@@ -1,6 +1,7 @@
 "use client"
 import React, { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'motion/react'
+import Image from "next/image"; // Tambahkan import Image
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { Reveal } from '../animations/reveal'
 
 function About() {
@@ -19,21 +20,18 @@ function ScreenOne() {
   const { scrollYProgress } = useScroll({
     target: targetRef,
     offset: ["end end", "end start"],
-  })
+  });
 
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.7])
-  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0])
-  const scaleText = useTransform(scrollYProgress, [0, 1], [1, 0.8])
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.7]);
+  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
+  const scaleText = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
 
   return (
     <div className="bg-white w-full h-screen">
       <motion.div 
         className="h-screen relative bg-white" 
         ref={targetRef}
-        style={{
-          scale,
-          opacity
-        }}
+        style={{ scale, opacity }}
       >
         <motion.div
           style={{
@@ -55,13 +53,13 @@ function ScreenOne() {
                 fontSize: 'clamp(5rem, 10vw, 9rem)' 
               }}
             >
-                About <span className="text-light-200">Me</span>
+              About <span className="text-light-200">Me</span>
             </motion.h1>
           </Reveal>
         </div>
       </motion.div>
     </div>
-  )
+  );
 }
 
 function ScreenTwo() {
@@ -69,11 +67,11 @@ function ScreenTwo() {
   const { scrollYProgress } = useScroll({
     target: targetRef,
     offset: ["start end", "end start"],
-  })
+  });
   
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 0.8])
-  const y = useTransform(scrollYProgress, [0, 1], [300, -300])
-  const opacity = useTransform(scrollYProgress, [0.15, 0.5, 0.85], [0, 1, 0])
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 0.8]);
+  const y = useTransform(scrollYProgress, [0, 1], [300, -300]);
+  const opacity = useTransform(scrollYProgress, [0.15, 0.5, 0.85], [0, 1, 0]);
 
   return (
     <div className="bg-white w-full h-screen">
@@ -94,7 +92,8 @@ function ScreenTwo() {
             </Reveal>
             <Reveal>
               <p className="text-xl sm:text-2xl text-black/80 font-poppins font-black">
-                I&apos;m an ambitious and dedicated electrical engineering student at  <span className="text-light-200">Universitas Indonesia</span>.
+                I&apos;m an ambitious and dedicated electrical engineering student at  
+                <span className="text-light-200"> Universitas Indonesia</span>.
               </p>
             </Reveal>
           </div>
@@ -102,9 +101,11 @@ function ScreenTwo() {
             <motion.div className="relative flex items-center justify-center lg:justify-end z-0 rounded-xl">
               <div className="relative w-full max-w-[35rem] h-[20rem] sm:h-[30rem] lg:h-[40rem]">
                 <div className="relative w-full h-full bg-white rounded-xl overflow-hidden shadow-lg">
-                  <img
+                  <Image
                     src="/assets/fotodiri3.jpeg"
                     alt="Fatih"
+                    width={560} 
+                    height={800} 
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -114,5 +115,5 @@ function ScreenTwo() {
         </motion.div>
       </motion.div>
     </div>
-  )
+  );
 }

@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, useAnimate, stagger } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkedin, faGithub, faInstagram, faLine, faSpotify } from '@fortawesome/free-brands-svg-icons';
