@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, useAnimate, stagger } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkedin, faGithub, faInstagram, faLine, faSpotify } from '@fortawesome/free-brands-svg-icons';
@@ -42,15 +42,16 @@ function ContactMe() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);
 
-  // Intersection Observer setup
+
   useEffect(() => {
+    const refElement = containerRef.current; 
+    if (!refElement) return;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry?.isIntersecting && entry.intersectionRatio === 1) {
           setIsInView(true);
-          if (containerRef.current) {
-            observer.unobserve(containerRef.current);
-          }
+          observer.unobserve(refElement);
         }
       },
       {
@@ -58,17 +59,14 @@ function ContactMe() {
       }
     );
 
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
+    observer.observe(refElement);
 
     return () => {
-      if (containerRef.current) {
-        observer.unobserve(containerRef.current);
+      if (refElement) {
+        observer.unobserve(refElement);
       }
     };
   }, []);
-
 
   useEffect(() => {
     if (isInView) {

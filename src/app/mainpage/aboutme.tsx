@@ -89,12 +89,12 @@ function ScreenTwo() {
           <div className="flex flex-col justify-center space-y-6 max-w-xl text-center lg:text-left relative z-10">
             <Reveal>
               <p className="text-3xl sm:text-5xl text-black font-poppins font-black leading-tight">
-                Hi! Im Muhammad <span className="text-light-200">Fatih Zamzami</span>.
+                Hi! I&apos;m Muhammad <span className="text-light-200">Fatih Zamzami</span>.
               </p>
             </Reveal>
             <Reveal>
               <p className="text-xl sm:text-2xl text-black/80 font-poppins font-black">
-                I'm an ambitious and dedicated electrical engineering student @  <span className="text-light-200">Universitas Indonesia</span>.
+                I&apos;m an ambitious and dedicated electrical engineering student at  <span className="text-light-200">Universitas Indonesia</span>.
               </p>
             </Reveal>
           </div>
