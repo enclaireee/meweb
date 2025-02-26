@@ -83,10 +83,10 @@ function ContactMe() {
   }, [isInView, animate]);
 
   return (
-    <div ref={containerRef} className="min-h-[50vh] flex flex-col justify-center items-center bg-gray-50 px-4">
-      <div className="container mx-auto text-center mb-12">
+    <div ref={containerRef} className="min-h-[50vh] flex flex-col justify-center items-center bg-gray-50 px-4 py-12 sm:py-16">
+      <div className="container mx-auto text-center mb-8 sm:mb-12">
         <motion.h1
-          className="text-4xl sm:text-7xl font-poppins font-superbold text-gray-900"
+          className="text-3xl sm:text-5xl md:text-7xl font-poppins font-extrabold text-gray-900"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: 'easeInOut' }}
@@ -94,7 +94,7 @@ function ContactMe() {
           Get in Touch
         </motion.h1>
       </div>
-      <div ref={scope} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 w-full max-w-4xl">
+      <div ref={scope} className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 w-full max-w-4xl px-4">
         {socials.map((social, index) => (
           <motion.a
             key={index}
@@ -102,12 +102,17 @@ function ContactMe() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`Visit my ${social.name}`}
-            className={`${social.bgColor} h-24 sm:h-32 md:h-40 rounded-lg flex justify-center items-center`}
+            className={`${social.bgColor} h-20 sm:h-32 md:h-40 rounded-lg flex justify-center items-center
+              shadow-md hover:shadow-lg transition-shadow duration-200`}
             initial={{ opacity: 0, y: 30 }}
             whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.95 }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
           >
-            <FontAwesomeIcon icon={social.icon} className="text-white text-4xl sm:text-6xl md:text-8xl" />
+            <FontAwesomeIcon 
+              icon={social.icon} 
+              className="text-white text-3xl sm:text-4xl md:text-6xl" 
+            />
           </motion.a>
         ))}
       </div>
