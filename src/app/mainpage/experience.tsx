@@ -2,13 +2,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
-interface Experience {
-  id: number;
-  title: string;
-  role: string;
-  description: string;
-}
-
 const experiences = [
   {
     id: 1,
@@ -40,62 +33,48 @@ const experiences = [
   },
 ];
 
-function useWindowWidth(): number {
-  const [width, setWidth] = useState<number>(
+// Custom hook to get the window width
+function useWindowWidth() {
+  const [width, setWidth] = useState(
     typeof window !== "undefined" ? window.innerWidth : 1024
   );
-  
   useEffect(() => {
     const handleResize = () => setWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  
   return width;
 }
 
 export default function ExperienceContent() {
-  const pinnedRef = useRef<HTMLDivElement>(null);
+  const pinnedRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: pinnedRef,
     offset: ["start start", "end end"],
   });
 
+  // Adjust the translation distance based on viewport width
   const windowWidth = useWindowWidth();
-  const isMobile = windowWidth < 768;
-
-  const translateDistance = isMobile ? 0 : -800;
+  const translateDistance = windowWidth < 768 ? -400 : -800;
   const x = useTransform(scrollYProgress, [0, 1], [0, translateDistance]);
 
   return (
     <div className="bg-gray-50">
-      <div 
-        ref={pinnedRef} 
-        className="relative" 
-        style={{ height: isMobile ? "auto" : "200vh" }}
-      >
-        <div className={`sticky top-0 flex flex-col items-center justify-center ${isMobile ? "h-auto py-12" : "h-[120vh]"}`}>
+      <div ref={pinnedRef} className="relative" style={{ height: "200vh" }}>
+        <div className="sticky top-0 flex flex-col items-center justify-center h-[120vh]">
           <div className="text-center mb-12 px-4">
             <motion.h1 className="font-poppins text-4xl md:text-6xl font-extrabold">
               My <span className="text-yellow-400">Experiences</span>
             </motion.h1>
           </div>
           <motion.div
-            style={{ x: isMobile ? 0 : x }}
-            className={`w-full max-w-6xl mx-auto px-4 ${
-              isMobile 
-                ? "flex flex-col gap-8" 
-                : "flex flex-nowrap gap-4"
-            }`}
+            style={{ x }}
+            className="w-full max-w-6xl mx-auto flex flex-nowrap gap-4 px-4"
           >
             {experiences.map((experience) => (
               <div
                 key={experience.id}
-                className={`${
-                  isMobile 
-                    ? "w-full" 
-                    : "min-w-[250px] sm:min-w-[300px]"
-                } p-6 sm:p-8 rounded-xl shadow-lg bg-white`}
+                className="min-w-[250px] sm:min-w-[300px] p-6 sm:p-8 rounded-xl shadow-lg bg-white"
               >
                 <h2 className="font-poppins text-xl sm:text-3xl font-bold text-yellow-400 mb-2">
                   {experience.title}

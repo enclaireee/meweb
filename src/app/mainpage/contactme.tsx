@@ -1,39 +1,45 @@
-"use client"
-import React, { useEffect, useRef, useState } from 'react';
-import { motion, useAnimate, stagger } from 'framer-motion';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLinkedin, faGithub, faInstagram, faLine, faSpotify } from '@fortawesome/free-brands-svg-icons';
+"use client";
+import React, { useEffect, useRef, useState } from "react";
+import { motion, useAnimate, stagger } from "framer-motion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faLinkedin,
+  faGithub,
+  faInstagram,
+  faLine,
+  faSpotify,
+} from "@fortawesome/free-brands-svg-icons";
 
 const socials = [
   {
-    name: 'LinkedIn',
-    url: 'https://www.linkedin.com/in/fatihzamzami',
+    name: "LinkedIn",
+    url: "https://www.linkedin.com/in/fatihzamzami",
     icon: faLinkedin,
-    bgColor: 'bg-blue-400',
+    bgColor: "bg-blue-400",
   },
   {
-    name: 'Line',
-    url: 'https://line.me/ti/p/haiinifatih',
+    name: "Line",
+    url: "https://line.me/ti/p/haiinifatih",
     icon: faLine,
-    bgColor: 'bg-green-400',
+    bgColor: "bg-green-400",
   },
   {
-    name: 'Instagram',
-    url: 'https://www.instagram.com/fthzami',
+    name: "Instagram",
+    url: "https://www.instagram.com/fthzami",
     icon: faInstagram,
-    bgColor: 'bg-pink-400',
+    bgColor: "bg-pink-400",
   },
   {
-    name: 'GitHub',
-    url: 'https://github.com/enclaire1443',
+    name: "GitHub",
+    url: "https://github.com/enclaireee",
     icon: faGithub,
-    bgColor: 'bg-blue-800',
+    bgColor: "bg-blue-800",
   },
   {
-    name: 'Spotify',
-    url: 'https://open.spotify.com/user/31s4tbptqdhmx2wmxwmecw2eaz4y?si=b12fc2f74c5d4a8b',
+    name: "Spotify",
+    url: "https://open.spotify.com/user/31s4tbptqdhmx2wmxwmecw2eaz4y?si=b12fc2f74c5d4a8b",
     icon: faSpotify,
-    bgColor: 'bg-[#1ED760]',
+    bgColor: "bg-[#1ED760]",
   },
 ];
 
@@ -42,9 +48,8 @@ function ContactMe() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);
 
-
   useEffect(() => {
-    const refElement = containerRef.current; 
+    const refElement = containerRef.current;
     if (!refElement) return;
 
     const observer = new IntersectionObserver(
@@ -56,7 +61,7 @@ function ContactMe() {
       },
       {
         threshold: 1.0,
-      }
+      },
     );
 
     observer.observe(refElement);
@@ -71,30 +76,36 @@ function ContactMe() {
   useEffect(() => {
     if (isInView) {
       animate(
-        'a',
+        "a",
         { opacity: 1, y: 0 },
         {
           duration: 0.6,
           delay: stagger(0.2),
-          ease: 'easeInOut',
-        }
+          ease: "easeInOut",
+        },
       );
     }
   }, [isInView, animate]);
 
   return (
-    <div ref={containerRef} className="min-h-[50vh] flex flex-col justify-center items-center bg-gray-50 px-4 py-12 sm:py-16">
+    <div
+      ref={containerRef}
+      className="min-h-[50vh] flex flex-col justify-center items-center bg-gray-50 px-4 py-12 sm:py-16"
+    >
       <div className="container mx-auto text-center mb-8 sm:mb-12">
         <motion.h1
           className="text-3xl sm:text-5xl md:text-7xl font-poppins font-extrabold text-gray-900"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: 'easeInOut' }}
+          transition={{ duration: 0.6, ease: "easeInOut" }}
         >
           Get in Touch
         </motion.h1>
       </div>
-      <div ref={scope} className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 w-full max-w-4xl px-4">
+      <div
+        ref={scope}
+        className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 w-full max-w-4xl px-4"
+      >
         {socials.map((social, index) => (
           <motion.a
             key={index}
@@ -107,11 +118,11 @@ function ContactMe() {
             initial={{ opacity: 0, y: 30 }}
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.95 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
           >
-            <FontAwesomeIcon 
-              icon={social.icon} 
-              className="text-white text-3xl sm:text-4xl md:text-6xl" 
+            <FontAwesomeIcon
+              icon={social.icon}
+              className="text-white text-3xl sm:text-4xl md:text-6xl"
             />
           </motion.a>
         ))}
