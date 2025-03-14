@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, useAnimate, stagger } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -43,45 +43,43 @@ const socials = [
   },
 ];
 
-function ContactMe() {
+export default function ContactMe() {
   const [scope, animate] = useAnimate();
-  const containerRef = useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);
 
   useEffect(() => {
-    const refElement = containerRef.current;
-    if (!refElement) return;
-
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry?.isIntersecting && entry.intersectionRatio === 1) {
+        if (entry?.isIntersecting) {
           setIsInView(true);
-          observer.unobserve(refElement);
+          observer.unobserve(entry.target);
         }
       },
       {
-        threshold: 1.0,
+        threshold: 0.1,
       },
     );
 
-    observer.observe(refElement);
+    const element = scope.current;
+    if (element) {
+      observer.observe(element);
+    }
 
     return () => {
-      if (refElement) {
-        observer.unobserve(refElement);
+      if (element) {
+        observer.unobserve(element);
       }
     };
-  }, []);
+  }, [scope]);
 
   useEffect(() => {
     if (isInView) {
       animate(
         "a",
-        { opacity: 1, y: 0 },
+        { opacity: 1 },
         {
-          duration: 0.6,
-          delay: stagger(0.2),
-          ease: "easeInOut",
+          duration: 0.3,
+          delay: stagger(0.1),
         },
       );
     }
@@ -89,46 +87,58 @@ function ContactMe() {
 
   return (
     <div
-      ref={containerRef}
-      className="min-h-[50vh] flex flex-col justify-center items-center bg-gray-50 px-4 py-12 sm:py-16"
+      className="relative w-full"
+      style={{ clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)" }}
     >
-      <div className="container mx-auto text-center mb-8 sm:mb-12">
-        <motion.h1
-          className="text-3xl sm:text-5xl md:text-7xl font-poppins font-extrabold text-gray-900"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeInOut" }}
-        >
-          Get in Touch
-        </motion.h1>
-      </div>
-      <div
-        ref={scope}
-        className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 w-full max-w-4xl px-4"
-      >
-        {socials.map((social, index) => (
-          <motion.a
-            key={index}
-            href={social.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Visit my ${social.name}`}
-            className={`${social.bgColor} h-20 sm:h-32 md:h-40 rounded-lg flex justify-center items-center
-              shadow-md hover:shadow-lg transition-shadow duration-200`}
-            initial={{ opacity: 0, y: 30 }}
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+      {/* Sticky content container with reduced height */}
+      <div className="fixed w-full h-[40vh] bottom-0 z-10">
+        <div className="h-full bg-gradient-to-b from-gray-800 via-gray-900 to-black flex flex-col justify-center items-center overflow-hidden">
+          {/* Top curve overlay */}
+          <div
+            className="absolute top-0 left-0 right-0 h-16 bg-gray-800"
+            style={{
+              borderTopLeftRadius: "50% 100%",
+              borderTopRightRadius: "50% 100%",
+            }}
+          />
+
+          <div className="container mx-auto text-center mb-4 relative z-10">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-poppins font-bold text-white">
+              Get in <span className="text-light-200">Touch</span>
+            </h1>
+
+            <div className="w-16 h-1 bg-light-200 mx-auto mt-2 rounded-full" />
+          </div>
+
+          <div
+            ref={scope}
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 w-full max-w-4xl px-4 relative z-10"
           >
-            <FontAwesomeIcon
-              icon={social.icon}
-              className="text-white text-3xl sm:text-4xl md:text-6xl"
-            />
-          </motion.a>
-        ))}
+            {socials.map((social, index) => (
+              <motion.a
+                key={index}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Visit my ${social.name}`}
+                className={`${social.bgColor} h-14 sm:h-16 md:h-20 rounded-lg flex justify-center items-center
+                  shadow-md hover:shadow-lg transition-shadow duration-200 backdrop-blur-sm`}
+                initial={{ opacity: 0 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <FontAwesomeIcon
+                  icon={social.icon}
+                  className="text-white text-xl sm:text-2xl md:text-3xl"
+                />
+              </motion.a>
+            ))}
+          </div>
+        </div>
       </div>
+
+      {/* Spacer div with reduced height */}
+      <div className="w-full h-[40vh]"></div>
     </div>
   );
 }
-
-export default ContactMe;
