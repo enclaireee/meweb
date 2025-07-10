@@ -7,11 +7,43 @@ import {
   FaMedal,
   FaCalendarAlt,
   FaLaptopCode,
+  FaCodeBranch,
+  FaHeartbeat
 } from "react-icons/fa";
 
 const experiences = [
+    {
+    id: 2,
+    title: "2nd Winner of ProtoTech Competiton IEEE ITB Student Branch",
+    role: "Software Developer",
+    period: "2025",
+    description:
+      "Won a 2nd place in a competition organized by IEEE ITB Student Branch, showcasing skills in software development and problem-solving. Developed a prototype that addressed real-world challenges using innovative technology solutions in healthcare.",
+    icon: FaHeartbeat,
+    color: "bg-blue-500",
+    skills: [
+      "Software Development",
+      "Prototype Development",
+      "Healthcare Technology",
+    ],
+  },
+    {
+    id: 3,
+    title: "EXERTION UI 1.0",
+    role: "Director of Events",
+    period: "2025",
+    description:
+      "Directed a nation scale tech and logic competition for high school and university students. Coordinated with the jurors and participants to ensure smooth execution of the event.",
+    icon: FaCodeBranch,
+    color: "bg-purple-500",
+    skills: [
+      "Event Management",
+      "Team Leadership",
+      "Communication",
+    ],
+  },
   {
-    id: 1,
+    id: 4,
     title: "Ikatan Mahasiswa Elektro 2025",
     role: "Staff of Research and Development",
     period: "2025 - Present",
@@ -27,9 +59,9 @@ const experiences = [
     ],
   },
   {
-    id: 2,
-    title: "Exercise FTUI Staff 2025",
-    role: "Software Division",
+    id: 5,
+    title: "Exercise FTUI 2025",
+    role: "Software Engineer",
     period: "2025 - Present",
     description:
       "Developing secure, production-ready software while gaining hands-on experience in the full development workflow. Contributed to frontend and backend components of web applications.",
@@ -43,7 +75,7 @@ const experiences = [
     ],
   },
   {
-    id: 3,
+    id: 6,
     title: "Indonesian Delegate at 2023 World Scout Jamboree",
     role: "Team Leader",
     period: "2023",
@@ -59,7 +91,7 @@ const experiences = [
     ],
   },
   {
-    id: 4,
+    id: 7,
     title: "Hong Kong International Mathematics Olympiad 2019",
     role: "Bronze Medalist",
     period: "2019",
