@@ -1,6 +1,120 @@
 @import "tailwindcss";
 
-html,
+/* ---------------------------------------------------------------------------
+   Design tokens — "Schematic Editorial"
+   Warm paper, near-black ink, one signal-orange accent. Editorial serif
+   display type against monospace measurement annotations.
+--------------------------------------------------------------------------- */
+@theme {
+  /* Palette — deliberately small */
+  --color-paper: #f2eee5;
+  --color-paper-deep: #e7e2d4;
+  --color-ink: #1a1813;
+  --color-ink-soft: #5f5a4c;
+  --color-signal: #e8490f;
+  --color-line: rgb(26 24 19 / 0.16);
+  --color-line-faint: rgb(26 24 19 / 0.07);
+
+  /* Type */
+  --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
+  --font-body: var(--font-archivo), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "SF Mono", monospace;
+
+  /* Fluid type scale */
+  --text-hero: clamp(2.75rem, 9.5vw, 9rem);
+  --text-hero--line-height: 0.95;
+  --text-display: clamp(2rem, 5.5vw, 4.75rem);
+  --text-display--line-height: 1.02;
+  --text-title: clamp(1.375rem, 2.6vw, 2.25rem);
+  --text-title--line-height: 1.15;
+  --text-annot: 0.6875rem;
+  --text-annot--line-height: 1.5;
+
+  /* Motion language — every animation uses one of these */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-inout-soft: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-snap: cubic-bezier(0.83, 0, 0.17, 1);
+  --duration-fast: 300ms;
+  --duration-base: 600ms;
+  --duration-slow: 1000ms;
+  --duration-drama: 1400ms;
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+html {
+  scroll-behavior: auto; /* Lenis owns scrolling; CSS smooth would fight it */
+}
+
 body {
-  min-height: 100%;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-signal);
+  color: var(--color-paper);
+}
+
+/* ---------------------------------------------------------------------------
+   Utilities — shared visual patterns of the schematic language
+--------------------------------------------------------------------------- */
+
+/* Monospace measurement annotation, e.g. "FIG. 02 — EEG / 512Hz" */
+@utility annot {
+  font-family: var(--font-mono);
+  font-size: var(--text-annot);
+  line-height: var(--text-annot--line-height);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Engineering-paper grid backdrop */
+@utility bg-grid-paper {
+  background-image: linear-gradient(var(--color-line-faint) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-line-faint) 1px, transparent 1px);
+  background-size: 3.5rem 3.5rem;
+}
+
+/* Display face with Fraunces' wonky optical-size forms switched on */
+@utility font-display-wonk {
+  font-family: var(--font-display);
+  font-variation-settings:
+    "opsz" 144,
+    "WONK" 1;
+}
+
+/* Hide scrollbars on intentional horizontal tracks */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Marquee track — duration set inline, reversed via direction */
+@utility marquee-track {
+  animation: marquee-x var(--marquee-duration, 30s) linear infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes marquee-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Keyboard focus that matches the art direction */
+:focus-visible {
+  outline: 2px solid var(--color-signal);
+  outline-offset: 3px;
 }
