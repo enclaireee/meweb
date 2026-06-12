@@ -1,11 +1,15 @@
-import MainPage from "./mainpage/page"
-import ClientLayout from "./client_layout"
+import React from 'react'
+import ClientLayout from "../client_layout";
+import Experience from "./experience"
+import ContactMe from "./contactme"
 
-
-export default function Home() {
+function Page() {
   return (
     <ClientLayout>
-      <main><MainPage /></main>
+        <Experience />
+        <ContactMe />
     </ClientLayout>
-  );
+  )
 }
+
+export default Page

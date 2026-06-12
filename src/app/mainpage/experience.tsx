@@ -1,112 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import {
-  FaCode,
-  FaUserFriends,
-  FaMedal,
-  FaCalendarAlt,
-  FaLaptopCode,
-  FaCodeBranch,
-  FaHeartbeat
-} from "react-icons/fa";
-
-const experiences = [
-    {
-    id: 2,
-    title: "2nd Winner of ProtoTech Competiton IEEE ITB Student Branch",
-    role: "Software Developer",
-    period: "2025",
-    description:
-      "Won a 2nd place in a competition organized by IEEE ITB Student Branch, showcasing skills in software development and problem-solving. Developed a prototype that addressed real-world challenges using innovative technology solutions in healthcare.",
-    icon: FaHeartbeat,
-    color: "bg-blue-500",
-    skills: [
-      "Software Development",
-      "Prototype Development",
-      "Healthcare Technology",
-    ],
-  },
-    {
-    id: 3,
-    title: "EXERTION UI 1.0",
-    role: "Director of Events",
-    period: "2025",
-    description:
-      "Directed a nation scale tech and logic competition for high school and university students. Coordinated with the jurors and participants to ensure smooth execution of the event.",
-    icon: FaCodeBranch,
-    color: "bg-purple-500",
-    skills: [
-      "Event Management",
-      "Team Leadership",
-      "Communication",
-    ],
-  },
-  {
-    id: 4,
-    title: "Ikatan Mahasiswa Elektro 2025",
-    role: "Staff of Research and Development",
-    period: "2025 - Present",
-    description:
-      "Conducted internal research and development by analyzing data and providing actionable recommendations. Collaborated with team members to implement data-driven improvements for organization initiatives.",
-    icon: FaCode,
-    color: "bg-blue-500",
-    skills: [
-      "Data Analysis",
-      "Research Methodology",
-      "Team Collaboration",
-      "Project Planning",
-    ],
-  },
-  {
-    id: 5,
-    title: "Exercise FTUI 2025",
-    role: "Software Engineer",
-    period: "2025 - Present",
-    description:
-      "Developing secure, production-ready software while gaining hands-on experience in the full development workflow. Contributed to frontend and backend components of web applications.",
-    icon: FaLaptopCode,
-    color: "bg-yellow-400",
-    skills: [
-      "JavaScript/TypeScript",
-      "React",
-      "Next.js",
-      "Git Version Control",
-    ],
-  },
-  {
-    id: 6,
-    title: "Indonesian Delegate at 2023 World Scout Jamboree",
-    role: "Team Leader",
-    period: "2023",
-    description:
-      "Led a team of delegates at the World Scout Jamboree, fostering teamwork and global cultural exchange. Coordinated activities and ensured smooth communication between international participants.",
-    icon: FaUserFriends,
-    color: "bg-green-500",
-    skills: [
-      "Leadership",
-      "Cross-Cultural Communication",
-      "Problem Solving",
-      "Event Management",
-    ],
-  },
-  {
-    id: 7,
-    title: "Hong Kong International Mathematics Olympiad 2019",
-    role: "Bronze Medalist",
-    period: "2019",
-    description:
-      "Achieved a bronze medal, showcasing problem-solving and analytical skills in a highly competitive international mathematics competition against participants from around the world.",
-    icon: FaMedal,
-    color: "bg-amber-500",
-    skills: [
-      "Mathematical Analysis",
-      "Logical Reasoning",
-      "Competition Strategy",
-      "Time Management",
-    ],
-  },
-];
+import { FaCalendarAlt } from "react-icons/fa";
+import { experiences, Experience } from "@/data";
 
 export default function ExperienceContent() {
   // Binary code background effect
@@ -195,7 +91,7 @@ export default function ExperienceContent() {
 }
 
 interface TimelineItemProps {
-  experience: (typeof experiences)[0];
+  experience: Experience;
   index: number;
   isEven: boolean;
 }
@@ -246,7 +142,9 @@ function TimelineItem({ experience, index, isEven }: TimelineItemProps) {
       >
         {/* Date indicator - desktop only */}
         <div
-          className={`hidden md:flex items-center font-poppins text-sm text-gray-500 mb-2 ${!isEven ? "justify-end" : ""}`}
+          className={`hidden md:flex items-center font-poppins text-sm text-gray-500 mb-2 ${
+            !isEven ? "justify-end" : ""
+          }`}
         >
           {!isEven && <span className="ml-2">{experience.period}</span>}
           <FaCalendarAlt
