@@ -8,24 +8,24 @@
    Light: warm paper, daylight. Dark: lamp-lit studio, warm off-black.
 --------------------------------------------------------------------------- */
 :root {
-  --background: #f4f1ea;
-  --surface: #ebe7dc;
-  --foreground: #1c1a15;
-  --muted: #6c6557;
-  --border: rgb(28 26 21 / 0.14);
-  --border-faint: rgb(28 26 21 / 0.06);
-  --accent: #d8430c;
+  --background: #faf9f6;
+  --surface: #f0ede6;
+  --foreground: #1a1815;
+  --muted: #8a8378;
+  --border: rgb(26 24 21 / 0.12);
+  --border-faint: rgb(26 24 21 / 0.05);
+  --accent: #c4450a;
   color-scheme: light;
 }
 
 .dark {
-  --background: #16130f;
-  --surface: #211d17;
+  --background: #141210;
+  --surface: #1e1b16;
   --foreground: #ece8dd;
-  --muted: #a39c8a;
-  --border: rgb(236 232 221 / 0.16);
-  --border-faint: rgb(236 232 221 / 0.07);
-  --accent: #ff5c22;
+  --muted: #9e978a;
+  --border: rgb(236 232 221 / 0.14);
+  --border-faint: rgb(236 232 221 / 0.06);
+  --accent: #ff6130;
   color-scheme: dark;
 }
 
@@ -44,14 +44,14 @@
 --------------------------------------------------------------------------- */
 @theme {
   /* Type (families swapped in the typography phase) */
-  --font-display: var(--font-display-face), "Iowan Old Style", Georgia, serif;
-  --font-body: var(--font-body-face), system-ui, sans-serif;
+  --font-display: var(--font-display-face), Georgia, "Times New Roman", serif;
+  --font-body: var(--font-body-face), "Helvetica Neue", Arial, sans-serif;
 
   /* Type scale — five steps, nothing else */
   --text-hero: clamp(2.5rem, 8vw, 7.5rem);
   --text-hero--line-height: 0.96;
-  --text-hero--letter-spacing: -0.02em;
-  --text-hero--font-weight: 500;
+  --text-hero--letter-spacing: -0.025em;
+  --text-hero--font-weight: 700;
   --text-title: clamp(1.875rem, 4.5vw, 4rem);
   --text-title--line-height: 1.05;
   --text-title--letter-spacing: -0.015em;
@@ -115,8 +115,9 @@ body {
 @utility annot {
   font-size: var(--text-caption);
   line-height: var(--text-caption--line-height);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
+  font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
 

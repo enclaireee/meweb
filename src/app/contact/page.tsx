@@ -36,9 +36,10 @@ export default function ContactPage() {
                   <a
                     href={`mailto:${profile.email}`}
                     data-cursor="write"
-                    className="inline-block border border-foreground bg-foreground px-8 py-4 font-display text-lead text-background transition-colors duration-300 hover:border-accent hover:bg-accent"
+                    className="group inline-flex items-center gap-6 border border-border px-10 py-5 transition-all duration-500 hover:border-foreground hover:bg-surface/50"
                   >
-                    {profile.email}
+                    <span className="font-display text-lead text-foreground">{profile.email}</span>
+                    <span className="font-display text-lead text-muted transition-colors duration-500 group-hover:text-foreground">↗</span>
                   </a>
                 </Magnetic>
               </div>

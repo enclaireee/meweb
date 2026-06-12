@@ -21,9 +21,9 @@ export function NavRail() {
   return (
     <nav
       aria-label="Pages"
-      className="annot fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/90 backdrop-blur-sm lg:inset-x-auto lg:left-0 lg:top-1/2 lg:w-auto lg:-translate-y-1/2 lg:border-0 lg:bg-transparent lg:backdrop-blur-none"
+      className="annot fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/90 backdrop-blur-sm lg:inset-x-auto lg:left-3 lg:top-1/2 lg:w-auto lg:-translate-y-1/2 lg:border-0 lg:bg-transparent lg:backdrop-blur-none"
     >
-      <ul className="flex justify-between px-4 py-3 lg:flex-col lg:gap-3 lg:px-3 lg:py-0">
+      <ul className="flex justify-between px-4 py-3 lg:flex-col lg:gap-2 lg:px-2.5 lg:py-0">
         {pages.map((p) => {
           const isActive =
             p.href === "/" ? pathname === "/" : pathname.startsWith(p.href);
