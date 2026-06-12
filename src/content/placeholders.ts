@@ -73,15 +73,15 @@ export const placeholders: Record<string, PlaceholderSpec> = {
     format: "JPG / WebP",
     notes: "Detail/macro shot of the OLED readout is a strong alternative. Warm light suits the palette.",
   },
-  "contact-strip": {
-    id: "contact-strip",
-    section: "Contact / footer",
-    purpose: "Wide atmospheric strip above the contact block",
-    subject: "Wide crop: campus, lab, or desk setup — low detail, works at 30% contrast as a backdrop",
+  "about-strip": {
+    id: "about-strip",
+    section: "About — atmospheric divider",
+    purpose: "Wide calm strip between the narrative and the record timeline",
+    subject: "Wide crop: campus, lab, or desk setup — low detail, atmospheric",
     width: 2400,
     height: 800,
     ratio: "3:1",
     format: "JPG / WebP",
-    notes: "Sits behind/beside oversized type — needs a calm, low-contrast area. Heavily compressible; max ~250KB.",
+    notes: "Full-bleed divider; needs to read at low contrast in both themes. Heavily compressible; max ~250KB.",
   },
 };
