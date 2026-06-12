@@ -36,11 +36,14 @@
   --text-hero: clamp(2.5rem, 8vw, 7.5rem);
   --text-hero--line-height: 0.96;
   --text-hero--letter-spacing: -0.02em;
+  --text-hero--font-weight: 500;
   --text-title: clamp(1.875rem, 4.5vw, 4rem);
   --text-title--line-height: 1.05;
   --text-title--letter-spacing: -0.015em;
+  --text-title--font-weight: 500;
   --text-heading: clamp(1.25rem, 2vw, 1.75rem);
   --text-heading--line-height: 1.2;
+  --text-heading--font-weight: 500;
   --text-lead: clamp(1.0625rem, 1.4vw, 1.3125rem);
   --text-lead--line-height: 1.55;
   --text-caption: 0.6875rem;

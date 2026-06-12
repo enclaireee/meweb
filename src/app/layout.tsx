@@ -1,24 +1,19 @@
 import type { Metadata } from "next";
-import { Fraunces, Archivo, IBM_Plex_Mono } from "next/font/google";
+import { Newsreader, Hanken_Grotesk } from "next/font/google";
 import SmoothScroll from "@/components/providers/SmoothScroll";
 import { Cursor } from "@/components/ui/Cursor";
 import "./globals.css";
 
-const fraunces = Fraunces({
+const newsreader = Newsreader({
   subsets: ["latin"],
   variable: "--font-display-face",
-  axes: ["opsz", "WONK"],
+  style: ["normal", "italic"],
+  axes: ["opsz"],
 });
 
-const archivo = Archivo({
+const hanken = Hanken_Grotesk({
   subsets: ["latin"],
   variable: "--font-body-face",
-});
-
-const plexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-plex-mono",
 });
 
 export const metadata: Metadata = {
@@ -35,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${fraunces.variable} ${archivo.variable} ${plexMono.variable} antialiased`}
+        className={`${newsreader.variable} ${hanken.variable} antialiased`}
       >
         <SmoothScroll>{children}</SmoothScroll>
         <Cursor />
