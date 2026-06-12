@@ -1,9 +1,161 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* Class-based dark mode (next-themes sets .dark on <html>) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------------------------------------------------------------------------
+   Semantic palette — designed per theme, never inverted.
+   Light: warm paper, daylight. Dark: lamp-lit studio, warm off-black.
+--------------------------------------------------------------------------- */
+:root {
+  --background: #f4f1ea;
+  --surface: #ebe7dc;
+  --foreground: #1c1a15;
+  --muted: #6c6557;
+  --border: rgb(28 26 21 / 0.14);
+  --border-faint: rgb(28 26 21 / 0.06);
+  --accent: #d8430c;
+  color-scheme: light;
+}
+
+.dark {
+  --background: #16130f;
+  --surface: #211d17;
+  --foreground: #ece8dd;
+  --muted: #a39c8a;
+  --border: rgb(236 232 221 / 0.16);
+  --border-faint: rgb(236 232 221 / 0.07);
+  --accent: #ff5c22;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-border-faint: var(--border-faint);
+  --color-accent: var(--accent);
+}
+
+/* ---------------------------------------------------------------------------
+   Static tokens — type, rhythm, motion
+--------------------------------------------------------------------------- */
+@theme {
+  /* Type (families swapped in the typography phase) */
+  --font-display: var(--font-display-face), "Iowan Old Style", Georgia, serif;
+  --font-body: var(--font-body-face), system-ui, sans-serif;
+
+  /* Type scale — five steps, nothing else */
+  --text-hero: clamp(2.5rem, 8vw, 7.5rem);
+  --text-hero--line-height: 0.96;
+  --text-hero--letter-spacing: -0.02em;
+  --text-hero--font-weight: 500;
+  --text-title: clamp(1.875rem, 4.5vw, 4rem);
+  --text-title--line-height: 1.05;
+  --text-title--letter-spacing: -0.015em;
+  --text-title--font-weight: 500;
+  --text-heading: clamp(1.25rem, 2vw, 1.75rem);
+  --text-heading--line-height: 1.2;
+  --text-heading--font-weight: 500;
+  --text-lead: clamp(1.0625rem, 1.4vw, 1.3125rem);
+  --text-lead--line-height: 1.55;
+  --text-caption: 0.6875rem;
+  --text-caption--line-height: 1.5;
+
+  /* Spacing rhythm — one gutter, one section beat */
+  --spacing-gutter: clamp(1.5rem, 5vw, 5rem);
+  --spacing-section: clamp(6rem, 14vh, 10rem);
+
+  /* Surfaces are flat; depth comes from hairlines, not shadows */
+  --radius: 0px;
+
+  /* Motion language — UI is quick and interruptible; long durations are
+     reserved for the few signature moments */
+  --ease-out-soft: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-inout-soft: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 150ms;
+  --duration-base: 300ms;
+  --duration-gesture: 700ms;
+  --duration-signature: 1100ms;
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+html {
+  scroll-behavior: auto; /* Lenis owns scrolling; CSS smooth would fight it */
+}
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-body);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-background);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* ---------------------------------------------------------------------------
+   Utilities — the few shared voices
+--------------------------------------------------------------------------- */
+
+/* Annotation voice: small, uppercase, tracked. */
+@utility annot {
+  font-size: var(--text-caption);
+  line-height: var(--text-caption--line-height);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Hide scrollbars on intentional horizontal tracks */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Marquee track — duration set inline */
+@utility marquee-track {
+  animation: marquee-x var(--marquee-duration, 30s) linear infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes marquee-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Theme switch: a quick whole-page crossfade via the View Transitions API.
+   The toggle only calls startViewTransition when motion is allowed. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--duration-base);
+  animation-timing-function: var(--ease-inout-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
 }

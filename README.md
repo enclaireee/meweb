@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# fatihweb — portfolio 2026
 
-## Getting Started
+Personal portfolio of Muhammad Fatih Zamzami. Next.js 16 · React 19 ·
+Tailwind CSS v4 · GSAP + ScrollTrigger · Lenis · Motion.
 
-First, run the development server:
+## Run
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
+npm run build   # production build
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Where things live
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Copy & facts** — everything you'd ever edit lives in
+  [src/content/](src/content/): `profile.ts`, `projects.ts`,
+  `experience.ts`, `capabilities.ts`. No prose is hard-coded in components.
+  Items marked `[NEEDS REVIEW]` are original copy awaiting your sign-off.
+- **Images** — every image slot is a spec-driven `<Placeholder>`; the full
+  shopping list is in [PLACEHOLDERS.md](PLACEHOLDERS.md). To swap one in,
+  add the asset to `public/` and replace the `<Placeholder>` with a
+  `next/image` inside the same `<ImageReveal>` wrapper.
+- **Sections** — [src/components/sections/](src/components/sections/), one
+  file per section, assembled in [src/app/page.tsx](src/app/page.tsx).
+- **Primitives** — reveal/parallax/split-text/marquee/magnetic/cursor in
+  [src/components/motion/](src/components/motion/) and
+  [src/components/ui/](src/components/ui/).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Design system in one paragraph
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The direction is **"Schematic Editorial"**: warm paper and hairline grids of
+an engineer's lab notebook, annotated in IBM Plex Mono (the `annot` utility),
+headlined in oversized Fraunces with its wonky optical-size forms, body in
+Archivo, and exactly one accent — signal orange — reserved for the things
+that matter. All tokens (palette, fluid type scale, named easing curves and
+durations) are defined in `@theme` in
+[src/app/globals.css](src/app/globals.css) and mirrored for JS in
+[src/lib/motion.ts](src/lib/motion.ts) / [src/lib/gsap.ts](src/lib/gsap.ts),
+so CSS, Motion, and GSAP all speak one motion language. Every animation has
+a calm `prefers-reduced-motion` fallback. Full rationale in
+[DESIGN.md](DESIGN.md).

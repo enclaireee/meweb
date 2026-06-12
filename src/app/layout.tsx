@@ -1,27 +1,29 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { Poppins } from "next/font/google";
+import { Newsreader, Hanken_Grotesk } from "next/font/google";
+import { ViewTransitions } from "next-view-transitions";
+import SmoothScroll from "@/components/providers/SmoothScroll";
+import { ThemeProvider } from "@/components/providers/Theme";
+import { Cursor } from "@/components/ui/Cursor";
+import { NavRail } from "@/components/ui/NavRail";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import "./globals.css";
 
-const poppins = Poppins({
-  variable: "--font-poppins",
+const newsreader = Newsreader({
   subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-display-face",
+  style: ["normal", "italic"],
+  axes: ["opsz"],
 });
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const hanken = Hanken_Grotesk({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: "--font-body-face",
 });
 
 export const metadata: Metadata = {
-  title: "My Portfolio",
-  description: "Fatih Zamzami's Portfolio Website Created using React and Next.js",
+  title: "Muhammad Fatih Zamzami — Electrical Engineer",
+  description:
+    "Portfolio of Muhammad Fatih Zamzami — electrical engineering student at Universitas Indonesia building across hardware and software.",
 };
 
 export default function RootLayout({
@@ -30,12 +32,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${poppins.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
-    </html>
+    <ViewTransitions>
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={`${newsreader.variable} ${hanken.variable} antialiased`}
+        >
+          <ThemeProvider>
+            <SmoothScroll>{children}</SmoothScroll>
+            <NavRail />
+            <ThemeToggle />
+            <Cursor />
+          </ThemeProvider>
+        </body>
+      </html>
+    </ViewTransitions>
   );
 }
