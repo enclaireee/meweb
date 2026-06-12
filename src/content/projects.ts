@@ -1,0 +1,57 @@
+import type { Project } from "./types";
+
+/**
+ * Project facts (names, dates, tech, what was built) come from the CV.
+ * Titles, taglines, and descriptions are original site copy.
+ */
+export const projects: Project[] = [
+  {
+    slug: "neuro-adaptive-game",
+    title: "Refocus",
+    cvName: "Refocusing ADHD using EEG and Neuro-Adaptive Video Game System",
+    year: "2025",
+    timeframe: "Feb – Apr 2025",
+    domain: "Brain–computer interface",
+    status: "shipped",
+    // [NEEDS REVIEW] Original tagline.
+    tagline: "A video game that gets harder when you focus — and easier when you drift.",
+    description: [
+      "A closed-loop neurofeedback system built as a non-pharmacological approach to ADHD therapy. A NeuroSky MindWave Mobile 2 headset streams raw brainwave data into a Python pipeline, where a DB-6 discrete wavelet transform and a five-model GMM ensemble turn noise into a live read on the player's attention.",
+      "That attention signal — the low-beta/theta ratio — drives a space shooter built in Godot. Difficulty scales with focus in real time, so staying locked in is the gameplay. The whole loop, from scalp to screen, runs live.",
+    ],
+    stack: ["Python", "Godot", "NeuroSky EEG", "DWT", "GMM"],
+  },
+  {
+    slug: "komat-unpar",
+    title: "KOMAT UNPAR 2025",
+    cvName: "KOMAT UNPAR 2025 Competition Website",
+    year: "2025",
+    timeframe: "Mar – Aug 2025",
+    domain: "Full-stack web",
+    status: "shipped",
+    // [NEEDS REVIEW] Original tagline.
+    tagline: "The digital front door for a nationwide mathematics competition.",
+    description: [
+      "The full-stack platform for KOMAT UNPAR, a national mathematics competition hosted by Universitas Katolik Parahyangan. Built end-to-end: an animated, fully responsive participant-facing site, plus an admin dashboard handling registration and payments for participants across the country.",
+      "Shipped on Next.js 15 with Tailwind v4 and Framer Motion, deployed to Vercel with continuous delivery — maintained in production through the full competition cycle.",
+    ],
+    stack: ["Next.js 15", "Tailwind CSS v4", "Framer Motion", "Vercel"],
+    // [NEEDS REVIEW] Add the live URL if the site is still up.
+  },
+  {
+    slug: "solar-monitor",
+    title: "Sunmeter",
+    cvName: "Solar-Powered Lighting System with Real-Time Efficiency Monitoring",
+    year: "2026",
+    timeframe: "May – Jul 2026",
+    domain: "Embedded systems",
+    status: "in-progress",
+    // [NEEDS REVIEW] Original tagline + project nickname ("Sunmeter") — rename if you prefer the formal title.
+    tagline: "A solar lamp that knows exactly how efficient it's being.",
+    description: [
+      "A solar-powered LED lighting system that measures itself. An INA219 current/voltage sensor and an LDR track panel output under changing light, while an Arduino crunches the numbers and reports live efficiency on a 0.96\" OLED.",
+      "Built as the final project for Embedded Systems — photovoltaic panel, microcontroller, and sensor array integrated into one self-reporting unit.",
+    ],
+    stack: ["Arduino", "INA219", "C/C++", "OLED (I2C)"],
+  },
+];
