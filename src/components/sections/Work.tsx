@@ -56,12 +56,8 @@ export function Work() {
         <div className="flex flex-col justify-between px-gutter py-16 lg:h-full lg:w-[38vw] lg:shrink-0 lg:py-10">
           <p className="annot text-muted">03 — selected work</p>
           <div>
-            <h2 className="font-display text-title">
-              Three builds,
-              <br />
-              <span className="italic">three stacks.</span>
-            </h2>
-            <p className="annot mt-6 hidden text-muted lg:block">scroll → the shelf slides</p>
+            <h2 className="font-display text-title">Three builds, three stacks.</h2>
+            <p className="annot mt-6 hidden text-muted lg:block">scroll ↓</p>
           </div>
         </div>
 
@@ -77,20 +73,17 @@ function WorkPanel({ project, index }: { project: Project; index: number }) {
   const num = String(index + 1).padStart(2, "0");
   return (
     <article className="grid grid-cols-12 gap-x-4 border-t border-border px-gutter py-16 lg:h-full lg:w-[78vw] lg:shrink-0 lg:border-l lg:border-t-0 lg:content-center lg:py-10">
-      <div className="col-span-12 flex items-baseline justify-between lg:col-span-12">
-        <span className="font-display text-title text-muted/40">{num}</span>
-        <div className="annot text-right text-muted">
-          <p>{project.domain}</p>
-          <p>
-            {project.timeframe}
-            {project.status === "in-progress" && (
-              <span className="ml-2 text-accent">● in progress</span>
-            )}
-          </p>
-        </div>
+      <div className="annot col-span-12 flex items-baseline justify-between text-muted">
+        <p>{num} / {project.domain}</p>
+        <p>
+          {project.timeframe}
+          {project.status === "in-progress" && (
+            <span className="ml-2 text-accent">● in progress</span>
+          )}
+        </p>
       </div>
 
-      <div className="col-span-12 mt-6 lg:col-span-6 lg:mt-10">
+      <div className="col-span-12 mt-8 lg:col-span-6 lg:mt-12">
         <ImageReveal from="left" className="aspect-[4/3]">
           <Placeholder id={placeholderByProject[project.slug]} />
         </ImageReveal>
@@ -99,18 +92,12 @@ function WorkPanel({ project, index }: { project: Project; index: number }) {
         </p>
       </div>
 
-      <div className="col-span-12 mt-8 flex flex-col justify-center lg:col-span-5 lg:col-start-8 lg:mt-10">
+      <div className="col-span-12 mt-8 flex flex-col justify-center lg:col-span-5 lg:col-start-8 lg:mt-12">
         <Reveal>
           <h3 className="font-display text-heading">{project.title}</h3>
-          <p className="mt-3 font-display text-xl italic text-muted">{project.tagline}</p>
-          <p className="mt-5 max-w-prose leading-relaxed text-foreground">{project.description[0]}</p>
-          <ul className="annot mt-6 flex flex-wrap gap-x-4 gap-y-2 text-muted">
-            {project.stack.map((s) => (
-              <li key={s} className="border border-border px-2 py-1">
-                {s}
-              </li>
-            ))}
-          </ul>
+          <p className="mt-2 font-display text-lead italic text-muted">{project.tagline}</p>
+          <p className="mt-6 max-w-prose leading-relaxed text-foreground">{project.description[0]}</p>
+          <p className="annot mt-6 text-muted">{project.stack.join(" · ")}</p>
         </Reveal>
       </div>
     </article>

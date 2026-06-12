@@ -17,7 +17,7 @@ export function Contact() {
         </SplitLines>
 
         <Reveal className="mt-10 max-w-xl">
-          <p className="text-lg leading-relaxed text-foreground">{profile.availability}</p>
+          <p className="text-lead text-foreground">{profile.availability}</p>
         </Reveal>
 
         <div className="mt-12 flex flex-wrap items-center gap-x-10 gap-y-6 pb-16">
@@ -25,7 +25,7 @@ export function Contact() {
             <a
               href={`mailto:${profile.email}`}
               data-cursor="write"
-              className="inline-block border border-foreground bg-foreground px-8 py-4 font-display text-lg italic text-background transition-colors duration-300 hover:bg-accent hover:border-accent"
+              className="inline-block border border-foreground bg-foreground px-8 py-4 font-display text-lead text-background transition-colors duration-300 hover:border-accent hover:bg-accent"
             >
               {profile.email}
             </a>

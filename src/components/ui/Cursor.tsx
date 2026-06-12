@@ -45,13 +45,11 @@ export function Cursor() {
     >
       <motion.div
         className="flex items-center justify-center rounded-full bg-accent"
-        animate={{ width: label ? 72 : 10, height: label ? 72 : 10 }}
-        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+        animate={{ width: label ? 56 : 8, height: label ? 56 : 8 }}
+        transition={{ type: "spring", stiffness: 400, damping: 32 }}
       >
         {label && (
-          <span className="annot px-2 text-center text-background" style={{ fontSize: "0.5625rem" }}>
-            {label}
-          </span>
+          <span className="annot px-1.5 text-center text-background">{label}</span>
         )}
       </motion.div>
     </motion.div>

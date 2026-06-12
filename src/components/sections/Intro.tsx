@@ -51,14 +51,10 @@ export function Intro() {
           aria-hidden="true"
         >
           <div className="flex w-full items-end justify-between p-6 sm:p-10">
-            <div className="annot space-y-1 text-background/60">
-              <p>fatih zamzami — portfolio 2026</p>
-              <p>calibrating type · grid · signal</p>
-            </div>
+            <p className="annot text-background/60">fatih zamzami — portfolio 2026</p>
             <span
               ref={counterRef}
-              className="font-display text-background"
-              style={{ fontSize: "clamp(4rem, 14vw, 11rem)", lineHeight: 0.85 }}
+              className="font-display text-hero text-background"
             >
               000
             </span>

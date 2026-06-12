@@ -21,12 +21,6 @@ export function Placeholder({ id, className }: PlaceholderProps) {
       aria-label={spec ? `Placeholder image: ${spec.purpose}` : `Placeholder image: ${id}`}
       className={`relative h-full w-full overflow-hidden border border-border bg-surface ${className ?? ""}`}
     >
-      {/* construction diagonals */}
-      <svg className="absolute inset-0 h-full w-full" aria-hidden="true" preserveAspectRatio="none">
-        <line x1="0" y1="0" x2="100%" y2="100%" stroke="var(--color-border)" strokeWidth="1" />
-        <line x1="100%" y1="0" x2="0" y2="100%" stroke="var(--color-border)" strokeWidth="1" />
-      </svg>
-
       {/* corner ticks */}
       <span aria-hidden="true" className="absolute left-2 top-2 h-3 w-3 border-l border-t border-muted" />
       <span aria-hidden="true" className="absolute right-2 top-2 h-3 w-3 border-r border-t border-muted" />

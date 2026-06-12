@@ -18,35 +18,26 @@ const domains = [
 export function Hero() {
   return (
     <section id="top" className="relative flex min-h-svh flex-col">
-      {/* annotation header */}
       <header className="annot flex items-start justify-between gap-4 px-gutter pt-6 text-muted">
-        <p>
-          {profile.name}
-          <br />
-          {profile.location}
-        </p>
-        <p className="text-right">
-          Portfolio — 2026
-          <br />
-          {profile.heroKicker}
-        </p>
+        <p>{profile.name} — {profile.location}</p>
+        <p className="pr-28 sm:pr-32">Portfolio 2026</p>
       </header>
 
-      <div className="grid flex-1 grid-cols-12 items-end gap-x-4 px-gutter pb-10 pt-16 lg:pt-8">
+      <div className="grid flex-1 grid-cols-12 items-end gap-x-4 px-gutter pb-12 pt-16 lg:pt-8">
         <div className="col-span-12 lg:col-span-8">
           <SplitLines
             as="h1"
             immediate
             delay={0.25}
-            className="font-display text-hero tracking-tight"
+            className="font-display text-hero"
           >
             Fatih
             <br />
             <span className="italic">Zamzami</span>
           </SplitLines>
 
-          <Reveal delay={0.7} className="mt-8 max-w-xl">
-            <p className="text-heading font-display text-foreground">{profile.heroLine}</p>
+          <Reveal delay={0.7} className="mt-10 max-w-xl">
+            <p className="font-display text-lead text-muted">{profile.heroLine}</p>
           </Reveal>
         </div>
 
@@ -59,12 +50,12 @@ export function Hero() {
         </div>
       </div>
 
-      {/* domain marquee along the fold */}
+      {/* the fold: one quiet kinetic line */}
       <div className="border-y border-border py-3">
-        <Marquee duration={26}>
+        <Marquee duration={32}>
           {domains.map((d) => (
-            <span key={d} className="annot mx-6 flex items-center gap-6 text-foreground">
-              {d} <span className="text-accent">●</span>
+            <span key={d} className="annot mx-8 text-muted">
+              {d}
             </span>
           ))}
         </Marquee>

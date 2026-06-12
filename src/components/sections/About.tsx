@@ -53,7 +53,7 @@ export function About() {
         <div className="col-span-12 space-y-6 lg:col-span-6">
           {profile.about.map((para, i) => (
             <Reveal key={i} delay={i * 0.08}>
-              <p className="max-w-prose text-lg leading-relaxed text-foreground">{para}</p>
+              <p className="max-w-prose text-lead text-foreground">{para}</p>
             </Reveal>
           ))}
         </div>
