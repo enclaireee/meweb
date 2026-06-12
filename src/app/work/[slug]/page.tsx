@@ -52,13 +52,17 @@ export default async function CaseStudy({
       <main>
         {/* intro beat — one full viewport */}
         <header className="relative flex min-h-svh flex-col justify-between overflow-hidden px-gutter pb-10 pt-section">
-          {/* looming numeral */}
-          <span
+          {/* looming numeral, drifting slowly against the scroll */}
+          <div
             aria-hidden="true"
-            className="pointer-events-none absolute -right-4 -top-6 select-none font-display text-[clamp(10rem,32vw,26rem)] leading-none text-surface lg:-right-8"
+            className="pointer-events-none absolute -right-4 -top-6 select-none lg:-right-8"
           >
-            {num}
-          </span>
+            <Parallax amount={16}>
+              <span className="font-display block text-[clamp(10rem,32vw,26rem)] leading-none text-surface">
+                {num}
+              </span>
+            </Parallax>
+          </div>
 
           <div className="relative">
             <p className="annot text-muted">
