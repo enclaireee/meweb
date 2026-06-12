@@ -32,6 +32,8 @@ export interface Project {
   timeframe: string;
   tagline: string;
   description: string[];
+  /** Case-study specifics — rewritten from the CV's project bullets. */
+  details: string[];
   stack: string[];
   /** Domain tag used for visual grouping, e.g. "BCI / Signal Processing". */
   domain: string;

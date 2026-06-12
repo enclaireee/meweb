@@ -19,6 +19,12 @@ export const projects: Project[] = [
       "A closed-loop neurofeedback system built as a non-pharmacological approach to ADHD therapy. A NeuroSky MindWave Mobile 2 headset streams raw brainwave data into a Python pipeline, where a DB-6 discrete wavelet transform and a five-model GMM ensemble turn noise into a live read on the player's attention.",
       "That attention signal — the low-beta/theta ratio — drives a space shooter built in Godot. Difficulty scales with focus in real time, so staying locked in is the gameplay. The whole loop, from scalp to screen, runs live.",
     ],
+    details: [
+      "NeuroSky MindWave Mobile 2 headset streaming raw EEG in real time",
+      "DB-6 discrete wavelet transform for feature extraction",
+      "Five-model GMM ensemble recognizing attention patterns",
+      "Godot space shooter whose difficulty tracks the live low-beta/theta ratio",
+    ],
     stack: ["Python", "Godot", "NeuroSky EEG", "DWT", "GMM"],
   },
   {
@@ -34,6 +40,11 @@ export const projects: Project[] = [
     description: [
       "The full-stack platform for KOMAT UNPAR, a national mathematics competition hosted by Universitas Katolik Parahyangan. Built end-to-end: an animated, fully responsive participant-facing site, plus an admin dashboard handling registration and payments for participants across the country.",
       "Shipped on Next.js 15 with Tailwind v4 and Framer Motion, deployed to Vercel with continuous delivery — maintained in production through the full competition cycle.",
+    ],
+    details: [
+      "Participant-facing frontend with interactive animation, fully responsive",
+      "Admin dashboard with integrated registration and payment flows",
+      "Continuous delivery to Vercel via GitHub through the live competition cycle",
     ],
     stack: ["Next.js 15", "Tailwind CSS v4", "Framer Motion", "Vercel"],
     // [NEEDS REVIEW] Add the live URL if the site is still up.
@@ -51,6 +62,12 @@ export const projects: Project[] = [
     description: [
       "A solar-powered LED lighting system that measures itself. An INA219 current/voltage sensor and an LDR track panel output under changing light, while an Arduino crunches the numbers and reports live efficiency on a 0.96\" OLED.",
       "Built as the final project for Embedded Systems — photovoltaic panel, microcontroller, and sensor array integrated into one self-reporting unit.",
+    ],
+    details: [
+      "INA219 current/voltage sensing with an LDR light reference",
+      "Arduino firmware computing live efficiency under changing light",
+      "Photovoltaic panel, LED load, and sensor array integrated into one unit",
+      "Live metrics on a 0.96″ I2C OLED readout",
     ],
     stack: ["Arduino", "INA219", "C/C++", "OLED (I2C)"],
   },

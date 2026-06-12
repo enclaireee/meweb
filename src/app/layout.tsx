@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Newsreader, Hanken_Grotesk } from "next/font/google";
+import { ViewTransitions } from "next-view-transitions";
 import SmoothScroll from "@/components/providers/SmoothScroll";
 import { ThemeProvider } from "@/components/providers/Theme";
 import { Cursor } from "@/components/ui/Cursor";
+import { NavRail } from "@/components/ui/NavRail";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import "./globals.css";
 
@@ -30,16 +32,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${newsreader.variable} ${hanken.variable} antialiased`}
-      >
-        <ThemeProvider>
-          <SmoothScroll>{children}</SmoothScroll>
-          <ThemeToggle />
-          <Cursor />
-        </ThemeProvider>
-      </body>
-    </html>
+    <ViewTransitions>
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={`${newsreader.variable} ${hanken.variable} antialiased`}
+        >
+          <ThemeProvider>
+            <SmoothScroll>{children}</SmoothScroll>
+            <NavRail />
+            <ThemeToggle />
+            <Cursor />
+          </ThemeProvider>
+        </body>
+      </html>
+    </ViewTransitions>
   );
 }

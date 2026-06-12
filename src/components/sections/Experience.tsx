@@ -1,12 +1,12 @@
-import { experience, education, awards } from "@/content";
-import { Stagger, StaggerItem, Reveal } from "@/components/motion/Reveal";
+import { experience } from "@/content";
+import { Stagger, StaggerItem } from "@/components/motion/Reveal";
 
 export function Experience() {
   return (
-    <section id="experience" className="border-t border-border px-gutter py-section">
+    <section className="border-t border-border px-gutter py-section">
       <div className="grid grid-cols-12 gap-x-4">
         <div className="col-span-12 lg:col-span-3">
-          <p className="annot text-muted">05 — the record</p>
+          <p className="annot text-muted">experience</p>
           <h2 className="font-display text-title mt-4">The record.</h2>
         </div>
 
@@ -35,36 +35,6 @@ export function Experience() {
             </StaggerItem>
           ))}
         </Stagger>
-      </div>
-
-      <div className="mt-24 grid grid-cols-12 gap-x-4 gap-y-12">
-        <Reveal className="col-span-12 sm:col-span-6 lg:col-span-4 lg:col-start-4">
-          <p className="annot text-muted">Training</p>
-          <ul className="mt-4 space-y-5 border-t border-border pt-5">
-            {education.map((ed) => (
-              <li key={ed.school}>
-                <p className="font-display text-lead">{ed.school}</p>
-                <p className="annot mt-1 text-muted">
-                  {ed.program} · {ed.start} — {ed.end ?? "now"}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </Reveal>
-
-        <Reveal delay={0.1} className="col-span-12 sm:col-span-6 lg:col-span-4 lg:col-start-9">
-          <p className="annot text-muted">Recognition</p>
-          <ul className="mt-4 space-y-5 border-t border-border pt-5">
-            {awards.map((a) => (
-              <li key={a.title}>
-                <p className="font-display text-lead">{a.title}</p>
-                <p className="annot mt-1 text-muted">
-                  {a.issuer} · {a.year}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </Reveal>
       </div>
     </section>
   );
