@@ -47,21 +47,21 @@ export function Work() {
   );
 
   return (
-    <section id="work" ref={sectionRef} className="border-t border-line lg:h-svh lg:overflow-hidden">
+    <section id="work" ref={sectionRef} className="border-t border-border lg:h-svh lg:overflow-hidden">
       <div
         ref={trackRef}
         className="flex flex-col lg:h-full lg:w-max lg:flex-row lg:items-stretch"
       >
         {/* section title panel */}
-        <div className="flex flex-col justify-between px-6 py-16 sm:px-10 lg:h-full lg:w-[38vw] lg:shrink-0 lg:py-10">
-          <p className="annot text-ink-soft">03 — selected work</p>
+        <div className="flex flex-col justify-between px-gutter py-16 lg:h-full lg:w-[38vw] lg:shrink-0 lg:py-10">
+          <p className="annot text-muted">03 — selected work</p>
           <div>
-            <h2 className="font-display-wonk text-display">
+            <h2 className="font-display text-title">
               Three builds,
               <br />
               <span className="italic">three stacks.</span>
             </h2>
-            <p className="annot mt-6 hidden text-ink-soft lg:block">scroll → the shelf slides</p>
+            <p className="annot mt-6 hidden text-muted lg:block">scroll → the shelf slides</p>
           </div>
         </div>
 
@@ -76,15 +76,15 @@ export function Work() {
 function WorkPanel({ project, index }: { project: Project; index: number }) {
   const num = String(index + 1).padStart(2, "0");
   return (
-    <article className="grid grid-cols-12 gap-x-4 border-t border-line px-6 py-16 sm:px-10 lg:h-full lg:w-[78vw] lg:shrink-0 lg:border-l lg:border-t-0 lg:content-center lg:py-10">
+    <article className="grid grid-cols-12 gap-x-4 border-t border-border px-gutter py-16 lg:h-full lg:w-[78vw] lg:shrink-0 lg:border-l lg:border-t-0 lg:content-center lg:py-10">
       <div className="col-span-12 flex items-baseline justify-between lg:col-span-12">
-        <span className="font-display-wonk text-display text-ink-soft/40">{num}</span>
-        <div className="annot text-right text-ink-soft">
+        <span className="font-display text-title text-muted/40">{num}</span>
+        <div className="annot text-right text-muted">
           <p>{project.domain}</p>
           <p>
             {project.timeframe}
             {project.status === "in-progress" && (
-              <span className="ml-2 text-signal">● in progress</span>
+              <span className="ml-2 text-accent">● in progress</span>
             )}
           </p>
         </div>
@@ -94,19 +94,19 @@ function WorkPanel({ project, index }: { project: Project; index: number }) {
         <ImageReveal from="left" className="aspect-[4/3]">
           <Placeholder id={placeholderByProject[project.slug]} />
         </ImageReveal>
-        <p className="annot mt-2 text-ink-soft">
+        <p className="annot mt-2 text-muted">
           Fig. {num} — {project.cvName}
         </p>
       </div>
 
       <div className="col-span-12 mt-8 flex flex-col justify-center lg:col-span-5 lg:col-start-8 lg:mt-10">
         <Reveal>
-          <h3 className="font-display text-title">{project.title}</h3>
-          <p className="mt-3 font-display text-xl italic text-ink-soft">{project.tagline}</p>
-          <p className="mt-5 max-w-prose leading-relaxed text-ink">{project.description[0]}</p>
-          <ul className="annot mt-6 flex flex-wrap gap-x-4 gap-y-2 text-ink-soft">
+          <h3 className="font-display text-heading">{project.title}</h3>
+          <p className="mt-3 font-display text-xl italic text-muted">{project.tagline}</p>
+          <p className="mt-5 max-w-prose leading-relaxed text-foreground">{project.description[0]}</p>
+          <ul className="annot mt-6 flex flex-wrap gap-x-4 gap-y-2 text-muted">
             {project.stack.map((s) => (
-              <li key={s} className="border border-line px-2 py-1">
+              <li key={s} className="border border-border px-2 py-1">
                 {s}
               </li>
             ))}

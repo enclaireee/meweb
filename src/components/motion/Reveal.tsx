@@ -23,7 +23,7 @@ export function Reveal({ children, delay = 0, y = 28, className, once = true }: 
       initial={reduced ? { opacity: 0 } : { opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once, margin: "-12% 0px" }}
-      transition={{ duration: DUR.base, delay, ease: EASE.outExpo }}
+      transition={{ duration: DUR.gesture, delay, ease: EASE.outExpo }}
     >
       {children}
     </motion.div>
@@ -62,7 +62,7 @@ export function StaggerItem({ children, className }: { children: ReactNode; clas
         show: {
           opacity: 1,
           y: 0,
-          transition: { duration: DUR.base, ease: EASE.outExpo },
+          transition: { duration: DUR.gesture, ease: EASE.outExpo },
         },
       }}
     >

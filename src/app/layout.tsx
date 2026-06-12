@@ -6,13 +6,13 @@ import "./globals.css";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
-  variable: "--font-fraunces",
+  variable: "--font-display-face",
   axes: ["opsz", "WONK"],
 });
 
 const archivo = Archivo({
   subsets: ["latin"],
-  variable: "--font-archivo",
+  variable: "--font-body-face",
 });
 
 const plexMono = IBM_Plex_Mono({

@@ -17,9 +17,9 @@ const domains = [
 
 export function Hero() {
   return (
-    <section id="top" className="bg-grid-paper relative flex min-h-svh flex-col">
+    <section id="top" className="relative flex min-h-svh flex-col">
       {/* annotation header */}
-      <header className="annot flex items-start justify-between gap-4 px-6 pt-6 text-ink-soft sm:px-10">
+      <header className="annot flex items-start justify-between gap-4 px-gutter pt-6 text-muted">
         <p>
           {profile.name}
           <br />
@@ -32,13 +32,13 @@ export function Hero() {
         </p>
       </header>
 
-      <div className="grid flex-1 grid-cols-12 items-end gap-x-4 px-6 pb-10 pt-16 sm:px-10 lg:pt-8">
+      <div className="grid flex-1 grid-cols-12 items-end gap-x-4 px-gutter pb-10 pt-16 lg:pt-8">
         <div className="col-span-12 lg:col-span-8">
           <SplitLines
             as="h1"
             immediate
             delay={0.25}
-            className="font-display-wonk text-hero tracking-tight"
+            className="font-display text-hero tracking-tight"
           >
             Fatih
             <br />
@@ -46,7 +46,7 @@ export function Hero() {
           </SplitLines>
 
           <Reveal delay={0.7} className="mt-8 max-w-xl">
-            <p className="text-title font-display text-ink">{profile.heroLine}</p>
+            <p className="text-heading font-display text-foreground">{profile.heroLine}</p>
           </Reveal>
         </div>
 
@@ -55,16 +55,16 @@ export function Hero() {
           <ImageReveal from="bottom" delay={0.5} className="aspect-[4/5]">
             <Placeholder id="hero-portrait" />
           </ImageReveal>
-          <p className="annot mt-2 text-ink-soft">Fig. 01 — portrait</p>
+          <p className="annot mt-2 text-muted">Fig. 01 — portrait</p>
         </div>
       </div>
 
       {/* domain marquee along the fold */}
-      <div className="border-y border-line py-3">
+      <div className="border-y border-border py-3">
         <Marquee duration={26}>
           {domains.map((d) => (
-            <span key={d} className="annot mx-6 flex items-center gap-6 text-ink">
-              {d} <span className="text-signal">●</span>
+            <span key={d} className="annot mx-6 flex items-center gap-6 text-foreground">
+              {d} <span className="text-accent">●</span>
             </span>
           ))}
         </Marquee>

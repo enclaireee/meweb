@@ -42,18 +42,18 @@ export function About() {
 
   return (
     <section id="about">
-      <div ref={pinRef} className="flex min-h-svh flex-col justify-center px-6 sm:px-10">
-        <p className="annot mb-8 text-ink-soft">02 — a working theory</p>
-        <p ref={textRef} className="font-display text-display max-w-5xl">
+      <div ref={pinRef} className="flex min-h-svh flex-col justify-center px-gutter">
+        <p className="annot mb-8 text-muted">02 — a working theory</p>
+        <p ref={textRef} className="font-display text-title max-w-5xl">
           {profile.statement}
         </p>
       </div>
 
-      <div className="grid grid-cols-12 gap-x-4 gap-y-12 border-t border-line px-6 py-24 sm:px-10 lg:py-32">
+      <div className="grid grid-cols-12 gap-x-4 gap-y-12 border-t border-border px-gutter py-section">
         <div className="col-span-12 space-y-6 lg:col-span-6">
           {profile.about.map((para, i) => (
             <Reveal key={i} delay={i * 0.08}>
-              <p className="max-w-prose text-lg leading-relaxed text-ink">{para}</p>
+              <p className="max-w-prose text-lg leading-relaxed text-foreground">{para}</p>
             </Reveal>
           ))}
         </div>
@@ -62,7 +62,7 @@ export function About() {
             <ImageReveal from="right" className="aspect-[4/3]">
               <Placeholder id="about-candid" />
             </ImageReveal>
-            <p className="annot mt-2 text-ink-soft">Fig. 02 — field conditions</p>
+            <p className="annot mt-2 text-muted">Fig. 02 — field conditions</p>
           </Parallax>
         </div>
       </div>

@@ -45,19 +45,19 @@ export function Intro() {
     <AnimatePresence>
       {!skip && !done && (
         <motion.div
-          className="fixed inset-0 z-40 flex items-end bg-ink"
+          className="fixed inset-0 z-40 flex items-end bg-foreground"
           exit={{ y: "-100%" }}
-          transition={{ duration: DUR.slow, ease: EASE.outExpo }}
+          transition={{ duration: DUR.signature, ease: EASE.outExpo }}
           aria-hidden="true"
         >
           <div className="flex w-full items-end justify-between p-6 sm:p-10">
-            <div className="annot space-y-1 text-paper/60">
+            <div className="annot space-y-1 text-background/60">
               <p>fatih zamzami — portfolio 2026</p>
-              <p>calibrating type / grid / signal</p>
+              <p>calibrating type · grid · signal</p>
             </div>
             <span
               ref={counterRef}
-              className="font-display-wonk text-paper"
+              className="font-display text-background"
               style={{ fontSize: "clamp(4rem, 14vw, 11rem)", lineHeight: 0.85 }}
             >
               000

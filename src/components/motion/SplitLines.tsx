@@ -38,7 +38,7 @@ export function SplitLines({
           { autoAlpha: 0 },
           {
             autoAlpha: 1,
-            duration: DUR.base,
+            duration: DUR.gesture,
             delay,
             scrollTrigger: immediate ? undefined : { trigger: el, start: "top 85%" },
           },
@@ -53,7 +53,7 @@ export function SplitLines({
         onSplit: (self) =>
           gsap.from(self.lines, {
             yPercent: 110,
-            duration: DUR.slow,
+            duration: DUR.signature,
             ease: GSAP_EASE.outExpo,
             stagger: 0.09,
             delay,

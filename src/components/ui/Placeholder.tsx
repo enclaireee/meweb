@@ -19,21 +19,21 @@ export function Placeholder({ id, className }: PlaceholderProps) {
     <div
       role="img"
       aria-label={spec ? `Placeholder image: ${spec.purpose}` : `Placeholder image: ${id}`}
-      className={`relative h-full w-full overflow-hidden border border-line bg-paper-deep ${className ?? ""}`}
+      className={`relative h-full w-full overflow-hidden border border-border bg-surface ${className ?? ""}`}
     >
       {/* construction diagonals */}
       <svg className="absolute inset-0 h-full w-full" aria-hidden="true" preserveAspectRatio="none">
-        <line x1="0" y1="0" x2="100%" y2="100%" stroke="var(--color-line)" strokeWidth="1" />
-        <line x1="100%" y1="0" x2="0" y2="100%" stroke="var(--color-line)" strokeWidth="1" />
+        <line x1="0" y1="0" x2="100%" y2="100%" stroke="var(--color-border)" strokeWidth="1" />
+        <line x1="100%" y1="0" x2="0" y2="100%" stroke="var(--color-border)" strokeWidth="1" />
       </svg>
 
       {/* corner ticks */}
-      <span aria-hidden="true" className="absolute left-2 top-2 h-3 w-3 border-l border-t border-ink-soft" />
-      <span aria-hidden="true" className="absolute right-2 top-2 h-3 w-3 border-r border-t border-ink-soft" />
-      <span aria-hidden="true" className="absolute bottom-2 left-2 h-3 w-3 border-b border-l border-ink-soft" />
-      <span aria-hidden="true" className="absolute bottom-2 right-2 h-3 w-3 border-b border-r border-ink-soft" />
+      <span aria-hidden="true" className="absolute left-2 top-2 h-3 w-3 border-l border-t border-muted" />
+      <span aria-hidden="true" className="absolute right-2 top-2 h-3 w-3 border-r border-t border-muted" />
+      <span aria-hidden="true" className="absolute bottom-2 left-2 h-3 w-3 border-b border-l border-muted" />
+      <span aria-hidden="true" className="absolute bottom-2 right-2 h-3 w-3 border-b border-r border-muted" />
 
-      <span className="annot absolute bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap bg-paper px-2 py-1 text-ink-soft">
+      <span className="annot absolute bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap bg-background px-2 py-1 text-muted">
         {label}
       </span>
     </div>

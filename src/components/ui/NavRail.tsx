@@ -39,7 +39,7 @@ export function NavRail() {
   return (
     <nav
       aria-label="Sections"
-      className="annot fixed inset-x-0 bottom-0 z-30 border-t border-line bg-paper/90 backdrop-blur-sm lg:inset-x-auto lg:left-0 lg:top-1/2 lg:w-auto lg:-translate-y-1/2 lg:border-0 lg:bg-transparent lg:backdrop-blur-none"
+      className="annot fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/90 backdrop-blur-sm lg:inset-x-auto lg:left-0 lg:top-1/2 lg:w-auto lg:-translate-y-1/2 lg:border-0 lg:bg-transparent lg:backdrop-blur-none"
     >
       <ul className="flex justify-between px-4 py-3 lg:flex-col lg:gap-3 lg:px-3 lg:py-0">
         {sections.map((s) => {
@@ -50,7 +50,7 @@ export function NavRail() {
                 href={`#${s.id}`}
                 aria-current={isActive ? "true" : undefined}
                 className={`group flex items-center gap-2 transition-colors duration-300 ${
-                  isActive ? "text-signal" : "text-ink-soft hover:text-ink"
+                  isActive ? "text-accent" : "text-muted hover:text-foreground"
                 }`}
               >
                 <span>{s.index}</span>

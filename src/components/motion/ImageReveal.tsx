@@ -35,7 +35,7 @@ export function ImageReveal({ children, className, from = "bottom", delay = 0 }:
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         gsap.from(el, {
           autoAlpha: 0,
-          duration: DUR.base,
+          duration: DUR.gesture,
           scrollTrigger: { trigger: el, start: "top 85%", once: true },
         });
         return;
@@ -48,10 +48,10 @@ export function ImageReveal({ children, className, from = "bottom", delay = 0 }:
       tl.fromTo(
         el,
         { clipPath: clips[from] },
-        { clipPath: "inset(0% 0 0 0)", duration: DUR.drama, ease: GSAP_EASE.outExpo },
+        { clipPath: "inset(0% 0 0 0)", duration: DUR.signature, ease: GSAP_EASE.outExpo },
       );
       if (inner) {
-        tl.from(inner, { scale: 1.18, duration: DUR.drama, ease: GSAP_EASE.outExpo }, 0);
+        tl.from(inner, { scale: 1.12, duration: DUR.signature, ease: GSAP_EASE.outExpo }, 0);
       }
     },
     { scope: ref, dependencies: [from, delay] },

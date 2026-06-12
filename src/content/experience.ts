@@ -4,6 +4,7 @@ import type { ExperienceEntry, EducationEntry, Award } from "./types";
  * Roles, orgs, and dates come straight from the CV. Summaries and
  * highlights are rewritten as original site copy.
  */
+
 export const experience: ExperienceEntry[] = [
   {
     slug: "ime-rnd",

@@ -1,43 +1,67 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   Design tokens — "Schematic Editorial"
-   Warm paper, near-black ink, one signal-orange accent. Editorial serif
-   display type against monospace measurement annotations.
+   Semantic palette — designed per theme, never inverted.
+   Light: warm paper. Dark arrives in the theming phase as .dark overrides.
+--------------------------------------------------------------------------- */
+:root {
+  --background: #f4f1ea;
+  --surface: #ebe7dc;
+  --foreground: #1c1a15;
+  --muted: #6c6557;
+  --border: rgb(28 26 21 / 0.14);
+  --border-faint: rgb(28 26 21 / 0.06);
+  --accent: #d8430c;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-border-faint: var(--border-faint);
+  --color-accent: var(--accent);
+}
+
+/* ---------------------------------------------------------------------------
+   Static tokens — type, rhythm, motion
 --------------------------------------------------------------------------- */
 @theme {
-  /* Palette — deliberately small */
-  --color-paper: #f2eee5;
-  --color-paper-deep: #e7e2d4;
-  --color-ink: #1a1813;
-  --color-ink-soft: #5f5a4c;
-  --color-signal: #e8490f;
-  --color-line: rgb(26 24 19 / 0.16);
-  --color-line-faint: rgb(26 24 19 / 0.07);
+  /* Type (families swapped in the typography phase) */
+  --font-display: var(--font-display-face), "Iowan Old Style", Georgia, serif;
+  --font-body: var(--font-body-face), system-ui, sans-serif;
 
-  /* Type */
-  --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
-  --font-body: var(--font-archivo), system-ui, sans-serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, "SF Mono", monospace;
+  /* Type scale — five steps, nothing else */
+  --text-hero: clamp(2.5rem, 8vw, 7.5rem);
+  --text-hero--line-height: 0.96;
+  --text-hero--letter-spacing: -0.02em;
+  --text-title: clamp(1.875rem, 4.5vw, 4rem);
+  --text-title--line-height: 1.05;
+  --text-title--letter-spacing: -0.015em;
+  --text-heading: clamp(1.25rem, 2vw, 1.75rem);
+  --text-heading--line-height: 1.2;
+  --text-lead: clamp(1.0625rem, 1.4vw, 1.3125rem);
+  --text-lead--line-height: 1.55;
+  --text-caption: 0.6875rem;
+  --text-caption--line-height: 1.5;
 
-  /* Fluid type scale */
-  --text-hero: clamp(2.75rem, 9.5vw, 9rem);
-  --text-hero--line-height: 0.95;
-  --text-display: clamp(2rem, 5.5vw, 4.75rem);
-  --text-display--line-height: 1.02;
-  --text-title: clamp(1.375rem, 2.6vw, 2.25rem);
-  --text-title--line-height: 1.15;
-  --text-annot: 0.6875rem;
-  --text-annot--line-height: 1.5;
+  /* Spacing rhythm — one gutter, one section beat */
+  --spacing-gutter: clamp(1.5rem, 5vw, 5rem);
+  --spacing-section: clamp(6rem, 14vh, 10rem);
 
-  /* Motion language — every animation uses one of these */
+  /* Surfaces are flat; depth comes from hairlines, not shadows */
+  --radius: 0px;
+
+  /* Motion language — UI is quick and interruptible; long durations are
+     reserved for the few signature moments */
+  --ease-out-soft: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-inout-soft: cubic-bezier(0.65, 0, 0.35, 1);
-  --ease-snap: cubic-bezier(0.83, 0, 0.17, 1);
-  --duration-fast: 300ms;
-  --duration-base: 600ms;
-  --duration-slow: 1000ms;
-  --duration-drama: 1400ms;
+  --duration-fast: 150ms;
+  --duration-base: 300ms;
+  --duration-gesture: 700ms;
+  --duration-signature: 1100ms;
 }
 
 /* ---------------------------------------------------------------------------
@@ -48,44 +72,34 @@ html {
 }
 
 body {
-  background: var(--color-paper);
-  color: var(--color-ink);
+  background: var(--color-background);
+  color: var(--color-foreground);
   font-family: var(--font-body);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: var(--color-signal);
-  color: var(--color-paper);
+  background: var(--color-accent);
+  color: var(--color-background);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
 }
 
 /* ---------------------------------------------------------------------------
-   Utilities — shared visual patterns of the schematic language
+   Utilities — the few shared voices
 --------------------------------------------------------------------------- */
 
-/* Monospace measurement annotation, e.g. "FIG. 02 — EEG / 512Hz" */
+/* Annotation voice: small, uppercase, tracked. */
 @utility annot {
-  font-family: var(--font-mono);
-  font-size: var(--text-annot);
-  line-height: var(--text-annot--line-height);
-  letter-spacing: 0.08em;
+  font-size: var(--text-caption);
+  line-height: var(--text-caption--line-height);
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-}
-
-/* Engineering-paper grid backdrop */
-@utility bg-grid-paper {
-  background-image: linear-gradient(var(--color-line-faint) 1px, transparent 1px),
-    linear-gradient(90deg, var(--color-line-faint) 1px, transparent 1px);
-  background-size: 3.5rem 3.5rem;
-}
-
-/* Display face with Fraunces' wonky optical-size forms switched on */
-@utility font-display-wonk {
-  font-family: var(--font-display);
-  font-variation-settings:
-    "opsz" 144,
-    "WONK" 1;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Hide scrollbars on intentional horizontal tracks */
@@ -96,7 +110,7 @@ body {
   }
 }
 
-/* Marquee track — duration set inline, reversed via direction */
+/* Marquee track — duration set inline */
 @utility marquee-track {
   animation: marquee-x var(--marquee-duration, 30s) linear infinite;
   @media (prefers-reduced-motion: reduce) {
@@ -111,10 +125,4 @@ body {
   to {
     transform: translateX(-50%);
   }
-}
-
-/* Keyboard focus that matches the art direction */
-:focus-visible {
-  outline: 2px solid var(--color-signal);
-  outline-offset: 3px;
 }
