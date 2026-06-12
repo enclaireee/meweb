@@ -14,6 +14,8 @@ export interface Profile {
   heroLine: string;
   /** Short kicker shown near the hero line. */
   heroKicker: string;
+  /** One pinned, scroll-scrubbed manifesto line. Original copy. */
+  statement: string;
   /** The about narrative, written for the site. Facts sourced from the CV. */
   about: string[];
   socials: SocialLink[];

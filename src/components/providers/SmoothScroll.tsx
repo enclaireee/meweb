@@ -16,6 +16,7 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
     const lenis = new Lenis({
       duration: 1.1,
       easing: (t) => 1 - Math.pow(2, -10 * t), // expo-out, same family as --ease-out-expo
+      anchors: true, // NavRail uses plain #anchors; Lenis takes them over
     });
 
     lenis.on("scroll", ScrollTrigger.update);

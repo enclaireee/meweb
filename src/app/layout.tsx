@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Archivo, IBM_Plex_Mono } from "next/font/google";
+import SmoothScroll from "@/components/providers/SmoothScroll";
+import { Cursor } from "@/components/ui/Cursor";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -35,7 +37,8 @@ export default function RootLayout({
       <body
         className={`${fraunces.variable} ${archivo.variable} ${plexMono.variable} antialiased`}
       >
-        {children}
+        <SmoothScroll>{children}</SmoothScroll>
+        <Cursor />
       </body>
     </html>
   );

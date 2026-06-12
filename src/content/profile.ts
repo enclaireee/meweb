@@ -16,6 +16,10 @@ export const profile: Profile = {
   heroLine: "I build systems that listen — to brainwaves, to sunlight, to scroll position.",
   heroKicker: "Electrical engineering, Universitas Indonesia",
 
+  // [NEEDS REVIEW] Original manifesto line for the pinned about section.
+  statement:
+    "Engineering is the craft of feedback — sense the world, decide, respond. I practice it everywhere: in circuits, in software, in teams.",
+
   about: [
     // Original narrative. Facts: EE undergrad at UI, control systems +
     // programming interest, hardware + software experience, leadership roles.
