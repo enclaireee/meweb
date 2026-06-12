@@ -1,8 +1,11 @@
 @import "tailwindcss";
 
+/* Class-based dark mode (next-themes sets .dark on <html>) */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ---------------------------------------------------------------------------
    Semantic palette — designed per theme, never inverted.
-   Light: warm paper. Dark arrives in the theming phase as .dark overrides.
+   Light: warm paper, daylight. Dark: lamp-lit studio, warm off-black.
 --------------------------------------------------------------------------- */
 :root {
   --background: #f4f1ea;
@@ -12,6 +15,18 @@
   --border: rgb(28 26 21 / 0.14);
   --border-faint: rgb(28 26 21 / 0.06);
   --accent: #d8430c;
+  color-scheme: light;
+}
+
+.dark {
+  --background: #16130f;
+  --surface: #211d17;
+  --foreground: #ece8dd;
+  --muted: #a39c8a;
+  --border: rgb(236 232 221 / 0.16);
+  --border-faint: rgb(236 232 221 / 0.07);
+  --accent: #ff5c22;
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -128,4 +143,12 @@ body {
   to {
     transform: translateX(-50%);
   }
+}
+
+/* Theme switch: a quick whole-page crossfade via the View Transitions API.
+   The toggle only calls startViewTransition when motion is allowed. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--duration-base);
+  animation-timing-function: var(--ease-inout-soft);
 }

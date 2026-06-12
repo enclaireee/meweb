@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Newsreader, Hanken_Grotesk } from "next/font/google";
 import SmoothScroll from "@/components/providers/SmoothScroll";
+import { ThemeProvider } from "@/components/providers/Theme";
 import { Cursor } from "@/components/ui/Cursor";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import "./globals.css";
 
 const newsreader = Newsreader({
@@ -28,12 +30,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${newsreader.variable} ${hanken.variable} antialiased`}
       >
-        <SmoothScroll>{children}</SmoothScroll>
-        <Cursor />
+        <ThemeProvider>
+          <SmoothScroll>{children}</SmoothScroll>
+          <ThemeToggle />
+          <Cursor />
+        </ThemeProvider>
       </body>
     </html>
   );
