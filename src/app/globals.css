@@ -8,24 +8,26 @@
    Light: warm paper, daylight. Dark: lamp-lit studio, warm off-black.
 --------------------------------------------------------------------------- */
 :root {
-  --background: #f4f1ea;
-  --surface: #ebe7dc;
-  --foreground: #1c1a15;
-  --muted: #6c6557;
-  --border: rgb(28 26 21 / 0.14);
-  --border-faint: rgb(28 26 21 / 0.06);
-  --accent: #d8430c;
+  --background: #faf9f6;
+  --surface: #f0ede6;
+  --foreground: #1a1815;
+  --muted: #8a8378;
+  --border: rgb(26 24 21 / 0.12);
+  --border-faint: rgb(26 24 21 / 0.05);
+  --accent: #c4450a;
+  --background-translucent: rgb(250 249 246 / 0.55);
   color-scheme: light;
 }
 
 .dark {
-  --background: #16130f;
-  --surface: #211d17;
+  --background: #141210;
+  --surface: #1e1b16;
   --foreground: #ece8dd;
-  --muted: #a39c8a;
-  --border: rgb(236 232 221 / 0.16);
-  --border-faint: rgb(236 232 221 / 0.07);
-  --accent: #ff5c22;
+  --muted: #9e978a;
+  --border: rgb(236 232 221 / 0.14);
+  --border-faint: rgb(236 232 221 / 0.06);
+  --accent: #ff6130;
+  --background-translucent: rgb(20 18 16 / 0.55);
   color-scheme: dark;
 }
 
@@ -44,14 +46,14 @@
 --------------------------------------------------------------------------- */
 @theme {
   /* Type (families swapped in the typography phase) */
-  --font-display: var(--font-display-face), "Iowan Old Style", Georgia, serif;
-  --font-body: var(--font-body-face), system-ui, sans-serif;
+  --font-display: var(--font-display-face), Georgia, "Times New Roman", serif;
+  --font-body: var(--font-body-face), "Helvetica Neue", Arial, sans-serif;
 
   /* Type scale — five steps, nothing else */
   --text-hero: clamp(2.5rem, 8vw, 7.5rem);
   --text-hero--line-height: 0.96;
-  --text-hero--letter-spacing: -0.02em;
-  --text-hero--font-weight: 500;
+  --text-hero--letter-spacing: -0.025em;
+  --text-hero--font-weight: 700;
   --text-title: clamp(1.875rem, 4.5vw, 4rem);
   --text-title--line-height: 1.05;
   --text-title--letter-spacing: -0.015em;
@@ -115,9 +117,58 @@ body {
 @utility annot {
   font-size: var(--text-caption);
   line-height: var(--text-caption--line-height);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
+  font-weight: 500;
   font-variant-numeric: tabular-nums;
+}
+
+/* Engineering graph-paper backdrop (theme-aware) — Contact's signature sheet */
+@utility bg-grid-sheet {
+  background-image: linear-gradient(var(--color-border-faint) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-border-faint) 1px, transparent 1px);
+  background-size: 3rem 3rem;
+}
+
+/* Progressive edge blur — content softens gradually under the nav, no
+   frosted slab. Two masked backdrop-filter layers fake the gradient blur:
+   a wide gentle pass and a tighter stronger pass nearer the edge. */
+@utility blur-edge-b {
+  pointer-events: none;
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+  &::before {
+    backdrop-filter: blur(3px);
+    mask-image: linear-gradient(to top, black 45%, transparent 100%);
+  }
+  &::after {
+    backdrop-filter: blur(9px);
+    mask-image: linear-gradient(to top, black 0%, transparent 55%);
+    background: linear-gradient(to top, var(--background-translucent) 0%, transparent 70%);
+  }
+}
+
+@utility blur-edge-l {
+  pointer-events: none;
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+  &::before {
+    backdrop-filter: blur(3px);
+    mask-image: linear-gradient(to right, black 40%, transparent 100%);
+  }
+  &::after {
+    backdrop-filter: blur(8px);
+    mask-image: linear-gradient(to right, black 0%, transparent 50%);
+    background: linear-gradient(to right, var(--background-translucent) 0%, transparent 65%);
+  }
 }
 
 /* Hide scrollbars on intentional horizontal tracks */

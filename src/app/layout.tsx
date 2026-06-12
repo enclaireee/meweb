@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Newsreader, Hanken_Grotesk } from "next/font/google";
+import { Playfair_Display, Inter } from "next/font/google";
 import { ViewTransitions } from "next-view-transitions";
 import SmoothScroll from "@/components/providers/SmoothScroll";
 import { ThemeProvider } from "@/components/providers/Theme";
@@ -8,16 +8,17 @@ import { NavRail } from "@/components/ui/NavRail";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import "./globals.css";
 
-const newsreader = Newsreader({
+const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-display-face",
   style: ["normal", "italic"],
-  axes: ["opsz"],
+  weight: ["400", "500", "600", "700"],
 });
 
-const hanken = Hanken_Grotesk({
+const inter = Inter({
   subsets: ["latin"],
   variable: "--font-body-face",
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -35,7 +36,7 @@ export default function RootLayout({
     <ViewTransitions>
       <html lang="en" suppressHydrationWarning>
         <body
-          className={`${newsreader.variable} ${hanken.variable} antialiased`}
+          className={`${playfair.variable} ${inter.variable} antialiased`}
         >
           <ThemeProvider>
             <SmoothScroll>{children}</SmoothScroll>

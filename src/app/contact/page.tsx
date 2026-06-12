@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { profile } from "@/content";
 import { SplitLines } from "@/components/motion/SplitLines";
-import { Magnetic } from "@/components/motion/Magnetic";
 import { Reveal } from "@/components/motion/Reveal";
-import { ImageReveal } from "@/components/motion/ImageReveal";
-import { Placeholder } from "@/components/ui/Placeholder";
+import { ContactForm } from "@/components/contact/ContactForm";
+import { LocalTime } from "@/components/contact/LocalTime";
+import { PanelIn } from "@/components/contact/PanelIn";
 import { Footer } from "@/components/ui/Footer";
 
 export const metadata: Metadata = {
@@ -12,41 +12,61 @@ export const metadata: Metadata = {
   description: "Get in touch — email, GitHub, LinkedIn.",
 };
 
+const [emailUser, emailDomain] = ["muhfatihzamzami", "@gmail.com"];
+
+/**
+ * "Transmission sheet" — this page alone sits on engineering graph paper.
+ * The email address itself is the headline; the form is the instrument
+ * panel beside it.
+ */
 export default function ContactPage() {
   return (
     <>
-      <main>
-        <section className="px-gutter pt-section">
-          <p className="annot text-muted">transmission</p>
-          <SplitLines as="h1" immediate className="font-display text-hero mt-6">
-            Say
-            <br />
-            <span className="italic">hello.</span>
-          </SplitLines>
+      <main className="bg-grid-sheet">
+        <section className="grid min-h-svh grid-cols-12 gap-x-4 px-gutter pb-28 pt-section lg:pb-section">
+          {/* left: the giant address */}
+          <div className="col-span-12 lg:col-span-7 lg:pr-8">
+            <p className="annot text-muted">transmission — contact</p>
 
-          <Reveal delay={0.3} className="mt-10 max-w-xl">
-            <p className="text-lead">{profile.availability}</p>
-          </Reveal>
+            <a
+              href={`mailto:${profile.email}`}
+              data-cursor="write"
+              className="group mt-8 block"
+            >
+              <SplitLines as="span" immediate delay={0.15} className="block font-display text-title">
+                <span className="block transition-colors duration-300 group-hover:text-accent">
+                  {emailUser}
+                </span>
+                <span className="block italic text-muted transition-colors duration-300 group-hover:text-accent">
+                  {emailDomain}
+                </span>
+              </SplitLines>
+              <span className="annot mt-4 inline-block text-muted transition-all duration-300 ease-(--ease-out-expo) group-hover:translate-x-1.5 group-hover:text-foreground">
+                open a draft →
+              </span>
+            </a>
 
-          <div className="mt-14 grid grid-cols-12 gap-x-4 gap-y-12 pb-section">
-            <div className="col-span-12 lg:col-span-6">
-              <p className="annot text-muted">email</p>
-              <div className="mt-4">
-                <Magnetic>
-                  <a
-                    href={`mailto:${profile.email}`}
-                    data-cursor="write"
-                    className="inline-block border border-foreground bg-foreground px-8 py-4 font-display text-lead text-background transition-colors duration-300 hover:border-accent hover:bg-accent"
-                  >
-                    {profile.email}
-                  </a>
-                </Magnetic>
+            <Reveal delay={0.5} className="mt-16 max-w-md">
+              <p className="text-lead">{profile.availability}</p>
+            </Reveal>
+
+            <Reveal delay={0.6} className="mt-10">
+              <div className="annot flex flex-wrap items-center gap-x-8 gap-y-3 text-muted">
+                <span className="flex items-center gap-2">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="absolute h-full w-full animate-ping rounded-full bg-accent opacity-60 motion-reduce:animate-none" />
+                    <span className="h-full w-full rounded-full bg-accent" />
+                  </span>
+                  open to work
+                </span>
+                <span>
+                  Depok, ID — <LocalTime />
+                </span>
               </div>
-            </div>
+            </Reveal>
 
-            <div className="col-span-12 sm:col-span-6 lg:col-span-3 lg:col-start-7">
-              <p className="annot text-muted">elsewhere</p>
-              <ul className="mt-4 space-y-3 border-t border-border pt-4">
+            <Reveal delay={0.7} className="mt-12">
+              <ul className="flex flex-wrap gap-x-10 gap-y-3">
                 {profile.socials.map((s) => (
                   <li key={s.label}>
                     <a
@@ -54,29 +74,27 @@ export default function ContactPage() {
                       target="_blank"
                       rel="noopener noreferrer"
                       data-cursor={s.label.toLowerCase()}
-                      className="group flex items-baseline justify-between gap-4 transition-colors duration-300 hover:text-accent"
+                      className="group/s annot inline-flex items-baseline gap-2 text-muted transition-colors duration-300 hover:text-foreground"
                     >
-                      <span className="font-display text-lead">{s.label}</span>
-                      <span className="annot text-muted transition-colors duration-300 group-hover:text-accent">
-                        @{s.handle} ↗
+                      <span className="relative">
+                        {s.label}
+                        <span className="absolute -bottom-1 left-0 h-px w-0 bg-accent transition-all duration-300 ease-(--ease-out-expo) group-hover/s:w-full" />
+                      </span>
+                      <span className="transition-transform duration-300 ease-(--ease-out-expo) group-hover/s:-translate-y-0.5 group-hover/s:translate-x-0.5">
+                        ↗
                       </span>
                     </a>
                   </li>
                 ))}
               </ul>
-            </div>
-
-            <div className="annot col-span-12 flex flex-col gap-1 text-muted sm:col-span-6 lg:col-span-2 lg:col-start-11 lg:text-right">
-              <p>{profile.location}</p>
-              <p>UTC+7</p>
-              <p>{profile.role}</p>
-            </div>
+            </Reveal>
           </div>
-        </section>
 
-        <ImageReveal from="bottom" className="aspect-[3/1] w-full">
-          <Placeholder id="contact-strip" />
-        </ImageReveal>
+          {/* right: the instrument panel */}
+          <PanelIn className="col-span-12 mt-16 lg:col-span-5 lg:mt-0 lg:self-center">
+            <ContactForm />
+          </PanelIn>
+        </section>
       </main>
       <Footer />
     </>
