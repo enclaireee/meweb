@@ -6,8 +6,6 @@ import ContactMe from "./contactme"
 function Page() {
   return (
     <ClientLayout>
-        <LandingPage />
-        <AboutMe />
         <Experience />
         <ContactMe />
     </ClientLayout>
