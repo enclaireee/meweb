@@ -15,6 +15,7 @@
   --border: rgb(26 24 21 / 0.12);
   --border-faint: rgb(26 24 21 / 0.05);
   --accent: #c4450a;
+  --background-translucent: rgb(250 249 246 / 0.55);
   color-scheme: light;
 }
 
@@ -26,6 +27,7 @@
   --border: rgb(236 232 221 / 0.14);
   --border-faint: rgb(236 232 221 / 0.06);
   --accent: #ff6130;
+  --background-translucent: rgb(20 18 16 / 0.55);
   color-scheme: dark;
 }
 
@@ -119,6 +121,54 @@ body {
   text-transform: uppercase;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
+}
+
+/* Engineering graph-paper backdrop (theme-aware) — Contact's signature sheet */
+@utility bg-grid-sheet {
+  background-image: linear-gradient(var(--color-border-faint) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-border-faint) 1px, transparent 1px);
+  background-size: 3rem 3rem;
+}
+
+/* Progressive edge blur — content softens gradually under the nav, no
+   frosted slab. Two masked backdrop-filter layers fake the gradient blur:
+   a wide gentle pass and a tighter stronger pass nearer the edge. */
+@utility blur-edge-b {
+  pointer-events: none;
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+  &::before {
+    backdrop-filter: blur(3px);
+    mask-image: linear-gradient(to top, black 45%, transparent 100%);
+  }
+  &::after {
+    backdrop-filter: blur(9px);
+    mask-image: linear-gradient(to top, black 0%, transparent 55%);
+    background: linear-gradient(to top, var(--background-translucent) 0%, transparent 70%);
+  }
+}
+
+@utility blur-edge-l {
+  pointer-events: none;
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+  &::before {
+    backdrop-filter: blur(3px);
+    mask-image: linear-gradient(to right, black 40%, transparent 100%);
+  }
+  &::after {
+    backdrop-filter: blur(8px);
+    mask-image: linear-gradient(to right, black 0%, transparent 50%);
+    background: linear-gradient(to right, var(--background-translucent) 0%, transparent 65%);
+  }
 }
 
 /* Hide scrollbars on intentional horizontal tracks */
