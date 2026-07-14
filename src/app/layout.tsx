@@ -1,6 +1,21 @@
 import type { Metadata } from "next";
+import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import "./globals.css";
 
-// Salvaged from v1. Fonts, styles, and providers arrive with the Phase 3+ system.
+const plexSans = IBM_Plex_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans-face",
+  weight: ["400", "500", "600"],
+  display: "swap",
+});
+
+const plexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono-face",
+  weight: ["400", "500", "700"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Muhammad Fatih Zamzami — Electrical Engineer",
   description:
@@ -12,7 +27,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={`${plexSans.variable} ${plexMono.variable} antialiased`}>
+        {children}
+      </body>
     </html>
   );
 }

@@ -1,0 +1,156 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   CONTROL ROOM — token layer. The console is dark by default; .light is
+   "daylight ops", a designed print of the same instrument panel, not an
+   inversion. Every pair below passes WCAG AA — ratios in docs/design/03-tokens.md.
+--------------------------------------------------------------------------- */
+:root {
+  --bg: #0d1013;
+  --bg-subtle: #15191d;
+  --fg: #e8ecef;
+  --fg-muted: #9aa6b0;
+  --accent: #ffb000;
+  --accent-fg: #14171a;
+  --ok: #4cc38a;
+  --fail: #ff6369;
+  --border: rgb(232 236 239 / 0.14);
+  --border-faint: rgb(232 236 239 / 0.06);
+  --ring: var(--accent);
+  color-scheme: dark;
+}
+
+.light {
+  --bg: #f6f7f8;
+  --bg-subtle: #e9ecee;
+  --fg: #16191c;
+  --fg-muted: #566069;
+  --accent: #8a5800;
+  --accent-fg: #ffffff;
+  --ok: #1a7f37;
+  --fail: #c43c35;
+  --border: rgb(22 25 28 / 0.16);
+  --border-faint: rgb(22 25 28 / 0.07);
+  color-scheme: light;
+}
+
+/* Motion — three easings, four durations. Nothing animates longer than
+   --dur-slow except page transitions (--dur-page). */
+:root {
+  --dur-fast: 120ms;
+  --dur-base: 240ms;
+  --dur-slow: 400ms;
+  --dur-page: 600ms;
+  --ease-step: steps(3, end); /* discrete instrument readouts; not a Tailwind
+    utility — consume via var(). (@theme drops comma'd values) */
+}
+
+/* Reduced motion is handled here, at the token layer: durations collapse to
+   1ms (not 0 — transitionend must still fire) and everything downstream that
+   uses the tokens becomes effectively instant. JS springs mirror this via
+   useReducedMotion (see src/lib/motion.ts). */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 1ms;
+    --dur-base: 1ms;
+    --dur-slow: 1ms;
+    --dur-page: 1ms;
+  }
+}
+
+@custom-variant light (&:where(.light, .light *));
+
+@theme inline {
+  /* semantic colors — utilities: bg-bg, text-fg-muted, border-border, … */
+  --color-*: initial;
+  --color-bg: var(--bg);
+  --color-bg-subtle: var(--bg-subtle);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-ok: var(--ok);
+  --color-fail: var(--fail);
+  --color-border: var(--border);
+  --color-border-faint: var(--border-faint);
+  --color-ring: var(--ring);
+
+  /* type — IBM Plex superfamily, loaded in layout.tsx via next/font */
+  --font-sans: var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-face), ui-monospace, "SF Mono", monospace;
+
+  /* fluid type scale — 6 steps, leading/tracking defined per step.
+     Fluid range is 360px → 1440px viewport. */
+  --text-label: 0.6875rem; /* 11px — machine tags, always mono+uppercase */
+  --text-label--line-height: 1.4;
+  --text-label--letter-spacing: 0.08em;
+  --text-body-s: 0.8125rem; /* 13px — dense data, captions */
+  --text-body-s--line-height: 1.55;
+  --text-body-s--letter-spacing: 0;
+  --text-body: clamp(0.9375rem, 0.915rem + 0.1vw, 1rem); /* 15→16px */
+  --text-body--line-height: 1.65;
+  --text-body--letter-spacing: 0;
+  --text-lead: clamp(1.0625rem, 0.98rem + 0.37vw, 1.3125rem); /* 17→21px */
+  --text-lead--line-height: 1.5;
+  --text-lead--letter-spacing: -0.005em;
+  --text-h: clamp(1.625rem, 1.33rem + 1.3vw, 2.5rem); /* 26→40px */
+  --text-h--line-height: 1.15;
+  --text-h--letter-spacing: -0.01em;
+  --text-display: clamp(2.75rem, 1.5rem + 5.56vw, 6.5rem); /* 44→104px */
+  --text-display--line-height: 0.95;
+  --text-display--letter-spacing: -0.02em;
+
+  /* space — one geometric scale, base 8px, ratio 1.5. Layout spacing uses
+     these (p-s1 … gap-s5); Tailwind's numeric scale is for micro-tweaks only. */
+  --spacing-s1: 0.5rem; /* 8 */
+  --spacing-s2: 0.75rem; /* 12 */
+  --spacing-s3: 1.125rem; /* 18 */
+  --spacing-s4: 1.75rem; /* 28 */
+  --spacing-s5: 2.5rem; /* 40 */
+  --spacing-s6: 3.75rem; /* 60 */
+  --spacing-s7: 5.75rem; /* 92 */
+  --spacing-s8: 8.5rem; /* 136 */
+  --spacing-s9: 12.75rem; /* 204 */
+
+  /* radius — none. The console is square. Elevation — none: layering is
+     borders + bg-subtle, never shadows. */
+  --radius-*: initial;
+
+  /* easings — utilities: ease-out-expo, ease-out-quart, ease-mech */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-mech: cubic-bezier(0.7, 0, 0.3, 1);
+
+  /* grid */
+  --container-console: 96rem; /* 1536px — full console width */
+  --spacing-gutter: clamp(1.125rem, 0.75rem + 1.6vw, 2.5rem); /* 18→40px */
+}
+
+@layer base {
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-fg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
+
+@utility label {
+  /* the machine-tag voice: PROC/01, SYS/UPTIME, … */
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  letter-spacing: var(--text-label--letter-spacing);
+  text-transform: uppercase;
+}
