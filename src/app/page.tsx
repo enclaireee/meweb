@@ -1,21 +1,4 @@
-import { Intro } from "@/components/sections/Intro";
-import { Hero } from "@/components/sections/Hero";
-import { About } from "@/components/sections/About";
-import { Work } from "@/components/sections/Work";
-import { ContactClose } from "@/components/sections/ContactClose";
-import { Footer } from "@/components/ui/Footer";
-
+// Stub — redesign/v2 in progress. Real pages land in Phase 5.
 export default function Home() {
-  return (
-    <>
-      <Intro />
-      <main>
-        <Hero />
-        <About />
-        <Work />
-        <ContactClose />
-      </main>
-      <Footer />
-    </>
-  );
+  return <main>redesign/v2 — under construction</main>;
 }
