@@ -11,8 +11,7 @@ import { useEffect, useRef, useState } from "react";
 export function FeedbackLoop() {
   const [attn, setAttn] = useState(62);
   const [diff, setDiff] = useState(62);
-  const attnRef = useRef(attn);
-  attnRef.current = attn;
+  const attnRef = useRef(62);
 
   useEffect(() => {
     // one loop for the component's lifetime; once converged the updater
@@ -55,7 +54,10 @@ export function FeedbackLoop() {
             min={0}
             max={100}
             value={attn}
-            onChange={(e) => setAttn(+e.target.value)}
+            onChange={(e) => {
+              attnRef.current = +e.target.value;
+              setAttn(+e.target.value);
+            }}
             className="mt-s2 w-full accent-(--accent)"
             aria-label="Simulated attention signal"
           />
