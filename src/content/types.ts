@@ -19,7 +19,6 @@ export interface Profile {
   /** The about narrative, written for the site. Facts sourced from the CV. */
   about: string[];
   socials: SocialLink[];
-  availability: string;
 }
 
 export interface Project {

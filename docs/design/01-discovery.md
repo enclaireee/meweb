@@ -40,7 +40,7 @@ internship/job conversation, not a peer following.
 | About | The person; why the range is deliberate | Summary + leadership thread | Keep, short |
 | Skills/toolkit | Recruiter scan fodder | Languages, frameworks, engineering | Keep, compact list — never a grid of logos or "90% proficiency" bars |
 | Awards | Third-party validation | ProtoTech 2nd place (IEEE ITB), Best BPH | Keep as a two-line footnote inside About/Experience, not a section |
-| Contact | Conversion | Email, LinkedIn, GitHub, location, availability | Keep |
+| Contact | Conversion | Email, LinkedIn, GitHub, location | Keep — **no availability/"open to work" line anywhere** (user decision) |
 | Blog/notes, testimonials, /uses | — | CV cannot fill them | **Killed** |
 
 ### The four case studies
@@ -79,10 +79,9 @@ control-systems thesis; deliberate — every element defensible in an interview.
 (and per the v2 mandate: must not read as a variant of v1's warm-paper
 editorial-annotation look.)
 
-## Open questions for Fatih
+## Decisions (approved by Fatih, July 2026)
 
-1. OK to fold the PGNCOM internship narrative into the OT Lab case study
-   (single strongest story) rather than duplicating it in two places?
-2. Contact form is killed in favor of mailto/copy-email — confirm.
-3. "Open to internships, freelance builds, and odd hardware problems" — still
-   the availability line you want?
+1. PGNCOM internship narrative folds into the OT Lab case study. ✓
+2. Contact form killed; mailto/copy-email instead. ✓
+3. **No availability line** — no "open to work" copy anywhere on the site.
+   (`profile.availability` must be dropped from content + types.)

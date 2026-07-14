@@ -35,6 +35,4 @@ export const profile: Profile = {
     { label: "Instagram", url: "https://www.instagram.com/fthzami", handle: "fthzami" },
   ],
 
-  // [NEEDS REVIEW] Original copy — adjust to actual availability.
-  availability: "Open to internships, freelance builds, and odd hardware problems.",
 };
