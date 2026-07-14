@@ -124,6 +124,14 @@
   /* grid */
   --container-console: 96rem; /* 1536px — full console width */
   --spacing-gutter: clamp(1.125rem, 0.75rem + 1.6vw, 2.5rem); /* 18→40px */
+
+  /* marquee — speed set per-instance via --marquee-dur */
+  --animate-marquee: marquee var(--marquee-dur, 40s) linear infinite;
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
 }
 
 @layer base {
@@ -143,6 +151,78 @@
   :focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: 2px;
+  }
+}
+
+/* transition-duration shorthands bound to the tokens */
+@utility dur-fast {
+  transition-duration: var(--dur-fast);
+}
+@utility dur-base {
+  transition-duration: var(--dur-base);
+}
+@utility dur-slow {
+  transition-duration: var(--dur-slow);
+}
+
+/* case-study body copy — the only place descendant styling is allowed */
+@utility prose-console {
+  & > * + * {
+    margin-top: --spacing(s3);
+  }
+  & h2 {
+    font-family: var(--font-mono);
+    font-size: var(--text-h);
+    line-height: var(--text-h--line-height);
+    letter-spacing: var(--text-h--letter-spacing);
+    font-weight: 500;
+    margin-top: --spacing(s6);
+  }
+  & h3 {
+    font-family: var(--font-mono);
+    font-size: var(--text-lead);
+    font-weight: 500;
+    margin-top: --spacing(s5);
+  }
+  & ul {
+    list-style: none;
+    padding-left: --spacing(s3);
+  }
+  & ul li {
+    position: relative;
+  }
+  & ul li::before {
+    content: "▪";
+    position: absolute;
+    left: calc(-1 * --spacing(s3));
+    color: var(--accent);
+  }
+  & code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-faint);
+    padding: 0.1em 0.35em;
+  }
+  & pre {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    padding: --spacing(s3);
+    overflow-x: auto;
+  }
+  & pre code {
+    background: none;
+    border: none;
+    padding: 0;
+  }
+  & blockquote {
+    border-left: 2px solid var(--accent);
+    padding-left: --spacing(s3);
+    color: var(--fg-muted);
+  }
+  & strong {
+    font-weight: 600;
+    color: var(--fg);
   }
 }
 
