@@ -151,6 +151,17 @@
   translate: 0 0;
 }
 
+/* shiki dual theme — dark is the default console, .light flips the vars */
+.shiki,
+.shiki span {
+  color: var(--shiki-dark);
+  background: transparent !important;
+}
+.light .shiki,
+.light .shiki span {
+  color: var(--shiki-light);
+}
+
 /* route + theme crossfade — the one animation allowed past 400ms */
 ::view-transition-old(root),
 ::view-transition-new(root) {

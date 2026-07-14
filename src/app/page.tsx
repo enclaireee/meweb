@@ -1,5 +1,6 @@
 import { Link as TransitionLink } from "next-view-transitions";
-import { profile, projects, experience, capabilities } from "@/content";
+import { profile } from "@content/meta/profile";
+import { getProjects, getExperience, getSkills } from "@/lib/content";
 import { Section } from "@/components/ui/Section";
 import { Panel } from "@/components/ui/Panel";
 import { Tag } from "@/components/ui/Tag";
@@ -12,6 +13,9 @@ import { Marquee } from "@/components/motion/Marquee";
 const proc = (i: number) => `PROC/${String(i + 1).padStart(2, "0")}`;
 
 export default function Home() {
+  const projects = getProjects();
+  const experience = getExperience();
+  const capabilities = getSkills();
   return (
     <div className="space-y-s7 pb-s7">
       {/* HERO — the operator card */}
@@ -62,7 +66,7 @@ export default function Home() {
                   bodyClassName="flex h-full flex-col gap-s2"
                 >
                   <h3 className="font-mono text-h font-medium">{p.title}</h3>
-                  <p className="text-body-s text-fg-muted">{p.tagline}</p>
+                  <p className="text-body-s text-fg-muted">{p.summary}</p>
                   <div className="mt-auto flex flex-wrap gap-s1 pt-s2">
                     {p.stack.map((s) => (
                       <Tag key={s}>{s}</Tag>

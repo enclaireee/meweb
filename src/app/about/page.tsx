@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { profile, experience, education, awards, capabilities, languages } from "@/content";
+import { profile, education, awards } from "@content/meta/profile";
+import { getExperience, getSkills } from "@/lib/content";
+import { Mdx } from "@/components/mdx/Mdx";
 import { Section } from "@/components/ui/Section";
 import { Panel } from "@/components/ui/Panel";
 import { Tag } from "@/components/ui/Tag";
@@ -13,6 +15,8 @@ export const metadata: Metadata = {
 };
 
 export default function About() {
+  const experience = getExperience();
+  const capabilities = getSkills();
   return (
     <div className="space-y-s7 pt-s6 pb-s7">
       <Section tag="ID — OPERATOR RECORD" title={profile.name}>
@@ -41,14 +45,10 @@ export default function About() {
                     {e.org} · {e.location}
                   </p>
                   <p className="mt-s2 max-w-[65ch] text-body-s">{e.summary}</p>
-                  {e.highlights.length > 0 && (
-                    <ul className="mt-s2 max-w-[65ch] space-y-s1 text-body-s text-fg-muted">
-                      {e.highlights.map((h) => (
-                        <li key={h.slice(0, 24)}>
-                          <span className="text-accent">▪</span> {h}
-                        </li>
-                      ))}
-                    </ul>
+                  {e.body && (
+                    <div className="prose-console mt-s2 max-w-[65ch] text-body-s text-fg-muted">
+                      <Mdx source={e.body} />
+                    </div>
                   )}
                 </Panel>
               </Reveal>
@@ -83,7 +83,7 @@ export default function About() {
           ))}
         </div>
         <p className="mt-s3 text-body-s text-fg-muted">
-          {languages.map((l) => `${l.label} (${l.level})`).join(" · ")}
+          {profile.languages.map((l) => `${l.label} (${l.level})`).join(" · ")}
         </p>
       </Section>
 

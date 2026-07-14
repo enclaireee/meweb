@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Link as TransitionLink } from "next-view-transitions";
-import { projects } from "@/content";
+import { getProjects } from "@/lib/content";
+import { Mdx } from "@/components/mdx/Mdx";
 import { Prose } from "@/components/ui/Prose";
 import { Panel } from "@/components/ui/Panel";
 import { Tag } from "@/components/ui/Tag";
+import { Link } from "@/components/ui/Link";
 import { Reveal } from "@/components/motion/Reveal";
 
 export function generateStaticParams() {
-  return projects.map((p) => ({ slug: p.slug }));
+  return getProjects().map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({
@@ -17,9 +19,9 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const p = projects.find((x) => x.slug === slug);
+  const p = getProjects().find((x) => x.slug === slug);
   return p
-    ? { title: `${p.title} — Muhammad Fatih Zamzami`, description: p.tagline }
+    ? { title: `${p.title} — Muhammad Fatih Zamzami`, description: p.summary }
     : {};
 }
 
@@ -28,6 +30,7 @@ export default async function CaseStudy({
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  const projects = getProjects();
   const { slug } = await params;
   const i = projects.findIndex((p) => p.slug === slug);
   if (i === -1) notFound();
@@ -45,21 +48,13 @@ export default async function CaseStudy({
           </span>
         </p>
         <h1 className="mt-s3 font-mono text-display font-medium">{p.title}</h1>
-        <p className="mt-s3 max-w-[46ch] text-lead text-fg-muted">{p.tagline}</p>
+        <p className="mt-s3 max-w-[46ch] text-lead text-fg-muted">{p.summary}</p>
       </header>
 
       {/* body + specifics rail */}
       <div className="mt-s5 grid gap-s5 lg:grid-cols-[1fr_20rem] lg:items-start">
         <Prose>
-          {p.description.map((para) => (
-            <p key={para.slice(0, 24)}>{para}</p>
-          ))}
-          <h2>Specifics</h2>
-          <ul>
-            {p.details.map((d) => (
-              <li key={d}>{d}</li>
-            ))}
-          </ul>
+          <Mdx source={p.body} />
         </Prose>
 
         <Reveal className="lg:sticky lg:top-s7">
@@ -67,7 +62,7 @@ export default async function CaseStudy({
             <dl className="space-y-s3 text-body-s">
               <div>
                 <dt className="label text-fg-muted">TIMEFRAME</dt>
-                <dd className="mt-s1 font-mono">{p.timeframe}</dd>
+                <dd className="mt-s1 font-mono">{p.period}</dd>
               </div>
               <div>
                 <dt className="label text-fg-muted">DOMAIN</dt>
@@ -81,6 +76,16 @@ export default async function CaseStudy({
                   ))}
                 </dd>
               </div>
+              {(p.links.repo || p.links.live || p.links.paper) && (
+                <div>
+                  <dt className="label text-fg-muted">LINKS</dt>
+                  <dd className="mt-s1 flex flex-wrap gap-s3">
+                    {p.links.repo && <Link href={p.links.repo}>REPO</Link>}
+                    {p.links.live && <Link href={p.links.live}>LIVE</Link>}
+                    {p.links.paper && <Link href={p.links.paper}>PAPER</Link>}
+                  </dd>
+                </div>
+              )}
               <div>
                 <dt className="label text-fg-muted">CV RECORD</dt>
                 <dd className="mt-s1 text-fg-muted">{p.cvName}</dd>

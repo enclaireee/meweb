@@ -1,0 +1,39 @@
+---
+title: Refocus
+cvName: Refocusing ADHD using EEG and Neuro-Adaptive Video Game System
+summary: A video game that gets harder when you focus — and easier when you drift.
+year: "2025"
+period: Feb – Apr 2025
+domain: Brain–computer interface
+status: shipped
+featured: true
+order: 1
+stack: [Python, Godot, NeuroSky EEG, DWT, GMM]
+tags: [bci, signal-processing, games]
+---
+
+A closed-loop neurofeedback system built as a non-pharmacological approach to
+ADHD therapy. A NeuroSky MindWave Mobile 2 headset streams raw brainwave data
+into a Python pipeline, where a DB-6 discrete wavelet transform and a
+five-model GMM ensemble turn noise into a live read on the player's attention.
+
+That attention signal — the low-beta/theta ratio — drives a space shooter
+built in Godot. Difficulty scales with focus in real time, so staying locked
+in is the gameplay. The whole loop, from scalp to screen, runs live.
+
+```python
+# the control variable, computed per EEG window
+ratio = band_power(low_beta) / band_power(theta)
+difficulty.set_target(clamp(k * ratio, MIN_LVL, MAX_LVL))
+```
+
+## Try the loop
+
+<FeedbackLoop />
+
+## Specifics
+
+- NeuroSky MindWave Mobile 2 headset streaming raw EEG in real time
+- DB-6 discrete wavelet transform for feature extraction
+- Five-model GMM ensemble recognizing attention patterns
+- Godot space shooter whose difficulty tracks the live low-beta/theta ratio

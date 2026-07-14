@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { profile } from "@/content";
+import { profile } from "@content/meta/profile";
 
 /** The contact headline: the email address itself, click to copy. */
 export function CopyEmail() {

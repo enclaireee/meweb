@@ -1,0 +1,43 @@
+---
+title: OT Observability Lab
+cvName: OT Observability Lab, Catalog-Driven OT/ICS Monitoring & Simulation System
+summary: A monitoring stack for gas infrastructure, defined entirely in YAML.
+year: "2026"
+period: Jun 2026 – present
+domain: SCADA / OT monitoring
+status: in-progress
+featured: true
+order: 2
+stack: [Zabbix 7.0, Python, YAML, SNMP]
+tags: [scada, ot, monitoring]
+---
+
+A catalog-driven provisioning framework for Zabbix 7.0, built during my SCADA
+engineering internship at PT PGAS Telekomunikasi Nusantara. One YAML catalog
+is the single source of truth for four OT/ICS asset classes — PLCs, HMIs,
+network devices, and gas process instrumentation — and a Python engine turns
+it into Zabbix hosts, templates, items, and triggers through the API.
+
+```yaml
+# one entry in the asset catalog — everything downstream is generated
+- class: plc
+  host: plc-metering-01
+  templates: [tpl.plc.health, tpl.modbus.core]
+  triggers:
+    - key: cpu.load
+      warn: "> 70"
+      fail: "> 90"
+```
+
+Because you can't rehearse alerting on a live gas pipeline, the lab includes
+a telemetry simulator that generates synthetic SCADA sensor data to validate
+dashboards and alert logic before anything touches production. On top sits a
+three-tier asset health model (Good / Underperform / Failed) with
+correlation-based failure-chain detection across SNMP-monitored parameters.
+
+## Specifics
+
+- YAML catalog as single source of truth across 4 OT/ICS asset classes
+- Python provisioning engine driving the Zabbix API — hosts, templates, items, triggers
+- Synthetic SCADA telemetry simulator for pre-deployment validation
+- 3-tier health classification with correlation-based failure-chain detection

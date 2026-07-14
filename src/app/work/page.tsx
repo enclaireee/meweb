@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Link as TransitionLink } from "next-view-transitions";
-import { projects } from "@/content";
+import { getProjects } from "@/lib/content";
 import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/motion/Reveal";
 
@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default function WorkIndex() {
+  const projects = getProjects();
   return (
     <div className="pt-s6 pb-s7">
       <Section tag="PROC — PROCESS TABLE" aside={`${projects.length} ENTRIES`} title="Work">
@@ -29,7 +30,7 @@ export default function WorkIndex() {
                       {p.title}
                     </span>
                     <span className="mt-s1 block text-body-s text-fg-muted">
-                      {p.tagline}
+                      {p.summary}
                     </span>
                   </span>
                   <span className="label text-fg-muted">
