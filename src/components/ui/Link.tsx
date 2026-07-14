@@ -1,4 +1,4 @@
-import NextLink from "next/link";
+import { Link as NextLink } from "next-view-transitions";
 
 /** Inline text link. Signature hover: inverse video — text becomes a lit segment. */
 export function Link({

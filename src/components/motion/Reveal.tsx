@@ -1,31 +1,45 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
-import { dur, ease } from "@/lib/motion";
+import { useEffect, useRef } from "react";
 
-/** Scroll-in wrapper. Reduced motion ⇒ children render statically. */
+/**
+ * Scroll-in wrapper. Platform IntersectionObserver + CSS tokens — no library.
+ * No-JS safe: the hidden state only applies under html.js (see globals.css),
+ * so content is always visible without JavaScript. Reduced motion is handled
+ * by the duration tokens collapsing.
+ */
 export function Reveal({
   delay = 0,
-  y = 14,
-  className,
+  className = "",
   children,
 }: {
   delay?: number;
-  y?: number;
   className?: string;
   children: React.ReactNode;
 }) {
-  const reduced = useReducedMotion();
-  if (reduced) return <div className={className}>{children}</div>;
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add("reveal-in");
+          io.disconnect();
+        }
+      },
+      { rootMargin: "0px 0px -10% 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
   return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "0px 0px -10% 0px" }}
-      transition={{ duration: dur.slow, ease: ease.outExpo, delay }}
+    <div
+      ref={ref}
+      className={`reveal ${className}`}
+      style={delay ? ({ "--reveal-delay": `${delay}s` } as React.CSSProperties) : undefined}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

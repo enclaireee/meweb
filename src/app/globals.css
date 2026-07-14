@@ -134,11 +134,37 @@
   }
 }
 
+/* Reveal — no-JS-safe: content is visible by default; the pre-paint "js"
+   class on <html> opts into the hidden initial state, and IntersectionObserver
+   (components/motion/Reveal) flips .reveal-in. Reduced motion: duration
+   tokens collapse, so the transition is effectively instant. */
+.js .reveal {
+  opacity: 0;
+  translate: 0 0.875rem;
+  transition:
+    opacity var(--dur-slow) var(--ease-out-expo),
+    translate var(--dur-slow) var(--ease-out-expo);
+  transition-delay: var(--reveal-delay, 0s);
+}
+.js .reveal.reveal-in {
+  opacity: 1;
+  translate: 0 0;
+}
+
+/* route + theme crossfade — the one animation allowed past 400ms */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--dur-page);
+  animation-timing-function: var(--ease-out-quart);
+}
+
 @layer base {
   body {
     background: var(--bg);
     color: var(--fg);
-    font-family: var(--font-sans);
+    /* --font-*-face come from next/font on <body>; the @theme --font-sans
+       token is inlined into utilities and does not exist at runtime */
+    font-family: var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
     font-size: var(--text-body);
     line-height: var(--text-body--line-height);
   }
@@ -168,25 +194,25 @@
 /* case-study body copy — the only place descendant styling is allowed */
 @utility prose-console {
   & > * + * {
-    margin-top: --spacing(s3);
+    margin-top: theme(--spacing-s3);
   }
   & h2 {
-    font-family: var(--font-mono);
+    font-family: var(--font-mono-face), ui-monospace, monospace;
     font-size: var(--text-h);
     line-height: var(--text-h--line-height);
     letter-spacing: var(--text-h--letter-spacing);
     font-weight: 500;
-    margin-top: --spacing(s6);
+    margin-top: theme(--spacing-s6);
   }
   & h3 {
-    font-family: var(--font-mono);
+    font-family: var(--font-mono-face), ui-monospace, monospace;
     font-size: var(--text-lead);
     font-weight: 500;
-    margin-top: --spacing(s5);
+    margin-top: theme(--spacing-s5);
   }
   & ul {
     list-style: none;
-    padding-left: --spacing(s3);
+    padding-left: theme(--spacing-s3);
   }
   & ul li {
     position: relative;
@@ -194,11 +220,11 @@
   & ul li::before {
     content: "▪";
     position: absolute;
-    left: calc(-1 * --spacing(s3));
+    left: calc(-1 * theme(--spacing-s3));
     color: var(--accent);
   }
   & code {
-    font-family: var(--font-mono);
+    font-family: var(--font-mono-face), ui-monospace, monospace;
     font-size: 0.9em;
     background: var(--bg-subtle);
     border: 1px solid var(--border-faint);
@@ -207,7 +233,7 @@
   & pre {
     background: var(--bg-subtle);
     border: 1px solid var(--border);
-    padding: --spacing(s3);
+    padding: theme(--spacing-s3);
     overflow-x: auto;
   }
   & pre code {
@@ -217,7 +243,7 @@
   }
   & blockquote {
     border-left: 2px solid var(--accent);
-    padding-left: --spacing(s3);
+    padding-left: theme(--spacing-s3);
     color: var(--fg-muted);
   }
   & strong {
@@ -228,7 +254,7 @@
 
 @utility label {
   /* the machine-tag voice: PROC/01, SYS/UPTIME, … */
-  font-family: var(--font-mono);
+  font-family: var(--font-mono-face), ui-monospace, monospace;
   font-size: var(--text-label);
   line-height: var(--text-label--line-height);
   letter-spacing: var(--text-label--letter-spacing);

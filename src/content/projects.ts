@@ -28,6 +28,27 @@ export const projects: Project[] = [
     stack: ["Python", "Godot", "NeuroSky EEG", "DWT", "GMM"],
   },
   {
+    slug: "ot-observability-lab",
+    title: "OT Observability Lab",
+    cvName: "OT Observability Lab, Catalog-Driven OT/ICS Monitoring & Simulation System",
+    year: "2026",
+    timeframe: "Jun 2026 – present",
+    domain: "SCADA / OT monitoring",
+    status: "in-progress",
+    tagline: "A monitoring stack for gas infrastructure, defined entirely in YAML.",
+    description: [
+      "A catalog-driven provisioning framework for Zabbix 7.0, built during my SCADA engineering internship at PT PGAS Telekomunikasi Nusantara. One YAML catalog is the single source of truth for four OT/ICS asset classes — PLCs, HMIs, network devices, and gas process instrumentation — and a Python engine turns it into Zabbix hosts, templates, items, and triggers through the API.",
+      "Because you can't rehearse alerting on a live gas pipeline, the lab includes a telemetry simulator that generates synthetic SCADA sensor data to validate dashboards and alert logic before anything touches production. On top sits a three-tier asset health model (Good / Underperform / Failed) with correlation-based failure-chain detection across SNMP-monitored parameters.",
+    ],
+    details: [
+      "YAML catalog as single source of truth across 4 OT/ICS asset classes",
+      "Python provisioning engine driving the Zabbix API — hosts, templates, items, triggers",
+      "Synthetic SCADA telemetry simulator for pre-deployment validation",
+      "3-tier health classification with correlation-based failure-chain detection",
+    ],
+    stack: ["Zabbix 7.0", "Python", "YAML", "SNMP"],
+  },
+  {
     slug: "komat-unpar",
     title: "KOMAT UNPAR 2025",
     cvName: "KOMAT UNPAR 2025 Competition Website",

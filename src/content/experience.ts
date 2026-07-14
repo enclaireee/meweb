@@ -7,6 +7,21 @@ import type { ExperienceEntry, EducationEntry, Award } from "./types";
 
 export const experience: ExperienceEntry[] = [
   {
+    slug: "pgncom",
+    org: "PT PGAS Telekomunikasi Nusantara (PGNCOM)",
+    role: "Automation & SCADA System Engineer Intern",
+    start: "Jun 2026",
+    end: null,
+    location: "Jakarta, Indonesia",
+    summary:
+      "Inside the OT stack that keeps natural gas moving — monitoring, automating, and simulating SCADA infrastructure.",
+    highlights: [
+      "Automated telemetry collection and alerting for SCADA and network devices across live gas transmission infrastructure.",
+      "Configured and operated Wonderware, Reliance, and Zabbix; analyzed industrial OT architecture in real energy operations.",
+      "Engineered the OT Observability Lab — see the case study.",
+    ],
+  },
+  {
     slug: "ime-rnd",
     org: "Ikatan Mahasiswa Elektro FTUI",
     role: "Head of Research & Development",
@@ -63,6 +78,17 @@ export const experience: ExperienceEntry[] = [
       "Designed and ran three competitions spanning high school and university students.",
       "Drew 150+ participants, past target for a debut event.",
     ],
+  },
+  {
+    slug: "wsj-leader",
+    org: "25th World Scout Jamboree, South Korea",
+    role: "Contingent Team Leader",
+    start: "Aug 2023",
+    end: "Aug 2023",
+    location: "SaeManGeum, South Korea",
+    summary:
+      "Led a 30-member Indonesian contingent through a global event — logistics, welfare, and real-time contingency management.",
+    highlights: [],
   },
 ];
 
