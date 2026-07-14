@@ -11,23 +11,25 @@ import { useEffect, useRef, useState } from "react";
 export function FeedbackLoop() {
   const [attn, setAttn] = useState(62);
   const [diff, setDiff] = useState(62);
-  const raf = useRef(0);
+  const attnRef = useRef(attn);
+  attnRef.current = attn;
 
   useEffect(() => {
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setDiff(attn);
-      return;
-    }
+    // one loop for the component's lifetime; once converged the updater
+    // returns the same value and React bails out, so idle frames are free
+    const gain = matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 0.07; // ponytail: fixed pursuit gain; expose as prop if a second widget ever needs it
+    let id: number;
     const step = () => {
       setDiff((d) => {
-        const next = d + (attn - d) * 0.07; // ponytail: fixed pursuit gain; expose as prop if a second widget ever needs it
-        return Math.abs(attn - next) < 0.05 ? attn : next;
+        const a = attnRef.current;
+        const next = d + (a - d) * gain;
+        return Math.abs(a - next) < 0.05 ? a : next;
       });
-      raf.current = requestAnimationFrame(step);
+      id = requestAnimationFrame(step);
     };
-    raf.current = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf.current);
-  }, [attn]);
+    id = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   const err = attn - diff;
   const rows: [string, number, string][] = [
