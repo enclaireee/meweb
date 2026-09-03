@@ -32,23 +32,28 @@ export function FeedbackLoop() {
 
   const err = attn - diff;
   const rows: [string, number, string][] = [
-    ["SIG/ATTENTION (LOW-β/θ)", attn, "bg-accent"],
-    ["CTL/DIFFICULTY", diff, "bg-ok"],
+    ["Attention (low-β/θ)", attn, "bg-accent"],
+    ["Game difficulty", diff, "bg-ink"],
   ];
 
   return (
-    <div className="border border-border bg-bg-subtle">
-      <div className="flex items-center justify-between border-b border-border px-s3 py-s1">
-        <span className="label text-fg-muted">DEMO/CLOSED-LOOP</span>
-        <span className="label text-fg-muted">
-          ERR — <span className={Math.abs(err) > 1 ? "text-accent" : "text-ok"}>
-            {err > 0 ? "+" : ""}{err.toFixed(1)}
+    <div className="bg-raised">
+      <div className="flex items-center justify-between border-b border-rule-faint px-5 py-2">
+        <span className="meta text-faint">Try it</span>
+        <span className="meta text-faint">
+          error{" "}
+          <span className={Math.abs(err) > 1 ? "text-accent" : "text-muted"}>
+            {err > 0 ? "+" : ""}
+            {err.toFixed(1)}
           </span>
         </span>
       </div>
-      <div className="space-y-s3 p-s3">
+      <div className="space-y-5 p-5">
         <label className="block">
-          <span className="label text-fg-muted">DRAG THE SIGNAL — THE LOOP PURSUES IT</span>
+          <span className="text-small text-muted">
+            Drag the attention signal. Difficulty chases it, the same way it
+            chases the real one off the headset.
+          </span>
           <input
             type="range"
             min={0}
@@ -58,17 +63,17 @@ export function FeedbackLoop() {
               attnRef.current = +e.target.value;
               setAttn(+e.target.value);
             }}
-            className="mt-s2 w-full accent-(--accent)"
+            className="mt-3 w-full accent-(--accent)"
             aria-label="Simulated attention signal"
           />
         </label>
         {rows.map(([label, v, color]) => (
           <div key={label}>
             <div className="flex justify-between">
-              <span className="label text-fg-muted">{label}</span>
-              <span className="font-mono text-body-s tabular-nums">{v.toFixed(0)}</span>
+              <span className="meta text-faint">{label}</span>
+              <span className="text-small tabular-nums">{v.toFixed(0)}</span>
             </div>
-            <div className="mt-s1 h-s1 border border-border-faint">
+            <div className="mt-2 h-1.5 bg-sunk">
               <div className={`h-full ${color}`} style={{ width: `${v}%` }} />
             </div>
           </div>

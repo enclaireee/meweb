@@ -1,6 +1,6 @@
 import { codeToHtml } from "shiki";
 
-/** Shiki-highlighted code block, dual theme via CSS vars (see globals.css). */
+/** Shiki-highlighted code block. Dark only. */
 export async function CodeBlock({
   code,
   lang = "text",
@@ -10,17 +10,15 @@ export async function CodeBlock({
 }) {
   const html = await codeToHtml(code.trimEnd(), {
     lang,
-    themes: { dark: "github-dark-default", light: "github-light-default" },
+    themes: { dark: "github-dark-default" },
     defaultColor: false,
   });
   return (
-    <div className="code-block border border-border bg-bg-subtle">
-      <div className="flex items-center justify-between border-b border-border-faint px-s3 py-s1">
-        <span className="label text-fg-muted">SRC/{lang.toUpperCase()}</span>
-      </div>
+    <div className="bg-sunk">
+      <p className="meta border-b border-rule-faint px-5 py-2 text-faint">{lang}</p>
       {/* shiki output: <pre class="shiki"><code>… */}
       <div
-        className="overflow-x-auto p-s3 text-body-s"
+        className="overflow-x-auto p-5 text-small"
         dangerouslySetInnerHTML={{ __html: html }}
       />
     </div>

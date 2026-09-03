@@ -1,13 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Link as TransitionLink } from "next-view-transitions";
+import TransitionLink from "next/link";
 import { getProjects } from "@/lib/content";
-import { Mdx } from "@/components/mdx/Mdx";
-import { Prose } from "@/components/ui/Prose";
-import { Panel } from "@/components/ui/Panel";
-import { Tag } from "@/components/ui/Tag";
-import { Link } from "@/components/ui/Link";
-import { Reveal } from "@/components/motion/Reveal";
+import { projectJsonLd } from "@/lib/jsonld";
+import { CaseStudy } from "@/components/ui/CaseStudy";
 
 export function generateStaticParams() {
   return getProjects().map((p) => ({ slug: p.slug }));
@@ -20,12 +16,10 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const p = getProjects().find((x) => x.slug === slug);
-  return p
-    ? { title: `${p.title} — Muhammad Fatih Zamzami`, description: p.summary }
-    : {};
+  return p ? { title: p.title, description: p.summary } : {};
 }
 
-export default async function CaseStudy({
+export default async function ProjectPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -38,75 +32,27 @@ export default async function CaseStudy({
   const next = projects[(i + 1) % projects.length];
 
   return (
-    <div className="pt-s6 pb-s7">
-      {/* intro */}
-      <header className="border-b border-border pb-s5">
-        <p className="label text-fg-muted">
-          PROC/{String(i + 1).padStart(2, "0")} —{" "}
-          <span className={p.status === "shipped" ? "text-ok" : "text-accent"}>
-            ● {p.status === "shipped" ? "SHIPPED" : "RUNNING"}
-          </span>
-        </p>
-        <h1 className="mt-s3 font-mono text-display font-medium">{p.title}</h1>
-        <p className="mt-s3 max-w-[46ch] text-lead text-fg-muted">{p.summary}</p>
-      </header>
+    <article>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(projectJsonLd(p)) }}
+      />
 
-      {/* body + specifics rail */}
-      <div className="mt-s5 grid gap-s5 lg:grid-cols-[1fr_20rem] lg:items-start">
-        <Prose>
-          <Mdx source={p.body} />
-        </Prose>
+      <CaseStudy project={p} />
 
-        <Reveal className="lg:sticky lg:top-s7">
-          <Panel tag="SPEC" aside={p.year}>
-            <dl className="space-y-s3 text-body-s">
-              <div>
-                <dt className="label text-fg-muted">TIMEFRAME</dt>
-                <dd className="mt-s1 font-mono">{p.period}</dd>
-              </div>
-              <div>
-                <dt className="label text-fg-muted">DOMAIN</dt>
-                <dd className="mt-s1 font-mono">{p.domain}</dd>
-              </div>
-              <div>
-                <dt className="label text-fg-muted">STACK</dt>
-                <dd className="mt-s1 flex flex-wrap gap-s1">
-                  {p.stack.map((s) => (
-                    <Tag key={s}>{s}</Tag>
-                  ))}
-                </dd>
-              </div>
-              {(p.links.repo || p.links.live || p.links.paper) && (
-                <div>
-                  <dt className="label text-fg-muted">LINKS</dt>
-                  <dd className="mt-s1 flex flex-wrap gap-s3">
-                    {p.links.repo && <Link href={p.links.repo}>REPO</Link>}
-                    {p.links.live && <Link href={p.links.live}>LIVE</Link>}
-                    {p.links.paper && <Link href={p.links.paper}>PAPER</Link>}
-                  </dd>
-                </div>
-              )}
-              <div>
-                <dt className="label text-fg-muted">CV RECORD</dt>
-                <dd className="mt-s1 text-fg-muted">{p.cvName}</dd>
-              </div>
-            </dl>
-          </Panel>
-        </Reveal>
-      </div>
-
-      {/* next case */}
+      {/* Leaving a case study steps back down into the archive: the next-case
+          link uses the same recess as the work index. */}
       <TransitionLink
         href={`/work/${next.slug}`}
-        className="group mt-s7 block border border-border p-s4 transition-colors dur-base hover:border-accent"
+        className="field-sunk group mt-40 block"
       >
-        <p className="label text-fg-muted">
-          NEXT/PROC — {String(((i + 1) % projects.length) + 1).padStart(2, "0")}
-        </p>
-        <p className="mt-s2 font-mono text-h font-medium transition-colors dur-fast group-hover:text-accent">
-          {next.title} →
-        </p>
+        <div className="mx-auto flex max-w-page flex-wrap items-baseline justify-between gap-x-12 gap-y-3 px-gutter py-16">
+          <p className="text-title font-semibold transition-colors duration-(--dur-micro) group-hover:text-accent">
+            {next.title}
+          </p>
+          <p className="meta text-faint">Next case study</p>
+        </div>
       </TransitionLink>
-    </div>
+    </article>
   );
 }

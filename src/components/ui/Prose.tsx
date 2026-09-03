@@ -6,5 +6,5 @@ export function Prose({
   className?: string;
   children: React.ReactNode;
 }) {
-  return <div className={`prose-console max-w-[65ch] ${className}`}>{children}</div>;
+  return <div className={`longform ${className}`}>{children}</div>;
 }

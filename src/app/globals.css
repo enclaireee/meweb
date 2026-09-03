@@ -1,273 +1,545 @@
 @import "tailwindcss";
 
-/* ---------------------------------------------------------------------------
-   CONTROL ROOM — token layer. The console is dark by default; .light is
-   "daylight ops", a designed print of the same instrument panel, not an
-   inversion. Every pair below passes WCAG AA — ratios in docs/design/03-tokens.md.
---------------------------------------------------------------------------- */
+/* The hero greeting's face: Archivo subset to eleven glyphs, both axes intact.
+   4,732 bytes. Spec v3.1 §6.1 — the full width axis on the primary font
+   measured +0.396s LCP, four times the kill condition, so it is scoped to the
+   only element that uses it. Regenerate with scripts/build-greeting-font.sh if
+   the greeting text ever changes. */
+@font-face {
+  font-family: "Archivo Greeting";
+  src: url("/fonts/archivo-greeting.woff2") format("woff2-variations");
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  font-display: swap;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Tokens. Spec: docs/design-spec.md §1.
+   Three surfaces, three inks, one accent. Depth is made of light, not
+   shadow — a black shadow is invisible on #0F0D0C — so every raised surface
+   carries a top border lighter than its bottom border, lit from directly
+   overhead. The sunk field inverts that, because that is what a recess does.
+   ───────────────────────────────────────────────────────────────────────── */
 :root {
-  --bg: #0d1013;
-  --bg-subtle: #15191d;
-  --fg: #e8ecef;
-  --fg-muted: #9aa6b0;
-  --accent: #ffb000;
-  --accent-fg: #14171a;
-  --ok: #4cc38a;
-  --fail: #ff6369;
-  --border: rgb(232 236 239 / 0.14);
-  --border-faint: rgb(232 236 239 / 0.06);
-  --ring: var(--accent);
+  /* Steps roughly doubled from the v1 values (#0c0b0a/#141211/#1b1917/#232120).
+     At seven hex steps apart the four surfaces were nearly indistinguishable,
+     so a recessed section read as the same ground as the one above it and the
+     whole depth model was doing its work invisibly. */
+  --surface-sunk: #080706;
+  --surface-base: #141211;
+  --surface-raised: #242120;
+  --surface-lifted: #302c2a;
+
+  --ink: #fbf7f1;
+  /* 6.72 → 9.02 on base. Secondary text was sitting close to the AA floor and
+     reading as washed out rather than as quiet. */
+  --ink-muted: #bcb3a7;
+  /* Lightened from #6b645b, which was 3.0:1 at 13px and failed WCAG AA.
+     This clears 4.5:1 on all four surfaces (4.70 on the lifted hover state,
+     the tightest case) and still reads a step quieter than --ink-muted. */
+  --ink-faint: #a79d91;
+
+  /* Three appearances on the landing page, total. Never decoration. */
+  --accent: #ff6a44;
+  --accent-ink: #140b08;
+
+  /* Light from directly above: top edges lighter, bottom edges darker. */
+  --edge-light-1: rgb(251 247 241 / 0.11);
+  --edge-light-2: rgb(251 247 241 / 0.20);
+  --edge-dark: rgb(0 0 0 / 0.38);
+  --edge-dark-strong: rgb(0 0 0 / 0.5);
+  --rule: rgb(251 247 241 / 0.18);
+  --rule-faint: rgb(251 247 241 / 0.10);
+
+  /* Hue-matched to the ground, never pure black. Offset is 0 horizontal:
+     the dominant shapes here are full-bleed photographs, and a lateral
+     offset under a full-width image reads as a bug rather than as light. */
+  /* The recess lips, tokenised so the cut can be re-lit per theme. */
+  /* The "image pending" ground. A hardcoded hex here rendered as a black
+     slab in light mode, which is how this got tokenised. */
+  --surface-placeholder: #2a2724;
+  --grain-opacity: 0.03;
+  --lip-top: rgb(0 0 0 / 0.5);
+  --lip-bottom: var(--edge-light-1);
+
+  --shadow-rest: 0 1px 2px hsl(20 18% 2% / 0.5);
+  --shadow-lift:
+    0 2px 4px hsl(20 18% 2% / 0.45), 0 4px 8px hsl(20 18% 2% / 0.34),
+    0 8px 16px hsl(20 18% 2% / 0.22);
+
+  /* Three bands, spec §13.1. The scrubbed handoff has no duration — scroll
+     position is its timeline. */
+  --dur-micro: 160ms;
+  --dur-standard: 320ms;
+  --dur-narrative: 520ms;
+
+  /* Two curves. ease-in-out appears nowhere. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-narrative: cubic-bezier(0.33, 0, 0.15, 1);
+
   color-scheme: dark;
 }
 
-.light {
-  --bg: #f6f7f8;
-  --bg-subtle: #e9ecee;
-  --fg: #16191c;
-  --fg-muted: #566069;
-  --accent: #8a5800;
-  --accent-fg: #ffffff;
-  --ok: #1a7f37;
-  --fail: #c43c35;
-  --border: rgb(22 25 28 / 0.16);
-  --border-faint: rgb(22 25 28 / 0.07);
+/* ─────────────────────────────────────────────────────────────────────────
+   Light theme. Spec v3 §1.1. The light source does not move — it is still
+   directly overhead. What changes is which cue is visible: a lit top edge is
+   invisible on white, so depth is carried by a cast shadow below instead.
+   Every value here was contrast-checked, not eyeballed: --ink-faint clears
+   4.5:1 on the sunk field (4.63, the tightest surface in this theme, the
+   inverse of dark where the lifted state was tightest) and --accent clears
+   4.5:1 on all four surfaces (4.77 on sunk).
+   ───────────────────────────────────────────────────────────────────────── */
+/* One definition, one selector. The alternative — a @media block plus a
+   [data-theme] block — states this palette twice and lets the two drift.
+   Instead the inline script in layout.tsx resolves stored choice ?? system
+   preference before first paint and stamps data-theme. With JS off you get
+   the dark theme, which is the canonical one, so that path is a design, not
+   a breakage. */
+:root[data-theme="light"] {
+  --surface-sunk: #e0d9cd;
+  --surface-base: #f6f2eb;
+  --surface-raised: #fffdf8;
+  --surface-lifted: #ffffff;
+
+  --ink: #100e0c;
+  --ink-muted: #4d463d;
+  --ink-faint: #5c554b;
+
+  /* Darkened from the dark theme's #ff5c33, which measures 3.97 on this
+     ground and fails AA. Same vermilion, enough depth to carry text. */
+  --accent: #b02a08;
+  --accent-ink: #fffdf9;
+
+  /* No lit edges: on a near-white surface they render as nothing. Depth is
+     the shadow below, and the only borders left are real rules. */
+  --edge-light-1: transparent;
+  --edge-light-2: transparent;
+  --edge-dark: rgb(16 14 12 / 0.14);
+  --edge-dark-strong: rgb(16 14 12 / 0.20);
+  --rule: rgb(16 14 12 / 0.20);
+  --rule-faint: rgb(16 14 12 / 0.10);
+
+  /* The recess inverts: on light ground a cut reads as a shadow at its top
+     lip and a highlight at its bottom, which is the same overhead light. */
+  --surface-placeholder: #d6cfc2;
+  --grain-opacity: 0.018;
+  --lip-top: rgb(16 14 12 / 0.16);
+  --lip-bottom: rgb(255 255 255 / 0.9);
+
+  --shadow-rest: 0 1px 2px hsl(28 20% 40% / 0.20);
+  --shadow-lift:
+    0 2px 4px hsl(28 20% 40% / 0.16), 0 4px 8px hsl(28 20% 40% / 0.14),
+    0 8px 16px hsl(28 20% 40% / 0.10);
+
   color-scheme: light;
 }
 
-/* Motion — three easings, four durations. Nothing animates longer than
-   --dur-slow except page transitions (--dur-page). */
-:root {
-  --dur-fast: 120ms;
-  --dur-base: 240ms;
-  --dur-slow: 400ms;
-  --dur-page: 600ms;
-  --ease-step: steps(3, end); /* discrete instrument readouts; not a Tailwind
-    utility — consume via var(). (@theme drops comma'd values) */
-}
-
-/* Reduced motion is handled here, at the token layer: durations collapse to
-   1ms (not 0 — transitionend must still fire) and everything downstream that
-   uses the tokens becomes effectively instant. JS springs mirror this via
-   useReducedMotion (see src/lib/motion.ts). */
-@media (prefers-reduced-motion: reduce) {
-  :root {
-    --dur-fast: 1ms;
-    --dur-base: 1ms;
-    --dur-slow: 1ms;
-    --dur-page: 1ms;
-  }
-}
-
-@custom-variant light (&:where(.light, .light *));
-
 @theme inline {
-  /* semantic colors — utilities: bg-bg, text-fg-muted, border-border, … */
   --color-*: initial;
-  --color-bg: var(--bg);
-  --color-bg-subtle: var(--bg-subtle);
-  --color-fg: var(--fg);
-  --color-fg-muted: var(--fg-muted);
+  --color-sunk: var(--surface-sunk);
+  --color-base: var(--surface-base);
+  --color-raised: var(--surface-raised);
+  --color-lifted: var(--surface-lifted);
+  --color-placeholder: var(--surface-placeholder);
+  --color-ink: var(--ink);
+  --color-muted: var(--ink-muted);
+  --color-faint: var(--ink-faint);
   --color-accent: var(--accent);
-  --color-accent-fg: var(--accent-fg);
-  --color-ok: var(--ok);
-  --color-fail: var(--fail);
-  --color-border: var(--border);
-  --color-border-faint: var(--border-faint);
-  --color-ring: var(--ring);
+  --color-accent-ink: var(--accent-ink);
+  --color-edge-light-1: var(--edge-light-1);
+  --color-edge-light-2: var(--edge-light-2);
+  --color-edge-dark: var(--edge-dark);
+  --color-rule: var(--rule);
+  --color-rule-faint: var(--rule-faint);
 
-  /* type — IBM Plex superfamily, loaded in layout.tsx via next/font */
-  --font-sans: var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-mono-face), ui-monospace, "SF Mono", monospace;
+  /* One family, one token. Contrast comes from scale and width, not from a
+     second typeface, so there is no display face to alias. */
+  --font-text: var(--font-text-face), ui-sans-serif, system-ui, sans-serif;
 
-  /* fluid type scale — 6 steps, leading/tracking defined per step.
-     Fluid range is 360px → 1440px viewport. */
-  --text-label: 0.6875rem; /* 11px — machine tags, always mono+uppercase */
-  --text-label--line-height: 1.4;
-  --text-label--letter-spacing: 0.08em;
-  --text-body-s: 0.8125rem; /* 13px — dense data, captions */
-  --text-body-s--line-height: 1.55;
-  --text-body-s--letter-spacing: 0;
-  --text-body: clamp(0.9375rem, 0.915rem + 0.1vw, 1rem); /* 15→16px */
-  --text-body--line-height: 1.65;
-  --text-body--letter-spacing: 0;
-  --text-lead: clamp(1.0625rem, 0.98rem + 0.37vw, 1.3125rem); /* 17→21px */
-  --text-lead--line-height: 1.5;
+  /* Type. `display` is used exactly once per page and never again — that
+     single rule is the fix for four elements previously sharing one step. */
+  /* The greeting is the largest thing on the site and the only user of this
+     step — spec v4 §3.3 says it fills the fold. Everything else tops out at
+     --text-display. */
+  --text-greeting: clamp(3.25rem, 1rem + 12.5vw, 10.5rem); /* 52 → 168 */
+  --text-greeting--line-height: 0.92;
+  --text-greeting--letter-spacing: -0.035em;
+
+  --text-display: clamp(2.75rem, 1.1rem + 7vw, 5.5rem); /* 44 → 88 */
+  --text-display--line-height: 0.98;
+  --text-display--letter-spacing: -0.025em;
+  --text-title: clamp(1.75rem, 1.2rem + 2.4vw, 2.75rem); /* 28 → 44 */
+  --text-title--line-height: 1.1;
+  --text-title--letter-spacing: -0.02em;
+  --text-lead: clamp(1.125rem, 1.02rem + 0.5vw, 1.375rem); /* 18 → 22 */
+  --text-lead--line-height: 1.45;
   --text-lead--letter-spacing: -0.005em;
-  --text-h: clamp(1.625rem, 1.33rem + 1.3vw, 2.5rem); /* 26→40px */
-  --text-h--line-height: 1.15;
-  --text-h--letter-spacing: -0.01em;
-  --text-display: clamp(2.75rem, 1.5rem + 5.56vw, 6.5rem); /* 44→104px */
-  --text-display--line-height: 0.95;
-  --text-display--letter-spacing: -0.02em;
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.65;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.5;
 
-  /* space — one geometric scale, base 8px, ratio 1.5. Layout spacing uses
-     these (p-s1 … gap-s5); Tailwind's numeric scale is for micro-tweaks only. */
-  --spacing-s1: 0.5rem; /* 8 */
-  --spacing-s2: 0.75rem; /* 12 */
-  --spacing-s3: 1.125rem; /* 18 */
-  --spacing-s4: 1.75rem; /* 28 */
-  --spacing-s5: 2.5rem; /* 40 */
-  --spacing-s6: 3.75rem; /* 60 */
-  --spacing-s7: 5.75rem; /* 92 */
-  --spacing-s8: 8.5rem; /* 136 */
-  --spacing-s9: 12.75rem; /* 204 */
+  /* Radius scales with the surface's shorter dimension. Photographs and
+     section grounds are exempt and always square — they read as prints. */
+  --radius-chip: 2px;
+  --radius-control: 4px;
+  --radius-panel: 8px;
 
-  /* radius — none. The console is square. Elevation — none: layering is
-     borders + bg-subtle, never shadows. */
-  --radius-*: initial;
+  --shadow-rest: var(--shadow-rest);
+  --shadow-lift: var(--shadow-lift);
 
-  /* easings — utilities: ease-out-expo, ease-out-quart, ease-mech */
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
-  --ease-mech: cubic-bezier(0.7, 0, 0.3, 1);
+  --ease-out: var(--ease-out);
+  --ease-narrative: var(--ease-narrative);
 
-  /* grid */
-  --container-console: 96rem; /* 1536px — full console width */
-  --spacing-gutter: clamp(1.125rem, 0.75rem + 1.6vw, 2.5rem); /* 18→40px */
-
-  /* marquee — speed set per-instance via --marquee-dur */
-  --animate-marquee: marquee var(--marquee-dur, 40s) linear infinite;
-  @keyframes marquee {
-    to {
-      transform: translateX(-50%);
-    }
-  }
-}
-
-/* Reveal — no-JS-safe: content is visible by default; the pre-paint "js"
-   class on <html> opts into the hidden initial state, and IntersectionObserver
-   (components/motion/Reveal) flips .reveal-in. Reduced motion: duration
-   tokens collapse, so the transition is effectively instant. */
-.js .reveal {
-  opacity: 0;
-  translate: 0 0.875rem;
-  transition:
-    opacity var(--dur-slow) var(--ease-out-expo),
-    translate var(--dur-slow) var(--ease-out-expo);
-  transition-delay: var(--reveal-delay, 0s);
-}
-.js .reveal.reveal-in {
-  opacity: 1;
-  translate: 0 0;
-}
-
-/* shiki dual theme — dark is the default console, .light flips the vars */
-.shiki,
-.shiki span {
-  color: var(--shiki-dark);
-  background: transparent !important;
-}
-.light .shiki,
-.light .shiki span {
-  color: var(--shiki-light);
-}
-
-/* route + theme crossfade — the one animation allowed past 400ms */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: var(--dur-page);
-  animation-timing-function: var(--ease-out-quart);
+  --container-page: 90rem;
+  --spacing-gutter: clamp(1.25rem, 0.6rem + 2.6vw, 3.5rem);
 }
 
 @layer base {
+  /* Reserved always, so locking the page when an overlay opens cannot make
+     the scrollbar vanish and shift everything sideways. */
+  html {
+    scrollbar-gutter: stable;
+  }
+
   body {
-    background: var(--bg);
-    color: var(--fg);
-    /* --font-*-face come from next/font on <body>; the @theme --font-sans
-       token is inlined into utilities and does not exist at runtime */
-    font-family: var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
+    background: var(--surface-base);
+    color: var(--ink);
+    /* Switching theme is a state change, not a jump cut. Surfaces already
+       transition at the micro band via surface-rest, so the grounds arrive
+       slightly ahead of the page — deliberate, not drift. */
+    transition:
+      background-color var(--dur-standard) var(--ease-out),
+      color var(--dur-standard) var(--ease-out);
+    font-family: var(--font-text-face), ui-sans-serif, system-ui, sans-serif;
     font-size: var(--text-body);
     line-height: var(--text-body--line-height);
+    font-synthesis-weight: none;
   }
 
   ::selection {
     background: var(--accent);
-    color: var(--accent-fg);
+    color: var(--accent-ink);
   }
 
+  /* Never animated — a focus ring that fades in is an accessibility
+     affordance arriving late. */
   :focus-visible {
-    outline: 2px solid var(--ring);
-    outline-offset: 2px;
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
   }
 }
 
-/* transition-duration shorthands bound to the tokens */
-@utility dur-fast {
-  transition-duration: var(--dur-fast);
+/* ─── Motion primitives. Spec v4. ────────────────────────────────────────────
+   Everything here is opt-IN via html[data-motion], which the inline script in
+   layout.tsx sets only when JavaScript is running and reduced motion is off.
+   With JS disabled, or under prefers-reduced-motion, none of these rules apply
+   and every element is already in its final position. The animation is the
+   enhancement; the content never waits for it.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* The hero's exit, spec v3.1 §3 — as a native scroll-driven animation.
+   It was a Framer Motion useScroll wrapper first, and wrapping the LCP element
+   in a client motion component measured +0.147s LCP. This is the case native
+   timelines are actually for: purely scrubbed, no fire-once semantics, no
+   coordination with anything. It runs off the main thread and adds no
+   JavaScript at all. Browsers without support simply keep a static hero. */
+@supports (animation-timeline: view()) {
+  html[data-motion] .hero-recede {
+    animation: hero-recede linear both;
+    animation-timeline: view();
+    animation-range: exit 0% exit 100%;
+    transform-origin: top left;
+  }
 }
-@utility dur-base {
-  transition-duration: var(--dur-base);
-}
-@utility dur-slow {
-  transition-duration: var(--dur-slow);
+@keyframes hero-recede {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.96);
+    opacity: 0;
+  }
 }
 
-/* case-study body copy — the only place descendant styling is allowed */
-@utility prose-console {
+@media (prefers-reduced-motion: reduce) {
+  html[data-motion] .hero-recede {
+    animation: none;
+  }
+}
+
+/* The curtain. Hidden unless the script turns it on, so a JS-disabled visitor
+   never meets an opaque div they cannot dismiss. */
+.curtain {
+  display: none;
+}
+.curtain[data-on] {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: var(--surface-base);
+}
+.curtain[data-lift] {
+  transform: translateY(-100%);
+  transition: transform var(--dur-narrative) var(--ease-narrative);
+}
+
+/* Per-character reveal (SplitText). */
+/* Registered so it interpolates. An unregistered custom property is a string
+   to the engine and jumps rather than transitions. */
+@property --wdth {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 100;
+}
+@property --wdth-nudge {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+/* The screen-reader copy must not join a selection: without this, selecting
+   the greeting and copying it yields "Hi, I'm Hi, I'm Fatih. Fatih." — the
+   hidden string and the visible characters both. The spans stay aria-hidden,
+   so assistive tech still hears the string exactly once. */
+.split > .sr-only {
+  user-select: none;
+}
+
+.split-mask {
+  display: inline-block;
+  /* Vertical only: the mask clips the character's rise, but a narrow glyph
+     inside a pinned-width box must stay fully visible. */
+  overflow: hidden;
+  text-align: left;
+  /* Descenders and diacritics sit below the baseline; without this the mask
+     clips the tail of a "y" permanently, not just during the animation. */
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+  vertical-align: bottom;
+}
+.split-char {
+  display: inline-block;
+  /* Restored after measuring: removing this as "13 permanently promoted layers
+     for a one-second animation" cost +0.15s LCP. The promotion is what lets the
+     greeting — the LCP element — paint without re-rasterising per frame. */
+  will-change: transform;
+  font-family: "Archivo Greeting", var(--font-text-face), sans-serif;
+  /* Settled width plus whatever the pointer is currently doing to it. Where
+     the subset never loads, the primary face has no wdth axis and this is
+     simply ignored — the mask reveal still plays. */
+  font-variation-settings: "wdth" calc(var(--wdth) + var(--wdth-nudge));
+}
+html[data-motion] .split-char {
+  --wdth: 82;
+}
+html[data-motion][data-play] .split-char {
+  transform: none;
+  --wdth: 100;
+  /* All animated properties in ONE declaration. A second rule listing only
+     `transform` used to win the cascade and silently dropped --wdth from the
+     transition list, so the axis jumped instead of resolving. */
+  transition:
+    transform var(--dur-narrative) var(--ease-out),
+    --wdth var(--dur-narrative) var(--ease-out);
+}
+
+/* The full stop is the last thing to resolve, and the only accent appearance
+   in the hero: it lands vermilion and cools to ink. Colour marks the instant
+   the line is finished. */
+.split-final {
+  color: var(--ink);
+}
+html[data-motion] .split-final {
+  color: var(--accent);
+}
+html[data-motion][data-play] .split-final {
+  color: var(--ink);
+  /* Repeats transform and --wdth: a transition declaration replaces rather
+     than extends, so listing only colour here would strip the other two from
+     this one character. */
+  transition:
+    transform var(--dur-narrative) var(--ease-out),
+    --wdth var(--dur-narrative) var(--ease-out),
+    color 400ms var(--ease-out);
+}
+html[data-motion] .split-char {
+  transform: translateY(105%);
+}
+
+/* The opening sequence past the greeting. Same gate and same trigger as the
+   characters, so the whole hero is one arrival rather than a headline
+   animation followed by static content. No IntersectionObserver: these are
+   above the fold by definition, and the trigger is the page being ready. */
+html[data-motion] .arrive {
+  transform: translateY(24px);
+}
+html[data-motion][data-play] .arrive {
+  transform: none;
+  transition: transform var(--dur-standard) var(--ease-out);
+}
+
+/* Section and list reveal. */
+.reveal-mask {
+  overflow: hidden;
+}
+html[data-motion] .reveal {
+  transform: translateY(24px);
+}
+html[data-motion] .reveal[data-revealed] {
+  transform: none;
+  transition: transform var(--dur-standard) var(--ease-out);
+}
+
+/* Belt and braces: if data-motion is ever set on a machine that later asks for
+   reduced motion, nothing moves and nothing is left mid-transform. */
+@media (prefers-reduced-motion: reduce) {
+  html[data-motion] .split-char,
+  html[data-motion] .split-final,
+  html[data-motion] .arrive,
+  html[data-motion] .reveal {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Meta keys and small structural labels. Sentence case, zero tracking —
+   the previous uppercase +0.06em version was the eyebrow-label tell. */
+@utility meta {
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  letter-spacing: 0;
+  font-weight: 500;
+  text-transform: none;
+}
+
+/* Elevation grammar. Hover moves a surface up a level; it does not
+   translate. The change is in ground, edges and shadow together. */
+@utility surface-rest {
+  background: var(--surface-raised);
+  border-top: 1px solid var(--edge-light-1);
+  border-bottom: 1px solid var(--edge-dark);
+  box-shadow: var(--shadow-rest);
+  transition:
+    background-color var(--dur-micro) var(--ease-out),
+    border-color var(--dur-micro) var(--ease-out),
+    box-shadow var(--dur-micro) var(--ease-out);
+}
+@utility surface-lift {
+  background: var(--surface-lifted);
+  border-top-color: var(--edge-light-2);
+  border-bottom-color: var(--edge-dark-strong);
+  box-shadow: var(--shadow-lift);
+}
+
+/* The recess. Dark lip on top, light lip below — the inverse of a raised
+   surface, because that is what an overhead light does to a cut. */
+@utility field-sunk {
+  background: var(--surface-sunk);
+  border-top: 1px solid var(--lip-top);
+  border-bottom: 1px solid var(--lip-bottom);
+}
+
+/* Shared-element route transition: a cover on the index is the same element
+   as the cover atop its case study, so it travels rather than cross-fades. */
+::view-transition-group(*) {
+  animation-duration: var(--dur-narrative);
+  animation-timing-function: var(--ease-narrative);
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--dur-standard);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 1ms;
+  }
+}
+
+/* Long-form case copy. The only place descendant styling is allowed. */
+@utility longform {
   & > * + * {
-    margin-top: theme(--spacing-s3);
+    margin-top: 1.25em;
+  }
+  & > figure + *,
+  & > * + figure {
+    margin-top: 3.5rem;
   }
   & h2 {
-    font-family: var(--font-mono-face), ui-monospace, monospace;
-    font-size: var(--text-h);
-    line-height: var(--text-h--line-height);
-    letter-spacing: var(--text-h--letter-spacing);
-    font-weight: 500;
-    margin-top: theme(--spacing-s6);
+    font-size: var(--text-lead);
+    line-height: 1.2;
+    font-weight: 600;
+    margin-top: 3.5rem;
   }
   & h3 {
-    font-family: var(--font-mono-face), ui-monospace, monospace;
-    font-size: var(--text-lead);
-    font-weight: 500;
-    margin-top: theme(--spacing-s5);
+    font-size: var(--text-body);
+    font-weight: 600;
+    margin-top: 2.5rem;
+  }
+  & a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 2px;
   }
   & ul {
     list-style: none;
-    padding-left: theme(--spacing-s3);
+    padding-left: 1.15rem;
+  }
+  & ul li + li {
+    margin-top: 0.5rem;
   }
   & ul li {
     position: relative;
   }
   & ul li::before {
-    content: "▪";
+    content: "";
     position: absolute;
-    left: calc(-1 * theme(--spacing-s3));
-    color: var(--accent);
+    left: -1.15rem;
+    top: 0.7em;
+    width: 0.4rem;
+    height: 1px;
+    background: var(--accent);
   }
   & code {
-    font-family: var(--font-mono-face), ui-monospace, monospace;
-    font-size: 0.9em;
-    background: var(--bg-subtle);
-    border: 1px solid var(--border-faint);
-    padding: 0.1em 0.35em;
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 0.875em;
+    background: var(--surface-raised);
+    padding: 0.12em 0.4em;
+    border-radius: var(--radius-chip);
   }
   & pre {
-    background: var(--bg-subtle);
-    border: 1px solid var(--border);
-    padding: theme(--spacing-s3);
+    background: var(--surface-sunk);
+    border: 1px solid var(--rule-faint);
+    border-radius: var(--radius-panel);
+    padding: 1.25rem;
     overflow-x: auto;
+    font-size: var(--text-small);
   }
   & pre code {
     background: none;
-    border: none;
     padding: 0;
   }
   & blockquote {
+    font-size: var(--text-lead);
+    line-height: 1.35;
+    color: var(--ink);
+    padding-left: 1.25rem;
     border-left: 2px solid var(--accent);
-    padding-left: theme(--spacing-s3);
-    color: var(--fg-muted);
   }
   & strong {
     font-weight: 600;
-    color: var(--fg);
   }
 }
 
-@utility label {
-  /* the machine-tag voice: PROC/01, SYS/UPTIME, … */
-  font-family: var(--font-mono-face), ui-monospace, monospace;
-  font-size: var(--text-label);
-  line-height: var(--text-label--line-height);
-  letter-spacing: var(--text-label--letter-spacing);
-  text-transform: uppercase;
+.shiki,
+.shiki span {
+  color: var(--shiki-dark);
+  background: transparent !important;
 }

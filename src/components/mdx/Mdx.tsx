@@ -1,6 +1,6 @@
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { CodeBlock } from "./CodeBlock";
-import { Figure, Callout, Metrics, Compare, Video, Embed } from "./blocks";
+import { Figure, Pair, Callout, Metrics, Video } from "./blocks";
 import { FeedbackLoop } from "./FeedbackLoop";
 
 /** Fenced ``` blocks → Shiki. */
@@ -16,11 +16,10 @@ function Pre(props: React.HTMLAttributes<HTMLPreElement>) {
 const components = {
   pre: Pre,
   Figure,
+  Pair,
   Callout,
   Metrics,
-  Compare,
   Video,
-  Embed,
   FeedbackLoop,
 };
 

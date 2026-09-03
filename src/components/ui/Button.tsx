@@ -1,50 +1,41 @@
-import { Link as NextLink } from "next-view-transitions";
+import NextLink from "next/link";
 
-type Variant = "solid" | "outline";
+type Variant = "solid" | "quiet";
 
 const base =
-  "label inline-flex items-center gap-s1 border px-s3 py-s2 transition-colors dur-fast ease-out-quart";
+  "inline-flex items-center gap-2 px-5 py-3 text-small font-medium transition-colors duration-(--dur-micro)";
 const variants: Record<Variant, string> = {
-  // signature: inverse-video flip on hover
-  solid: "border-accent bg-accent text-accent-fg hover:bg-transparent hover:text-accent",
-  outline: "border-border text-fg hover:border-accent hover:text-accent",
+  solid: "bg-accent text-accent-ink hover:bg-ink hover:text-ground",
+  quiet: "border border-rule text-ink hover:border-accent hover:text-accent",
 };
 
 export function Button({
   variant = "solid",
   href,
-  loading,
-  disabled,
   className = "",
   children,
   ...rest
 }: {
   variant?: Variant;
   href?: string;
-  loading?: boolean;
-  disabled?: boolean;
   className?: string;
   children: React.ReactNode;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
-  const cls = `${base} ${variants[variant]} ${
-    disabled || loading ? "pointer-events-none opacity-40" : ""
-  } ${className}`;
-  const body = (
-    <>
-      {children}
-      {loading && <span className="animate-pulse" aria-label="loading">█</span>}
-    </>
-  );
+  const cls = `${base} ${variants[variant]} ${className}`;
   if (href) {
-    return (
-      <NextLink href={href} className={cls} aria-disabled={disabled || loading}>
-        {body}
+    return /^https?:|^mailto:/.test(href) ? (
+      <a href={href} className={cls} target="_blank" rel="noreferrer">
+        {children}
+      </a>
+    ) : (
+      <NextLink href={href} className={cls}>
+        {children}
       </NextLink>
     );
   }
   return (
-    <button className={cls} disabled={disabled || loading} {...rest}>
-      {body}
+    <button className={cls} {...rest}>
+      {children}
     </button>
   );
 }
