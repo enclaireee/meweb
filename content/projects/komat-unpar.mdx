@@ -1,0 +1,54 @@
+---
+title: KOMAT UNPAR 2025
+cvName: KOMAT UNPAR 2025 Competition Website
+role: Registration and entry-fee payment flow
+summary: The registration platform for a national mathematics competition, built to survive one very busy week.
+year: "2025"
+period: Aug 2025
+domain: Full-stack web
+status: shipped
+featured: false
+order: 4
+stack: [Next.js 15, Tailwind CSS v4, Framer Motion, Vercel]
+tags: [web, production]
+coverAlt: The KOMAT UNPAR landing page as it shipped.
+---
+
+KOMAT is a national mathematics competition run by Universitas Katolik
+Parahyangan. I built the platform it runs on: the participant-facing site,
+and the admin dashboard behind it that handles registration and payment for
+entrants from across Indonesia.
+
+<Figure
+  want="work/komat-unpar/landing.png"
+  alt="The competition landing page"
+  caption="The public side. Most of the animation work went here, because it is the only page a lot of people ever see."
+  ratio="16/10"
+  bleed
+/>
+
+## The part that mattered
+
+A competition site is quiet for months and then has one week where everyone
+shows up at once, pays, and expects a confirmation. That week is the whole
+project. The public pages are the easy half.
+
+<Figure
+  want="work/komat-unpar/admin.png"
+  alt="The admin dashboard listing registrations and payment states"
+  caption="The admin side, which is where the actual work happened: registrations, payment states, and the ability to fix a record when someone paid twice."
+/>
+
+It shipped on Next.js 15 with Tailwind v4 and Framer Motion, deployed to
+Vercel with continuous delivery, and I maintained it in production through the
+full competition cycle rather than handing it over at launch.
+
+{/* TODO(fatih): how many participants registered through it? Did anything
+    break during the rush, and what did you do about it at 2am? That story is
+    worth more than the stack list. */}
+
+## The short version
+
+- Participant-facing frontend, animated and fully responsive
+- Admin dashboard with integrated registration and payment flows
+- Continuous delivery to Vercel through the live competition cycle

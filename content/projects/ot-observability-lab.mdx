@@ -1,0 +1,77 @@
+---
+title: OT Observability Lab
+cvName: OT Observability Lab, Catalog-Driven OT/ICS Monitoring & Simulation System
+role: Team project — the synthetic SCADA telemetry simulator and the 3-tier asset health model
+summary: Monitoring for gas infrastructure, defined entirely in one YAML file.
+year: "2026"
+period: Jun 2026 – Aug 2026
+domain: SCADA / OT monitoring
+status: shipped
+featured: true
+order: 2
+stack: [Zabbix 7.0, Python, YAML, SNMP]
+tags: [scada, ot, monitoring]
+coverAlt: The Zabbix dashboard for the simulated pipeline, running on the lab bench.
+---
+
+This is the work I do at my SCADA engineering internship at PT PGAS
+Telekomunikasi Nusantara. Monitoring OT equipment is not hard because the
+protocols are exotic; it's hard because every PLC, HMI, network device and
+gas process instrument gets configured by hand, one at a time, and nobody can
+tell you afterwards what is actually being watched.
+
+<Figure
+  want="work/ot-observability-lab/dashboard.png"
+  alt="The generated Zabbix dashboard showing simulated pipeline assets"
+  caption="Every host, template, item and trigger on this screen was generated. None of it was clicked into existence."
+  ratio="16/10"
+  bleed
+/>
+
+## One file is the truth
+
+The whole system is driven by a single YAML catalog covering four OT/ICS asset
+classes. A Python engine reads it and provisions Zabbix through the API:
+hosts, templates, items, triggers. Change the catalog, re-run, and the server
+matches it.
+
+```yaml
+# one entry in the asset catalog — everything downstream is generated
+- class: plc
+  host: plc-metering-01
+  templates: [tpl.plc.health, tpl.modbus.core]
+  triggers:
+    - key: cpu.load
+      warn: "> 70"
+      fail: "> 90"
+```
+
+## You can't rehearse on a live pipeline
+
+The obvious problem with alerting logic for gas transmission is that there is
+no safe way to test it. You cannot make a real compressor misbehave to find
+out whether your trigger fires.
+
+So the lab includes a telemetry simulator that generates synthetic SCADA
+sensor data, which means dashboards and alert rules get validated against
+failure conditions long before anything is pointed at production. On top of
+that sits a three-tier health model — good, underperforming, failed — with
+correlation-based failure-chain detection across the SNMP-monitored
+parameters, so a cascade reads as one event rather than forty alarms.
+
+<Figure
+  want="work/ot-observability-lab/simulator.png"
+  alt="Synthetic telemetry driving a fault condition"
+  caption="The simulator walking an asset from good into failed, so the trigger logic can be checked without touching anything real."
+/>
+
+{/* TODO(fatih): how many assets does the catalog cover now, and how long did
+    provisioning take by hand before this existed? A before/after number here
+    is the single most persuasive thing you could add to this page. */}
+
+## The short version
+
+- YAML catalog as the single source of truth across 4 OT/ICS asset classes
+- Python provisioning engine driving the Zabbix API
+- Synthetic SCADA telemetry simulator for pre-deployment validation
+- Three-tier health classification with correlation-based failure-chain detection

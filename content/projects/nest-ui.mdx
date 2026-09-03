@@ -1,0 +1,66 @@
+---
+title: NEST UI 2026
+cvName: NEST UI Website Registration System
+role: Front-end — shared component library and the responsive layouts across the public site and the dashboards
+summary: The registration platform for NEST UI 2026, team dashboards included.
+year: "2026"
+period: Jun 2026 – present
+domain: Full-stack web
+status: in-progress
+featured: true
+order: 3
+stack: [Next.js, TypeScript, Supabase]
+tags: [web, production]
+coverAlt: The NEST UI 2026 registration site, public pages and team dashboard.
+---
+
+Registration for NEST UI 2026 runs through this: public pages, the sign-up
+flow, and a dashboard for each team that registers. It is live at
+[nestui.id](https://nestui.id), built on Next.js and TypeScript with Supabase
+behind it, and it has taken more than fifty teams through registration.
+
+<Figure
+  want="work/nest-ui/cover.jpg"
+  alt="The NEST UI 2026 registration site, public pages and team dashboard"
+  caption="Two surfaces, one component library: the public site anyone can see and the dashboard only a registered team can."
+  ratio="16/10"
+  bleed
+/>
+
+## Two products wearing one set of components
+
+My part was the front-end: the shared component library and the responsive
+layouts on both sides of the login. That sounds like one job and is really two,
+because a public marketing page and a team dashboard want opposite things from
+the same button. The public side wants it large, spaced, and persuasive. The
+dashboard wants it small, dense, and repeated forty times in a table.
+
+Building those as one library rather than two is the only way the site stays
+coherent as it grows, and it is also the thing most likely to go wrong: a
+component that tries to serve both ends up serving neither. The layouts are
+responsive on both sides, which on the dashboard means deciding what a table
+does when it runs out of horizontal room.
+
+## The hard part was who can see what
+
+The interesting problem here was not load and it was not layout. It was
+permissions.
+
+A team has members. Members submit things. Any of them can come back later and
+change something. So every read and every write has to answer a question first:
+is this person on this team? Get that wrong in the obvious direction and someone
+sees another team's submission — which, on a registration platform, is the one
+failure you cannot apologise your way out of.
+
+That constraint shapes the front-end more than it looks like it should. Every
+dashboard view has to assume it might be rendering for someone who should not
+see it, and fail closed rather than open.
+
+## It shipped and it held
+
+No launch-day story here: it went smoothly. Registration opened, teams came
+through, and nothing needed fixing at two in the morning. Server-rendered pages,
+image optimisation, and the SEO and Open Graph metadata were all in place before
+it went live rather than after.
+
+That is a less exciting write-up than a war story, and it is the honest one.

@@ -1,30 +1,14 @@
-import { Link } from "next-view-transitions";
-import { Magnetic } from "@/components/motion/Magnetic";
-import { Reveal } from "@/components/motion/Reveal";
+import { site } from "@content/meta/site";
+import { Button } from "@/components/ui/Button";
 
-/** Signal lost — small, characterful, on-brand. */
 export default function NotFound() {
   return (
-    <main className="bg-grid-sheet flex min-h-svh flex-col items-center justify-center px-gutter text-center">
-      <p className="annot text-muted">no signal on this frequency</p>
-      <Magnetic strength={0.15}>
-        <p className="font-display text-hero mt-4 italic" aria-hidden="true">
-          404
-        </p>
-      </Magnetic>
-      <h1 className="sr-only">Page not found</h1>
-      <Reveal delay={0.2}>
-        <p className="mt-4 max-w-sm text-lead text-muted">
-          Whatever was broadcast here has drifted out of range.
-        </p>
-        <Link
-          href="/"
-          data-cursor="home"
-          className="annot mt-10 inline-block border border-border px-6 py-3 text-muted transition-colors duration-300 hover:border-foreground hover:text-foreground"
-        >
-          ← back to the index
-        </Link>
-      </Reveal>
-    </main>
+    <div className="mx-auto flex min-h-[50svh] max-w-page flex-col items-start justify-center gap-8 px-gutter">
+      <h1 className="text-display font-semibold">{site.pages.notFound.title}</h1>
+      <p className="max-w-[38ch] text-body text-muted">{site.pages.notFound.lead}</p>
+      <Button href="/" variant="quiet">
+        {site.pages.notFound.action}
+      </Button>
+    </div>
   );
 }

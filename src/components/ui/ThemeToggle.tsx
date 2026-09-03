@@ -1,58 +1,51 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { useTheme } from "next-themes";
-
-const noopSubscribe = () => () => {};
+import { FaMoon, FaSun } from "react-icons/fa6";
 
 /**
- * Theme switch in the annotation voice: a small disc that's an outline sun
- * in light and a filled moon-bite in dark. Flips inside a View Transitions
- * crossfade when motion is allowed; instant repaint otherwise.
+ * Dark is canonical; this only records a deviation from it. The resolved
+ * theme is stamped on <html> before first paint by the inline script in
+ * layout.tsx, so this control's job is to read what is already there.
+ *
+ * <html> is the store. Reading it through useSyncExternalStore rather than
+ * an effect keeps the server snapshot honest — the server cannot know which
+ * theme the visitor resolved to, so it renders the canonical one and the
+ * client corrects on its first paint with no hydration mismatch. Same
+ * pattern the viewport query uses.
  */
-export function ThemeToggle() {
-  const { resolvedTheme, setTheme } = useTheme();
-  // next-themes only knows the real theme on the client; render a stable
-  // shell until hydrated so SSR markup matches.
-  const mounted = useSyncExternalStore(noopSubscribe, () => true, () => false);
-  const isDark = mounted && resolvedTheme === "dark";
+function subscribe(onChange: () => void) {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-theme"],
+  });
+  return () => observer.disconnect();
+}
 
-  const flip = () => {
-    const next = isDark ? "light" : "dark";
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!reduced && document.startViewTransition) {
-      document.startViewTransition(() => setTheme(next));
-    } else {
-      setTheme(next);
-    }
-  };
+const readTheme = () =>
+  document.documentElement.dataset.theme === "light" ? "light" : "dark";
+
+export function ThemeToggle() {
+  const theme = useSyncExternalStore(subscribe, readTheme, () => "dark" as const);
+  const next = theme === "light" ? "dark" : "light";
 
   return (
     <button
       type="button"
-      onClick={flip}
-      aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
-      data-cursor={isDark ? "light" : "dark"}
-      className="annot fixed right-4 top-4 z-30 flex items-center gap-2 border border-border bg-background/80 px-3 py-2 text-muted backdrop-blur-sm transition-colors duration-150 hover:text-foreground sm:right-6 sm:top-6"
+      onClick={() => {
+        document.documentElement.dataset.theme = next;
+        try {
+          localStorage.setItem("theme", next);
+        } catch {
+          // Private mode can refuse storage. The theme still applies to this
+          // page view; it just will not be remembered.
+        }
+      }}
+      aria-label={`Switch to ${next} theme`}
+      className="text-small text-muted transition-colors duration-(--dur-micro) hover:text-ink"
     >
-      <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
-        {isDark ? (
-          // moon: disc with a bite
-          <path d="M10.5 7.3A5 5 0 1 1 4.7 1.5a4 4 0 1 0 5.8 5.8Z" fill="currentColor" />
-        ) : (
-          // sun: outline disc with ticks
-          <>
-            <circle cx="6" cy="6" r="2.6" fill="none" stroke="currentColor" strokeWidth="1.1" />
-            <g stroke="currentColor" strokeWidth="1.1">
-              <line x1="6" y1="0.4" x2="6" y2="1.9" />
-              <line x1="6" y1="10.1" x2="6" y2="11.6" />
-              <line x1="0.4" y1="6" x2="1.9" y2="6" />
-              <line x1="10.1" y1="6" x2="11.6" y2="6" />
-            </g>
-          </>
-        )}
-      </svg>
-      <span className="hidden sm:inline">{mounted ? (isDark ? "dark" : "light") : "theme"}</span>
+      {theme === "light" ? <FaMoon aria-hidden /> : <FaSun aria-hidden />}
     </button>
   );
 }
