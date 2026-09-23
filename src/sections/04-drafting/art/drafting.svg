@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-60 -20 120 60">
+  <!--
+    Station 04, the Drafting Table (KOMAT UNPAR). Floor at y=40, aisle |x| < 8 below y=18.
+    A tilted drafting board with the competition site pinned to it as a paper browser window,
+    maths symbols on strings, a plan chest at the back.
+  -->
+
+  <!-- a ruler arch: the header is graduated, tick marks cut up into it -->
+  <path id="arch" data-z="0" data-stock="blueprintDeep" data-cut="knife" data-cast="false"
+    d="M-60 -20 H60 V40 H28 V10 H-28 V40 H-60 Z"
+    data-holes="M-25.2 8.2 H-24.8 V10.1 H-25.2 Z M-22.7 8.9 H-22.3 V10.1 H-22.7 Z M-20.2 8.2 H-19.8 V10.1 H-20.2 Z M-17.7 8.9 H-17.3 V10.1 H-17.7 Z M-15.2 7.4 H-14.8 V10.1 H-15.2 Z M-12.7 8.9 H-12.3 V10.1 H-12.7 Z M-10.2 8.2 H-9.8 V10.1 H-10.2 Z M-7.7 8.9 H-7.3 V10.1 H-7.7 Z M-5.2 8.2 H-4.8 V10.1 H-5.2 Z M-2.7 8.9 H-2.3 V10.1 H-2.7 Z M-0.2 7.4 H0.2 V10.1 H-0.2 Z M2.3 8.9 H2.7 V10.1 H2.3 Z M4.8 8.2 H5.2 V10.1 H4.8 Z M7.3 8.9 H7.7 V10.1 H7.3 Z M9.8 8.2 H10.2 V10.1 H9.8 Z M12.3 8.9 H12.7 V10.1 H12.3 Z M14.8 7.4 H15.2 V10.1 H14.8 Z M17.3 8.9 H17.7 V10.1 H17.3 Z M19.8 8.2 H20.2 V10.1 H19.8 Z M22.3 8.9 H22.7 V10.1 H22.3 Z M24.8 8.2 H25.2 V10.1 H24.8 Z" />
+
+  <!-- far: the plan chest (left) and a tall bookcase (right) -->
+  <path id="far-plan-chest" data-z="-42" data-stock="sky" data-cut="knife"
+    d="M-35 40 V29.4 H-13.4 V40 Z"
+    data-holes="M-33.4 31.6 H-15 V31.95 H-33.4 Z M-33.4 34.2 H-15 V34.55 H-33.4 Z M-33.4 36.8 H-15 V37.15 H-33.4 Z M-25.2 30.4 H-23.2 V30.9 H-25.2 Z M-25.2 32.9 H-23.2 V33.4 H-25.2 Z M-25.2 35.5 H-23.2 V36 H-25.2 Z" />
+  <path id="far-bookcase" data-z="-42" data-stock="blueprintLight" data-cut="knife"
+    d="M13.4 40 V8 H30.4 V40 Z"
+    data-holes="M14.6 9.4 H29.2 V15 H14.6 Z M14.6 16.4 H29.2 V22 H14.6 Z M14.6 23.4 H29.2 V29 H14.6 Z" />
+  <path id="far-books" data-z="-42" data-stock="mustard" data-cut="knife"
+    d="M15.2 15.1 V11 H16.4 V15.1 Z M16.7 15.1 V11.8 H17.9 V15.1 Z M18.3 15.1 L19.3 11.4 L20.2 11.7 L19.3 15.1 Z M24.6 15.1 V12.2 H28.6 V15.1 Z M15 22.1 V18.4 H20.6 V22.1 Z M23.4 22.1 V17.6 H24.6 V22.1 Z M25 22.1 V18.8 H26.2 V22.1 Z" />
+
+  <!-- middle A (left): the drafting board, tilted on its hinge, on a trestle -->
+  <path id="drafting-board" data-z="-20" data-stock="wood" data-cut="knife"
+    d="M-28 26.4 L-11.2 17.2 L-10.2 19 L-27 28.2 Z M-26.2 27.6 L-25.2 27.6 L-23 40 H-24.2 Z M-13.6 20.4 L-12.6 20.4 L-11 40 H-12.2 Z M-24.2 34 H-11.6 V34.7 H-24.2 Z" />
+  <!-- the site, pinned to the board: title bar dots, a header, cards, a button -->
+  <path id="browser-window" data-z="-19.6" data-stock="white" data-cut="knife"
+    d="M-25.6 24.4 L-14.2 18.2 L-11.8 22.6 L-23.2 28.8 Z"
+    data-holes="M-24.4 24.3 a0.3 0.3 0 1 0 0.6 0 a0.3 0.3 0 1 0 -0.6 0 Z M-23.4 23.75 a0.3 0.3 0 1 0 0.6 0 a0.3 0.3 0 1 0 -0.6 0 Z M-22.4 23.2 a0.3 0.3 0 1 0 0.6 0 a0.3 0.3 0 1 0 -0.6 0 Z M-22.3 25.6 L-16.4 22.4 L-16 23.1 L-21.9 26.3 Z M-21.7 27.1 L-19.6 26 L-19.2 26.7 L-21.3 27.8 Z M-18.9 25.6 L-16.8 24.5 L-16.4 25.2 L-18.5 26.3 Z M-16.1 24.1 L-14 23 L-13.6 23.7 L-15.7 24.8 Z" />
+
+  <!-- stage (right): the stool, and the T-square leaning on it -->
+  <path id="stool" data-z="-16" data-stock="tomato" data-cut="knife"
+    d="M11.2 30.2 H18.4 V31.2 H11.2 Z M11.8 31.2 H12.8 L12.2 40 H11 Z M16.8 31.2 H17.8 L18.6 40 H17.4 Z M12 35.8 H17.6 V36.4 H12 Z" />
+  <path id="t-square" data-z="-14" data-stock="sunflower" data-cut="knife"
+    d="M20.2 40 L25.4 25.2 L26 25.4 L20.8 40.1 Z M23.8 24.9 L27.8 26.3 L27.6 26.9 L23.6 25.5 Z" />
+
+  <!-- hung: the symbols of the trade, each on its own string -->
+  <path id="sigma" data-z="-34" data-stock="sunflower" data-hang="-6 12.6" data-cut="knife"
+    d="M-7.6 12.6 H-4.4 V13.2 H-6.6 L-5.4 14.8 L-6.6 16.4 H-4.4 V17 H-7.6 V16.6 L-6.2 14.8 L-7.6 13 Z" />
+  <path id="pi" data-z="-34" data-stock="pink" data-hang="0 13.2" data-cut="knife"
+    d="M-1.8 13.2 H1.8 V13.8 H1 V17.4 H0.4 V13.8 H-0.5 C-0.5 15.4 -0.8 16.8 -1.3 17.4 L-1.8 17.1 C-1.3 16.5 -1.1 15.2 -1.1 13.8 H-1.8 Z" />
+  <path id="radical" data-z="-34" data-stock="mint" data-hang="6.8 12.8" data-cut="knife"
+    d="M4.4 15.6 L5.2 15.2 L6 16.6 L7.4 12.8 H9.6 V13.4 H7.8 L6.2 17.6 H5.8 L4.9 15.9 L4.6 16.1 Z" />
+
+  <!-- detail: a waste basket of crumpled drafts; a paper plane parked behind the left wing -->
+  <path id="waste-basket" data-z="-6" data-stock="steel" data-cut="knife"
+    d="M-26.6 34.8 H-21 L-21.8 40 H-25.8 Z M-26 34.8 C-26 33.6 -25 33.2 -24.2 33.6 C-23.4 32.8 -22 33.4 -21.8 34.8 Z"
+    data-holes="M-25.4 36 H-25 L-24.8 39 H-25.2 Z M-23.9 36 H-23.5 V39 H-23.9 Z M-22.4 36 H-22 L-22.2 39 H-22.6 Z" />
+  <path id="paper-plane" data-z="-6" data-stock="white" data-cut="knife"
+    d="M-31.8 28.3 L-27.6 27.1 L-27.3 27.5 L-29.3 29.9 L-29.9 29.1 L-31.6 29.2 Z" />
+</svg>

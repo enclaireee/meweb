@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+  <!-- UI paper outlines, in percent of the element box. Cut by scripts/cut into CSS clip-path variables. -->
+  <!-- specimen plate: a guillotined card, one corner a touch off-square -->
+  <path id="plate" d="M0.3 0.2 L99.7 0 L100 99.6 L0 100 Z" />
+  <!-- hung title tag: luggage-tag shoulders (≈45° at a 420×370 tag) -->
+  <path id="tag" d="M8.2 0 L91.6 0.2 L100 9.2 L99.8 100 L0.2 99.8 L0 9 Z" />
+  <!-- small cards: roles, awards, notes -->
+  <path id="card" d="M0.5 0 L100 0.9 L99.4 100 L0 99.3 Z" />
+  <!-- cut strips: stack tags, labels, the hint -->
+  <path id="strip" d="M0 4 L100 0 L98.8 100 L1.4 96 Z" />
+  <!-- the depth tag: a tall strip with one shoulder -->
+  <path id="strip-tall" d="M0 0.6 L93 0 L100 4.2 L99.6 100 L0.4 99.4 Z" />
+  <!-- skill tag on a peg: shoulders under the hook -->
+  <path id="peg" d="M16 0 L84 0 L100 22 L99 100 L1 100 L0 22 Z" />
+  <!-- torn scrap for buttons: torn, not cut (architecture.md §7.1 #14), so the tear is drawn in -->
+  <path
+    id="scrap"
+    d="M0.8 6 L5 2.4 L9.6 4.1 L14.2 0.9 L19.8 3.2 L25.1 1.1 L30.6 3.8 L36.2 0.4 L41.5 2.9 L47.3 0.8 L52.6 3.5 L58.4 1.2 L63.9 3.9 L69.1 0.6 L74.8 2.7 L80.2 0.3 L85.7 3.1 L90.8 1 L95.9 3.6 L99.4 1.8 L100 20 L98.6 42 L99.7 63 L98.9 83 L99.8 96.4 L94.7 99 L89.1 96.8 L83.8 99.6 L78.2 97.3 L72.9 99.8 L67.3 96.9 L61.8 99.4 L56.1 97.2 L50.9 99.9 L45.2 97.1 L39.8 99.3 L34.1 96.6 L28.9 99.5 L23.2 97.4 L17.8 99.8 L12.3 96.9 L6.9 99.2 L1.2 97.5 L0 78 L1.1 56 L0.2 34 L1 14 Z"
+    data-cut="knife"
+  />
+</svg>

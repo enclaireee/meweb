@@ -1,0 +1,64 @@
+.station {
+  position: relative;
+  min-height: 160svh;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: calc(var(--mat) + 88px) calc(var(--mat) + 40px) calc(var(--mat) + 40px);
+}
+
+.column {
+  width: min(420px, 34vw);
+  display: grid;
+  gap: 20px;
+  /* design.md §7.2: the plate fades up on arrival, only once the observer is live */
+  transition:
+    opacity var(--dur-base) var(--ease-settle),
+    translate var(--dur-base) var(--ease-settle);
+}
+
+:global(html[data-stations="live"]) .station:not([data-active]) .column {
+  opacity: 0;
+  translate: 0 12px;
+}
+
+.station[data-flow] .sticky {
+  position: relative;
+  align-items: flex-start;
+}
+.station[data-flow] .column {
+  width: min(760px, 58vw);
+}
+
+@media (max-width: 1023.98px) {
+  .column {
+    width: 44vw;
+  }
+  .station[data-flow] .column {
+    width: min(640px, 70vw);
+  }
+}
+
+@media (max-width: 639.98px) {
+  .sticky {
+    align-items: flex-end;
+    justify-content: stretch;
+    padding: calc(var(--mat) + 72px) calc(var(--mat) + 12px) calc(var(--mat) + 12px);
+  }
+  .column,
+  .station[data-flow] .column {
+    width: 100%;
+  }
+  .station:not([data-flow]) .column {
+    max-height: 56svh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 4px;
+  }
+}

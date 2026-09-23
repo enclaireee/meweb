@@ -1,0 +1,26 @@
+.card {
+  list-style: none;
+  transition: translate var(--dur-quick) var(--ease-paper);
+}
+.card:hover {
+  translate: 0 -2px;
+}
+
+.face {
+  display: block;
+  padding: 30px 18px 16px;
+  clip-path: var(--clip-card, none);
+  mask: radial-gradient(circle at 50% 14px, transparent 4px, #000 4.5px);
+  -webkit-mask: radial-gradient(circle at 50% 14px, transparent 4px, #000 4.5px);
+  box-shadow: inset calc(var(--light-x) * -2px) calc(var(--light-y) * 2px) 0 rgb(255 255 255 / 0.35);
+}
+
+.lines {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+  padding-left: 1em;
+  list-style: "– ";
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}

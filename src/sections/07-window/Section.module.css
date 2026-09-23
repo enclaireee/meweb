@@ -1,0 +1,19 @@
+.face {
+  padding: 26px 28px 28px;
+  clip-path: var(--clip-plate, none);
+  box-shadow: inset calc(var(--light-x) * -2px) calc(var(--light-y) * 2px) 0 rgb(255 255 255 / 0.35);
+}
+
+.links {
+  display: grid;
+  gap: 12px;
+  margin-top: 22px;
+  justify-items: start;
+}
+.links > li:nth-child(2) {
+  rotate: -0.8deg;
+}
+.links > li:nth-child(3) {
+  rotate: 0.6deg;
+  margin-left: 10px;
+}

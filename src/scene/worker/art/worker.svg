@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -1 6 7" data-aisle="closed" data-backing="0.12">
+  <!--
+    The worker (design.md §8): a split-pin profile puppet, facing +x, feet on y=6 (world y = 6 - y).
+    ~5 units tall with the hat, 5.5 heads. One path per part; data-pivot is the pin, data-parent the part it
+    hangs from. Only hinge rotation happens at runtime. data-backing gives every part an ink mount.
+  -->
+
+  <!-- behind the body -->
+  <path id="arm-back-upper" data-z="-0.4" data-stock="ink" data-parent="torso" data-pivot="0 2.4"
+    d="M-0.17 2.35 C-0.17 2.2 0.17 2.2 0.17 2.35 L0.15 3.1 C0.15 3.22 -0.15 3.22 -0.15 3.1 Z" />
+  <path id="arm-back-lower" data-z="-0.36" data-stock="ink" data-parent="arm-back-upper" data-pivot="0 3.1"
+    d="M-0.15 3.05 C-0.15 2.94 0.15 2.94 0.15 3.05 L0.13 3.66 C0.21 3.74 0.19 3.9 0.02 3.92 C-0.15 3.92 -0.2 3.76 -0.12 3.66 Z" />
+  <path id="leg-back-thigh" data-z="-0.3" data-stock="ink" data-parent="torso" data-pivot="0 3.7"
+    d="M-0.2 3.62 C-0.2 3.48 0.2 3.48 0.2 3.62 L0.18 4.8 C0.18 4.93 -0.18 4.93 -0.18 4.8 Z" />
+  <path id="leg-back-shin" data-z="-0.26" data-stock="ink" data-parent="leg-back-thigh" data-pivot="0 4.8"
+    d="M-0.17 4.74 C-0.17 4.63 0.17 4.63 0.17 4.74 L0.16 5.56 L0.4 5.56 C0.56 5.56 0.63 5.7 0.63 5.85 V6 H-0.23 V5.56 Z" />
+
+  <!-- the body: torso is the root; the hip pin is where the legs hang -->
+  <path id="torso" data-z="0" data-stock="ink" data-pivot="0 3.7"
+    d="M-0.55 3.9 V2.6 C-0.55 2.3 -0.32 2.12 0 2.12 C0.3 2.12 0.52 2.3 0.52 2.6 V3.9 C0.52 4.02 -0.55 4.02 -0.55 3.9 Z" />
+  <path id="head" data-z="0.05" data-stock="paper" data-parent="torso" data-pivot="0.02 2.15"
+    d="M0.05 1.2 C0.34 1.2 0.49 1.38 0.52 1.58 L0.66 1.74 L0.52 1.82 C0.48 2.02 0.3 2.14 0.05 2.14 C-0.23 2.14 -0.42 1.94 -0.42 1.67 C-0.42 1.4 -0.23 1.2 0.05 1.2 Z" />
+  <path id="eye" data-z="0.1" data-stock="ink" data-parent="head" data-pivot="0.02 2.15"
+    d="M0.17 1.6 a0.11 0.11 0 1 0 0.22 0 a0.11 0.11 0 1 0 -0.22 0 Z" />
+  <!-- the accent: vest (a reflective stripe cut clean through) and hard hat -->
+  <path id="vest" data-z="0.12" data-stock="accent" data-parent="torso" data-pivot="0 3.7"
+    d="M-0.5 3.72 V2.7 C-0.5 2.42 -0.3 2.28 -0.06 2.28 H0.16 L0.47 2.95 V3.72 Z"
+    data-holes="M-0.6 3.02 H0.6 V3.4 H-0.6 Z" />
+  <path id="hat" data-z="0.16" data-stock="accent" data-parent="head" data-pivot="-0.46 1.42"
+    d="M-0.43 1.36 C-0.43 1.02 -0.12 0.8 0.12 0.8 C0.42 0.8 0.62 1.05 0.62 1.36 Z M-0.5 1.3 H0.86 C0.9 1.3 0.9 1.52 0.86 1.52 H-0.5 Z" />
+  <path id="headlamp" data-z="0.2" data-stock="glow" data-parent="hat" data-pivot="-0.46 1.42"
+    d="M0.44 1.14 a0.12 0.12 0 1 0 0.24 0 a0.12 0.12 0 1 0 -0.24 0 Z" />
+
+  <!-- in front of the body -->
+  <path id="leg-front-thigh" data-z="0.3" data-stock="ink" data-parent="torso" data-pivot="0 3.7"
+    d="M-0.2 3.62 C-0.2 3.48 0.2 3.48 0.2 3.62 L0.18 4.8 C0.18 4.93 -0.18 4.93 -0.18 4.8 Z" />
+  <path id="leg-front-shin" data-z="0.34" data-stock="ink" data-parent="leg-front-thigh" data-pivot="0 4.8"
+    d="M-0.17 4.74 C-0.17 4.63 0.17 4.63 0.17 4.74 L0.16 5.56 L0.4 5.56 C0.56 5.56 0.63 5.7 0.63 5.85 V6 H-0.23 V5.56 Z" />
+  <path id="arm-front-upper" data-z="0.42" data-stock="ink" data-parent="torso" data-pivot="0 2.4"
+    d="M-0.17 2.35 C-0.17 2.2 0.17 2.2 0.17 2.35 L0.15 3.1 C0.15 3.22 -0.15 3.22 -0.15 3.1 Z" />
+  <path id="arm-front-lower" data-z="0.46" data-stock="ink" data-parent="arm-front-upper" data-pivot="0 3.1"
+    d="M-0.15 3.05 C-0.15 2.94 0.15 2.94 0.15 3.05 L0.13 3.66 C0.21 3.74 0.19 3.9 0.02 3.92 C-0.15 3.92 -0.2 3.76 -0.12 3.66 Z" />
+  <path id="clipboard" data-z="0.52" data-stock="paper" data-parent="arm-front-lower" data-pivot="0.02 3.78"
+    d="M0.02 3.25 L0.5 3.19 L0.54 3.83 L0.06 3.88 Z" />
+</svg>

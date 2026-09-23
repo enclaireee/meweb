@@ -1,0 +1,30 @@
+.hint {
+  position: fixed;
+  z-index: 65;
+  left: calc(var(--mat) + 16px);
+  bottom: calc(var(--mat) + 16px);
+  opacity: 0;
+  translate: 0 8px;
+  pointer-events: none;
+  transition:
+    opacity 600ms var(--ease-paper),
+    translate 600ms var(--ease-paper);
+}
+
+:global(html[data-scene="live"]) .hint:not([data-gone]) {
+  opacity: 1;
+  translate: 0 0;
+  transition-delay: 1.8s;
+}
+
+.strip {
+  display: block;
+  padding: 7px 16px 8px;
+  clip-path: var(--clip-strip, none);
+}
+
+@media (max-width: 1023.98px) {
+  .hint {
+    display: none;
+  }
+}

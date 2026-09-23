@@ -1,26 +1,241 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------------------
+ * Tokens: design.md §1.1, §2, §3, §7.1, mirrored from src/design/tokens.ts.
+ * Light states are attributes on <html>: data-light="night" | "morning".
+ * ------------------------------------------------------------------------- */
+
+:root,
+[data-light="night"] {
+  --paper: #e9dfcc;
+  --ink: #2b2521;
+  --ink-soft: #5a4f46;
+  --accent: #e8742f;
+  --accent-text: #c4531f;
+  --glow: #ffd58a;
+  --shadow: rgba(10, 13, 31, 0.55);
+  --fog: #6f7fa3;
+  --sky: #8fa0c0;
+  /* the room behind the canvas before the poster paints */
+  --stage: #212843;
+  color-scheme: dark;
+}
+
+[data-light="morning"] {
+  --paper: #f2eadb;
+  --ink: #2b2521;
+  --ink-soft: #5a4f46;
+  --accent: #d9622b;
+  --accent-text: #b84a1a;
+  --shadow: rgba(59, 46, 38, 0.35);
+  --fog: #ede3d3;
+  --sky: #f7f0e4;
+  --stage: #dcd6cf;
+  color-scheme: light;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* light aim, written by the scene (design.md §5.4); centred until then */
+  --light-x: 0;
+  --light-y: -0.4;
+
+  --ease-paper: cubic-bezier(0.45, 0, 0.2, 1);
+  --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-quick: 180ms;
+  --dur-base: 320ms;
+  --dur-slow: 700ms;
+  --dur-light: 1200ms;
+
+  --mat: 10px;
+  --paper-shadow: drop-shadow(
+    calc(var(--light-x) * -8px) calc(6px + var(--light-y) * -6px) 14px var(--shadow)
+  );
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@media (max-width: 639.98px) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --mat: 6px;
   }
 }
 
+@theme inline {
+  --font-serif: var(--font-newsreader), ui-serif, Georgia, serif;
+
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-glow: var(--glow);
+
+  --text-kicker: 0.75rem;
+  --text-kicker--letter-spacing: 0.18em;
+  --text-kicker--font-weight: 560;
+  --text-kicker--line-height: 1.3;
+  --text-caption: clamp(0.94rem, 0.9rem + 0.2vw, 1rem);
+  --text-caption--line-height: 1.45;
+  --text-body: clamp(1rem, 0.96rem + 0.2vw, 1.06rem);
+  --text-body--line-height: 1.55;
+  --text-fact: 1.5rem;
+  --text-fact--line-height: 1.1;
+  --text-fact--font-weight: 600;
+  --text-plate-title: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem);
+  --text-plate-title--line-height: 1.1;
+  --text-plate-title--font-weight: 500;
+  --text-hero: clamp(2.5rem, 1.6rem + 4vw, 4.75rem);
+  --text-hero--line-height: 1;
+  --text-hero--font-weight: 450;
+
+  --ease-paper: var(--ease-paper);
+  --ease-settle: var(--ease-settle);
+}
+
+/* ---------------------------------------------------------------------------
+ * Base
+ * ------------------------------------------------------------------------- */
+
+html {
+  background: var(--stage);
+  transition: background-color var(--dur-light) var(--ease-paper);
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: clip;
+  font-family: var(--font-serif);
+  color: var(--ink);
+  font-optical-sizing: auto;
+  font-feature-settings: "kern", "liga";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--paper);
+}
+
+/* The focus stitch (design.md §6): visible everywhere, never removed. */
+:focus-visible {
+  outline: 2px dashed var(--ink);
+  outline-offset: 3px;
+}
+
+/* Paper stock that follows the light change (colour transitions are slow, design.md §8). */
+.paper {
+  background-color: var(--paper);
+  color: var(--ink);
+  transition:
+    background-color var(--dur-light) var(--ease-paper),
+    color var(--dur-light) var(--ease-paper);
+}
+
+/* Fibre on HTML paper: the same grain tile as the scene, multiplied in. */
+.grain {
+  position: relative;
+  isolation: isolate;
+}
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url("/textures/grain-rough.webp") repeat;
+  background-size: 256px;
+  mix-blend-mode: multiply;
+  opacity: 0.08;
+}
+
+/* Wrapper that casts the lit-side shadow for a clipped paper child. */
+.cast {
+  filter: var(--paper-shadow);
+}
+
+/* Perforation divider (design.md §6). */
+.perforation {
+  height: 3px;
+  border: 0;
+  background: radial-gradient(circle, color-mix(in srgb, var(--ink) 30%, transparent) 1.5px, transparent 1.6px) 0 0 / 8px 3px repeat-x;
+}
+
+/* The poster: a still of the composed desk (LCP), fixed behind everything. It fades once the
+   canvas has drawn, and stays as the whole backdrop when there's no WebGL (design.md §10). */
+.poster {
+  position: fixed;
+  inset: 0;
+  background: var(--stage) url("/poster/desk-night.avif") center / cover no-repeat;
+  transition: opacity 300ms var(--ease-paper);
+}
+[data-light="morning"] .poster {
+  background-image: url("/poster/desk-morning.avif");
+}
+@media (orientation: portrait) {
+  .poster {
+    background-image: url("/poster/desk-night-portrait.avif");
+  }
+  [data-light="morning"] .poster {
+    background-image: url("/poster/desk-morning-portrait.avif");
+  }
+}
+html[data-scene="live"] .poster {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.lenis) {
+    scroll-behavior: smooth;
+  }
+}
+
+/* The frame mat that closes the box (design.md §3). */
+.frame-mat {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  border: var(--mat) solid var(--paper);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--ink) 25%, transparent),
+    inset 0 4px 18px rgba(0, 0, 0, 0.35);
+  transition: border-color var(--dur-light) var(--ease-paper);
+}
+
+.skip-link {
+  position: fixed;
+  left: calc(var(--mat) + 12px);
+  top: calc(var(--mat) + 12px);
+  z-index: 80;
+  transform: translateY(-200%);
+}
+.skip-link:focus-visible {
+  transform: none;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Lenis (scene chunk) */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

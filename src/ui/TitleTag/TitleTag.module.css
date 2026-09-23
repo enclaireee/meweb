@@ -1,0 +1,58 @@
+.hang {
+  position: relative;
+  transform-origin: 50% 26px;
+}
+
+/* the string runs up out of frame from the punched hole */
+.string {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% - 26px);
+  width: 1px;
+  height: 100vh;
+  background: color-mix(in srgb, var(--ink) 80%, transparent);
+  z-index: 1;
+}
+
+.tag {
+  position: relative;
+  container-type: inline-size;
+  padding: 58px 32px 32px;
+  clip-path: var(--clip-tag, none);
+  /* the punched hole is a real opening: the scene shows through it */
+  mask: radial-gradient(circle at 50% 26px, transparent 6.5px, #000 7px);
+  -webkit-mask: radial-gradient(circle at 50% 26px, transparent 6.5px, #000 7px);
+  box-shadow: inset calc(var(--light-x) * -2px) calc(var(--light-y) * 2px) 0 rgb(255 255 255 / 0.35);
+}
+
+/* stitched inner border */
+.tag::before {
+  content: "";
+  position: absolute;
+  inset: 44px 12px 12px;
+  border: 1px dashed color-mix(in srgb, var(--ink) 40%, transparent);
+  pointer-events: none;
+}
+
+/* reinforcement washer around the hole */
+.washer {
+  position: absolute;
+  left: 50%;
+  top: 26px;
+  width: 22px;
+  height: 22px;
+  translate: -50% -50%;
+  border-radius: 50%;
+  border: 3.5px solid color-mix(in srgb, var(--ink) 14%, var(--paper));
+}
+
+@media (max-width: 639.98px) {
+  .tag {
+    padding: 52px 22px 22px;
+  }
+}
+
+/* design.md's clamp stays the ceiling; the tag's own width is the floor so the name never overflows */
+.name {
+  font-size: min(var(--text-hero), 16.5cqi);
+}

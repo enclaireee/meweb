@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-60 -20 120 60" data-aisle="closed">
+  <!--
+    Station 07, the Window (contact). Floor at y=40. The end of the route: the aisle is closed by the
+    window wall. The cable ends at the socket under the sill; the city is lit beyond the glass.
+  -->
+
+  <!-- the last arch: rounded shoulders, a constellation punched through its header -->
+  <path id="arch" data-z="0" data-stock="navyDeep" data-cut="knife" data-cast="false"
+    d="M-60 -20 H60 V40 H28 V15 Q28 9 22 9 H-22 Q-28 9 -28 15 V40 H-60 Z"
+    data-holes="M-20.3 4.8 a0.3 0.3 0 1 0 0.6 0 a0.3 0.3 0 1 0 -0.6 0 Z M-16.3 3.2 a0.4 0.4 0 1 0 0.8 0 a0.4 0.4 0 1 0 -0.8 0 Z M-12.3 5.4 a0.3 0.3 0 1 0 0.6 0 a0.3 0.3 0 1 0 -0.6 0 Z M-7.3 3.8 a0.3 0.3 0 1 0 0.6 0 a0.3 0.3 0 1 0 -0.6 0 Z M4.7 4.4 a0.35 0.35 0 1 0 0.7 0 a0.35 0.35 0 1 0 -0.7 0 Z M9.7 2.8 a0.3 0.3 0 1 0 0.6 0 a0.3 0.3 0 1 0 -0.6 0 Z M14.7 5 a0.4 0.4 0 1 0 0.8 0 a0.4 0.4 0 1 0 -0.8 0 Z M19.7 3.6 a0.3 0.3 0 1 0 0.6 0 a0.3 0.3 0 1 0 -0.6 0 Z" />
+
+  <!-- the window wall across the whole box: four panes, a sill below -->
+  <path id="window-wall" data-z="-50" data-stock="navy" data-cut="knife"
+    d="M-42 -20 H42 V40 H-42 Z"
+    data-holes="M-15 4 H-0.6 V14.6 H-15 Z M0.6 4 H15 V14.6 H0.6 Z M-15 15.4 H-0.6 V26 H-15 Z M0.6 15.4 H15 V26 H0.6 Z" />
+  <path id="window-sill" data-z="-49" data-stock="wood" data-cut="knife"
+    d="M-17.4 26 H17.4 V27.2 H-17.4 Z M-14.4 27.2 L-12.6 27.2 L-14.4 29.4 Z M12.6 27.2 L14.4 27.2 L14.4 29.4 Z" />
+  <!-- the socket where the cable ends -->
+  <path id="socket" data-z="-46.2" data-stock="graphite" data-cut="knife"
+    d="M8.4 40 V37.6 H10.8 V40 Z"
+    data-holes="M8.95 38.3 H9.3 V39 H8.95 Z M9.9 38.3 H10.25 V39 H9.9 Z" />
+
+  <!-- beyond the glass: the city, its windows lit from behind, and the moon on a string -->
+  <path id="city" data-z="-58" data-stock="blueprintDeep" data-cut="knife"
+    d="M-34 26 V17 H-29 V14 H-25.6 V18.4 H-22 V12.6 L-20.2 10.8 L-18.4 12.6 V19 H-14.2 V15.4 H-9.8 V20.2 H-6.2 V13.2 H-2.4 V17.8 H1.6 V11.2 H3 V9.8 H4.4 V11.2 H5.8 V18.6 H9.6 V14.6 H13.8 V19.4 H17.2 V12.8 H21 V17.2 H25.4 V15 H29.6 V20 H34 V26 Z"
+    data-holes="M-27.9 15.4 H-27.3 V16 H-27.9 Z M-26.9 16.8 H-26.3 V17.4 H-26.9 Z M-20.5 14 H-19.9 V14.6 H-20.5 Z M-20.5 16 H-19.9 V16.6 H-20.5 Z M-12.9 17 H-12.3 V17.6 H-12.9 Z M-11.3 18.4 H-10.7 V19 H-11.3 Z M-4.9 14.6 H-4.3 V15.2 H-4.9 Z M-3.9 16.8 H-3.3 V17.4 H-3.9 Z M2.1 12.6 H2.7 V13.2 H2.1 Z M3.7 14.4 H4.3 V15 H3.7 Z M2.9 16.6 H3.5 V17.2 H2.9 Z M11.1 16 H11.7 V16.6 H11.1 Z M12.3 17.6 H12.9 V18.2 H12.3 Z M18.5 14.2 H19.1 V14.8 H18.5 Z M19.5 16.2 H20.1 V16.8 H19.5 Z M26.7 16.6 H27.3 V17.2 H26.7 Z" />
+  <path id="city-glow" data-z="-58.5" data-stock="glow"
+    d="M-33 26 V12 H33 V26 Z" />
+  <path id="moon" data-z="-54" data-stock="cream" data-hang="8.4 5"
+    d="M8.4 5 a2.1 2.1 0 1 0 0.001 0 Z" />
+
+  <!-- a quiet corner to read in: an armchair, a floor lamp, a plant -->
+  <path id="armchair" data-z="-30" data-stock="tomato" data-cut="knife"
+    d="M-27 40 V38.4 H-26.4 V33.4 C-27.4 33.4 -27.8 32.6 -27.8 31.8 C-27.8 30.8 -27 30.2 -26 30.4 V25.6 C-26 24 -24.8 23.2 -22.8 23.2 H-19.2 C-17.2 23.2 -16 24 -16 25.6 V30.4 C-15 30.2 -14.2 30.8 -14.2 31.8 C-14.2 32.6 -14.6 33.4 -15.6 33.4 V38.4 H-15 V40 H-16.2 V39 H-25.8 V40 Z" />
+  <path id="floor-lamp" data-z="-30" data-stock="brass" data-cut="knife"
+    d="M17 40 V39.2 H21.4 V40 Z M18.8 39.2 V25.4 H19.6 V39.2 Z M16.4 25.6 L17.4 21.6 H21 L22 25.6 Z" />
+  <path id="lamp-glow" data-z="-30.3" data-stock="glow"
+    d="M17 25.2 H21.4 V26.4 H17 Z" />
+  <path id="plant" data-z="-20" data-stock="forest" data-cut="knife"
+    d="M11.6 40 L11.9 37 H14.9 L15.2 40 Z M13.2 37 C12.2 35.4 11.2 33.2 11.8 31.6 C13 32.8 13.6 34.8 13.6 37 Z M13.6 37 C13.6 34.4 14.4 31.8 15.8 30.8 C16.2 32.8 15.2 35 14 37 Z" />
+
+  <!-- detail: a telescope on its tripod behind the right wing, aimed at the moon -->
+  <path id="telescope" data-z="-6" data-stock="brass" data-cut="knife"
+    d="M27.4 40 L28.6 34.4 L29.2 34.5 L28.2 40 Z M29.6 34.4 L30.8 40 H30.2 L29.1 34.5 Z M28.4 34.6 L27.8 33.6 L31.6 30.4 L32.6 31.6 L28.9 34.8 Z" />
+</svg>

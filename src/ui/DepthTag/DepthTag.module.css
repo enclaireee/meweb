@@ -1,0 +1,82 @@
+.nav {
+  position: fixed;
+  z-index: 70;
+  left: calc(var(--mat) + 16px);
+  top: calc(var(--mat) + 16px);
+}
+
+.tag {
+  position: relative;
+  padding: 14px 18px 14px 16px;
+  clip-path: var(--clip-strip-tall, none);
+  box-shadow: inset calc(var(--light-x) * -2px) calc(var(--light-y) * 2px) 0 rgb(255 255 255 / 0.35);
+}
+
+.list {
+  display: grid;
+  gap: 2px;
+  margin-top: 8px;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 4px;
+  font-size: 0.9375rem;
+  line-height: 1.3;
+  color: var(--ink-soft);
+  text-decoration: none;
+  transition: color var(--dur-quick) var(--ease-paper);
+}
+.link:hover,
+.link[aria-current] {
+  color: var(--ink);
+}
+.link[aria-current] {
+  font-style: italic;
+}
+
+/* a punched hole per station; the current one gets the accent washer */
+.punch {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 35%, transparent);
+  flex: none;
+}
+.link[aria-current] .punch {
+  background: var(--stage);
+  box-shadow: 0 0 0 2.5px var(--accent);
+}
+
+.narrow {
+  display: none;
+}
+
+.summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 0.9375rem;
+  padding: 2px 4px;
+}
+.summary::-webkit-details-marker {
+  display: none;
+}
+.summary::after {
+  content: " ▾";
+  font-size: 0.75em;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 1023.98px) {
+  .wide {
+    display: none;
+  }
+  .narrow {
+    display: block;
+  }
+  .tag {
+    padding: 8px 12px;
+  }
+}

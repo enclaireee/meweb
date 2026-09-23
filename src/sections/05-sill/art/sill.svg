@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-60 -20 120 60">
+  <!--
+    Station 05, the Sill (Solar-Powered Lighting). Floor at y=40, aisle |x| < 8 below y=18.
+    A window at the back lets the light in; the panel drinks it on the sill, the LED gives it back,
+    and a small screen keeps count.
+  -->
+
+  <!-- a round-headed arch, like the window it leads to -->
+  <path id="arch" data-z="0" data-stock="terracottaDeep" data-cut="knife" data-cast="false"
+    d="M-60 -20 H60 V40 H28 V20 C28 12 16 7 0 7 C-16 7 -28 12 -28 20 V40 H-60 Z"
+    data-holes="M-0.5 3.2 a0.5 0.5 0 1 0 1 0 a0.5 0.5 0 1 0 -1 0 Z M-10.4 4.4 a0.4 0.4 0 1 0 0.8 0 a0.4 0.4 0 1 0 -0.8 0 Z M9.6 4.4 a0.4 0.4 0 1 0 0.8 0 a0.4 0.4 0 1 0 -0.8 0 Z" />
+
+  <!-- far: the back wall's window, panes cut through to the light beyond -->
+  <path id="far-window" data-z="-42" data-stock="cream" data-cut="knife"
+    d="M-36 2 H36 V40 H8 V16.6 H-8 V40 H-36 Z"
+    data-holes="M-12 4 H-0.4 V9.6 H-12 Z M0.4 4 H12 V9.6 H0.4 Z M-12 10.4 H-0.4 V15.4 H-12 Z M0.4 10.4 H12 V15.4 H0.4 Z" />
+
+  <!-- middle A (left): the sill, the tilted panel with its cells, the little screen -->
+  <path id="sill-ledge" data-z="-20" data-stock="wood" data-cut="knife"
+    d="M-31 21.6 H-8.6 V22.6 H-31 Z M-28 22.6 L-26 22.6 L-28 25 Z M-12.2 22.6 H-10.2 V25 Z" />
+  <path id="solar-panel" data-z="-19.6" data-stock="blueprint" data-cut="knife"
+    d="M-28.4 21.6 L-25.6 14.2 L-14.6 15.8 L-16.2 21.6 Z M-22.4 21.6 V23 H-21.2 V21.6 Z"
+    data-holes="M-26.9 20.8 L-26 18 L-23.5 18.35 L-24.3 21 Z M-22.9 21 L-22.2 18.45 L-19.6 18.8 L-20.2 21.1 Z M-19.1 21.05 L-18.55 19 L-16.3 19.3 L-16.8 21.05 Z M-25.6 17.2 L-24.8 15.2 L-22.4 15.55 L-23.1 17.55 Z M-21.9 17.7 L-21.3 15.7 L-18.5 16.1 L-19 18.1 Z M-18 18.2 L-17.6 16.35 L-15.5 16.65 L-15.9 18.45 Z" />
+  <path id="oled-card" data-z="-19.2" data-stock="graphite" data-cut="knife"
+    d="M-14.4 21.6 V18.6 L-10.2 18.4 V21.6 Z"
+    data-holes="M-13.6 19.3 H-11 V20.8 H-13.6 Z" />
+  <path id="oled-glow" data-z="-19.5" data-stock="glowCyan"
+    d="M-13.8 19.1 H-10.8 V21 H-13.8 Z" />
+
+  <!-- stage (right): the LED on its hinged arm, the Arduino on a crate -->
+  <path id="led-arm" data-z="-16" data-stock="steel" data-cut="knife"
+    d="M10.6 40 V38.6 H14.8 V40 Z M12.2 38.6 L13.2 38.6 L13.6 28.4 L12.8 28.2 Z M13.2 28.8 a0.8 0.8 0 1 0 0.001 0 Z M13.4 28 L18.4 22.6 L19 23.2 L14 28.6 Z M17.4 21.6 L20.6 21.2 L21 23.8 L18.2 24.8 Z" />
+  <path id="led-glow" data-z="-16.4" data-stock="glow"
+    d="M18.5 24.3 a1 1 0 1 0 2 0 a1 1 0 1 0 -2 0 Z" />
+  <path id="crate" data-z="-14" data-stock="kraft" data-cut="knife"
+    d="M19.8 40 V34.6 H27.2 V40 Z"
+    data-holes="M21.6 35.6 H25.4 V36.2 H21.6 Z" />
+  <path id="arduino" data-z="-13.6" data-stock="teal" data-cut="knife"
+    d="M20.4 34.6 V32.8 H26.4 V34.6 Z M21 32.8 V32.3 H21.5 V32.8 Z M22 32.8 V32.3 H22.5 V32.8 Z M23 32.8 V32.3 H23.5 V32.8 Z M24 32.8 V32.3 H24.5 V32.8 Z M25.4 32.8 V31.9 H26.2 V32.8 Z"
+    data-holes="M20.9 33.4 a0.3 0.3 0 1 0 0.6 0 a0.3 0.3 0 1 0 -0.6 0 Z" />
+
+  <!-- hung: a mobile, sun at one end and moon at the other -->
+  <path id="sun-moon-mobile" data-z="-34" data-stock="sunflower" data-hang="0 11.6" data-cut="knife"
+    d="M-0.2 11.6 H0.2 V12.6 H5 V12.9 H0.2 H-5 V12.6 H-0.2 Z M-5.1 12.9 H-4.8 V14.2 H-5.1 Z M4.8 12.9 H5.1 V14.2 H4.8 Z M-4.95 14 a1.35 1.35 0 1 0 0.001 0 Z M-6.9 14.8 L-6.4 14.8 L-6.3 15.2 Z M5.4 14.2 C4.2 14.4 3.6 15.4 3.9 16.4 C4.2 17.3 5.2 17.8 6.2 17.4 C5.4 17 5 16.2 5.2 15.4 C5.3 14.8 5.4 14.5 5.4 14.2 Z" />
+
+  <!-- detail: a watering can by the left jamb; a snail at the far end of the sill, half behind the wing -->
+  <path id="watering-can" data-z="-6" data-stock="leaf" data-cut="knife"
+    d="M-26.8 40 V36 H-22.4 V40 Z M-22.4 37 L-19.6 34.6 L-19.2 35.1 L-22 37.6 Z M-26.8 36.6 C-28.2 36.6 -28.6 38.4 -27.4 38.8 L-27.2 38.3 C-27.8 38 -27.6 37.2 -26.8 37.2 Z M-25.2 36 V35.2 H-24 V36 Z" />
+  <path id="snail" data-z="-19.8" data-stock="rose"
+    d="M-30.8 21.6 C-30.9 20.2 -29.8 19.6 -29 20.1 C-28.3 20.6 -28.4 21.3 -28.8 21.6 L-28.3 21.6 L-27.9 20.8 L-27.7 20.9 L-27.9 21.6 Z" />
+</svg>

@@ -1,0 +1,63 @@
+.dial {
+  position: fixed;
+  z-index: 70;
+  right: calc(var(--mat) + 16px);
+  top: calc(var(--mat) + 16px);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+/* the recessed slot the disc sits in: half the disc hides behind the card's lip */
+.slot {
+  display: block;
+  position: relative;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ink) 55%, var(--stage));
+  box-shadow:
+    inset 0 2px 5px rgb(0 0 0 / 0.55),
+    0 0 0 4px var(--paper);
+  overflow: hidden;
+  transition: box-shadow var(--dur-light) var(--ease-paper);
+}
+
+.slot::after {
+  /* the lip: covers the lower half so only one symbol shows at a time */
+  content: "";
+  position: absolute;
+  inset: 50% -2px -2px;
+  background: var(--paper);
+  border-top: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+  transition: background-color var(--dur-light) var(--ease-paper);
+}
+
+.disc {
+  position: absolute;
+  inset: 4px;
+  width: 48px;
+  height: 48px;
+  fill: var(--paper);
+  transition:
+    rotate var(--dur-slow) var(--ease-paper),
+    fill var(--dur-light) var(--ease-paper);
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.4));
+}
+
+:global([data-light="morning"]) .disc {
+  rotate: 180deg;
+}
+
+.pin {
+  fill: var(--ink-soft);
+}
+
+.dial:hover .disc {
+  rotate: -8deg;
+}
+:global([data-light="morning"]) .dial:hover .disc {
+  rotate: 172deg;
+}

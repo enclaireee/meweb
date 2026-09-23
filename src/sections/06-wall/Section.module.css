@@ -1,0 +1,72 @@
+.header {
+  padding: 22px 26px 20px;
+  clip-path: var(--clip-card, none);
+  box-shadow: inset calc(var(--light-x) * -2px) calc(var(--light-y) * 2px) 0 rgb(255 255 255 / 0.35);
+}
+
+.group {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+/* labels sit on the scene, so they get a small paper strip to stay readable */
+.label {
+  justify-self: start;
+  padding: 5px 10px 4px;
+  background: var(--paper);
+  color: var(--ink);
+  clip-path: var(--clip-strip, none);
+  transition: background-color var(--dur-light) var(--ease-paper);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
+.pegboard {
+  display: grid;
+  gap: 14px;
+  padding: 16px 18px 20px;
+  border-radius: 2px;
+  /* pegboard: a darker board with a regular grid of holes */
+  background:
+    radial-gradient(circle, rgb(0 0 0 / 0.55) 1.6px, transparent 2px) 0 0 / 18px 18px,
+    color-mix(in srgb, var(--ink) 55%, var(--stage));
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.3);
+}
+.row h4 {
+  color: var(--paper);
+  margin-bottom: 4px;
+}
+.pegs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 8px;
+}
+
+.ribbons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+.award {
+  list-style: none;
+}
+.awardFace {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  height: 100%;
+  padding: 14px 16px;
+  clip-path: var(--clip-card, none);
+}
+
+@media (max-width: 1023.98px) {
+  .cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

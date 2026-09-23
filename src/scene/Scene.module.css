@@ -1,0 +1,10 @@
+.canvas {
+  position: fixed;
+  inset: 0;
+  /* vertical scroll stays native on touch; horizontal drags tilt the box */
+  touch-action: pan-y;
+}
+
+.canvas canvas {
+  display: block;
+}

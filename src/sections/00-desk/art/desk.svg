@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-60 -20 120 60">
+  <!--
+    Station 00, the Desk. Front elevation, 1 unit = 1 cm, floor at y=40 (world y = 40 - y).
+    The aisle |x| < 8 below y=18 stays clear for the camera, the worker and the cable.
+    Every sheet except the arch and the hung things pops up on its hinge in the entrance.
+  -->
+
+  <!-- the proscenium: scalloped valance, a row of punched holes, open to the floor -->
+  <path id="arch" data-z="0" data-stock="woodDeep" data-cut="knife" data-cast="false"
+    d="M-60 -20 H60 V40 H28 V9.5 Q24.5 13 21 9.5 Q17.5 13 14 9.5 Q10.5 13 7 9.5 Q3.5 13 0 9.5 Q-3.5 13 -7 9.5 Q-10.5 13 -14 9.5 Q-17.5 13 -21 9.5 Q-24.5 13 -28 9.5 V40 H-60 Z"
+    data-holes="M-24.85 6.5 a0.35 0.35 0 1 0 0.7 0 a0.35 0.35 0 1 0 -0.7 0 Z M-17.85 6.5 a0.35 0.35 0 1 0 0.7 0 a0.35 0.35 0 1 0 -0.7 0 Z M-10.85 6.5 a0.35 0.35 0 1 0 0.7 0 a0.35 0.35 0 1 0 -0.7 0 Z M-3.85 6.5 a0.35 0.35 0 1 0 0.7 0 a0.35 0.35 0 1 0 -0.7 0 Z M3.15 6.5 a0.35 0.35 0 1 0 0.7 0 a0.35 0.35 0 1 0 -0.7 0 Z M10.15 6.5 a0.35 0.35 0 1 0 0.7 0 a0.35 0.35 0 1 0 -0.7 0 Z M17.15 6.5 a0.35 0.35 0 1 0 0.7 0 a0.35 0.35 0 1 0 -0.7 0 Z M24.15 6.5 a0.35 0.35 0 1 0 0.7 0 a0.35 0.35 0 1 0 -0.7 0 Z" />
+
+  <!-- far: shelves on the back wall, jars and books, pale and simple -->
+  <path id="far-shelf-left" data-z="-42" data-stock="kraft" data-hinge="bottom" data-cut="knife"
+    d="M-34 12 H-12.4 V12.9 H-34 Z M-31.6 12.9 L-29.3 12.9 L-31.6 15.5 Z M-15.1 12.9 L-12.8 12.9 L-12.8 15.5 Z" />
+  <path id="far-jars-left" data-z="-42" data-stock="mint" data-hinge="bottom"
+    d="M-32.6 12.3 V9.1 C-32.6 8.3 -32.1 7.9 -31.6 7.9 V7.3 H-30.7 V7.9 C-30.2 7.9 -29.8 8.3 -29.8 9.1 V12.3 Z
+       M-28.7 12.3 V10 C-28.7 9.5 -28.3 9.2 -27.9 9.2 H-27.2 C-26.8 9.2 -26.4 9.5 -26.4 10 V12.3 Z
+       M-25.3 12.3 V8.2 C-25.3 7.3 -24.6 6.7 -23.8 6.6 V6 H-22.7 V6.6 C-21.9 6.7 -21.3 7.3 -21.3 8.2 V12.3 Z
+       M-20 12.3 V8.6 C-20 7.9 -19.7 7.6 -19.6 7.3 V5.6 H-19 V7.3 C-18.9 7.6 -18.6 7.9 -18.6 8.6 V12.3 Z
+       M-17.5 12.3 V9.3 C-17.5 8.8 -17.1 8.4 -16.5 8.4 H-15.2 C-14.6 8.4 -14.2 8.8 -14.2 9.3 V12.3 Z"
+    data-holes="M-32 9.9 H-30.4 V10.9 H-32 Z M-24.6 8.8 H-22 V10.4 H-24.6 Z M-17 9.7 H-14.7 V10.6 H-17 Z" />
+  <path id="far-shelf-right" data-z="-42" data-stock="kraft" data-hinge="bottom" data-cut="knife"
+    d="M12.4 12 H34 V12.9 H12.4 Z M12.8 12.9 L15.1 12.9 L12.8 15.5 Z M31.6 12.9 L29.3 12.9 L31.6 15.5 Z" />
+  <path id="far-books-right" data-z="-42" data-stock="rose" data-hinge="bottom" data-cut="knife"
+    d="M13.4 12.3 V7.6 H14.6 V12.3 Z M14.9 12.3 V8.3 H15.9 V12.3 Z M16.1 12.3 V7.1 H17.5 V12.3 Z M17.7 12.3 L18.9 8.2 L19.9 8.5 L18.8 12.3 Z
+       M23.2 12.3 V9.4 H29.6 V12.3 Z M24.1 9.4 V8.1 H28.6 V9.4 Z"
+    data-holes="M16.5 8.2 H17.1 V8.9 H16.5 Z M25.4 10.3 H27.4 V11.1 H25.4 Z" />
+
+  <!-- middle B: the pinboard behind the desk, the tall cabinet on the right -->
+  <path id="pinboard" data-z="-30" data-stock="cork" data-hinge="bottom" data-cut="knife"
+    d="M-27.6 13.8 H-13.4 V24.8 H-27.6 Z" />
+  <path id="pinned-notes" data-z="-30" data-stock="cream" data-hinge="bottom"
+    d="M-26.3 15.4 L-22.4 15.1 L-22.1 19.6 L-26 19.9 Z M-21.1 15.2 L-17.9 15.5 L-18.2 18.9 L-21.4 18.6 Z M-16.9 15.9 L-14.5 15.8 L-14.4 18.1 L-16.8 18.2 Z M-20.2 20 L-15.4 19.7 L-15.2 23.4 L-20 23.7 Z"
+    data-holes="M-24.55 16.2 a0.3 0.3 0 1 0 0.6 0 a0.3 0.3 0 1 0 -0.6 0 Z M-19.95 16 a0.3 0.3 0 1 0 0.6 0 a0.3 0.3 0 1 0 -0.6 0 Z M-17.95 20.8 a0.3 0.3 0 1 0 0.6 0 a0.3 0.3 0 1 0 -0.6 0 Z" />
+  <path id="cabinet" data-z="-30" data-stock="sage" data-hinge="bottom" data-cut="knife"
+    d="M12 13.4 H27.6 V14.5 H27 V39.3 H27.4 V40 H12.2 V39.3 H12.6 V14.5 H12 Z"
+    data-holes="M19.62 16 H19.98 V38 H19.62 Z M18.4 26.4 a0.4 0.4 0 1 0 0.8 0 a0.4 0.4 0 1 0 -0.8 0 Z M20.4 26.4 a0.4 0.4 0 1 0 0.8 0 a0.4 0.4 0 1 0 -0.8 0 Z M14 16.2 H18 V17.9 H14 Z M21.6 16.2 H25.6 V17.9 H21.6 Z" />
+
+  <!-- things on the desk, standing just behind its front edge -->
+  <path id="lamp" data-z="-16" data-stock="tomato" data-hinge="bottom"
+    d="M-24.9 27.6 C-24.9 26.1 -20.7 26.1 -20.7 27.6 Z
+       M-23.3 26.7 L-19.3 18.4 L-18.5 18.8 L-22.5 27.1 Z
+       M-19.65 18.6 a0.75 0.75 0 1 0 1.5 0 a0.75 0.75 0 1 0 -1.5 0 Z
+       M-19.1 18.2 L-13.1 15.2 L-12.7 16 L-18.7 19 Z
+       M-14.3 14.6 C-13.2 13.3 -11.2 13.5 -10.6 14.9 L-8.9 19.2 C-10.5 20.2 -13.4 19.6 -15.3 18.1 Z"
+    data-holes="M-12.7 15.3 a0.3 0.3 0 1 0 0.6 0 a0.3 0.3 0 1 0 -0.6 0 Z" />
+  <path id="lamp-bulb" data-z="-16.4" data-stock="glow"
+    d="M-13.3 19.1 a1.05 1.05 0 1 0 2.1 0 a1.05 1.05 0 1 0 -2.1 0 Z" />
+  <path id="mug" data-z="-15.5" data-stock="cream" data-hinge="bottom"
+    d="M-17.1 24 H-14.1 V27.6 H-17.1 Z M-14.3 24.6 C-12.2 24.4 -12.2 27.2 -14.3 27 Z"
+    data-holes="M-14.1 25.25 C-13.1 25.2 -13.1 26.4 -14.1 26.35 Z" />
+  <path id="pencil-cup" data-z="-15.5" data-stock="mustard" data-hinge="bottom"
+    d="M-27 27.6 V24.9 H-25.2 V27.6 Z
+       M-26.7 25 L-27.4 21.6 L-26.95 21.5 L-26.25 24.9 Z
+       M-26.1 25 L-25.9 21 L-25.45 21 L-25.65 25 Z
+       M-25.6 25 L-24.6 22 L-24.15 22.15 L-25.15 25.1 Z" />
+
+  <!-- the stage: the desk, the side table, the notebook -->
+  <path id="desk" data-z="-14" data-stock="wood" data-hinge="bottom" data-cut="knife"
+    d="M-28 27.2 H-8.8 V28.9 H-28 Z M-27.1 28.9 H-25.6 V40 H-27.1 Z M-11.2 28.9 H-9.7 V40 H-11.2 Z M-24.2 28.9 H-15.8 V34.6 H-24.2 Z M-25.6 37.2 H-11.2 V37.9 H-25.6 Z"
+    data-holes="M-23.6 31.6 H-16.4 V31.95 H-23.6 Z M-21.2 30 H-18.8 V30.55 H-21.2 Z M-21.2 32.9 H-18.8 V33.45 H-21.2 Z" />
+  <path id="notebook" data-z="-16.5" data-stock="white" data-hinge="bottom"
+    d="M14.2 31.2 C15.8 30 18.1 29.9 19.4 30.8 C20.8 29.9 22.9 30 23.4 31.2 L23.4 31.8 H14.2 Z" />
+  <path id="plant" data-z="-16.5" data-stock="leaf" data-hinge="bottom"
+    d="M11.1 31.4 L11.5 28.9 H13.7 L14.1 31.4 Z
+       M12.4 29 C11.1 27.9 10.3 26.3 10.8 25.1 C12 25.9 12.7 27.4 12.8 29 Z
+       M12.7 29 C12.6 27 13.2 24.9 14.3 24.1 C14.6 25.8 13.9 27.7 13.1 29 Z
+       M13 29 C13.8 27.8 15.2 27.2 16 27.6 C15.4 28.5 14.2 29.1 13.2 29.2 Z" />
+  <path id="side-table" data-z="-16" data-stock="woodDeep" data-hinge="bottom" data-cut="knife"
+    d="M10 30.8 H23.8 V31.8 H10 Z M10.9 31.8 H12 V40 H10.9 Z M21.8 31.8 H22.9 V40 H21.8 Z M12 36.4 H21.8 V37.1 H12 Z" />
+  <path id="floor-books" data-z="-14" data-stock="plum" data-hinge="bottom" data-cut="knife"
+    d="M24.2 40 V38.6 H28.4 V40 Z M24.6 38.6 V37.3 H27.8 V38.6 Z M24.3 37.3 L24.5 36 L28.1 36.2 L27.9 37.3 Z" />
+
+  <!-- the cable's plug (accent) in its floor socket: where the guiding path begins -->
+  <path id="socket" data-z="-12.8" data-stock="graphite" data-hinge="bottom" data-cut="knife"
+    d="M9.6 40 V38.2 H11.8 V40 Z" data-holes="M10.1 38.8 H10.45 V39.4 H10.1 Z M10.95 38.8 H11.3 V39.4 H10.95 Z" />
+  <path id="plug" data-z="-12.3" data-stock="accent" data-hinge="bottom"
+    d="M8.5 40 V38.9 C8.5 38.5 8.8 38.3 9.2 38.3 H10.4 V40 Z M10.4 38.9 H11.1 V39.35 H10.4 Z" />
+
+  <!-- detail, closest to the arch: a toolbox, and a paper crane hiding behind the right wing -->
+  <path id="toolbox" data-z="-6" data-stock="tomato" data-hinge="bottom" data-cut="knife"
+    d="M-27.2 40 V37.2 H-20.4 V40 Z M-25.2 37.3 V36 C-25.2 35.5 -24.9 35.2 -24.4 35.2 H-23.2 C-22.7 35.2 -22.4 35.5 -22.4 36 V37.3 Z"
+    data-holes="M-24.5 36 H-23.1 V36.9 H-24.5 Z M-24.2 38.2 H-23.4 V38.7 H-24.2 Z" />
+  <path id="paper-crane" data-z="-6" data-stock="white" data-hinge="bottom"
+    d="M26.8 40 L28.3 38.3 L27.3 36.5 L27.75 36.35 L29 37.8 L29.9 37.6 L30.95 36.3 L31.35 36.5 L30.7 38.4 L31.3 40 Z" />
+
+  <!-- hung from the ceiling on strings, swaying: a paper star and a crescent moon -->
+  <path id="hung-star" data-z="-34" data-stock="sunflower" data-hang="6 12.2"
+    d="M6 12.2 L6.55 13.55 L8 13.65 L6.9 14.6 L7.25 16 L6 15.25 L4.75 16 L5.1 14.6 L4 13.65 L5.45 13.55 Z" />
+  <path id="hung-moon" data-z="-34" data-stock="cream" data-hang="-5.6 11.4"
+    d="M-5.6 11.4 C-7.5 11.7 -8.4 13.6 -7.7 15.3 C-7.1 16.6 -5.6 17.1 -4.3 16.6 C-5.5 16.1 -6.3 14.8 -6.1 13.5 C-5.95 12.5 -5.6 11.8 -5.6 11.4 Z" />
+</svg>

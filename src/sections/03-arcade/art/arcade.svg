@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-60 -20 120 60">
+  <!--
+    Station 03, the Arcade Corner (Refocus). Floor at y=40, aisle |x| < 8 below y=18.
+    A paper head wearing the EEG band, a CRT whose game level is cut clean through with the screen
+    glowing behind it, and a brainwave strung up across the room.
+  -->
+
+  <!-- an 8-bit arch: the opening steps up like a sprite -->
+  <path id="arch" data-z="0" data-stock="plumDeep" data-cut="knife" data-cast="false"
+    d="M-60 -20 H60 V40 H28 V16 H26 V13 H23 V11 H-23 V13 H-26 V16 H-28 V40 H-60 Z"
+    data-holes="M-19.6 6 H-18.4 V7.2 H-19.6 Z M-16.6 6 H-15.4 V7.2 H-16.6 Z M-13.6 6 H-12.4 V7.2 H-13.6 Z M12.4 6 H13.6 V7.2 H12.4 Z M15.4 6 H16.6 V7.2 H15.4 Z M18.4 6 H19.6 V7.2 H18.4 Z" />
+
+  <!-- far: two arcade cabinets at the back, screens cut out -->
+  <path id="far-cabinets" data-z="-42" data-stock="violet" data-cut="knife"
+    d="M-33 40 V14 L-31 11 H-23 L-22 14 V24 L-20.6 26 V40 Z M20.6 40 V26 L22 24 V14 L23 11 H31 L33 14 V40 Z"
+    data-holes="M-30.8 15 H-24.2 V21.4 H-30.8 Z M-29.6 27.4 a0.6 0.6 0 1 0 1.2 0 a0.6 0.6 0 1 0 -1.2 0 Z M24.2 15 H30.8 V21.4 H24.2 Z M28.4 27.4 a0.6 0.6 0 1 0 1.2 0 a0.6 0.6 0 1 0 -1.2 0 Z" />
+
+  <!-- middle A (right): the CRT on its stand, screen cut through -->
+  <path id="crt" data-z="-20" data-stock="slate" data-cut="knife"
+    d="M10.6 19.6 H23 V30 H10.6 Z M13.6 30 H20 V31.2 H13.6 Z M11.4 31.2 H22.2 V32 H11.4 Z M12 32 H13.2 V40 H12 Z M20.4 32 H21.6 V40 H20.4 Z M13.2 36.6 H20.4 V37.3 H13.2 Z"
+    data-holes="M12.2 21.1 Q12.2 20.9 12.4 20.9 H20.2 Q20.4 20.9 20.4 21.1 V28.3 Q20.4 28.5 20.2 28.5 H12.4 Q12.2 28.5 12.2 28.3 Z M21.1 22.2 a0.4 0.4 0 1 0 0.8 0 a0.4 0.4 0 1 0 -0.8 0 Z M21.1 24 a0.4 0.4 0 1 0 0.8 0 a0.4 0.4 0 1 0 -0.8 0 Z" />
+  <!-- the level, seen through the screen: platforms, a coin, a tiny player -->
+  <path id="crt-level" data-z="-20.3" data-stock="navy" data-cut="knife"
+    d="M11.9 28.8 V26.8 H14.4 V25.9 H16 V28.8 Z M16.6 24.4 H19.2 V25.1 H16.6 Z M18.8 28.8 V27.4 H20.7 V28.8 Z M13.1 25.6 V24.2 H13.8 V23.6 H14.4 V24.2 H14.9 V25.6 Z M17.5 22.4 a0.45 0.45 0 1 0 0.9 0 a0.45 0.45 0 1 0 -0.9 0 Z" />
+  <path id="crt-glow" data-z="-20.6" data-stock="glowCyan"
+    d="M11.8 20.6 H20.8 V28.8 H11.8 Z" />
+
+  <!-- stage (left): the paper head on its stand, wearing the EEG band -->
+  <path id="head-stand" data-z="-16" data-stock="cream" data-cut="knife"
+    d="M-26 40 V38.8 H-19 V40 Z M-22.9 38.8 V30 H-22.1 V38.8 Z M-23.6 30.4 Q-23.8 28.4 -24.4 27.8 C-25.6 26.8 -26 25.2 -25.8 23.6 C-25.5 21 -23.6 19.4 -21.2 19.6 C-18.8 19.8 -17.4 21.8 -17.6 24.2 L-16.9 25.4 L-17.7 25.9 L-17.6 26.6 C-17.8 27.4 -18.6 27.8 -19.6 27.8 Q-20.4 28.6 -20.6 30.4 Z" />
+  <path id="eeg-band" data-z="-15.6" data-stock="pink" data-cut="knife"
+    d="M-25.5 23.4 C-25.3 20.6 -23.4 19 -21.2 19.1 C-19 19.2 -17.6 20.6 -17.4 22.4 L-16.4 22.2 L-16.1 23.6 L-17.5 23.9 L-17.9 23 C-18.2 21.2 -19.4 20 -21.2 19.9 C-23 19.8 -24.5 21 -24.7 23.3 Z M-24.9 23 H-23.3 V25.2 H-24.9 Z M-24.4 25.2 H-23.8 V27.4 H-24.4 Z" />
+
+  <!-- hung: a brainwave card, low beta over theta, and a pixel heart -->
+  <path id="brainwave-card" data-z="-34" data-stock="pink" data-hang="-1 12.6" data-cut="knife"
+    d="M-6.4 12.6 H4.4 V17.4 H-6.4 Z"
+    data-holes="M-5.6 15.4 L-4.8 14.2 L-4 15.6 L-3.2 13.8 L-2.4 16 L-1.6 14 L-0.8 15.4 L0 14.6 L0.8 15.2 L1.6 14.8 L2.4 15.1 L3.6 14.9 V15.3 L2.4 15.5 L1.6 15.2 L0.8 15.6 L0 15.05 L-0.85 15.95 L-1.55 14.9 L-2.35 16.95 L-3.25 14.8 L-4 16.5 L-4.8 15 L-5.3 15.75 Z" />
+  <path id="pixel-heart" data-z="-34" data-stock="tomato" data-hang="9 12.8" data-cut="knife"
+    d="M8.1 13.6 H8.8 V12.8 H9.2 V13.6 H9.9 V14.3 H10.6 V15.7 H9.9 V16.4 H9.2 V17.1 H8.8 V16.4 H8.1 V15.7 H7.4 V14.3 H8.1 Z" />
+
+  <!-- detail: a joystick on the floor; a pixel ghost peeking round the left wing -->
+  <path id="joystick" data-z="-6" data-stock="tomato" data-cut="knife"
+    d="M23.6 40 V37.2 H28.8 V40 Z M25.9 37.2 V34.4 H26.5 V37.2 Z M25.2 34 a1 1 0 1 0 2 0 a1 1 0 1 0 -2 0 Z M27.4 36.4 a0.4 0.4 0 1 0 0.8 0 a0.4 0.4 0 1 0 -0.8 0 Z" />
+  <path id="pixel-ghost" data-z="-6" data-stock="mint" data-cut="knife"
+    d="M-31 40 V35.6 H-30.4 V35 H-27.6 V35.6 H-27 V40 H-27.6 V39.4 H-28.2 V40 H-28.8 V39.4 H-29.4 V40 H-30 V39.4 H-30.4 V40 Z"
+    data-holes="M-30.1 36.2 H-29.5 V37 H-30.1 Z M-28.6 36.2 H-28 V37 H-28.6 Z" />
+</svg>

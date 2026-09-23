@@ -1,36 +1,28 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# The Night Workshop
 
-## Getting Started
+Muhammad Fatih Zamzami's portfolio: a paper-cut diorama of a workshop at night. Scroll, and a small paper worker walks you through eight stations, one per project, to a window where you can say hello.
 
-First, run the development server:
+Everything you read is server-rendered HTML. The 3D scene (three.js + React Three Fiber) loads afterwards, when the page is idle, and only on devices that can run it.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Scripts
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+| Command | What it does |
+|---|---|
+| `npm run dev` | Development server |
+| `npm run build` / `npm start` | Production build and server |
+| `npm run lint` | ESLint (Next + React Compiler rules) |
+| `npm test` | Unit tests (vitest): cut pipeline, scroll→camera, walk cycle, spring |
+| `npm run e2e` | End-to-end tests (Playwright) against a production build on port 3200: no-JS, no-WebGL, reduced motion, anchors, flip, relight, the scene going live |
+| `npm run cut` | Bake every art SVG into cut geometry and the UI clip-paths (`cut:check` fails if they're stale) |
+| `npm run grain` | Regenerate the paper grain textures |
+| `npm run poster` | Render the desk posters and the share card from a running production build (`npm run poster -- http://localhost:3000/`) |
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Where things live
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `src/sections/NN-name/`: one folder per station. `Section.tsx` is the HTML, `Station.tsx` the 3D group, `art/*.svg` the source art, `art/*.cut.json` its baked geometry.
+- `src/scene/`: the 3D engine: one loop, one paper material, the camera rig, the lights, the worker.
+- `src/ui/`: the HTML paper objects (plates, tags, the depth tag, the relight dial).
+- `src/content/`: everything the site says, typed, from the CV.
+- `scripts/`: the cut pipeline, the grain generator and the poster renderer.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Add `?debug` to the URL to log draw calls, triangles and GPU memory every two seconds.

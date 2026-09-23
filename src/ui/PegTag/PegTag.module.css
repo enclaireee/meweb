@@ -1,0 +1,28 @@
+.peg {
+  position: relative;
+  list-style: none;
+  padding-top: 10px;
+  transform-origin: 50% 0;
+}
+
+/* the hook it hangs from */
+.hook {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 8px;
+  height: 14px;
+  translate: -50% 0;
+  border: 2px solid color-mix(in srgb, var(--ink) 75%, transparent);
+  border-bottom: 0;
+  border-radius: 4px 4px 0 0;
+  z-index: 1;
+}
+
+.face {
+  display: block;
+  padding: 10px 12px 7px;
+  font-size: 0.875rem;
+  line-height: 1.25;
+  clip-path: var(--clip-peg, none);
+}

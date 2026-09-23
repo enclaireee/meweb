@@ -1,0 +1,39 @@
+/* A real button over the worker (architecture.md §6.9): invisible until focused, follows him on screen. */
+.button {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 55;
+  width: 56px;
+  height: 84px;
+  margin: -34px 0 0 -28px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  visibility: hidden;
+}
+.button[data-on] {
+  visibility: visible;
+}
+
+.label {
+  position: absolute;
+  left: 50%;
+  top: -30px;
+  translate: -50% 0;
+  white-space: nowrap;
+  padding: 3px 10px 4px;
+  font-style: italic;
+  font-size: 0.875rem;
+  background: var(--paper);
+  color: var(--ink);
+  clip-path: var(--clip-strip, none);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-paper);
+  pointer-events: none;
+}
+.button:hover .label,
+.button:focus-visible .label {
+  opacity: 1;
+}

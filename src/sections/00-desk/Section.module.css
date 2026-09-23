@@ -1,0 +1,17 @@
+.notes {
+  rotate: 0.6deg;
+  margin-inline: 12px 4px;
+}
+
+.card {
+  padding: 20px 22px 18px;
+  clip-path: var(--clip-card, none);
+  box-shadow: inset calc(var(--light-x) * -2px) calc(var(--light-y) * 2px) 0 rgb(255 255 255 / 0.35);
+}
+
+@media (max-width: 639.98px) {
+  /* the phone's bottom card holds the tag; the notes follow it in the flow */
+  .notes {
+    margin-inline: 0;
+  }
+}
