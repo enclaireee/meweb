@@ -1,79 +1,36 @@
-# fatihweb — portfolio 2026
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-Personal portfolio of Muhammad Fatih Zamzami. Next.js 16 · React 19 ·
-Tailwind CSS v4 · GSAP + ScrollTrigger · Lenis · Motion · next-themes ·
-next-view-transitions.
+## Getting Started
 
-## Run
+First, run the development server:
 
 ```bash
-npm install
-npm run dev     # http://localhost:3000
-npm run build   # production build
-npm run lint
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-## Pages — one system, distinct identities
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-Every page shares the DNA (tokens, Newsreader + Hanken Grotesk, the `annot`
-voice, hairlines, easings/durations, the index rail) but has its own
-concept and signature interaction:
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-| Route | Concept | Signature |
-|---|---|---|
-| `/` | The index — hero, pinned manifesto scrub, horizontal work shelf, closing CTA | First-load calibration counter; pinned word-by-word statement |
-| `/work` | List-to-preview browser: oversized title rows | Cursor-following preview crossfade (inline images on touch/reduced-motion) |
-| `/work/[slug]` | Scroll-told case study | Full-viewport intro beat with looming drifting numeral + reading meter |
-| `/about` | Editorial dossier: file header, drop-cap narrative, sticky figure | The record as a scroll-drawn timeline |
-| `/contact` | Transmission sheet on graph paper; the email *is* the headline | Premium form: floating labels, inline validation, designed success state |
-| 404 | "Signal lost" | Magnetic drifting numeral |
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-**Navigation** is a fixed index rail (left on desktop, bottom strip on
-mobile) with a **progressive edge blur**: two masked `backdrop-filter`
-layers (`blur-edge-l` / `blur-edge-b` utilities) so content softens
-gradually under the nav instead of hitting a frosted slab. Theme-aware via
-`--background-translucent`. Routes crossfade with the View Transitions API
-(same crossfade the theme toggle uses).
+## Learn More
 
-## Where things live
+To learn more about Next.js, take a look at the following resources:
 
-- **Copy & facts** — everything you'd ever edit lives in
-  [src/content/](src/content/): `profile.ts`, `projects.ts`,
-  `experience.ts`, `capabilities.ts`. No prose is hard-coded in components.
-  Items marked `[NEEDS REVIEW]` are original copy awaiting sign-off.
-- **Images** — every image slot is a spec-driven `<Placeholder>`; the full
-  shopping list is in [PLACEHOLDERS.md](PLACEHOLDERS.md). To swap one in,
-  add the asset to `public/` and replace the `<Placeholder>` with a
-  `next/image` inside the same `<ImageReveal>` wrapper.
-- **Home sections** — [src/components/sections/](src/components/sections/);
-  page-specific pieces in `src/components/about|work|contact/`.
-- **Primitives** — reveal/parallax/split-text/marquee/magnetic/cursor in
-  [src/components/motion/](src/components/motion/) and
-  [src/components/ui/](src/components/ui/).
-- **Contact form** — UI, validation, and success state are fully wired;
-  the send is simulated. `[NEEDS REVIEW]` point `submitMessage()` in
-  [ContactForm.tsx](src/components/contact/ContactForm.tsx) at a real
-  endpoint (API route, Resend, Formspree…).
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-## Theming
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-Both themes are designed, not inverted: warm paper light, lamp-lit dark.
-Semantic tokens (`background / surface / foreground / muted / border /
-accent`) live as CSS vars on `:root` / `.dark` in
-[globals.css](src/app/globals.css), surfaced through `@theme inline`, with
-`@custom-variant dark`. `next-themes` resolves the theme before first paint
-(system default, manual choice persisted, no flash); the toggle flips
-inside a View Transitions crossfade.
+## Deploy on Vercel
 
-## Design system in one paragraph
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-The direction is **"Schematic Editorial," refined**: warm paper (or warm
-off-black), hairline rules over shadows, annotations in a small tracked
-voice (`annot`), oversized Newsreader display type with rationed italics,
-Hanken Grotesk for body and UI, and exactly one accent reserved for
-interaction states and live markers. Five type steps, one gutter, one
-section beat. Three easings and four durations defined in `@theme` and
-mirrored in [src/lib/motion.ts](src/lib/motion.ts) /
-[src/lib/gsap.ts](src/lib/gsap.ts) so CSS, Motion, and GSAP speak one
-motion language. Every animation has a calm `prefers-reduced-motion`
-fallback. Full rationale in [DESIGN.md](DESIGN.md).
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
