@@ -13,7 +13,8 @@
 }
 
 @media (pointer: coarse) {
-  :global(html[data-scene="live"]) .toggle {
+  :global(html[data-scene="live"]) .toggle,
+  :global(html[data-deck]) .toggle {
     display: block;
   }
 }

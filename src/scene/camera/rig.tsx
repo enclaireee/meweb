@@ -10,6 +10,7 @@ import { wake } from "@/scene/loop";
 import { stepSpring, springActive, type Spring } from "@/scene/motion/spring";
 import { cameraZ, archZ } from "./path";
 import { shadows } from "@/scene/light/shadows";
+import { baking } from "@/scene/bake";
 
 /** What the rest of the scene reads each frame (transient, never rendered from). */
 export const view = {
@@ -52,7 +53,9 @@ export function CameraRig({ children }: { children: ReactNode }) {
     const h = size.height;
     // desktop/tablet: the plate column is on the right, so the aisle sits left of centre;
     // phone: the bottom card, so the scene rides up
-    if (w >= 1024) camera.setViewOffset(w, h, w * 0.12, 0, w, h);
+    // the phone rooms are baked for their own stage window: no offset (mobile_concept.md §4.2)
+    if (baking()) camera.clearViewOffset();
+    else if (w >= 1024) camera.setViewOffset(w, h, w * 0.12, 0, w, h);
     else if (w >= 640) camera.setViewOffset(w, h, w * 0.1, 0, w, h);
     else camera.setViewOffset(w, h, 0, h * 0.2, w, h);
     camera.updateProjectionMatrix();

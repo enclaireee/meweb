@@ -61,6 +61,8 @@ const LIGHT_KEY = "nw-light";
 
 export function setLight(light: LightMode) {
   document.documentElement.dataset.light = light;
+  // from now on both lights' stills may load: the phone stage cross-fades between them (ui/StationShell)
+  document.documentElement.dataset.relit = "";
   try {
     localStorage.setItem(LIGHT_KEY, light);
   } catch {

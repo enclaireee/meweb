@@ -1,0 +1,268 @@
+/* Phones only: from 640px up the workshop has its own nav, worker and scene. */
+.deck {
+  display: none;
+}
+
+@media (max-width: 639.98px) {
+  .deck {
+    display: contents;
+  }
+
+  /* --- the program: the site nav, folded into a paper tab at the top left ------------------- */
+  .programButton {
+    position: fixed;
+    z-index: 70;
+    left: calc(var(--mat) + 10px);
+    top: calc(var(--mat) + 12px);
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .tab {
+    display: block;
+    padding: 7px 14px 8px;
+    clip-path: var(--clip-strip, none);
+  }
+  .program {
+    position: fixed;
+    inset: auto;
+    left: calc(var(--mat) + 10px);
+    top: calc(var(--mat) + 56px);
+    width: min(260px, calc(100vw - 2 * var(--mat) - 20px));
+    margin: 0;
+    padding: 16px 18px 12px;
+    border: 0;
+    clip-path: var(--clip-card, none);
+    filter: var(--paper-shadow);
+  }
+  .program ol {
+    margin-top: 6px;
+  }
+  .program a {
+    display: block;
+    padding: 9px 0;
+    font-size: 1.12rem;
+    color: var(--ink);
+    text-decoration: none;
+    border-top: 1px dashed color-mix(in srgb, var(--ink) 25%, transparent);
+  }
+  .program a[aria-current] {
+    font-style: italic;
+    color: var(--accent-text);
+  }
+
+  /* --- the storyteller, standing on the lip of the stage (no stage without JS: no storyteller) -- */
+  :global(html:not([data-js])) .teller {
+    display: none;
+  }
+  .teller {
+    position: fixed;
+    z-index: 64;
+    left: calc(var(--mat) + 14px);
+    /* his boots on the lip of the stage, just above the card panel (ui/StationShell) */
+    top: calc(var(--stage-h) - 4px - 112px);
+  }
+  .puppetButton {
+    display: block;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    filter: drop-shadow(calc(var(--light-x) * -5px) 4px 5px var(--shadow));
+    transform-origin: 50% 100%;
+  }
+  .puppet {
+    display: block;
+    height: 112px;
+    width: auto;
+    overflow: visible;
+  }
+  :global([data-light="night"]) .puppet {
+    /* the same paper under the night light (concept.md §5: relit, never a dark overlay) */
+    filter: brightness(0.88) saturate(0.95);
+  }
+
+  /* his head and his arm turn on their pins; nothing else moves (concept.md §2.8) */
+  .head,
+  .arm {
+    transform-box: view-box;
+  }
+  .head {
+    animation: nod 5.5s ease-in-out infinite;
+  }
+  .arm {
+    animation: gesture 7s ease-in-out infinite;
+  }
+  /* a new card: he turns to look at it */
+  [data-cue="turn"] .head {
+    animation:
+      look 1.4s var(--ease-settle),
+      nod 5.5s ease-in-out 1.4s infinite;
+  }
+  /* tapped: a wobble on his boots */
+  [data-cue="poke"] .puppetButton {
+    animation: wobble 0.7s var(--ease-settle);
+  }
+
+  .bubble {
+    position: absolute;
+    left: calc(100% + 10px);
+    bottom: 64%;
+    width: max-content;
+    max-width: min(230px, calc(100vw - 2 * var(--mat) - 110px));
+    padding: 8px 14px 9px;
+    font-size: 0.86rem;
+    font-style: italic;
+    line-height: 1.3;
+    text-wrap: balance;
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 17px 19px 16px 18px / 15px 17px 19px 16px;
+    filter: var(--paper-shadow);
+    transform-origin: 0 100%;
+    opacity: 0;
+    scale: 0.6;
+    transition:
+      opacity 0.2s,
+      scale 0.25s ease-in;
+    pointer-events: none;
+  }
+  .bubble[data-show] {
+    opacity: 1;
+    scale: 1;
+    transition:
+      opacity 0.15s,
+      scale 0.5s cubic-bezier(0.2, 1.6, 0.4, 1);
+  }
+  /* the tail, pointing back at him */
+  .bubble::after {
+    content: "";
+    position: absolute;
+    left: -9px;
+    bottom: 8px;
+    width: 12px;
+    height: 12px;
+    background: var(--paper);
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  }
+
+  /* --- the clappers: a punch per card, back and on at the ends ------------------------------- */
+  .clappers {
+    position: fixed;
+    z-index: 66;
+    left: calc(var(--mat) + 10px);
+    right: calc(var(--mat) + 10px);
+    bottom: calc(var(--mat) + 10px);
+  }
+  /* a dark wooden bar, so it reads against the paper sheet it sits on */
+  .strip.strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 46px;
+    padding: 0 4px;
+    clip-path: var(--clip-strip, none);
+    background-color: color-mix(in srgb, var(--ink) 90%, #5a3a26);
+    color: var(--paper);
+  }
+  .step {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    font-size: 1.6rem;
+    line-height: 1;
+    color: var(--paper);
+    text-decoration: none;
+  }
+  .step[aria-disabled] {
+    opacity: 0.25;
+    pointer-events: none;
+  }
+  .punches {
+    display: flex;
+    flex: 1;
+    justify-content: space-evenly;
+  }
+  .punch {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 44px;
+  }
+  /* a punched hole in the strip; the card that's up is the brass washer */
+  .punch::before {
+    content: "";
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--paper) 35%, transparent);
+    box-shadow: none;
+    transition:
+      background-color var(--dur-base) var(--ease-paper),
+      box-shadow var(--dur-base) var(--ease-paper);
+  }
+  .punch[aria-current]::before {
+    background: var(--accent);
+    box-shadow: 0 0 0 3px #cfa34a;
+  }
+}
+
+@keyframes nod {
+  0%,
+  100% {
+    rotate: 0deg;
+  }
+  40% {
+    rotate: -4deg;
+  }
+  70% {
+    rotate: 2deg;
+  }
+}
+@keyframes gesture {
+  0%,
+  100% {
+    rotate: 0deg;
+  }
+  50% {
+    rotate: -7deg;
+  }
+}
+@keyframes look {
+  30% {
+    rotate: 9deg;
+  }
+  60% {
+    rotate: -3deg;
+  }
+  100% {
+    rotate: 0deg;
+  }
+}
+@keyframes wobble {
+  20% {
+    rotate: -6deg;
+  }
+  45% {
+    rotate: 4deg;
+  }
+  70% {
+    rotate: -2deg;
+  }
+  100% {
+    rotate: 0deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .head,
+  .arm,
+  .puppetButton,
+  [data-cue] .head,
+  [data-cue] .puppetButton {
+    animation: none;
+  }
+}

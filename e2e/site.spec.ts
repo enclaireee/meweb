@@ -104,12 +104,61 @@ test.describe("edge cases", () => {
     await expect(page.locator("#contact")).toHaveAttribute("data-active", "");
   });
 
+  // the layered dolly (mobile_concept.md)
   test.describe("on a phone", () => {
     test.use({ viewport: { width: 360, height: 640 }, isMobile: true, hasTouch: true, reducedMotion: "reduce" });
-    test("every way to say hello fits on screen", async ({ page }) => {
+
+    test("the 3D never loads; the desk and its card are up at once", async ({ page }) => {
+      const scene: string[] = [];
+      page.on("request", (r) => /three|fiber/i.test(r.url()) && scene.push(r.url()));
+      await page.goto("/");
+      await expect(page.locator("html")).toHaveAttribute("data-deck", "");
+      await expect(page.locator("#about")).toHaveAttribute("data-active", "");
+      await expect(page.getByRole("heading", { level: 1 })).toBeInViewport();
+      await expect(page.locator("canvas")).toHaveCount(0);
+      expect(scene).toEqual([]);
+    });
+
+    test("scrolling walks into the next room; its card takes the bottom half", async ({ page }) => {
+      await page.goto("/");
+      await expect(page.locator("html")).toHaveAttribute("data-deck", "");
+      await page.evaluate(() => scrollTo({ top: document.getElementById("demandx")!.offsetTop, behavior: "instant" }));
+      await expect(page.locator("#demandx")).toHaveAttribute("data-active", "");
+      await expect(page).toHaveURL(/#demandx$/);
+      const card = await page.locator("#demandx > div:last-child").boundingBox();
+      expect(card!.y).toBeGreaterThanOrEqual(640 / 2 - 1);
+      await expect(page.getByRole("heading", { name: "DemandX" })).toBeInViewport();
+    });
+
+    test("scrolling all the way down reaches every room, the last one included", async ({ page }) => {
+      await page.goto("/");
+      await expect(page.locator("html")).toHaveAttribute("data-deck", "");
+      for (const id of ["experience", "contact"]) {
+        await page.evaluate((id: string) => scrollTo({ top: document.getElementById(id)!.offsetTop, behavior: "instant" }), id);
+        await expect(page.locator(`#${id}`)).toHaveAttribute("data-active", "");
+        expect(await page.evaluate((id: string) => Math.abs(scrollY - document.getElementById(id)!.offsetTop), id)).toBeLessThan(2);
+      }
+      await page.evaluate(() => scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" }));
+      await expect(page.locator("#contact")).toHaveAttribute("data-active", "");
+    });
+
+    test("the program's links and the clappers land on their card", async ({ page }) => {
+      await page.goto("/");
+      await page.getByRole("button", { name: "Program" }).click();
+      await page.getByRole("navigation", { name: "Sections" }).getByRole("link", { name: "Contact" }).click();
+      await expect(page.locator("#contact")).toHaveAttribute("data-active", "");
+      await page.getByRole("link", { name: "Previous room" }).click();
+      await expect(page.locator("#experience")).toHaveAttribute("data-active", "");
+    });
+
+    test("every way to say hello is on the contact card", async ({ page }) => {
       await page.goto("/#contact");
       await expect(page.locator("#contact")).toHaveAttribute("data-active", "");
-      for (const name of [/Email/, /GitHub/, /LinkedIn/]) await expect(page.getByRole("link", { name })).toBeInViewport({ ratio: 1 });
+      for (const name of [/Email/, /GitHub/, /LinkedIn/]) {
+        const link = page.getByRole("link", { name });
+        await link.scrollIntoViewIfNeeded();
+        await expect(link).toBeInViewport({ ratio: 1 });
+      }
     });
   });
 });

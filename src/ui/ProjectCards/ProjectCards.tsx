@@ -21,10 +21,10 @@ export function ProjectCards({ index, project }: { index: number; project: Proje
   const links = Object.entries(project.links).filter(([, href]) => href);
   const room = rooms[index]!;
   const tone = { "--tone": papers[room.wall], "--ink-tone": papers[room.ceiling] } as CSSProperties;
-  const story: [Slot, string, string, IconName][] = [
-    ["ml", "The problem", project.story.problem, "search"],
-    ["mr", "What I built", project.story.built, "hammer"],
-    ["bc", "What it changed", project.story.result, "trend"],
+  const story: [Slot, string, string, string, IconName][] = [
+    ["n1", "The problem", project.story.problem, project.brief.problem, "search"],
+    ["n2", "What I built", project.story.built, project.brief.built, "hammer"],
+    ["n3", "What it changed", project.story.result, project.brief.result, "trend"],
   ];
 
   return (
@@ -51,20 +51,25 @@ export function ProjectCards({ index, project }: { index: number; project: Proje
         <p className={styles.hook}>{project.caption}</p>
       </Hang>
 
+      {/* the big numbers are desktop only: a phone goes straight from the title to the stack (globals.css .long) */}
       {project.facts.slice(0, 3).map((f, k) => (
-        <Hang key={f.label} slot={statSlots[k]!} i={1 + k} depth={0.6 + k * 0.15} tilt={[2, -2.5, 1.5][k]!} className={styles.stat}>
+        <Hang key={f.label} slot={statSlots[k]!} i={1 + k} depth={0.6 + k * 0.15} tilt={[2, -2.5, 1.5][k]!} className={`${styles.stat} long`}>
           <span className={styles.value}>{f.value}</span>
           <span className={styles.label}>{f.label}</span>
         </Hang>
       ))}
 
-      {story.map(([slot, heading, text, icon], k) => (
+      {story.map(([slot, heading, text, brief, icon], k) => (
         <Hang key={heading} slot={slot} i={4 + k} depth={1 + k * 0.2} tilt={[1.4, -1, 0.8][k]!} className={styles.beat}>
           <h3 className={`${styles.beatHead} text-kicker uppercase`}>
             <Icon name={icon} badge />
             {heading}
           </h3>
-          <p className={styles.beatText}>{text}</p>
+          {/* the full beat on desktop, one sentence on a phone (globals.css) */}
+          <p className={styles.beatText}>
+            <span className="long">{text}</span>
+            <span className="brief">{brief}</span>
+          </p>
         </Hang>
       ))}
 

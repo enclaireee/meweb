@@ -71,30 +71,9 @@
 }
 
 /* phones: a slim row along the top instead */
+/* phones: the same links live in the theatre's program (ui/Deck) */
 @media (max-width: 639.98px) {
   .nav {
-    top: calc(var(--mat) + 10px);
-    left: calc(var(--mat) + 10px);
-    right: 84px;
-    translate: none;
-  }
-  .strip {
-    padding: 6px 10px;
-  }
-  .who {
     display: none;
-  }
-  .list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2px 10px;
-  }
-  .icon {
-    display: none;
-  }
-  .link {
-    font-size: 0.8rem;
-    padding: 2px 0;
-    gap: 5px;
   }
 }

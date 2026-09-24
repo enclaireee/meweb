@@ -54,11 +54,6 @@
 }
 
 @media (max-width: 639.98px) {
-  /* one card in this room, and it's the contact card: the line rides higher so all three ways to say
-     hello fit above the bottom of the screen (at the default height LinkedIn was cut off) */
-  :global(html[data-js] #contact) {
-    --line: max(26svh, calc(100svh - 540px));
-  }
   .links {
     margin-top: 12px;
   }

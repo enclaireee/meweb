@@ -98,3 +98,90 @@
   gap: 14px;
   margin-top: 10px;
 }
+
+/*
+ * Phones (the card panel, ui/StationShell): the title, then what it was built with, then the story.
+ * With JS it's one sheet: a mark of the room's colour, the plate and the dates, the name, the hook;
+ * the stack as chips and the links as buttons; the story as three beats on one stitched thread.
+ */
+@media (max-width: 639.98px) {
+  .set > :has(.stackCard) {
+    order: 1;
+  }
+  .set > :has(.beat) {
+    order: 2;
+  }
+
+  :global(html[data-js]) .tab {
+    width: 36px;
+    height: 5px;
+    margin: 0 0 14px;
+    border-radius: 3px;
+    clip-path: none;
+  }
+  :global(html[data-js]) .title {
+    padding-top: 0;
+  }
+  :global(html[data-js]) .meta {
+    padding-right: 40px;
+    font-size: 0.7rem;
+  }
+  :global(html[data-js]) .ribbon {
+    top: -6px;
+    right: 0;
+  }
+  :global(html[data-js]) .name {
+    margin-top: 10px;
+    font-size: 2.1rem;
+    line-height: 1.02;
+  }
+  :global(html[data-js]) .hook {
+    margin-top: 8px;
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+
+  /* built with: tidy chips, links as buttons */
+  :global(html[data-js]) .stack {
+    gap: 6px;
+    margin-top: 10px;
+  }
+  :global(html[data-js]) .chip {
+    padding: 6px 10px 5px;
+    font-size: 0.66rem;
+    background: color-mix(in srgb, var(--tone) 20%, var(--paper));
+  }
+  :global(html[data-js]) .links {
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  :global(html[data-js]) .links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 40px;
+    padding: 0 16px;
+    border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+    border-radius: 999px;
+    text-decoration: none;
+    font-style: normal;
+  }
+
+  /* the story: one thread, stitched from each beat's badge down past its sentence */
+  :global(html[data-js]) .set > :has(.beat) + :has(.beat) {
+    padding-top: 2px;
+    border-top: 0;
+  }
+  :global(html[data-js]) .beatHead {
+    gap: 10px;
+    font-size: 0.7rem;
+  }
+  :global(html[data-js]) .beatText {
+    margin: 4px 0 0 14px;
+    padding: 2px 0 4px 24px;
+    border-left: 1.5px dashed color-mix(in srgb, var(--ink-tone, var(--ink)) 45%, transparent);
+    font-size: 0.97rem;
+    line-height: 1.5;
+  }
+}

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Canvas, useFrame } from "@react-three/fiber";
+import "@/scene/threeConsole";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { camera as cam } from "@/design/tokens";
 import { clamp } from "@/lib/math";
@@ -18,6 +19,7 @@ import { Stations } from "./Stations";
 import { Worker, WorkerLayer, w as worker } from "./worker/Worker";
 import { TiltToggle } from "./input/TiltToggle";
 import { killEntrance, prepareEntrance, runEntrance } from "./entrance";
+import { BakeHook, baking } from "./bake";
 import styles from "./Scene.module.css";
 
 /** `?debug`: draw calls, triangles and GPU memory every 2 s (architecture.md §9), no tooling shipped. */
@@ -36,6 +38,13 @@ function DebugInfo() {
   return null;
 }
 
+/** device tilt aims the box like the pointer does; letting go settles it back over 1.5 s */
+function tilt(x: number, y: number) {
+  fast.tiltX = x;
+  fast.tiltY = y;
+  wake(x || y ? 300 : 1500);
+}
+
 /**
  * The 3D workshop (architecture.md §2, §6). Lazy-loaded; everything readable is already HTML.
  * The canvas sits behind the page, aria-hidden; the scene only listens to the document.
@@ -47,11 +56,13 @@ export default function Scene() {
   const pending = useRef<(() => void) | null>(null);
   // client-only chunk (ssr: false), so reading the URL once at mount is safe
   const [debug] = useState(() => location.search.includes("debug"));
+  const [bake] = useState(baking);
 
   useEffect(() => {
     advanceLoading(0.6);
     const smooth = !store.getState().reducedMotion;
-    const loop = startLoop({ smooth, onSlow: () => store.setState((s) => ({ tier: stepDown(s.tier) })) });
+    // (a bake runs on a software GPU: slow, and it must not step itself down)
+    const loop = startLoop({ smooth, onSlow: () => !baking() && store.setState((s) => ({ tier: stepDown(s.tier) })) });
     // ambient life (drift, sway, fidgets) renders at half rate, and not at all on the low tier or under
     // reduced motion (design.md §10)
     const ambient = () => {
@@ -162,9 +173,9 @@ export default function Scene() {
       <Canvas
         flat
         shadows="percentage"
-        dpr={dprFor(tier)}
+        dpr={bake ? 2 : dprFor(tier)}
         frameloop="never"
-        gl={{ antialias: true, alpha: false, stencil: false, powerPreference: "high-performance" }}
+        gl={{ antialias: true, alpha: bake, stencil: false, powerPreference: "high-performance" }}
         camera={{ fov: cam.fovLandscape, near: cam.near, far: cam.far, position: [0, cam.restY, cam.restDistance] }}
         onCreated={({ gl }) => {
           advanceLoading(0.72);
@@ -177,11 +188,12 @@ export default function Scene() {
         }}
       >
         {debug && <DebugInfo />}
+        {bake && <BakeHook />}
         <Lights />
         <CameraRig>
           <Floor />
           <Stations onFirstStation={onFirstStation} />
-          <Worker />
+          {!bake && <Worker />}
         </CameraRig>
       </Canvas>
       </div>
@@ -189,8 +201,8 @@ export default function Scene() {
           where they paint is set by their own z-index, not by DOM order */}
       {createPortal(
         <>
-          <WorkerLayer />
-          <TiltToggle />
+          {!bake && <WorkerLayer />}
+          <TiltToggle onTilt={tilt} />
         </>,
         document.body,
       )}

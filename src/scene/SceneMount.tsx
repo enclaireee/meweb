@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { advanceLoading, store, useScene } from "./store";
 import { initialTier } from "./quality/tier";
+import { PHONE } from "@/ui/Deck/phone";
 
 // the whole 3D chunk (three, R3F, GSAP, Lenis): never in the initial bundle (architecture.md §2.3)
 const Scene = dynamic(() => import("./Scene"), { ssr: false });
@@ -17,7 +18,9 @@ export function SceneMount() {
   const [go, setGo] = useState(false);
 
   useEffect(() => {
-    const t = initialTier();
+    // phones get the paper theatre instead (ui/Deck, mobile_concept.md): the 3D never downloads,
+    // except to bake the theatre's rooms (scene/bake.tsx)
+    const t = matchMedia(PHONE).matches && !location.search.includes("bake") ? "none" : initialTier();
     store.setState({ tier: t });
     if (t === "none") {
       // nothing to build: the curtain can part as soon as the type is in

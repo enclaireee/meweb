@@ -85,7 +85,7 @@ export function StationGroup({ index, file, onRoot, animate = {} }: StationProps
 
   const mat = paperMaterial();
   return (
-    <group ref={(g) => onRoot(index, g)} position={[0, 0, stationZ]}>
+    <group ref={(g) => onRoot(index, g)} position={[0, 0, stationZ]} userData={{ station: index }}>
       {built.merged && <mesh geometry={built.merged} material={mat} castShadow receiveShadow />}
       {built.mergedNoCast && <mesh geometry={built.mergedNoCast} material={mat} receiveShadow />}
       {built.glow && <mesh geometry={built.glow} material={glowMaterial()} />}

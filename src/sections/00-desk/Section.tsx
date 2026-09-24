@@ -36,14 +36,15 @@ export default function Section() {
           </Hang>
         ))}
 
-        <Hang slot="ml" i={4} depth={1.1} tilt={1.2}>
+        {/* on a phone the name tag's summary says it already (globals.css .long) */}
+        <Hang slot="n1" i={4} depth={1.1} tilt={1.2} className="long">
           <p className="text-kicker uppercase text-ink-soft">
             <Icon name="pencil" /> Desk notes
           </p>
           <p className={styles.text}>{profile.intro}</p>
         </Hang>
 
-        <Hang slot="bc" i={5} depth={1.2} tilt={-0.8}>
+        <Hang slot="n3" i={5} depth={1.2} tilt={-0.8}>
           <p className="text-kicker uppercase text-ink-soft">
             <Icon name="cap" /> Studying
           </p>
@@ -55,7 +56,7 @@ export default function Section() {
           </p>
         </Hang>
 
-        <Hang slot="br" i={6} depth={1.5} tilt={0.9}>
+        <Hang slot="br" i={6} depth={1.5} tilt={0.9} className="long">
           <p className="text-kicker uppercase text-ink-soft">
             <Icon name="book" /> On the syllabus
           </p>

@@ -79,3 +79,29 @@ Where the docs were silent or contradicted themselves, these are the calls made 
 - **Phones:** hauled-up cards clear the top by their own height; the Window's line rides higher so the whole contact card fits; the last room shows no swipe hint.
 - **Budgets (measured this pass):** initial JS 138 kB gz (the 90 kB target stays unreachable on Next 16 + React 19); scene chunks 238 + 64 = **302 kB gz** against 300 (three can't be tree-shaken under R3F); CSS 16 kB gz; 36 draws a frame at the desk.
 - **Left as-is:** Newsreader stays variable with `opsz` (279 KB preloaded, both styles). next/font 16.3 rejects weight ranges, dropping `opsz` breaks design.md §2, and splitting italic out would make browsers synthesize it. The `THREE.Clock` deprecation warning comes from R3F 9.8 (the latest stable) constructing a Clock; it goes away with R3F 10.
+
+## 2026-09-24: mobile revamp (supersedes the phone clothesline)
+
+- **Phones (< 640px) become a Kamishibai paper theatre.** See `mobile_concept.md`. Swipe pulls the front card out to show the next room behind it. The rooms are baked AVIF layers with CSS parallax, so phones never load three.js. The worker only narrates (one line per card, no walking). Tablets and desktop are unchanged.
+- **Why (user):** the clothesline swipe didn't work, and phones were laggy and slow to load. iOS was also getting the high tier.
+- **Built (phases 1–5 of `mobile_concept.md`):**
+  - **The pull:** a plain snap row. The still `<section>` is the snap target and the view timeline, and the inner `.card` is held in place while it enters. Sticky cards broke scrolling in Chromium and anchors in WebKit, and a snap target that moves with its own timeline stuck the deck at 135px.
+  - **Rooms:** baked by `npm run rooms` through global z clipping planes: 5 bands × 8 rooms × 2 lights, 1.0 MB in total, ~50 kB per room per light. Re-run it after any art, paper or light change.
+  - **Storyteller:** a server-rendered SVG of `worker.cut.json`.
+  - **Layout:** the hanging-card JS layout is gated to ≥ 640px, and the clothesline is removed (`Board`'s `flat` and `boardItem` are gone).
+  - **`TiltToggle`** now takes `onTilt`, so it no longer imports the scene loop.
+  - **Not checked yet:** a real device.
+
+## 2026-09-24: phones, round 2: the layered dolly (supersedes the kamishibai above)
+
+- **User:** the card pull "isn't working", the cards covered the scene when scrolling, and the animated depth was missed. The user chose a **layered dolly** driven by **scrolling the scene**, with the card in the **bottom half only**.
+- **Built** (`mobile_concept.md`):
+  - The page scrolls and snaps one room per 40svh. The wiring scales every nearby room's baked bands by D / (D − Δ) about the vanishing point, and each band is its own fixed layer, so rooms interleave.
+  - B0 is re-baked as the whole room without its own sheets, so mid-walk gaps show walls and floor, not haze.
+  - The card panel is fixed to the bottom half and scrolls on its own.
+  - Without JS, phones get the plain readable stack.
+- **Removed:** the horizontal deck, the view-timeline hold, and the "reading" state.
+- **Fix:** on phones the last two rooms couldn't be reached by scrolling: 8 × 40svh of page minus one screen stops short of where the Wall and the Window start. The last section is now `100lvh`, and an e2e test scrolls to both.
+- **Phone copy, shorter:** projects carry a `brief` (one sentence per story beat, cut from `story`), shown on phones via `.long` / `.brief`. The desk's "Desk notes" and "On the syllabus" cards are dropped on phones.
+- **Phone project cards (user):** title → "Built with" → the story. The big-number tags are hidden on phones.
+- **Phone card redesign (user: "so packed, like a dump from desktop"):** the bottom panel is one grained sheet, and the pieces are sections of it (no per-piece paper, holes, tilt or shadows). Projects get a room-colour mark, a bigger title, stack chips with link buttons, and the story as a stitched thread. The clappers are a dark bar. All of it is CSS under `html[data-js]` at < 640px; desktop is untouched.

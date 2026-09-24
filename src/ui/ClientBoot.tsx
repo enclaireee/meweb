@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { store } from "@/scene/store";
 import type { LightMode } from "@/design/tokens";
+import { PHONE } from "@/ui/Deck/phone";
 
 /**
  * Tiny always-on client wiring (initial bundle): the current station from the viewport centre,
@@ -17,6 +18,8 @@ export function ClientBoot() {
     const syncMotion = () => store.setState({ reducedMotion: mq.matches });
     syncMotion();
     mq.addEventListener("change", syncMotion);
+    // phones: the deck keeps track of the front card itself (ui/Deck)
+    if (matchMedia(PHONE).matches) return () => mq.removeEventListener("change", syncMotion);
 
     const sections = Array.from(document.querySelectorAll<HTMLElement>("section[data-station]"));
     let first = true;

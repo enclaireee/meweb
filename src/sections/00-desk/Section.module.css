@@ -41,3 +41,27 @@
   background: color-mix(in srgb, var(--tone) 30%, var(--paper));
   clip-path: var(--clip-strip, none);
 }
+
+/* phones, one sheet (ui/StationShell): the name big, the three threads as chips right under it, then
+   the schooling */
+@media (max-width: 639.98px) {
+  :global(html[data-js]) .name {
+    font-size: 2.6rem;
+  }
+  :global(html[data-js]) .set > :has(.focus) {
+    padding: 0 0 18px;
+    border-top: 0;
+  }
+  :global(html[data-js]) .set .focus.focus {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    padding: 9px 6px 8px;
+    font-size: 0.82rem;
+    background: color-mix(in srgb, var(--tone) 22%, var(--paper));
+    clip-path: var(--clip-strip, none);
+  }
+  :global(html[data-js]) .text {
+    font-size: 1rem;
+  }
+}

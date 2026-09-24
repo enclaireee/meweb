@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
+import "@/scene/threeConsole";
 import { worker as W, ramp } from "@/design/tokens";
 import { WorkerRig, applyPose, type Joints } from "@/scene/worker/rig";
 import { pose, rest } from "@/scene/worker/walk";

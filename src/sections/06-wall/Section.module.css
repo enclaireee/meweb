@@ -150,28 +150,3 @@
   line-height: 1.28;
   font-weight: 560;
 }
-
-/* phones: the boards come apart onto the clothesline (ui/Board), so the wrappers step aside */
-@media (max-width: 639.98px) {
-  :global(html[data-js]) .part {
-    display: contents;
-  }
-  :global(html[data-js]) .head {
-    width: 78vw;
-    margin: 0;
-  }
-  :global(html[data-js]) .role,
-  :global(html[data-js]) .award,
-  :global(html[data-js]) .group {
-    border-top: 0;
-    padding: 22px 16px 10px;
-    margin: 0;
-  }
-  :global(html[data-js]) .label {
-    font-size: 1rem;
-  }
-  :global(html[data-js]) .label .badge {
-    background: var(--paper);
-    color: var(--tone);
-  }
-}

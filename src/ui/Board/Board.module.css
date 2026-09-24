@@ -36,39 +36,41 @@
   display: none;
 }
 
-/* with JS: hung on two strings, lowered in one after another, hauled up */
-:global(html[data-js]) .board {
-  margin: 0;
-  z-index: 5;
-  pointer-events: auto;
-  translate: 0 -125vh;
-  transition: translate 0.55s cubic-bezier(0.55, 0, 0.85, 0.35) calc((4 - var(--i)) * 40ms);
-}
-:global(html[data-js]) [data-active] .board {
-  translate: 0 0;
-  transition: translate 1s cubic-bezier(0.2, 1.2, 0.4, 1) calc(200ms + var(--i) * 110ms);
-}
-:global(html[data-js]) .board:not(:where([data-active] *)) {
-  pointer-events: none;
-}
-:global(html[data-js]) .string {
-  display: block;
-  position: absolute;
-  bottom: calc(100% - 20px);
-  width: 1px;
-  height: 130vh;
-  background: color-mix(in srgb, var(--ink) 75%, transparent);
-  z-index: 1;
-}
-:global(html[data-js]) .left {
-  left: calc(16% + 4px);
-}
-:global(html[data-js]) .right {
-  right: calc(16% + 4px);
-}
-:global(html[data-js]) .parallax {
-  transform: translate(calc(var(--light-x) * -8px), calc((var(--light-y) + 0.4) * 5px));
-  transition: transform 0.25s linear;
+@media (min-width: 640px) {
+  /* with JS: hung on two strings, lowered in one after another, hauled up */
+  :global(html[data-js]) .board {
+    margin: 0;
+    z-index: 5;
+    pointer-events: auto;
+    translate: 0 -125vh;
+    transition: translate 0.55s cubic-bezier(0.55, 0, 0.85, 0.35) calc((4 - var(--i)) * 40ms);
+  }
+  :global(html[data-js]) [data-active] .board {
+    translate: 0 0;
+    transition: translate 1s cubic-bezier(0.2, 1.2, 0.4, 1) calc(200ms + var(--i) * 110ms);
+  }
+  :global(html[data-js]) .board:not(:where([data-active] *)) {
+    pointer-events: none;
+  }
+  :global(html[data-js]) .string {
+    display: block;
+    position: absolute;
+    bottom: calc(100% - 20px);
+    width: 1px;
+    height: 130vh;
+    background: color-mix(in srgb, var(--ink) 75%, transparent);
+    z-index: 1;
+  }
+  :global(html[data-js]) .left {
+    left: calc(16% + 4px);
+  }
+  :global(html[data-js]) .right {
+    right: calc(16% + 4px);
+  }
+  :global(html[data-js]) .parallax {
+    transform: translate(calc(var(--light-x) * -8px), calc((var(--light-y) + 0.4) * 5px));
+    transition: transform 0.25s linear;
+  }
 }
 
 @media (min-width: 640px) {
@@ -109,106 +111,52 @@
   }
 }
 
-/* phones: pegged to the clothesline (StationShell) */
+/* phones: laid in the caption card (ui/Deck), one board under the other */
 @media (max-width: 639.98px) {
+  .row,
+  .board {
+    grid-column: 1 / -1;
+  }
+  .row {
+    display: grid;
+    gap: 12px;
+  }
+  .board {
+    margin: 0;
+  }
   .sheet {
     padding: 24px 16px 18px;
   }
   .tab {
     margin: -24px -16px 14px;
   }
+
+  /* with JS: sections of the phone panel's one sheet (ui/StationShell), a perforation between boards */
   :global(html[data-js]) .row {
-    display: contents;
+    gap: 0;
   }
-  :global(html[data-js]) .board {
-    position: relative;
-    flex: 0 0 auto;
-    width: 84vw;
-    scroll-snap-align: start;
-    /* hauled by its own height past the top of the screen: a fixed distance left tall cards peeking in */
-    translate: 0 calc(-100% - var(--line) - 48px);
+  :global(html[data-js]) .board + .board {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px dashed color-mix(in srgb, var(--ink) 22%, transparent);
   }
-  :global(html[data-js]) .string {
-    top: -8px;
-    bottom: auto;
-    width: 9px;
-    height: 24px;
-    border-radius: 2px;
-    background: var(--peg);
-    box-shadow: 0 2px 3px rgb(0 0 0 / 0.3);
-    z-index: 2;
+  :global(html[data-js]) .board :global(.cast) {
+    filter: none;
   }
+  :global(html[data-js]) .board .sheet {
+    padding: 0;
+    background: none;
+    clip-path: none;
+    box-shadow: none;
+  }
+  :global(html[data-js]) .board .sheet::after,
+  :global(html[data-js]) .tab,
   :global(html[data-js]) .pin {
     display: none;
   }
-  :global(html[data-js]) .parallax {
-    transform: none;
-  }
-
-  /* a flat board comes apart: every piece is its own pegged card on the line */
-  :global(html[data-js]) .flat,
-  :global(html[data-js]) .flat .parallax,
-  :global(html[data-js]) .flat :global(.cast),
-  :global(html[data-js]) .flat .sheet {
-    display: contents;
-  }
-  :global(html[data-js]) .flat .string,
-  :global(html[data-js]) .flat .tab {
-    display: none;
-  }
-  :global(html[data-js]) .item {
-    position: relative;
-    isolation: isolate;
-    flex: 0 0 auto;
-    width: 72vw;
-    margin: 0;
-    padding: 24px 16px 14px;
-    background: var(--paper);
-    color: var(--ink);
-    clip-path: none;
-    filter: var(--paper-shadow);
-    scroll-snap-align: start;
-    /* hauled by its own height past the top of the screen: a fixed distance left tall cards peeking in */
-    translate: 0 calc(-100% - var(--line) - 48px);
-    transition: translate 0.55s cubic-bezier(0.55, 0, 0.85, 0.35);
-  }
-  :global(html[data-js]) [data-active] .item {
-    translate: 0 0;
-    transition: translate 1s cubic-bezier(0.2, 1.2, 0.4, 1) calc(160ms + min(var(--n, 0), 4) * 95ms);
-  }
-  :global(html[data-js]) .item::before {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: -8px;
-    width: 9px;
-    height: 24px;
-    translate: -50% 0;
-    border-radius: 2px;
-    background: var(--peg);
-    box-shadow: 0 2px 3px rgb(0 0 0 / 0.3);
-  }
-  :global(html[data-js]) .item::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: url("/textures/grain-rough.webp") repeat;
-    background-size: 256px;
-    mix-blend-mode: multiply;
-    opacity: 0.5;
-    pointer-events: none;
-  }
-  /* the section tags between the cards: in the room's colour */
-  :global(html[data-js]) .item[data-tag] {
-    width: auto;
-    padding: 24px 14px 12px;
-    background: var(--tone);
-    color: var(--paper);
-  }
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (min-width: 640px) and (prefers-reduced-motion: reduce) {
   :global(html[data-js]) .board,
   :global(html[data-js]) [data-active] .board,
   :global(html[data-js]) .item,

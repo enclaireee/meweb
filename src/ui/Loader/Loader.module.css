@@ -16,6 +16,12 @@
 :global(html[data-js]) .loader {
   display: block;
 }
+/* phones never wait on anything: the first card's stage is the first paint (mobile_concept.md §5) */
+@media (max-width: 639.98px) {
+  :global(html[data-js]) .loader {
+    display: none;
+  }
+}
 
 /* --- the curtain: flat red paper, folds cut as bands (paper has no gradients) --- */
 .curtain {

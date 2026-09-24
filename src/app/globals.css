@@ -56,10 +56,10 @@
 @media (max-width: 639.98px) {
   :root {
     --mat: 13px;
-    /* the phone clothesline (StationShell): where the twine runs, and the peg every card hangs from */
-    --line: max(46svh, calc(100svh - 380px));
-    --twine: #d8c39c;
-    --peg: linear-gradient(90deg, #c4955c 0 42%, #6e4a2b 42% 58%, #b5854f 58%);
+    /* the layered dolly (ui/StationShell): the room in the top half, its card in the bottom half, and
+       how far you scroll to walk from one room to the next */
+    --stage-h: 50svh;
+    --room-len: 40svh;
   }
 }
 
@@ -213,6 +213,30 @@ body {
 }
 html[data-scene="live"] .poster {
   opacity: 0;
+}
+
+/* Copy with a phone cut: `.long` is the full text, `.brief` the short one (content `brief`). */
+.brief {
+  display: none;
+}
+@media (max-width: 639.98px) {
+  .brief {
+    display: inline;
+  }
+  .long {
+    display: none;
+  }
+}
+
+/* Phones: the layered dolly (mobile_concept.md). One snap per room; no 3D, so no poster (each room's
+   stage is its own still). */
+@media (max-width: 639.98px) {
+  html[data-js] {
+    scroll-snap-type: y mandatory;
+  }
+  .poster {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {

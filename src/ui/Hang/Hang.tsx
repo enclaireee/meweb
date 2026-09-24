@@ -2,10 +2,11 @@ import type { CSSProperties, ElementType, ReactNode } from "react";
 import styles from "./Hang.module.css";
 
 /**
- * Where a card hangs (desktop/tablet). The layout keeps the middle of the view clear: cards sit in the
- * ceiling band, down the sides and along the floor, never over the doorway and the worker.
+ * Where a card hangs (desktop/tablet): the title tag, three small ceiling tags, three notes and a card
+ * near the floor. On desktop they gather in a loose cluster on the right (the camera already moves the
+ * aisle left), leaving the doorway and the worker clear.
  */
-export type Slot = "tr" | "t1" | "t2" | "t3" | "t4" | "t5" | "t6" | "ml" | "ml2" | "mr" | "mr2" | "mr3" | "bl" | "bc" | "br";
+export type Slot = "tr" | "t1" | "t2" | "t3" | "n1" | "n2" | "n3" | "br";
 
 /**
  * One small paper on a string (decisions.md, "lots of small papers"). When its section arrives the

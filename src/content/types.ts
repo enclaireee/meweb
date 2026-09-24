@@ -20,6 +20,8 @@ export type Project = {
   stack: string[];
   /** Plate back: the story, told in three beats (paraphrased from the CV, nothing added). */
   story: { problem: string; built: string; result: string };
+  /** The same three beats in one short sentence each, for phones (cut from `story`, nothing added). */
+  brief: { problem: string; built: string; result: string };
   /** The CV bullets, verbatim: kept as the source the story is written from. */
   bullets: string[];
   /** Empty until provided: never fabricate a URL. */

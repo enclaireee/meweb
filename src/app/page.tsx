@@ -11,8 +11,14 @@ import { SiteNav } from "@/ui/SiteNav/SiteNav";
 import { RelightDial } from "@/ui/RelightDial/RelightDial";
 import { HintStrip } from "@/ui/HintStrip/HintStrip";
 import { Loader } from "@/ui/Loader/Loader";
+import { preload } from "react-dom";
+import { Deck } from "@/ui/Deck/Deck";
+import { Storyteller } from "@/ui/Deck/Storyteller";
+import { PHONE } from "@/ui/Deck/phone";
 
 export default function Home() {
+  // phones: the desk card's backdrop band is the first paint (mobile_concept.md §6); desktop never asks
+  preload("/rooms/about-night-b0.avif", { as: "image", fetchPriority: "high", media: PHONE });
   return (
     <>
       {/* the still of the desk: LCP, and the whole backdrop when there's no WebGL */}
@@ -21,6 +27,7 @@ export default function Home() {
       <SiteNav />
       <RelightDial />
       <HintStrip />
+      <Deck puppet={<Storyteller />} />
       <Loader />
       <main id="main">
         <Desk />

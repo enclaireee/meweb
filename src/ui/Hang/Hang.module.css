@@ -32,95 +32,88 @@
   display: none;
 }
 
-/* ------------------------------------------------------------------------------------------
- * With JS: every card hangs on a string from above the frame, lowered in when its room arrives.
- * ---------------------------------------------------------------------------------------- */
-:global(html[data-js]) .hang {
-  position: absolute;
-  margin: 0;
-  width: var(--w);
-  transform-origin: 50% 0;
-  rotate: var(--tilt);
-  pointer-events: auto;
-  /* hauled up and out of sight: quick, no bounce, in reverse order */
-  translate: 0 -125vh;
-  transition: translate 0.55s cubic-bezier(0.55, 0, 0.85, 0.35) calc((6 - var(--i)) * 35ms);
-}
-:global(html[data-js]) [data-active] .hang {
-  /* lowered in one by one, overshooting a touch like stage rigging */
-  translate: 0 0;
-  transition: translate 0.95s cubic-bezier(0.2, 1.3, 0.4, 1) calc(160ms + var(--i) * 95ms);
-  animation: swing 2.8s ease-out calc(700ms + var(--i) * 95ms) backwards;
-}
-:global(html[data-js]) .hang:not(:where([data-active] *)) {
-  pointer-events: none;
-}
-
-/* the string runs up out of the frame from the hole */
-:global(html[data-js]) .string {
-  display: block;
-  position: absolute;
-  left: 50%;
-  bottom: calc(100% - 14px);
-  width: 1px;
-  height: 130vh;
-  background: color-mix(in srgb, var(--ink) 75%, transparent);
-  z-index: 1;
-}
-
-/* each card at its own depth: the pointer slides the near ones further */
-:global(html[data-js]) .parallax {
-  position: relative;
-  transform: translate(calc(var(--light-x) * var(--depth) * -16px), calc((var(--light-y) + 0.4) * var(--depth) * 9px));
-  transition: transform 0.25s linear;
-}
-
-@keyframes swing {
-  0% {
-    rotate: calc(var(--tilt) + 3.5deg);
-  }
-  22% {
-    rotate: calc(var(--tilt) - 2.4deg);
-  }
-  44% {
-    rotate: calc(var(--tilt) + 1.4deg);
-  }
-  66% {
-    rotate: calc(var(--tilt) - 0.7deg);
-  }
-  100% {
+@media (min-width: 640px) {
+  /* ------------------------------------------------------------------------------------------
+   * With JS: every card hangs on a string from above the frame, lowered in when its room arrives.
+   * ---------------------------------------------------------------------------------------- */
+  :global(html[data-js]) .hang {
+    position: absolute;
+    margin: 0;
+    width: var(--w);
+    transform-origin: 50% 0;
     rotate: var(--tilt);
+    pointer-events: auto;
+    /* hauled up and out of sight: quick, no bounce, in reverse order */
+    translate: 0 -125vh;
+    transition: translate 0.55s cubic-bezier(0.55, 0, 0.85, 0.35) calc((6 - var(--i)) * 35ms);
+  }
+  :global(html[data-js]) [data-active] .hang {
+    /* lowered in one by one, overshooting a touch like stage rigging */
+    translate: 0 0;
+    transition: translate 0.95s cubic-bezier(0.2, 1.3, 0.4, 1) calc(160ms + var(--i) * 95ms);
+    animation: swing 2.8s ease-out calc(700ms + var(--i) * 95ms) backwards;
+  }
+  :global(html[data-js]) .hang:not(:where([data-active] *)) {
+    pointer-events: none;
+  }
+
+  /* the string runs up out of the frame from the hole */
+  :global(html[data-js]) .string {
+    display: block;
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% - 14px);
+    width: 1px;
+    height: 130vh;
+    background: color-mix(in srgb, var(--ink) 75%, transparent);
+    z-index: 1;
+  }
+
+  /* each card at its own depth: the pointer slides the near ones further */
+  :global(html[data-js]) .parallax {
+    position: relative;
+    transform: translate(calc(var(--light-x) * var(--depth) * -16px), calc((var(--light-y) + 0.4) * var(--depth) * 9px));
+    transition: transform 0.25s linear;
+  }
+
+  @keyframes swing {
+    0% {
+      rotate: calc(var(--tilt) + 3.5deg);
+    }
+    22% {
+      rotate: calc(var(--tilt) - 2.4deg);
+    }
+    44% {
+      rotate: calc(var(--tilt) + 1.4deg);
+    }
+    66% {
+      rotate: calc(var(--tilt) - 0.7deg);
+    }
+    100% {
+      rotate: var(--tilt);
+    }
+  }
+
+  /* higher cards stack above lower ones, so every string passes behind the cards above it */
+  :global(html[data-js]) .t1,
+  :global(html[data-js]) .t2,
+  :global(html[data-js]) .t3 {
+    z-index: 6;
+  }
+  :global(html[data-js]) .tr {
+    z-index: 5;
+  }
+  :global(html[data-js]) .n1,
+  :global(html[data-js]) .n2 {
+    z-index: 4;
+  }
+  :global(html[data-js]) .n3,
+  :global(html[data-js]) .br {
+    z-index: 2;
   }
 }
 
-/* higher cards stack above lower ones, so every string passes behind the cards above it */
-:global(html[data-js]) .t1,
-:global(html[data-js]) .t2,
-:global(html[data-js]) .t3,
-:global(html[data-js]) .t4,
-:global(html[data-js]) .t5,
-:global(html[data-js]) .t6 {
-  z-index: 6;
-}
-:global(html[data-js]) .tr {
-  z-index: 5;
-}
-:global(html[data-js]) .ml,
-:global(html[data-js]) .mr,
-:global(html[data-js]) .mr3 {
-  z-index: 4;
-}
-:global(html[data-js]) .ml2,
-:global(html[data-js]) .mr2 {
-  z-index: 3;
-}
-:global(html[data-js]) .bl,
-:global(html[data-js]) .bc,
-:global(html[data-js]) .br {
-  z-index: 2;
-}
-
-/* --- slots (≥ 640px): the ceiling band, the sides, the floor; the middle stays clear ----- */
+/* --- tablets (640–1023px): the ceiling band, the sides, the floor; the middle stays clear -- */
 @media (min-width: 640px) {
   :global(html[data-js]) .tr {
     --w: min(340px, 27vw);
@@ -142,52 +135,17 @@
     left: 50vw;
     top: calc(var(--mat) + 6.5vh);
   }
-  :global(html[data-js]) .t4 {
-    --w: min(230px, 17vw);
-    left: 21vw;
-    top: calc(var(--mat) + 4vh);
-  }
-  :global(html[data-js]) .t5 {
-    --w: min(230px, 17vw);
-    left: 39vw;
-    top: calc(var(--mat) + 9vh);
-  }
-  :global(html[data-js]) .t6 {
-    --w: min(230px, 17vw);
-    left: 57vw;
-    top: calc(var(--mat) + 5vh);
-  }
-  :global(html[data-js]) .ml {
+  :global(html[data-js]) .n1 {
     --w: min(260px, 19vw);
     left: calc(var(--mat) + 190px);
     top: 38vh;
   }
-  :global(html[data-js]) .ml2 {
-    --w: min(240px, 18vw);
-    left: calc(var(--mat) + 190px);
-    top: 60vh;
-  }
-  :global(html[data-js]) .mr {
+  :global(html[data-js]) .n2 {
     --w: min(290px, 22vw);
     right: calc(var(--mat) + 2.5vw);
     top: 52vh;
   }
-  :global(html[data-js]) .mr2 {
-    --w: min(240px, 18vw);
-    right: calc(var(--mat) + 21vw);
-    top: 41vh;
-  }
-  :global(html[data-js]) .mr3 {
-    --w: min(250px, 19vw);
-    right: calc(var(--mat) + 2.5vw);
-    top: 40vh;
-  }
-  :global(html[data-js]) .bl {
-    --w: min(300px, 22vw);
-    left: calc(var(--mat) + 190px);
-    bottom: calc(var(--mat) + 4vh);
-  }
-  :global(html[data-js]) .bc {
+  :global(html[data-js]) .n3 {
     --w: min(300px, 23vw);
     left: 31vw;
     bottom: calc(var(--mat) + 3.5vh);
@@ -199,55 +157,111 @@
   }
 }
 
-/* --- phones: pegged to the clothesline, one swipe apart (StationShell) ------------------ */
-@media (max-width: 639.98px) {
-  :global(html[data-js]) .hang {
-    position: relative;
-    flex: 0 0 auto;
-    width: 76vw;
-    scroll-snap-align: start;
-    /* hauled by its own height past the top of the screen: a fixed distance left tall cards peeking in */
-    translate: 0 calc(-100% - var(--line) - 48px);
-    transition-delay: calc((4 - min(var(--i), 4)) * 35ms);
-  }
-  :global(html[data-js]) [data-active] .hang {
-    transition-delay: calc(160ms + min(var(--i), 4) * 95ms);
-    animation-delay: calc(700ms + min(var(--i), 4) * 95ms);
-  }
+/*
+ * --- desktop (≥ 1024px): a loose cluster on the right --------------------------------------
+ * Pinned up by hand, not set in columns: two ragged stacks whose edges wander and whose heights
+ * interleave, the small tags tucked into the gaps. The camera's view offset already puts the aisle
+ * left of centre, so the doorway and the worker keep the left of the screen to themselves.
+ */
+@media (min-width: 1024px) {
   :global(html[data-js]) .tr {
-    width: 82vw;
+    --w: min(330px, 23vw);
+    left: 70vw;
+    right: auto;
+    top: calc(var(--mat) + 10vh);
   }
-  /* the numbers and focus tags: small tags between the big cards */
-  :global(html[data-js]) .t1,
-  :global(html[data-js]) .t2,
+  :global(html[data-js]) .t1 {
+    --w: min(150px, 11vw);
+    left: 55vw;
+    top: calc(var(--mat) + 3vh);
+  }
+  :global(html[data-js]) .t2 {
+    --w: min(150px, 11vw);
+    left: 57.5vw;
+    top: calc(var(--mat) + 18vh);
+  }
   :global(html[data-js]) .t3 {
-    width: 38vw;
+    --w: min(150px, 11vw);
+    left: 81vw;
+    top: calc(var(--mat) + 1.5vh);
   }
-  /* the string becomes a clothes peg over the twine */
-  :global(html[data-js]) .string {
-    left: 50%;
-    top: -8px;
-    bottom: auto;
-    width: 9px;
-    height: 24px;
-    translate: -50% 0;
-    border-radius: 2px;
-    background: var(--peg);
-    box-shadow: 0 2px 3px rgb(0 0 0 / 0.3);
-    z-index: 2;
+  :global(html[data-js]) .n1 {
+    --w: min(260px, 17.5vw);
+    left: 52.5vw;
+    top: 35vh;
   }
-  :global(html[data-js]) .hole {
-    display: none;
+  :global(html[data-js]) .n2 {
+    --w: min(280px, 19.5vw);
+    left: 74vw;
+    right: auto;
+    top: 47vh;
   }
-  :global(html[data-js]) .parallax {
-    transform: none;
+  :global(html[data-js]) .n3 {
+    --w: min(270px, 18.5vw);
+    left: 56vw;
+    bottom: calc(var(--mat) + 5vh);
   }
-  .card {
-    padding: 22px 16px 14px;
+  :global(html[data-js]) .br {
+    --w: min(300px, 21vw);
+    left: 76.5vw;
+    right: auto;
+    bottom: calc(var(--mat) + 2vh);
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+/*
+ * --- phones: no strings. The papers are laid in the caption card under the stage (ui/Deck,
+ * mobile_concept.md), in reading order: the tag, the three small tags in a row, then the rest.
+ */
+@media (max-width: 639.98px) {
+  /* a card cut from the phone layout takes its place in the grid with it */
+  .hang:has(> .parallax > :global(.cast) > .card:global(.long)) {
+    display: none;
+  }
+  .hang {
+    grid-column: 1 / -1;
+    width: auto;
+    margin: 0;
+  }
+  /* the desk's three focus tags share a row */
+  .t1,
+  .t2,
+  .t3 {
+    grid-column: auto;
+    align-self: stretch;
+  }
+  .t1 .card,
+  .t2 .card,
+  .t3 .card {
+    height: 100%;
+  }
+
+  /* with JS the phone panel is one sheet (ui/StationShell): every piece is a section of it, set off
+     by a perforation, with no paper, hole, tilt or shadow of its own */
+  :global(html[data-js]) .hang {
+    padding: 18px 0;
+    border-top: 1px dashed color-mix(in srgb, var(--ink) 22%, transparent);
+  }
+  :global(html[data-js]) .tr {
+    padding-top: 0;
+    border-top: 0;
+  }
+  :global(html[data-js]) .hang :global(.cast) {
+    filter: none;
+  }
+  :global(html[data-js]) .hang .card {
+    padding: 0;
+    background: none;
+    clip-path: none;
+    box-shadow: none;
+  }
+  :global(html[data-js]) .hang .card::after,
+  :global(html[data-js]) .hole {
+    display: none;
+  }
+}
+
+@media (min-width: 640px) and (prefers-reduced-motion: reduce) {
   :global(html[data-js]) .hang,
   :global(html[data-js]) [data-active] .hang {
     translate: 0 0;

@@ -12,7 +12,8 @@
     "cut:check": "tsx scripts/cut/index.mts --check",
     "grain": "tsx scripts/grain.mts",
     "poster": "tsx scripts/poster.mts",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "rooms": "tsx scripts/rooms.mts"
   },
   "dependencies": {
     "@react-three/drei": "10.7.8",

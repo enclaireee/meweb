@@ -2,35 +2,29 @@
 
 import { useEffect, useState } from "react";
 import { clamp } from "@/lib/math";
-import { fast } from "@/scene/store";
-import { wake } from "@/scene/loop";
 import styles from "./TiltToggle.module.css";
 
 type PermissionCapable = { requestPermission?: () => Promise<"granted" | "denied"> };
 
 /**
  * "Tilt to look" (architecture.md §6.9): phones can look around the box by tilting, but iOS only
- * hands over orientation after a tap, so it's a paper toggle. Clamped to the pointer's ±3°/±2°;
- * the rig's damping is the low-pass filter.
+ * hands over orientation after a tap, so it's a paper toggle. `onTilt` gets −1..1 on each axis (the
+ * scene's rig or the phone stage smooths it) and (0, 0) when it's switched off.
  */
-export function TiltToggle() {
+export function TiltToggle({ onTilt }: { onTilt: (x: number, y: number) => void }) {
   const [on, setOn] = useState(false);
 
   useEffect(() => {
     if (!on) return;
     const onOrient = (e: DeviceOrientationEvent) => {
-      fast.tiltX = clamp((e.gamma ?? 0) / 25, -1, 1);
-      fast.tiltY = clamp(((e.beta ?? 45) - 45) / 25, -1, 1);
-      wake(300);
+      onTilt(clamp((e.gamma ?? 0) / 25, -1, 1), clamp(((e.beta ?? 45) - 45) / 25, -1, 1));
     };
     addEventListener("deviceorientation", onOrient);
     return () => {
       removeEventListener("deviceorientation", onOrient);
-      fast.tiltX = 0;
-      fast.tiltY = 0;
-      wake(1500);
+      onTilt(0, 0);
     };
-  }, [on]);
+  }, [on, onTilt]);
 
   const toggle = async () => {
     if (on) return setOn(false);

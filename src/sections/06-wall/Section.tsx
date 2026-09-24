@@ -5,7 +5,7 @@ import { awards } from "@/content/awards";
 import { formatDates } from "@/lib/dates";
 import { papers, rooms } from "@/design/tokens";
 import { StationShell } from "@/ui/StationShell/StationShell";
-import { Board, BoardRow, boardItem } from "@/ui/Board/Board";
+import { Board, BoardRow } from "@/ui/Board/Board";
 import { Icon, type IconName } from "@/ui/Icon/Icon";
 import { Ribbon } from "@/ui/Ribbon/Ribbon";
 import styles from "./Section.module.css";
@@ -17,34 +17,27 @@ const skillIcons: IconName[] = ["code", "layers", "chart"];
  * Experience on the left, one line a role (tap for the story); skills and ribbons on the right.
  */
 export default function Section() {
-  let n = 0;
-  // every piece is also a card on the phone clothesline, lowered in turn
-  const item = (extra = "", tag = false) => ({
-    className: `${boardItem} ${extra}`,
-    style: { "--n": n++ } as CSSProperties,
-    ...(tag ? { "data-tag": "" } : {}),
-  });
   const tone = { "--tone": papers[rooms[6]!.wall], "--ink-tone": papers[rooms[6]!.ceiling] } as CSSProperties;
 
   return (
     <StationShell index={6} labelledBy="wall-title">
       <div style={tone} className={styles.set}>
         <BoardRow>
-          <Board i={0} flat>
-            <header {...item(styles.head)}>
+          <Board i={0}>
+            <header className={styles.head}>
               <p className="text-kicker uppercase text-ink-soft">Plate 06 · The Wall</p>
               <h2 id="wall-title" className={styles.title}>
                 Experience and skills
               </h2>
             </header>
             <section aria-labelledby="experience-title" className={styles.part}>
-              <h3 id="experience-title" {...item(styles.label, true)}>
+              <h3 id="experience-title" className={styles.label}>
                 <Icon name="briefcase" badge className={styles.badge} />
                 Experience
               </h3>
               <ol className={`${styles.list} ${styles.part}`}>
                 {experience.map((r) => (
-                  <li key={r.id} {...item(styles.role)}>
+                  <li key={r.id} className={styles.role}>
                     <details name="roles" className={styles.details}>
                       <summary className={styles.summaryRow}>
                         <Icon name={r.kind === "work" ? "briefcase" : "flag"} className={styles.kind} />
@@ -66,14 +59,14 @@ export default function Section() {
             </section>
           </Board>
 
-          <Board i={1} flat>
+          <Board i={1}>
             <section id="skills" aria-labelledby="skills-title" className={styles.part}>
-              <h3 id="skills-title" {...item(styles.label, true)}>
+              <h3 id="skills-title" className={styles.label}>
                 <Icon name="wrench" badge className={styles.badge} />
                 Skills
               </h3>
               {skills.map((g, k) => (
-                <div key={g.label} {...item(styles.group)}>
+                <div key={g.label} className={styles.group}>
                   <h4 className={styles.groupTitle}>
                     <Icon name={skillIcons[k] ?? "chip"} /> {g.label}
                   </h4>
@@ -88,7 +81,7 @@ export default function Section() {
               ))}
             </section>
             <section aria-labelledby="awards-title" className={`${styles.part} ${styles.ribbons}`}>
-              <h3 id="awards-title" {...item(styles.label, true)}>
+              <h3 id="awards-title" className={styles.label}>
                 <span aria-hidden className={styles.rosette}>
                   <Ribbon small label="Ribbons" />
                 </span>
@@ -96,7 +89,7 @@ export default function Section() {
               </h3>
               <ul className={`${styles.list} ${styles.part}`}>
                 {awards.map((a) => (
-                  <li key={a.title} {...item(styles.award)}>
+                  <li key={a.title} className={styles.award}>
                     <p className={styles.awardTitle}>{a.title}</p>
                     <p className={styles.org}>
                       {a.issuer}, {a.year}

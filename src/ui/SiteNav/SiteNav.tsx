@@ -5,7 +5,7 @@ import { Icon, type IconName } from "@/ui/Icon/Icon";
 import styles from "./SiteNav.module.css";
 
 /** The five things you might come for, each pointing at its room. `on` = the stations it covers. */
-const items: { label: string; href: string; on: number[]; icon: IconName }[] = [
+export const items: { label: string; href: string; on: number[]; icon: IconName }[] = [
   { label: "Who I am", href: "#about", on: [0], icon: "person" },
   { label: "Projects", href: "#demandx", on: [1, 2, 3, 4, 5], icon: "folder" },
   { label: "Experience", href: "#experience", on: [6], icon: "briefcase" },
