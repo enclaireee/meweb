@@ -48,7 +48,11 @@ export function ClientBoot() {
       const sec = (e.target as HTMLElement).closest<HTMLElement>("section[data-station]");
       if (sec && !("active" in sec.dataset)) {
         const y = sec.offsetTop + sec.offsetHeight / 2 - innerHeight / 2;
-        scrollTo({ top: y, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+        // the next room glides; a room further off is a jump (the camera still dollies there on its own
+        // damping). A long smooth scroll would leave the focus on cards that haven't been lowered yet
+        const far = Math.abs(Number(sec.dataset.station) - store.getState().station) > 1;
+        const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+        scrollTo({ top: y, behavior: reduced || far ? "instant" : "smooth" });
       }
     };
     document.addEventListener("focusin", onFocus);

@@ -16,6 +16,14 @@ const SEEN_KEY = "nw-seen";
 /** Hooks that join the end of the entrance (the worker's walk-in registers here). */
 export const afterEntrance: ((opts: { returning: boolean }) => void)[] = [];
 
+let timeline: gsap.core.Timeline | null = null;
+
+/** The scene unmounted mid-entrance (tier fell to none, HMR): stop driving objects that are gone. */
+export function killEntrance() {
+  timeline?.kill();
+  timeline = null;
+}
+
 export function runEntrance() {
   const html = document.documentElement;
   const { reducedMotion } = store.getState();
@@ -44,7 +52,7 @@ export function runEntrance() {
 
   const e = motion.entrance;
   const scale = returning ? e.returnTotal / e.total : 1;
-  const tl = gsap.timeline({ onUpdate: () => ((shadows.dirty = true), wake(100)) });
+  const tl = (timeline = gsap.timeline({ onUpdate: () => ((shadows.dirty = true), wake(100)) }));
   tl.to({}, { duration: e.fade * scale }); // the poster's 300 ms cross-fade (CSS)
   sheets.forEach((h, i) => {
     tl.to(h.group.rotation, { x: 0, duration: e.sheet * scale, ease: "expo.out" }, e.fade * scale + i * e.stagger * scale);
@@ -58,6 +66,7 @@ export function runEntrance() {
       .to(lightState, { lampScale: 1, duration: 0.08 });
   }
   tl.call(() => {
+    timeline = null;
     afterEntrance.forEach((f) => f({ returning }));
     store.setState({ entranceDone: true });
   });

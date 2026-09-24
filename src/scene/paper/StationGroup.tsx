@@ -10,6 +10,7 @@ import { seeded } from "@/lib/rng";
 import { store, useScene } from "@/scene/store";
 import { wake } from "@/scene/loop";
 import { shadows } from "@/scene/light/shadows";
+import { compileBoth } from "@/scene/light/Lights";
 import type { CutFile, CutSheet } from "./cut";
 import { glowMaterial, paperMaterial } from "./material";
 import { mergeStatic, paint, relightOrder, sheetGeometry } from "./sheet";
@@ -42,8 +43,10 @@ export function StationGroup({ index, file, onRoot, animate = {} }: StationProps
   const scene = useThree((s) => s.scene);
   const camera = useThree((s) => s.camera);
 
-  // after the pop-up, hinged sheets never move again: merge them back in (one draw call, not twenty)
-  const popped = useScene((s) => s.entranceDone);
+  // after the pop-up, hinged sheets never move again: merge them back in (one draw call, not twenty).
+  // Only a station with hinges listens: the rest must not re-cut themselves when the entrance ends
+  const hasHinges = file.sheets.some((s) => !!s.hinge);
+  const popped = useScene((s) => hasHinges && s.entranceDone);
 
   const built = useMemo(() => {
     const hinged = (s: CutSheet) => !!s.hinge && !popped;
@@ -63,12 +66,22 @@ export function StationGroup({ index, file, onRoot, animate = {} }: StationProps
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file, stationZ, popped]);
 
-  // compile once, before this station is ever seen (no hitch mid-journey)
+  // compile once, before this station is ever seen (no hitch mid-journey), for both lights
   useEffect(() => {
-    gl.compile(scene, camera);
+    compileBoth(gl, scene, camera);
     shadows.dirty = true;
     wake(300);
   }, [gl, scene, camera, built]);
+
+  // a rebuilt (or unmounted) station frees what it replaced: R3F doesn't dispose geometry passed as a prop
+  useEffect(
+    () => () => {
+      built.merged?.dispose();
+      built.mergedNoCast?.dispose();
+      built.glow?.dispose();
+    },
+    [built],
+  );
 
   const mat = paperMaterial();
   return (
@@ -104,6 +117,7 @@ function Hung({ sheet, stationZ }: { sheet: CutSheet; stationZ: number }) {
     string.dispose();
     return both;
   }, [sheet, stationZ, hx, hy, len]);
+  useEffect(() => () => g.dispose(), [g]);
   const { period, phase } = useMemo(() => {
     const r = seeded(sheet.id + ":sway");
     return { period: 5 + 2 * r(), phase: r() * Math.PI * 2 };
@@ -114,7 +128,7 @@ function Hung({ sheet, stationZ }: { sheet: CutSheet; stationZ: number }) {
     const { reducedMotion, tier } = store.getState();
     if (!pivot.current || !pivot.current.parent?.visible || reducedMotion || tier === "low") return;
     pivot.current.rotation.z = 2 * DEG * Math.sin((state.clock.elapsedTime * Math.PI * 2) / period + phase);
-    shadows.dirty = true;
+    shadows.drift = true;
   });
 
   const mat = paperMaterial();
@@ -130,12 +144,16 @@ function Hung({ sheet, stationZ }: { sheet: CutSheet; stationZ: number }) {
 function Pivot({ sheet, stationZ, anim }: { sheet: CutSheet; stationZ: number; anim: SheetAnim }) {
   const [px, py] = sheet.pivot!;
   const g = useMemo(() => sheetGeometry(sheet, stationZ, [px, py]), [sheet, stationZ, px, py]);
+  useEffect(() => () => g.dispose(), [g]);
   const mesh = useRef<Mesh>(null);
   useFrame((state, delta) => {
     const m = mesh.current;
     if (!m || !m.parent?.visible || store.getState().reducedMotion) return;
-    if (anim(m, state.clock.elapsedTime, Math.min(delta, 0.1))) wake(100);
-    shadows.dirty = true;
+    // full-rate motion (the worker cranking the valve) shadows at once; idle drift may lag a little
+    if (anim(m, state.clock.elapsedTime, Math.min(delta, 0.1))) {
+      wake(100);
+      shadows.dirty = true;
+    } else shadows.drift = true;
   });
   return <mesh ref={mesh} position={[px, py, 0]} geometry={g} material={paperMaterial()} castShadow receiveShadow />;
 }
@@ -144,6 +162,7 @@ function Pivot({ sheet, stationZ, anim }: { sheet: CutSheet; stationZ: number; a
 function Hinged({ sheet, stationZ }: { sheet: CutSheet; stationZ: number }) {
   const y0 = sheet.bbox[1];
   const g = useMemo(() => sheetGeometry(sheet, stationZ, [0, y0]), [sheet, stationZ, y0]);
+  useEffect(() => () => g.dispose(), [g]);
   const group = useRef<Group>(null);
   useEffect(() => {
     const el = group.current;

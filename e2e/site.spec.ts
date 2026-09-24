@@ -86,3 +86,30 @@ test.describe("the scene", () => {
     expect(errors).toEqual([]);
   });
 });
+
+test.describe("edge cases", () => {
+  test("a deep link lands on its room even once smooth scrolling takes the page over", async ({ page }) => {
+    await page.goto("/#refocus");
+    await expect(page.locator("html")).toHaveAttribute("data-scene", "live", { timeout: 60_000 });
+    await expect(page.locator("#refocus")).toHaveAttribute("data-active", "");
+  });
+
+  test("a lost WebGL context falls back to the poster and the page keeps working", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator("html")).toHaveAttribute("data-scene", "live", { timeout: 60_000 });
+    await page.evaluate(() => document.querySelector("canvas")!.getContext("webgl2")!.getExtension("WEBGL_lose_context")!.loseContext());
+    await expect(page.locator("canvas")).toHaveCount(0);
+    await expect(page.locator(".poster")).toBeVisible();
+    await page.getByRole("navigation", { name: "Sections" }).getByRole("link", { name: "Contact" }).click();
+    await expect(page.locator("#contact")).toHaveAttribute("data-active", "");
+  });
+
+  test.describe("on a phone", () => {
+    test.use({ viewport: { width: 360, height: 640 }, isMobile: true, hasTouch: true, reducedMotion: "reduce" });
+    test("every way to say hello fits on screen", async ({ page }) => {
+      await page.goto("/#contact");
+      await expect(page.locator("#contact")).toHaveAttribute("data-active", "");
+      for (const name of [/Email/, /GitHub/, /LinkedIn/]) await expect(page.getByRole("link", { name })).toBeInViewport({ ratio: 1 });
+    });
+  });
+});

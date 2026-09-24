@@ -1,3 +1,4 @@
+import { store } from "@/scene/store";
 /**
  * The worker's speech bubble (lines.ts). One bubble, module state: `say` shows a line over his head for
  * as long as it takes to read, then folds it away. Lines are drawn from a shuffled deck per list, so
@@ -32,7 +33,8 @@ export const saying = () => performance.now() < until;
  * chatter off; a line never interrupts a higher one.
  */
 export function say(text: string, priority = 0) {
-  if (!el) return false;
+  // he only talks once he's on stage: not from behind the poster while the box is still being built
+  if (!el || !store.getState().sceneLive) return false;
   if (saying() && (priority < rank || (priority === 0 && rank === 0))) return false;
   const ms = Math.min(7000, 1900 + text.length * 55);
   rank = priority;

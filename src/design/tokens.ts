@@ -219,7 +219,7 @@ export const motion = {
   slow: 0.7,
   light: 1.2,
   stagger: 0.06,
-  pointerLambda: 3.2,
+  pointerLambda: 2.5,
   lenisLerp: 0.08,
   spring: { stiffness: 40, damping: 5, mass: 1 },
   entrance: { sheet: 0.6, stagger: 0.09, fade: 0.3, flicker: 0.25, total: 1.8, returnTotal: 0.8 },

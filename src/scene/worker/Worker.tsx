@@ -9,7 +9,7 @@ import { clamp, damp, DEG } from "@/lib/math";
 import { seeded } from "@/lib/rng";
 import { LAST_STATION } from "@/sections/stations";
 import { fast, store } from "@/scene/store";
-import { scrollToStation, wake } from "@/scene/loop";
+import { idleFor, nudge, scrollToStation, wake } from "@/scene/loop";
 import { view } from "@/scene/camera/rig";
 import { shadows } from "@/scene/light/shadows";
 import { afterEntrance } from "@/scene/entrance";
@@ -26,13 +26,21 @@ const S = W.scale;
 const slowV = (cycleDistance(W.slow) / W.slow.cycle) * S;
 const briskV = (cycleDistance(W.brisk) / W.brisk.cycle) * S;
 
+/**
+ * With nobody at the box for this long he finishes the job in hand and takes a breather (fidgets only)
+ * until someone moves again: alive, not busy (concept.md §8), and the box stops drawing at full rate.
+ */
+const REST_S = 45;
+
 /** What the stations can read: is he working their prop right now? */
 export const activity = { valve: false };
 
-type Act = { name: ActionName; t: number; dur: number };
+type Act = { name: ActionName; t: number; dur: number; idle?: boolean };
 
-/** Everything the loop mutates. One worker, so module state is honest. */
-const w = {
+/** Everything the loop mutates. One worker, so module state is honest. (Exported read-only for ?debug.) */
+export const w = {
+  /** false until his entrance: hidden, and simply kept at the room the camera is in */
+  onStage: false,
   mode: "follow" as "follow" | "job",
   pos: new Vector3(),
   prev: new Vector3(),
@@ -42,7 +50,7 @@ const w = {
   walking: 0,
   yaw: 50 * DEG,
   face: 0 as 0 | 1 | -1,
-  entering: null as null | { t: number; dur: number; from: Vector3; to: Vector3 },
+  entering: null as null | { t: number; dur: number; from: Vector3; to: Vector3; greet: boolean },
   routine: null as null | { station: number; order: number[]; job: number; step: number; t: number; pauseUntil: number; loops: number },
   settledFor: 0,
   act: null as Act | null,
@@ -62,33 +70,54 @@ const w = {
 };
 
 const F = { x: 0, z: 0 };
+// scratch poses, reused every frame
+const SLOW: Pose = { ...rest };
+const BRISK: Pose = { ...rest };
+const BODY: Pose = { ...rest };
+const NONE: Overlay = {};
+const EXTRA = { head: 0, clip: 0, hat: 0, lift: 0 };
+/** the HTML handle, set by WorkerLayer (no DOM query per frame) */
+let handle: HTMLButtonElement | null = null;
 const V = new Vector3();
 const D = new Vector3(1, 0, 0);
 const HEAD = new Vector3();
 
-const startAct = (name: ActionName, dur = DURATION[name]) => {
-  w.act = { name, t: 0, dur };
-  wake(dur * 1000 + 600);
+/** `idle`: a fidget of his own, not a job or a reply to you: it rides the half-rate ambient frames */
+const startAct = (name: ActionName, dur = DURATION[name], idle = false) => {
+  w.act = { name, t: 0, dur, idle };
+  if (idle) nudge(dur * 1000 + 600);
+  else wake(dur * 1000 + 600);
 };
 
 /** A reaction, if he's free to do it (not mid-job, not walking fast). */
-export function react(name: ActionName) {
+export function react(name: ActionName, idle = false) {
   if (w.act || w.speed > 0.5 || store.getState().reducedMotion || !store.getState().sceneLive) return false;
-  startAct(name);
+  startAct(name, DURATION[name], idle);
   return true;
 }
 
-/** Click / Enter on the worker: a hop of surprise, then off to the next station. */
+/** The station a poke is walking you to, until the camera gets there or the walk's time is up (you
+ * may scroll somewhere else meanwhile): −1 for none. */
+let walkingTo = -1;
+let walkUntil = 0;
+
+/**
+ * Click / Enter on the worker: a hop of surprise, then off to the next station. One poke, one station:
+ * pokes while he's already taking you somewhere don't stack up (spam-clicking used to skip rooms).
+ */
 export function pokeWorker() {
   const { reducedMotion, station } = store.getState();
+  if (walkingTo >= 0 && performance.now() < walkUntil && Math.abs(view.s - walkingTo) > 0.1) return;
   const next = Math.min(Math.max(station, Math.round(view.s)) + 1, LAST_STATION);
   say(pick(lines.poke), 1);
+  walkingTo = next === Math.round(view.s) ? -1 : next;
+  walkUntil = performance.now() + 4000; // the hop, the 2.4 s walk, and some slack
   if (!reducedMotion && !w.act) {
     startAct("hop");
     w.pendingNext = true;
     return;
   }
-  scrollToStation(next);
+  if (walkingTo >= 0) scrollToStation(walkingTo);
 }
 
 /** Clamp a heading so the flat puppet never goes edge-on to the camera (design.md §8). */
@@ -119,11 +148,19 @@ export function Worker() {
     w.pos.set(F.x, 0, F.z);
     w.prev.copy(w.pos);
     const hook = ({ returning }: { returning: boolean }) => {
+      w.onStage = true;
       if (store.getState().reducedMotion) return;
+      if (Math.round(view.s) !== 0) {
+        // you're already deeper in (a deep link, or you scrolled on while it loaded): he's waiting in
+        // your room, not walking in at a desk you can't see
+        followPoint(view.s, F);
+        w.pos.set(F.x, 0, F.z);
+        w.prev.copy(w.pos);
+        return;
+      }
       followPoint(0, F);
-      w.entering = { t: 0, dur: returning ? 1.6 : 3.2, from: new Vector3(F.x - 18, 0, F.z - 1.5), to: new Vector3(F.x, 0, F.z) };
+      w.entering = { t: 0, dur: returning ? 1.6 : 3.2, from: new Vector3(F.x - 18, 0, F.z - 1.5), to: new Vector3(F.x, 0, F.z), greet: !returning };
       wake(3800);
-      if (!returning) setTimeout(() => say(pick(lines.hello), 1), 1400);
     };
     afterEntrance.push(hook);
     // a change of light gets a reaction: a stretch for the morning, a yawn for the night
@@ -136,6 +173,7 @@ export function Worker() {
       if (s.station < prev.station && s.sceneLive && Math.random() < 0.5) setTimeout(() => say(pick(lines.back)), 900);
     });
     return () => {
+      w.onStage = false;
       const i = afterEntrance.indexOf(hook);
       if (i >= 0) afterEntrance.splice(i, 1);
       unsub();
@@ -151,6 +189,19 @@ export function Worker() {
     const settled = Math.abs(view.s - fast.s) < 0.03 && Math.abs(fast.s - here) < 0.02;
     w.prev.copy(w.pos);
 
+    // before his entrance he isn't on stage: hidden, parked in the camera's room, no speed (so no
+    // "catching up" remarks, and no pop from the desk to the wings when the walk-in starts)
+    // (deeper in, there's no walk-in to wait for: he's in your room as the box fades in around him)
+    if (!w.onStage && sceneLive && Math.round(view.s) !== 0) w.onStage = true;
+    g.visible = w.onStage;
+    if (!w.onStage) {
+      followPoint(view.s, F);
+      w.pos.set(F.x, 0, F.z);
+      w.prev.copy(w.pos);
+      w.speed = 0;
+      return;
+    }
+
     // --- where he should be ------------------------------------------------------------
     if (reducedMotion) {
       // he stands at the current room; no walking, no jobs (design.md §10)
@@ -162,7 +213,11 @@ export function Worker() {
       e.t += dt;
       const k = clamp(e.t / e.dur, 0, 1);
       w.pos.lerpVectors(e.from, e.to, k);
-      if (k >= 1) w.entering = null;
+      if (k >= 1) {
+        // he says hello once he's there, not from behind whatever he's walking past
+        if (e.greet) say(pick(lines.hello), 1);
+        w.entering = null;
+      }
     } else {
       // scrolling on drops the job: he eases back to walking ahead of you
       if (w.routine && (w.routine.station !== here || !settled)) {
@@ -177,7 +232,7 @@ export function Worker() {
         followPoint(view.s, F);
         const near = Math.hypot(w.pos.x - F.x, w.pos.z - F.z) < 0.4;
         w.settledFor = settled && near && sceneLive && entranceDone && !w.act ? w.settledFor + dt : 0;
-        if (w.settledFor > 1.2 && routines[here]?.length) {
+        if (w.settledFor > 1.2 && routines[here]?.length && idleFor() < REST_S) {
           const loops = 0;
           w.routine = { station: here, order: shuffle(routines[here]!.length, `jobs:${here}:${loops}:${Math.floor(view.time)}`), job: 0, step: 0, t: 0, pauseUntil: 0, loops };
           w.mode = "job";
@@ -194,7 +249,7 @@ export function Worker() {
         w.pos.z = damp(w.pos.z, F.z, 3.2, dt);
         // you scrolled off at a sprint and he had to jog to keep up
         w.rushFor = w.speed > briskV * 1.6 ? w.rushFor + dt : 0;
-        if (w.rushFor > 0.35 && view.time > w.rushQuietUntil) {
+        if (w.rushFor > 0.35 && view.time > w.rushQuietUntil && entranceDone) {
           if (say(pick(lines.rush))) w.rushQuietUntil = view.time + 25;
         }
       } else {
@@ -224,7 +279,9 @@ export function Worker() {
       const cycle = W.slow.cycle + (W.brisk.cycle - W.slow.cycle) * blend;
       const rate = Math.min(v / (cycleDistance(blend < 0.5 ? W.slow : W.brisk) * S), 1 / W.brisk.cycle);
       w.phase += Math.max(rate, w.walking > 0.02 ? 0.25 / cycle : 0) * dt;
-      p = mix(rest, mix(pose(w.phase, W.slow), pose(w.phase, W.brisk), blend), w.walking);
+      pose(w.phase, W.slow, SLOW);
+      pose(w.phase, W.brisk, BRISK);
+      p = mix(rest, mix(SLOW, BRISK, blend, BODY), w.walking, BODY);
     } else {
       w.phase = Math.round(w.phase * 2 - 0.5) / 2 + 0.25;
       if (w.arrivedAt !== here && sceneLive && !reducedMotion && settled) {
@@ -242,16 +299,16 @@ export function Worker() {
         w.act = null;
         if (w.pendingNext && done === "hop") {
           w.pendingNext = false;
-          scrollToStation(Math.min(Math.max(store.getState().station, Math.round(view.s)) + 1, LAST_STATION));
+          if (walkingTo >= 0) scrollToStation(walkingTo);
         }
       }
     }
     activity.valve = w.act?.name === "valve";
     w.actW = damp(w.actW, w.act ? 1 : 0, 7, dt);
-    let o: Overlay = {};
+    let o: Overlay = NONE;
     if (w.last && w.actW > 0.002) {
       o = action(w.last.name, w.last.t);
-      p = overlay(p, o, w.actW);
+      p = overlay(p, o, w.actW, BODY);
     }
 
     // --- facing -----------------------------------------------------------------------
@@ -272,11 +329,11 @@ export function Worker() {
         if (pick < 0.25) w.hat.v += 3;
         else if (pick < 0.5) w.headTarget = 12 * DEG;
         else if (pick < 0.7) w.clipTarget = -35 * DEG;
-        else if (pick < 0.85) react("scratch");
-        else react("lookUp");
+        else if (pick < 0.85) react("scratch", true);
+        else react("lookUp", true);
         w.nextFidget = W.fidget[0] + (W.fidget[1] - W.fidget[0]) * rng();
-        setTimeout(() => ((w.headTarget = 0), (w.clipTarget = 0), wake(1200)), 1300);
-        wake(1500);
+        setTimeout(() => ((w.headTarget = 0), (w.clipTarget = 0), nudge(1200)), 1300);
+        nudge(1500);
       }
     }
     w.head = damp(w.head, w.headTarget, 5, dt);
@@ -287,16 +344,20 @@ export function Worker() {
     // --- apply ---------------------------------------------------------------------------
     g.position.set(w.pos.x, 0, w.pos.z);
     g.rotation.y = w.yaw;
-    applyPose(joints.current, p, {
-      head: w.head + (o.head ?? 0) * w.actW,
-      clip: w.clip * (1 - w.actW),
-      hat: Math.max(0, w.hat.x) * 0.12,
-      lift: (o.lift ?? 0) * w.actW,
-    });
+    EXTRA.head = w.head + (o.head ?? 0) * w.actW;
+    EXTRA.clip = w.clip * (1 - w.actW);
+    EXTRA.hat = Math.max(0, w.hat.x) * 0.12;
+    EXTRA.lift = (o.lift ?? 0) * w.actW;
+    applyPose(joints.current, p, EXTRA);
 
-    if (moved || idleMoving || w.walking > 0.02 || w.actW > 0.002 || Math.abs(d) > 0.01) {
+    const acting = w.actW > 0.002;
+    if (moved || w.walking > 0.02 || (acting && !w.last?.idle) || Math.abs(d) > 0.01) {
       shadows.dirty = true;
       wake(150);
+    } else if (idleMoving || acting) {
+      // a fidget: its shadow follows on the ambient frames
+      shadows.dirty = true;
+      nudge(150);
     }
 
     // --- where he is on screen, for the HTML button (≤ 30 Hz) -----------------------------
@@ -305,7 +366,7 @@ export function Worker() {
       w.screen.on = HEAD.z < 1 && Math.abs(HEAD.x) < 1 && Math.abs(HEAD.y) < 1;
       w.screen.x = (HEAD.x * 0.5 + 0.5) * state.size.width;
       w.screen.y = (-HEAD.y * 0.5 + 0.5) * state.size.height;
-      const btn = document.querySelector<HTMLElement>("[data-worker]");
+      const btn = handle;
       if (btn) {
         btn.style.translate = `${w.screen.x.toFixed(0)}px ${w.screen.y.toFixed(0)}px`;
         // keep his speech bubble on screen; its tail still points at him
@@ -346,6 +407,12 @@ function runRoutine(dt: number, now: number) {
     if (r.step >= job.length) {
       r.step = 0;
       r.job++;
+      if (idleFor() > REST_S) {
+        // nobody's watching: he steps back to his spot and waits
+        w.routine = null;
+        w.face = 0;
+        w.mode = "follow";
+      }
     }
   };
   if (!step) return next();
@@ -376,6 +443,10 @@ function runRoutine(dt: number, now: number) {
  */
 export function WorkerLayer() {
   const btn = useRef<HTMLButtonElement>(null);
+  const bindHandle = (el: HTMLButtonElement | null) => {
+    btn.current = el;
+    handle = el;
+  };
 
   // chatter: every 11–20 s, if he's on screen and you're looking, a line for the room he's in
   useEffect(() => {
@@ -397,7 +468,7 @@ export function WorkerLayer() {
 
   return (
     <button
-      ref={btn}
+      ref={bindHandle}
       type="button"
       data-worker
       className={styles.button}

@@ -125,7 +125,8 @@
     flex: 0 0 auto;
     width: 84vw;
     scroll-snap-align: start;
-    translate: 0 -110svh;
+    /* hauled by its own height past the top of the screen: a fixed distance left tall cards peeking in */
+    translate: 0 calc(-100% - var(--line) - 48px);
   }
   :global(html[data-js]) .string {
     top: -8px;
@@ -167,7 +168,8 @@
     clip-path: none;
     filter: var(--paper-shadow);
     scroll-snap-align: start;
-    translate: 0 -110svh;
+    /* hauled by its own height past the top of the screen: a fixed distance left tall cards peeking in */
+    translate: 0 calc(-100% - var(--line) - 48px);
     transition: translate 0.55s cubic-bezier(0.55, 0, 0.85, 0.35);
   }
   :global(html[data-js]) [data-active] .item {

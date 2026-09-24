@@ -32,30 +32,29 @@ export function Stations({ onFirstStation }: { onFirstStation: () => void }) {
   const roots = useRef<(Group | null)[]>([]);
   const first = useRef(false);
 
-  const onRoot = useCallback(
-    (i: number, g: Group | null) => {
-      roots.current[i] = g;
-      if (i === 0 && g && !first.current) {
-        first.current = true;
-        onFirstStation();
-      }
-    },
-    [onFirstStation],
-  );
+  const onRoot = useCallback((i: number, g: Group | null) => {
+    roots.current[i] = g;
+  }, []);
 
   const inFlight = useRef(false);
 
   useFrame(() => {
     const s = view.s;
-    // one station at a time, nearest first, and only the desk before the scene is live: building a
-    // station is a burst of main-thread work, so they're spread across idle moments. The desk loads
-    // first wherever the camera is: the scene goes live on it, so a deep link (#contact) would
-    // otherwise wait forever for a desk that's out of range.
+    // one station at a time, nearest first, and before the scene is live only the desk and the room
+    // the camera is in: building a station is a burst of main-thread work, so they're spread across
+    // idle moments. The desk always loads (the entrance plays on it, even from a deep link).
+    // The scene goes live once the desk (the entrance) and the room the camera is in are both cut:
+    // someone who scrolled on while it loaded must not see a bare room fill in behind the poster
+    const here = Math.round(s);
+    if (!first.current && roots.current[0] && roots.current[here]) {
+      first.current = true;
+      onFirstStation();
+    }
     if (!inFlight.current) {
       const live = store.getState().sceneLive;
       let next = -1;
       for (let i = 0; i < stationArt.length; i++) {
-        if (requested.current[i] || (live ? Math.abs(i - s) > 2 : i > 0)) continue;
+        if (requested.current[i] || (live ? Math.abs(i - s) > 2 : i > 0 && i !== here)) continue;
         if (next < 0 || Math.abs(i - s) < Math.abs(next - s)) next = i;
       }
       if (next >= 0) {
@@ -76,9 +75,10 @@ export function Stations({ onFirstStation }: { onFirstStation: () => void }) {
       }
     }
     const reach = reachFor(store.getState().tier);
-    roots.current.forEach((g, i) => {
+    for (let i = 0; i < roots.current.length; i++) {
+      const g = roots.current[i];
       if (g) g.visible = Math.abs(i - s) <= reach;
-    });
+    }
   });
 
   return (

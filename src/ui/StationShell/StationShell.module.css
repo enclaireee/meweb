@@ -121,8 +121,12 @@
   :global(html[data-js]) .station[data-active] .layer::after {
     opacity: 1;
   }
+  /* the last room has one card and nowhere further to go */
   :global(html[data-js]) .station[data-station="7"] .layer::after {
     content: none;
+  }
+  :global(html[data-js]) .station[data-station="7"] .swipe {
+    display: none;
   }
 }
 

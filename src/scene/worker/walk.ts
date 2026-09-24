@@ -38,7 +38,8 @@ const swing = (p: number) => {
   return f < 0.5 ? f * 2 : -1;
 };
 
-export function pose(phase: number, g: Gait): Pose {
+/** The pose at `phase`, written into `out` when given (the loop reuses one: nothing allocates per frame). */
+export function pose(phase: number, g: Gait, out = {} as Pose): Pose {
   const A = g.hip * DEG;
   const hipFront = A * tri(phase);
   const hipBack = A * tri(phase + 0.5);
@@ -47,19 +48,19 @@ export function pose(phase: number, g: Gait): Pose {
   const kneeFront = sf < 0 ? 0 : -g.knee * DEG * Math.sin(Math.PI * sf);
   const kneeBack = sb < 0 ? 0 : -g.knee * DEG * Math.sin(Math.PI * sb);
   const stance = sf < 0 ? hipFront : hipBack;
-  const [e0, e1] = g.elbow;
-  return {
-    hipFront,
-    hipBack,
-    kneeFront,
-    kneeBack,
-    armFront: -g.arm * DEG * tri(phase),
-    armBack: -g.arm * DEG * tri(phase + 0.5),
-    elbowFront: (e0 + (e1 - e0) * (0.5 + 0.5 * tri(phase))) * DEG,
-    elbowBack: (e0 + (e1 - e0) * (0.5 + 0.5 * tri(phase + 0.5))) * DEG,
-    hipY: LEG * Math.cos(stance),
-    lean: -g.lean * DEG,
-  };
+  const e0 = g.elbow[0];
+  const e1 = g.elbow[1];
+  out.hipFront = hipFront;
+  out.hipBack = hipBack;
+  out.kneeFront = kneeFront;
+  out.kneeBack = kneeBack;
+  out.armFront = -g.arm * DEG * tri(phase);
+  out.armBack = -g.arm * DEG * tri(phase + 0.5);
+  out.elbowFront = (e0 + (e1 - e0) * (0.5 + 0.5 * tri(phase))) * DEG;
+  out.elbowBack = (e0 + (e1 - e0) * (0.5 + 0.5 * tri(phase + 0.5))) * DEG;
+  out.hipY = LEG * Math.cos(stance);
+  out.lean = -g.lean * DEG;
+  return out;
 }
 
 /** Standing still: legs together, arms relaxed. */
@@ -79,9 +80,10 @@ export const rest: Pose = {
 /** Distance covered per full cycle (two steps). */
 export const cycleDistance = (g: Gait) => 2 * g.stride;
 
-/** Blend two poses (gait transitions and easing to a stop). */
-export function mix(a: Pose, b: Pose, t: number): Pose {
-  const o = {} as Pose;
-  for (const k of Object.keys(a) as (keyof Pose)[]) o[k] = a[k] + (b[k] - a[k]) * t;
-  return o;
+export const POSE_KEYS = Object.keys(rest) as readonly (keyof Pose)[];
+
+/** Blend two poses (gait transitions and easing to a stop), into `out` when given (it may be `b`). */
+export function mix(a: Pose, b: Pose, t: number, out = {} as Pose): Pose {
+  for (const k of POSE_KEYS) out[k] = a[k] + (b[k] - a[k]) * t;
+  return out;
 }

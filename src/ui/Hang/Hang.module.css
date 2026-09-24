@@ -206,7 +206,8 @@
     flex: 0 0 auto;
     width: 76vw;
     scroll-snap-align: start;
-    translate: 0 -110svh;
+    /* hauled by its own height past the top of the screen: a fixed distance left tall cards peeking in */
+    translate: 0 calc(-100% - var(--line) - 48px);
     transition-delay: calc((4 - min(var(--i), 4)) * 35ms);
   }
   :global(html[data-js]) [data-active] .hang {

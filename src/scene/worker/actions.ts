@@ -5,7 +5,7 @@
  * Split pins only: nothing stretches, everything swings (concept.md §2.8, §9).
  */
 import { DEG } from "@/lib/math";
-import type { Pose } from "./walk";
+import { POSE_KEYS, type Pose } from "./walk";
 
 export type ActionName =
   | "write"
@@ -60,7 +60,11 @@ const crouch = (depth: number): Overlay => ({
   lift: -0.42 * depth,
 });
 
-/** The overlay for `name` at time t (s) into it. */
+/**
+ * The overlay for `name` at time t (s) into it.
+ * ponytail: returns a fresh literal (one small object a frame while he acts); an out-param version of
+ * 18 cases isn't worth it until a profile shows GC pauses on a real phone.
+ */
 export function action(name: ActionName, t: number): Overlay {
   switch (name) {
     case "write": // clipboard up at the chest, the other hand scribbling
@@ -150,13 +154,11 @@ export function action(name: ActionName, t: number): Overlay {
   }
 }
 
-/** Blend an overlay onto a pose (w: 0 → base, 1 → overlay). */
-export function overlay(base: Pose, o: Overlay, w: number): Pose {
-  const out = { ...base };
-  for (const k of Object.keys(o) as (keyof Overlay)[]) {
-    if (k === "head" || k === "lift" || k === "clip") continue;
-    const key = k as keyof Pose;
-    out[key] = base[key] + ((o[key] as number) - base[key]) * w;
+/** Blend an overlay onto a pose (w: 0 → base, 1 → overlay), into `out` when given (it may be `base`). */
+export function overlay(base: Pose, o: Overlay, w: number, out = {} as Pose): Pose {
+  for (const k of POSE_KEYS) {
+    const v = o[k];
+    out[k] = v === undefined ? base[k] : base[k] + (v - base[k]) * w;
   }
   return out;
 }

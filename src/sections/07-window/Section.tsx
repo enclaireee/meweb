@@ -7,6 +7,9 @@ import styles from "./Section.module.css";
 
 const icons: Record<string, IconName> = { email: "mail", github: "branch", linkedin: "linkedin" };
 
+/** On a narrow card an address wraps where a person would break it: before the @, after a slash. */
+const breakable = (text: string) => text.split(/(?=@)|(?<=\/)/).flatMap((part, i) => (i ? [<wbr key={i} />, part] : [part]));
+
 /** The last room: say hello, on one clear card. */
 export default function Section() {
   const tone = { "--tone": papers[rooms[7]!.wall], "--ink-tone": papers[rooms[7]!.ceiling] } as React.CSSProperties;
@@ -26,7 +29,7 @@ export default function Section() {
                   <span className={styles.kind}>
                     <Icon name={icons[c.id] ?? "arrow"} badge /> {c.label}
                   </span>
-                  <span className={styles.display}>{c.display}</span>
+                  <span className={styles.display}>{breakable(c.display)}</span>
                   <span className={styles.arrow} aria-hidden>
                     {c.id === "email" ? "→" : "↗"}
                   </span>

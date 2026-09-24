@@ -3,6 +3,12 @@
   inset: 0;
   /* vertical scroll stays native on touch; horizontal drags tilt the box */
   touch-action: pan-y;
+  /* the poster stays in front of a half-built box: the canvas cross-fades in on the entrance (§7.2) */
+  opacity: 0;
+  transition: opacity 300ms var(--ease-paper);
+}
+:global(html[data-scene="live"]) .canvas {
+  opacity: 1;
 }
 
 .canvas canvas {

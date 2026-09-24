@@ -13,42 +13,59 @@ const lines: [number, string][] = [
   [0.99, "Lights up"],
 ];
 
+/** Times from navigation start: the curtain is up from first paint, not from hydration. */
 const MIN_MS = 1100;
-const MAX_MS = 10000;
+/**
+ * The scene may delay nothing (portfolio_concept.md §2): past this the bar runs out and the curtain
+ * parts on the readable page and its poster; the box pops up behind it whenever it's ready.
+ */
+const CAP_MS = 2000;
+
+const lineAt = (p: number) => [...lines].reverse().find(([at]) => p >= at)?.[1] ?? lines[0]![1];
 
 /**
  * The loading screen (decisions.md: "curtain + worker cutting"): a paper stage curtain; in front of it
- * the worker walks a pair of scissors along a strip as the workshop loads. When it's ready the curtain
- * parts and the box pops up behind it. Only with JS (no-JS readers get the page straight away), and
- * the page underneath is complete HTML the whole time.
+ * the worker walks a pair of scissors along a strip as the workshop loads. When it's ready (or after
+ * CAP_MS, whichever comes first) the curtain parts. Only with JS (no-JS readers get the page straight
+ * away), and the page underneath is complete HTML the whole time.
  */
 export function Loader() {
   const open = useScene((s) => s.curtainOpen);
-  const [shown, setShown] = useState(0);
   const [gone, setGone] = useState(false);
+  const root = useRef<HTMLDivElement>(null);
+  const pctEl = useRef<HTMLSpanElement>(null);
+  const lineEl = useRef<HTMLSpanElement>(null);
   const shownRef = useRef(0);
-  const started = useRef(0);
 
   // fonts are the first real stage; everything after is reported by the scene
   useEffect(() => {
-    started.current = performance.now();
     advanceLoading(0.08);
     document.fonts?.ready.then(() => advanceLoading(0.28));
   }, []);
 
-  // the bar creeps between stages and jumps when one lands (a timer, not a render loop: it stops)
+  // the bar creeps between stages and jumps when one lands. A timer writing to the DOM, not React
+  // state: this runs while the main thread is busiest (parsing three, cutting the desk)
   useEffect(() => {
     if (open) return;
     const id = window.setInterval(() => {
+      const { progress, tier } = store.getState();
+      const now = performance.now();
+      // no WebGL / Save-Data: there's nothing to wait for
+      if (tier === "none") return store.setState({ curtainOpen: true });
+      if (now > CAP_MS) advanceLoading(1);
+      // a slow device hydrated after the cap had already passed: no more waiting on a bar
+      if (now > CAP_MS + 400) shownRef.current = 1;
       const target = store.getState().progress;
       const goal = Math.max(target, Math.min(0.92, shownRef.current + 0.004));
-      shownRef.current += (goal - shownRef.current) * 0.2;
+      shownRef.current += (goal - shownRef.current) * (progress >= 1 ? 0.35 : 0.2);
       if (target >= 1 && shownRef.current > 0.985) shownRef.current = 1;
-      setShown(shownRef.current);
-      const elapsed = performance.now() - started.current;
-      if ((shownRef.current >= 1 && elapsed > MIN_MS) || elapsed > MAX_MS) {
-        store.setState({ curtainOpen: true });
-      }
+      const p = Math.min(shownRef.current, 1);
+      const pct = String(Math.round(p * 100));
+      root.current?.style.setProperty("--p", String(p));
+      root.current?.setAttribute("aria-valuenow", pct);
+      if (pctEl.current) pctEl.current.textContent = `${pct}%`;
+      if (lineEl.current) lineEl.current.textContent = `${lineAt(p)}…`;
+      if (p >= 1 && now > MIN_MS) store.setState({ curtainOpen: true });
     }, 80);
     return () => clearInterval(id);
   }, [open]);
@@ -62,19 +79,17 @@ export function Loader() {
   }, [open]);
 
   if (gone) return null;
-  const pct = Math.round(Math.min(shown, 1) * 100);
-  const line = [...lines].reverse().find(([at]) => shown >= at)?.[1] ?? lines[0]![1];
 
   return (
     <div
+      ref={root}
       className={styles.loader}
       data-open={open || undefined}
-      style={{ "--p": Math.min(shown, 1) } as React.CSSProperties}
       role="progressbar"
       aria-label="Loading the workshop"
       aria-valuemin={0}
       aria-valuemax={100}
-      aria-valuenow={pct}
+      aria-valuenow={0}
     >
       <div className={`${styles.curtain} ${styles.left}`} aria-hidden />
       <div className={`${styles.curtain} ${styles.right}`} aria-hidden />
@@ -98,8 +113,10 @@ export function Loader() {
           </div>
 
           <p className={`${styles.status} text-caption italic`}>
-            <span>{line}…</span>
-            <span className="tabular-nums">{pct}%</span>
+            <span ref={lineEl}>{lines[0]![1]}…</span>
+            <span ref={pctEl} className="tabular-nums">
+              0%
+            </span>
           </p>
         </div>
       </div>

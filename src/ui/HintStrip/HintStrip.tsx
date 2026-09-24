@@ -18,7 +18,9 @@ export function HintStrip() {
       setGone(true);
       off();
     };
-    const events = ["pointermove", "wheel", "touchstart", "keydown"] as const;
+    // any scroll counts, however it came (scrollbar, keys, a nav link): design.md §6 "first pointer
+    // move or scroll"
+    const events = ["pointermove", "wheel", "touchstart", "keydown", "scroll"] as const;
     const off = () => events.forEach((e) => removeEventListener(e, leave));
     // only count interactions after the hint could have been seen
     const mo = new MutationObserver(() => {

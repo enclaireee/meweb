@@ -15,7 +15,8 @@ import { writeFileSync } from "node:fs";
 const url = process.argv[2] ?? "http://localhost:3000/";
 const root = join(import.meta.dirname, "..");
 const HIDE_ALL = `main, nav, [data-worker], button, .frame-mat, .skip-link, p[aria-hidden] { visibility: hidden !important; }`;
-const HIDE_UI = `nav, [data-worker], button, .frame-mat, .skip-link, p[aria-hidden], #about .cast + .cast { visibility: hidden !important; }`;
+// the share card keeps one paper: the name tag (every other hung card at the desk goes, string and all)
+const HIDE_UI = `nav, [data-worker], button, .frame-mat, .skip-link, p[aria-hidden], #about [class*="Hang-module"][class*="__hang"]:not(:has(h1)) { visibility: hidden !important; }`;
 
 const browser = await chromium.launch({ args: ["--use-gl=angle", "--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"] });
 
@@ -46,7 +47,7 @@ for (const light of ["night", "morning"] as const) {
 
 const og = await shoot("night", 1200, 630, HIDE_UI);
 await sharp(og).png({ compressionLevel: 9, palette: false }).toFile(join(root, "src/app/opengraph-image.png"));
-writeFileSync(join(root, "src/app/opengraph-image.alt.txt"), "A paper-cut diorama of a workshop at night: a desk under a lamp, a small paper worker by a cable, and a hung paper tag reading Muhammad Fatih Zamzami.\n");
+writeFileSync(join(root, "src/app/opengraph-image.alt.txt"), "A paper-cut diorama of a workshop at night: a desk under a lamp, a small paper worker in an orange hard hat, and a hung paper tag reading Muhammad Fatih Zamzami.\n");
 console.log("og → src/app/opengraph-image.png");
 
 await browser.close();

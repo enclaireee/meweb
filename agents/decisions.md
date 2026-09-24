@@ -63,3 +63,19 @@ Where the docs were silent or contradicted themselves, these are the calls made 
   - A "swipe →" hint fades as you swipe (scroll-driven, behind `@supports`), and "↓ next room" ends each line.
 - **Frame:** layered paper rings (outer, mat, pinstripe) with grain and photo corners.
 - **Fix:** before the scene is live, the desk loads wherever the camera is. A deep link to a far room (e.g. `#contact`) used to leave that room empty forever.
+
+## 2026-09-24: performance + polish pass (later entries win)
+
+- **The curtain never gates the page for long.** It parts when the desk is built or **2 s after navigation start**, whichever comes first (slow 4G + 4× CPU: readable at 2.3 s, was 6.4 s). Tier `none` skips it. The canvas stays transparent until the scene is live, then cross-fades over the poster in 300 ms (§7.2), so nobody sees a half-built box.
+- **Going live waits for the room you're in.** Before the scene is live the desk *and* the station at the camera are built (someone who scrolled on while it loaded never sees a bare room fill in). The worker is off stage until his entrance: at the desk he walks in and greets on arrival; deeper in he's simply in your room.
+- **Shadows re-render only when the lamp, the tilt or a caster moves.** The lamp ignores the idle drift (it moves the eye, not the light). Ambient motion (hung sway, idle pivots) refreshes the shadow map at ≤10 Hz, and the low tier at ≤4 Hz with one final render at rest. Worker fidgets ride the half-rate ambient frames.
+- **The worker rests** after 45 s without input: he finishes the job in hand and only fidgets until someone moves. Idle cost measured: 30 fps and ~19 shadow passes/s (was 60/60 indefinitely).
+- **Both lights' programs compile at station build** (which light casts is part of the program key): the relight compiles nothing mid-roll.
+- **FPS monitor:** the median of back-to-back full-rate frames over ≥2 s, sampled only once the scene is live, and frames of any length count. The old one ignored frames over 60 ms, so a truly slow device never stepped down.
+- **One poke, one station.** Pokes while a walk-on is in flight are ignored (4 s window).
+- **Deep links** land on their room's rest: Lenis used to take over mid-way through the browser's smooth anchor scroll and stop a room short.
+- **Camera tokens:** `pointerX/Y`, tilt and `driftX` stay above design.md's values (a "more parallax" call referenced in `tokens.ts`); `pointerLambda` is back to design.md's 2.5 (it had drifted to 3.2 with no recorded reason).
+- **Cache headers** for `/poster` and `/textures` are `max-age=86400, stale-while-revalidate=604800`, not `immutable`: the scripts regenerate those files under the same names.
+- **Phones:** hauled-up cards clear the top by their own height; the Window's line rides higher so the whole contact card fits; the last room shows no swipe hint.
+- **Budgets (measured this pass):** initial JS 138 kB gz (the 90 kB target stays unreachable on Next 16 + React 19); scene chunks 238 + 64 = **302 kB gz** against 300 (three can't be tree-shaken under R3F); CSS 16 kB gz; 36 draws a frame at the desk.
+- **Left as-is:** Newsreader stays variable with `opsz` (279 KB preloaded, both styles). next/font 16.3 rejects weight ranges, dropping `opsz` breaks design.md §2, and splitting italic out would make browsers synthesize it. The `THREE.Clock` deprecation warning comes from R3F 9.8 (the latest stable) constructing a Clock; it goes away with R3F 10.

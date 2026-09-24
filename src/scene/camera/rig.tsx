@@ -18,8 +18,15 @@ export const view = {
   /** damped aim, −1..1: pointer + drag + device tilt */
   aimX: 0,
   aimY: 0,
+  /** the idle drift's current x offset (the lamp doesn't ride it) */
+  drift: 0,
   time: 0,
 };
+
+/** what the shadows last saw: they only re-render when the lamp or the box tilt actually moved */
+const seen = { s: NaN, x: NaN, y: NaN };
+/** the light aim published to CSS, and when (≤ 30 Hz: it restyles the whole page) */
+const published = { x: NaN, y: NaN, at: 0 };
 
 /**
  * The camera rig (design.md §4.1, architecture.md §6.6): scroll dolly, pointer offset, idle drift,
@@ -31,7 +38,6 @@ export function CameraRig({ children }: { children: ReactNode }) {
   const inner = useRef<Group>(null);
   const get = useThree((s) => s.get);
   const size = useThree((s) => s.size);
-  const published = useRef({ x: NaN, y: NaN });
   const sway = useRef<{ el: HTMLElement | null; spring: Spring; lastX: number }>({ el: null, spring: { x: 0, v: 0 }, lastX: 0 });
 
   // lens + off-axis offset on resize only
@@ -89,10 +95,14 @@ export function CameraRig({ children }: { children: ReactNode }) {
     const ty = clamp(fast.pointerY + fast.tiltY, -1, 1);
     view.aimX = damp(view.aimX, tx, motion.pointerLambda, dt);
     view.aimY = damp(view.aimY, ty, motion.pointerLambda, dt);
-    if (Math.abs(view.aimX - tx) > 1e-3 || Math.abs(view.aimY - ty) > 1e-3) wake(200);
+    // settle exactly once it's within a hair (an exponential never arrives, and every frame it's "still
+    // moving" is a frame and a shadow pass)
+    if (Math.abs(view.aimX - tx) < 5e-4) view.aimX = tx;
+    if (Math.abs(view.aimY - ty) < 5e-4) view.aimY = ty;
+    if (view.aimX !== tx || view.aimY !== ty) wake(200);
 
-    const drift = !reducedMotion && tier !== "low" ? cam.driftX * Math.sin((view.time * Math.PI * 2) / cam.driftPeriod) : 0;
-    camera.position.set(view.aimX * cam.pointerX + drift, cam.restY + view.aimY * cam.pointerY, cameraZ(view.s));
+    view.drift = !reducedMotion && tier !== "low" ? cam.driftX * Math.sin((view.time * Math.PI * 2) / cam.driftPeriod) : 0;
+    camera.position.set(view.aimX * cam.pointerX + view.drift, cam.restY + view.aimY * cam.pointerY, cameraZ(view.s));
     camera.rotation.set(cam.pitchDeg * DEG, 0, 0);
 
     // box tilt about the current stage (not the world origin: far stations would swing wildly)
@@ -102,17 +112,28 @@ export function CameraRig({ children }: { children: ReactNode }) {
       inner.current.position.set(0, -12, -pivotZ);
       world.current.rotation.set(-view.aimY * cam.tiltPitchDeg * DEG, view.aimX * cam.tiltYawDeg * DEG, 0);
     }
-    shadows.dirty = true;
+    // the lamp rides the dolly and the aim, and the tilt turns every caster under it: those, and only
+    // those, move the shadows (the drift moves the eye, not the light)
+    if (view.s !== seen.s || view.aimX !== seen.x || view.aimY !== seen.y) {
+      seen.s = view.s;
+      seen.x = view.aimX;
+      seen.y = view.aimY;
+      shadows.dirty = true;
+    }
 
-    // the light aim, shared with the HTML paper (design.md §5.4)
-    const lx = Math.round(view.aimX * 200) / 200;
-    const ly = Math.round(view.aimY * 200) / 200;
-    if (lx !== published.current.x || ly !== published.current.y) {
-      published.current = { x: lx, y: ly };
+    // the light aim, shared with the HTML paper (design.md §5.4): 1/100 steps (a fifth of a pixel of
+    // shadow), and at most 30 times a second, because a variable on <html> restyles every element
+    const lx = Math.round(view.aimX * 100) / 100;
+    const ly = Math.round(view.aimY * 100) / 100;
+    const now = state.clock.elapsedTime;
+    if ((lx !== published.x || ly !== published.y) && (now - published.at >= 1 / 30 || (view.aimX === tx && view.aimY === ty))) {
+      published.x = lx;
+      published.y = ly;
+      published.at = now;
       const root = document.documentElement.style;
       root.setProperty("--light-x", String(lx));
       root.setProperty("--light-y", String(ly - 0.4));
-    }
+    } else if (lx !== published.x || ly !== published.y) wake(40);
 
     // the title tag swings on its string when the lamp sweeps past it fast (station 0 only)
     const sw = sway.current;

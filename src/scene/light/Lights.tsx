@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useFrame, useThree, type RootState } from "@react-three/fiber";
 import gsap from "gsap";
-import { Color, DirectionalLight, Fog, HemisphereLight, Object3D, SpotLight, Vector3 } from "three";
+import { Color, DirectionalLight, Fog, HemisphereLight, Object3D, SpotLight, Vector3, type Camera, type Scene, type WebGLRenderer } from "three";
 import { light as L, fog as F, ui, type LightMode } from "@/design/tokens";
 import { DEG, smoothstep } from "@/lib/math";
 import { store, type Tier } from "@/scene/store";
@@ -105,7 +105,8 @@ function updateLights(camera: { position: Vector3 }) {
   const k = smoothstep(0.25, 0.75, p);
 
   // the lamp rides the camera rig, aimed at the pointer's spot on the stage plane
-  spot.position.set(camera.position.x + L.spot.offset[0], camera.position.y + L.spot.offset[1], camera.position.z + L.spot.offset[2]);
+  // (it's carried by your hand, not by the idle drift: drifting the view doesn't move a single shadow)
+  spot.position.set(camera.position.x - view.drift + L.spot.offset[0], camera.position.y + L.spot.offset[1], camera.position.z + L.spot.offset[2]);
   target.position.set(view.aimX * 18, 9 + view.aimY * 8, archZ(view.s) - 26);
   target.updateMatrixWorld();
   spot.intensity = SPOT_INTENSITY * (1 - k) * lightState.lampScale;
@@ -144,10 +145,46 @@ function attach(get: () => RootState) {
   };
 }
 
+/** ms between shadow re-renders: moves at once, ambient drift at 10 Hz; the low tier is "static only"
+ * in spirit (§6.10): 4 Hz while moving, then one last render once it rests */
+const DRIFT_MS = 100;
+const LOW_MS = 250;
+let lastFlush = 0;
 function flushShadows(gl: { shadowMap: { needsUpdate: boolean } }) {
-  if (!shadows.dirty) return;
+  if (!shadows.dirty && !shadows.drift) return;
+  const low = store.getState().tier === "low";
+  if (low && !shadows.dirty) {
+    shadows.drift = false;
+    return;
+  }
+  const every = low ? LOW_MS : shadows.dirty ? 0 : DRIFT_MS;
+  const now = performance.now();
+  if (now - lastFlush < every) {
+    // a moved caster must not keep a stale shadow once everything stops: come back for it
+    if (shadows.dirty) wake(every - (now - lastFlush) + 20);
+    return;
+  }
   gl.shadowMap.needsUpdate = true;
+  lastFlush = now;
   shadows.dirty = false;
+  shadows.drift = false;
+}
+
+/**
+ * Compile the paper program for both lights before it's ever needed. Which light casts is part of the
+ * program (three keys it on the shadow-casting light counts), so without this the first relight would
+ * compile a shader mid-roll (§6.3: nothing compiles mid-journey). A material keeps every program it has
+ * used, so both stay warm.
+ */
+export function compileBoth(gl: WebGLRenderer, scene: Scene, camera: Camera) {
+  const { spot, sun } = lights();
+  const night = spot.castShadow;
+  spot.castShadow = !night;
+  sun.castShadow = night;
+  gl.compile(scene, camera);
+  spot.castShadow = night;
+  sun.castShadow = !night;
+  gl.compile(scene, camera);
 }
 
 /**
@@ -167,7 +204,11 @@ export function Lights() {
 
   useEffect(() => {
     relightTo(store.getState().light, true);
-    return store.subscribe((s, prev) => s.light !== prev.light && relightTo(s.light, false));
+    const unsub = store.subscribe((s, prev) => s.light !== prev.light && relightTo(s.light, false));
+    return () => {
+      unsub();
+      gsap.killTweensOf(lightState);
+    };
   }, []);
 
   useFrame((state) => updateLights(state.camera), -5);
