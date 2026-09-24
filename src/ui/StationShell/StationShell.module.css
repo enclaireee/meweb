@@ -3,62 +3,147 @@
   min-height: 160svh;
 }
 
-.sticky {
-  position: sticky;
-  top: 0;
-  min-height: 100svh;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding: calc(var(--mat) + 88px) calc(var(--mat) + 40px) calc(var(--mat) + 40px);
+.swipe {
+  display: none;
 }
 
-.column {
-  width: min(420px, 34vw);
-  display: grid;
-  gap: 20px;
-  /* design.md §7.2: the plate fades up on arrival, only once the observer is live */
-  transition:
-    opacity var(--dur-base) var(--ease-settle),
-    translate var(--dur-base) var(--ease-settle);
+/* without JS: the cards, one after another, readable */
+.layer {
+  padding: calc(var(--mat) + 72px) calc(var(--mat) + 16px) 48px;
+  max-width: 760px;
+  margin-left: auto;
 }
 
-:global(html[data-stations="live"]) .station:not([data-active]) .column {
-  opacity: 0;
-  translate: 0 12px;
+/* with JS: a layer over the scene; the room's cards hang in it */
+:global(html[data-js]) .layer {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  max-width: none;
+  padding: 0;
+  pointer-events: none;
 }
 
-.station[data-flow] .sticky {
-  position: relative;
-  align-items: flex-start;
-}
-.station[data-flow] .column {
-  width: min(760px, 58vw);
-}
-
-@media (max-width: 1023.98px) {
-  .column {
-    width: 44vw;
-  }
-  .station[data-flow] .column {
-    width: min(640px, 70vw);
-  }
-}
-
+/*
+ * Phones: a clothesline (decisions.md, "phones get their own layout"). The scene keeps the top half;
+ * a twine runs across the bottom half and the room's papers are pegged along it, one swipe apart.
+ * Scrolling up and down still walks between rooms. The layer spans the whole screen so the cards can
+ * drop from the top of the screen onto the line, but only the cards themselves take touches.
+ */
 @media (max-width: 639.98px) {
-  .sticky {
-    align-items: flex-end;
-    justify-content: stretch;
-    padding: calc(var(--mat) + 72px) calc(var(--mat) + 12px) calc(var(--mat) + 12px);
+  :global(html[data-js]) .layer {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: var(--line) 9vw 0;
+    overflow: auto hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 9vw;
+    scrollbar-width: none;
   }
-  .column,
-  .station[data-flow] .column {
-    width: 100%;
+  :global(html[data-js]) .layer::-webkit-scrollbar {
+    display: none;
   }
-  .station:not([data-flow]) .column {
-    max-height: 56svh;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    padding: 4px;
+  /* the twine: fixed to the screen, so the pegged cards slide along it */
+  :global(html[data-js]) .layer::before {
+    content: "";
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: calc(var(--line) + 3px);
+    height: 1.5px;
+    background: var(--twine);
+    box-shadow: 0 2px 2px rgb(0 0 0 / 0.25);
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+  }
+  :global(html[data-js]) .station[data-active] .layer::before {
+    opacity: 1;
+  }
+  /* the swipe hint: pinned at the right end of the twine, fading out over the first swipe */
+  :global(html[data-js]) .layer {
+    scroll-timeline: --line inline;
+  }
+  :global(html[data-js]) .swipe {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    position: fixed;
+    right: calc(var(--mat) + 6px);
+    top: calc(var(--line) - 30px);
+    z-index: 3;
+    padding: 4px 10px 3px;
+    font-size: 0.74rem;
+    font-style: italic;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    background: var(--paper);
+    border-radius: 999px;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.3);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  :global(html[data-js]) .station[data-active] .swipe {
+    opacity: 1;
+    transition: opacity 0.4s 1.4s;
+  }
+  @supports (animation-timeline: --a) {
+    :global(html[data-js]) .station[data-active] .swipe {
+      animation: swipe-away linear both;
+      animation-timeline: --line;
+      animation-range: 0 120px;
+    }
+  }
+  :global(html[data-js]) .nudge {
+    display: inline-block;
+    animation: nudge 1.3s ease-in-out infinite;
+  }
+
+  /* at the end of the line: the way on */
+  :global(html[data-js]) .layer::after {
+    content: "↓ next room" / "";
+    flex: 0 0 auto;
+    align-self: flex-start;
+    margin: 26px 0 0 4px;
+    padding: 4px 9px 3px;
+    font-size: 0.7rem;
+    font-style: italic;
+    letter-spacing: 0.06em;
+    color: var(--paper);
+    background: color-mix(in srgb, var(--ink) 55%, transparent);
+    border-radius: 999px;
+    opacity: 0;
+    transition: opacity 0.4s 0.6s;
+  }
+  :global(html[data-js]) .station[data-active] .layer::after {
+    opacity: 1;
+  }
+  :global(html[data-js]) .station[data-station="7"] .layer::after {
+    content: none;
+  }
+}
+
+@keyframes swipe-away {
+  to {
+    opacity: 0;
+    translate: 12px 0;
+  }
+}
+@keyframes nudge {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 4px 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :global(html[data-js]) .nudge {
+    animation: none;
   }
 }

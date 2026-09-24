@@ -7,7 +7,7 @@ import { stationArt } from "./art";
 import type { CutFile } from "./paper/cut";
 import type { StationProps } from "./paper/StationGroup";
 import { view } from "./camera/rig";
-import { store } from "./store";
+import { advanceLoading, store } from "./store";
 import { reachFor } from "./quality/tier";
 import { wake } from "./loop";
 import Desk from "@/sections/00-desk/Station";
@@ -48,12 +48,14 @@ export function Stations({ onFirstStation }: { onFirstStation: () => void }) {
   useFrame(() => {
     const s = view.s;
     // one station at a time, nearest first, and only the desk before the scene is live: building a
-    // station is a burst of main-thread work, so they're spread across idle moments
+    // station is a burst of main-thread work, so they're spread across idle moments. The desk loads
+    // first wherever the camera is: the scene goes live on it, so a deep link (#contact) would
+    // otherwise wait forever for a desk that's out of range.
     if (!inFlight.current) {
       const live = store.getState().sceneLive;
       let next = -1;
       for (let i = 0; i < stationArt.length; i++) {
-        if (requested.current[i] || Math.abs(i - s) > 2 || (!live && i > 0)) continue;
+        if (requested.current[i] || (live ? Math.abs(i - s) > 2 : i > 0)) continue;
         if (next < 0 || Math.abs(i - s) < Math.abs(next - s)) next = i;
       }
       if (next >= 0) {
@@ -61,6 +63,7 @@ export function Stations({ onFirstStation }: { onFirstStation: () => void }) {
         requested.current[i] = true;
         inFlight.current = true;
         stationArt[i]!().then((f) => {
+          if (i === 0) advanceLoading(0.84);
           const commit = () => {
             setFiles((prev) => prev.map((p, j) => (j === i ? f : p)));
             inFlight.current = false;

@@ -14,6 +14,10 @@ type State = {
   sceneLive: boolean;
   /** The pop-up entrance has finished: the desk can merge back into one mesh. */
   entranceDone: boolean;
+  /** Loading screen: how far along (0..1, stages only ever move it forward). */
+  progress: number;
+  /** The curtain has started to part: the entrance may play. */
+  curtainOpen: boolean;
 };
 
 /**
@@ -27,7 +31,12 @@ export const store = createStore<State>(() => ({
   reducedMotion: false,
   sceneLive: false,
   entranceDone: false,
+  progress: 0,
+  curtainOpen: false,
 }));
+
+/** Loading stages only move the bar forward. */
+export const advanceLoading = (p: number) => store.setState((s) => (p > s.progress ? { progress: p } : s));
 
 export const useScene = <T,>(select: (s: State) => T) => useStore(store, select);
 

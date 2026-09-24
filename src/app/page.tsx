@@ -7,9 +7,10 @@ import Sill from "@/sections/05-sill/Section";
 import Wall from "@/sections/06-wall/Section";
 import Window from "@/sections/07-window/Section";
 import { SceneMount } from "@/scene/SceneMount";
-import { DepthTag } from "@/ui/DepthTag/DepthTag";
+import { SiteNav } from "@/ui/SiteNav/SiteNav";
 import { RelightDial } from "@/ui/RelightDial/RelightDial";
 import { HintStrip } from "@/ui/HintStrip/HintStrip";
+import { Loader } from "@/ui/Loader/Loader";
 
 export default function Home() {
   return (
@@ -17,9 +18,10 @@ export default function Home() {
       {/* the still of the desk: LCP, and the whole backdrop when there's no WebGL */}
       <div className="poster" aria-hidden />
       <SceneMount />
-      <DepthTag />
+      <SiteNav />
       <RelightDial />
       <HintStrip />
+      <Loader />
       <main id="main">
         <Desk />
         <Storeroom />

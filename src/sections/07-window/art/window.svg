@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-60 -20 120 60" data-aisle="closed">
   <!--
-    Station 07, the Window (contact). Floor at y=40. The end of the route: the aisle is closed by the
-    window wall. The cable ends at the socket under the sill; the city is lit beyond the glass.
+    Station 07, the Window (contact): the bedroom at the end of the route. Floor at y=40. The aisle is
+    closed by the window wall; the city is lit beyond the glass, fairy lights over the bed.
   -->
 
   <!-- the last arch: rounded shoulders, a constellation punched through its header -->
@@ -13,9 +13,15 @@
   <path id="window-wall" data-z="-50" data-stock="navy" data-cut="knife"
     d="M-42 -20 H42 V40 H-42 Z"
     data-holes="M-15 4 H-0.6 V14.6 H-15 Z M0.6 4 H15 V14.6 H0.6 Z M-15 15.4 H-0.6 V26 H-15 Z M0.6 15.4 H15 V26 H0.6 Z" />
+  <path id="curtain-left" data-z="-49.4" data-stock="mustard"
+    d="M-19.6 2.6 H-13.4 C-14.2 8 -13.2 14 -14.4 19 C-15.2 22.6 -13.8 25.4 -14.6 28.4 H-19.6 Z" />
+  <path id="curtain-right" data-z="-49.4" data-stock="mustard"
+    d="M13.4 2.6 H19.6 V28.4 H14.6 C15.4 25.4 14 22.6 14.8 19 C16 14 13.4 8 13.4 2.6 Z" />
+  <path id="curtain-rail" data-z="-49.2" data-stock="brass" data-cut="knife"
+    d="M-21 1.8 H21 V2.8 H-21 Z" />
   <path id="window-sill" data-z="-49" data-stock="wood" data-cut="knife"
     d="M-17.4 26 H17.4 V27.2 H-17.4 Z M-14.4 27.2 L-12.6 27.2 L-14.4 29.4 Z M12.6 27.2 L14.4 27.2 L14.4 29.4 Z" />
-  <!-- the socket where the cable ends -->
+  <!-- a socket under the sill -->
   <path id="socket" data-z="-46.2" data-stock="graphite" data-cut="knife"
     d="M8.4 40 V37.6 H10.8 V40 Z"
     data-holes="M8.95 38.3 H9.3 V39 H8.95 Z M9.9 38.3 H10.25 V39 H9.9 Z" />
@@ -29,15 +35,55 @@
   <path id="moon" data-z="-54" data-stock="cream" data-hang="8.4 5"
     d="M8.4 5 a2.1 2.1 0 1 0 0.001 0 Z" />
 
-  <!-- a quiet corner to read in: an armchair, a floor lamp, a plant -->
-  <path id="armchair" data-z="-30" data-stock="tomato" data-cut="knife"
-    d="M-27 40 V38.4 H-26.4 V33.4 C-27.4 33.4 -27.8 32.6 -27.8 31.8 C-27.8 30.8 -27 30.2 -26 30.4 V25.6 C-26 24 -24.8 23.2 -22.8 23.2 H-19.2 C-17.2 23.2 -16 24 -16 25.6 V30.4 C-15 30.2 -14.2 30.8 -14.2 31.8 C-14.2 32.6 -14.6 33.4 -15.6 33.4 V38.4 H-15 V40 H-16.2 V39 H-25.8 V40 Z" />
-  <path id="floor-lamp" data-z="-30" data-stock="brass" data-cut="knife"
-    d="M17 40 V39.2 H21.4 V40 Z M18.8 39.2 V25.4 H19.6 V39.2 Z M16.4 25.6 L17.4 21.6 H21 L22 25.6 Z" />
-  <path id="lamp-glow" data-z="-30.3" data-stock="glow"
-    d="M17 25.2 H21.4 V26.4 H17 Z" />
-  <path id="plant" data-z="-20" data-stock="forest" data-cut="knife"
-    d="M11.6 40 L11.9 37 H14.9 L15.2 40 Z M13.2 37 C12.2 35.4 11.2 33.2 11.8 31.6 C13 32.8 13.6 34.8 13.6 37 Z M13.6 37 C13.6 34.4 14.4 31.8 15.8 30.8 C16.2 32.8 15.2 35 14 37 Z" />
+  <!-- the bed, side on: a wood frame, the mattress, a pillow, the blanket thrown over the foot -->
+  <path id="bed-frame" data-z="-17" data-stock="woodDeep" data-cut="knife"
+    d="M 4 40 V 27.4 C 4 24.6 1 24.6 1 27.4 V 37.2 H -16.6 V 33.4 C -16.6 32 -18.6 32 -18.6 33.4 V 40 H -16.6 V 38.2 H 1 V 40 Z"
+    data-holes="M1.9 28.4 a0.6 0.6 0 1 0 1.2 0 a0.6 0.6 0 1 0 -1.2 0 Z M1.9 31 a0.6 0.6 0 1 0 1.2 0 a0.6 0.6 0 1 0 -1.2 0 Z" />
+  <path id="mattress" data-z="-16.6" data-stock="cream"
+    d="M 1 37.2 V 36.4 Q 1 35.6 0.2 35.6 H -15.8 Q -16.6 35.6 -16.6 36.4 V 37.2 Z" />
+  <path id="pillow" data-z="-16.2" data-stock="white"
+    d="M 0.6 35.8 C 0.9 34 -0.2 33 -1.8 33.2 H -4.4 C -6 33.1 -6.6 34.2 -6.3 35.8 Z" />
+  <path id="blanket" data-z="-15.8" data-stock="tomato"
+    d="M -5.2 35.3 C -8.6 34.7 -13.4 34.7 -16.2 35.3 C -17 35.5 -17.2 36.3 -17 37.2 L -16.8 38.9 C -15.7 39.4 -14.6 38.9 -13.5 39.3 C -12.1 39.7 -11 39 -9.7 39.4 C -8.3 39.7 -7 39.1 -5.9 39.5 C -5.1 39.1 -4.8 37.9 -5 36.5 Z" />
+  <path id="blanket-band" data-z="-15.6" data-stock="sunflower"
+    d="M -5 36.3 C -8.6 35.7 -13.4 35.7 -17.1 36.3 L -17.1 37.2 C -13.4 36.6 -8.6 36.6 -4.9 37.2 Z" />
+  <path id="slippers" data-z="-12.5" data-stock="pink"
+    d="M-15.4 40 C-15.4 39.1 -14.8 38.7 -14 38.7 H-13.4 C-12.9 38.7 -12.6 39.3 -12.6 40 Z M-12.2 40 C-12.2 39.2 -11.7 38.9 -11 38.9 H-10.4 C-9.9 38.9 -9.6 39.4 -9.5 40 Z" />
+
+  <!-- the nightstand and its lamp, beside the headboard -->
+  <path id="nightstand" data-z="-18" data-stock="wood" data-cut="knife"
+    d="M 10.4 40 V 34.6 H 4.6 V 40 H 5.3 V 38.6 H 9.7 V 40 Z"
+    data-holes="M 9.6 36.2 H 5.4 V 36.7 H 9.6 Z" />
+  <path id="bedside-lamp" data-z="-17.8" data-stock="brass" data-cut="knife"
+    d="M 8.8 34.6 L 8.3 33.6 H 7 L 6.5 34.6 Z M 7.85 33.7 V 31 H 7.35 V 33.7 Z" />
+  <path id="lamp-shade" data-z="-17.6" data-stock="sunflower"
+    d="M 9.7 31.2 L 8.7 28.2 H 6.5 L 5.5 31.2 Z" />
+  <path id="lamp-glow" data-z="-17.7" data-stock="glow"
+    d="M 9.2 30.7 H 6 V 32.2 H 9.2 Z" />
+
+  <!-- fairy lights strung along the wall over the bed -->
+  <path id="garland" data-z="-49.4" data-stock="graphite" data-cut="knife"
+    d="M-33.6 2 Q-27 9.4 -20.6 3 L-20.6 3.4 Q-27 9.8 -33.6 2.4 Z" />
+  <path id="bulbs-warm" data-z="-49.3" data-stock="glow"
+    d="M-32.70 4.09 a0.42 0.5 0 1 0 0.84 0 a0.42 0.5 0 1 0 -0.84 0 Z M-28.51 6.53 a0.42 0.5 0 1 0 0.84 0 a0.42 0.5 0 1 0 -0.84 0 Z M-24.36 6.15 a0.42 0.5 0 1 0 0.84 0 a0.42 0.5 0 1 0 -0.84 0 Z" />
+  <path id="bulbs-pink" data-z="-49.3" data-stock="glowPink"
+    d="M-30.60 5.67 a0.42 0.5 0 1 0 0.84 0 a0.42 0.5 0 1 0 -0.84 0 Z M-26.43 6.69 a0.42 0.5 0 1 0 0.84 0 a0.42 0.5 0 1 0 -0.84 0 Z M-22.30 4.89 a0.42 0.5 0 1 0 0.84 0 a0.42 0.5 0 1 0 -0.84 0 Z" />
+
+  <!-- the right wall: a picture, a chest of drawers with a plant on it -->
+  <path id="picture" data-z="-49.8" data-stock="sky"
+    d="M23.4 8.4 H30.6 V14.6 H23.4 Z" />
+  <path id="picture-hill" data-z="-49.7" data-stock="leaf"
+    d="M23.6 14.4 L26 10.6 L27.4 12.4 L28.4 11.2 L30.4 14.4 Z" />
+  <path id="picture-frame" data-z="-49.6" data-stock="wood" data-cut="knife"
+    d="M23 8 H31 V15 H23 Z"
+    data-holes="M23.8 8.8 H30.2 V14.2 H23.8 Z" />
+  <path id="dresser" data-z="-44" data-stock="teal" data-cut="knife"
+    d="M18.6 40 V31.4 H27.4 V40 H26.8 V38.8 H19.2 V40 Z"
+    data-holes="M19.4 34 H26.6 V34.4 H19.4 Z M19.4 36.4 H26.6 V36.8 H19.4 Z" />
+  <path id="dresser-knobs" data-z="-43.6" data-stock="brass"
+    d="M22.7 32.7 a0.35 0.35 0 1 0 0.7 0 a0.35 0.35 0 1 0 -0.7 0 Z M22.7 35.2 a0.35 0.35 0 1 0 0.7 0 a0.35 0.35 0 1 0 -0.7 0 Z M22.7 37.6 a0.35 0.35 0 1 0 0.7 0 a0.35 0.35 0 1 0 -0.7 0 Z" />
+  <path id="plant" data-z="-43.8" data-stock="forest" data-cut="knife"
+    d="M21.2 31.4 L21.5 28.4 H24.5 L24.8 31.4 Z M22.8 28.4 C21.8 26.8 20.8 24.6 21.4 23 C22.6 24.2 23.2 26.2 23.2 28.4 Z M23.2 28.4 C23.2 25.8 24 23.2 25.4 22.2 C25.8 24.2 24.8 26.4 23.6 28.4 Z" />
 
   <!-- detail: a telescope on its tripod behind the right wing, aimed at the moon -->
   <path id="telescope" data-z="-6" data-stock="brass" data-cut="knife"

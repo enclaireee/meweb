@@ -18,6 +18,9 @@
   <path id="mimic-panel" data-z="-30" data-stock="steel" data-cut="knife"
     d="M-28 14 H-13 V40 H-28 Z"
     data-holes="M-26 17 H-15 V17.6 H-26 Z M-26 17.6 H-25.4 V24 H-26 Z M-25.4 23.4 H-19.6 V24 H-25.4 Z M-20.2 20 H-19.6 V23.4 H-20.2 Z M-19.6 20 H-15 V20.6 H-19.6 Z M-23.3 21.4 a0.7 0.7 0 1 0 1.4 0 a0.7 0.7 0 1 0 -1.4 0 Z M-17.5 26.6 a0.6 0.6 0 1 0 1.2 0 a0.6 0.6 0 1 0 -1.2 0 Z M-26 29 H-15 V29.6 H-26 Z M-26 32 H-15 V32.6 H-26 Z" />
+  <path id="hazard-sign" data-z="-29.6" data-stock="sunflower" data-cut="knife"
+    d="M-20.5 33.6 L-17.3 39 H-23.7 Z"
+    data-holes="M-20.8 35.4 H-20.2 V37.2 H-20.8 Z M-20.8 37.7 H-20.2 V38.3 H-20.8 Z" />
   <path id="status-rack" data-z="-30" data-stock="graphite" data-cut="knife"
     d="M13.2 22 H21.8 V40 H13.2 Z"
     data-holes="M14.6 23.6 H18.6 V24.2 H14.6 Z M19.5 23.6 a0.35 0.35 0 1 0 0.7 0 a0.35 0.35 0 1 0 -0.7 0 Z M14.6 26.2 H18.6 V26.8 H14.6 Z M19.5 26.3 a0.35 0.35 0 1 0 0.7 0 a0.35 0.35 0 1 0 -0.7 0 Z M14.6 28.8 H18.6 V29.4 H14.6 Z M19.5 29 a0.35 0.35 0 1 0 0.7 0 a0.35 0.35 0 1 0 -0.7 0 Z M14.6 31.4 H18.6 V32 H14.6 Z M19.5 31.7 a0.35 0.35 0 1 0 0.7 0 a0.35 0.35 0 1 0 -0.7 0 Z" />

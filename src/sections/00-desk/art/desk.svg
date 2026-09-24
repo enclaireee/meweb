@@ -62,9 +62,10 @@
     data-holes="M-23.6 31.6 H-16.4 V31.95 H-23.6 Z M-21.2 30 H-18.8 V30.55 H-21.2 Z M-21.2 32.9 H-18.8 V33.45 H-21.2 Z" />
   <path id="notebook" data-z="-16.5" data-stock="white" data-hinge="bottom"
     d="M14.2 31.2 C15.8 30 18.1 29.9 19.4 30.8 C20.8 29.9 22.9 30 23.4 31.2 L23.4 31.8 H14.2 Z" />
+  <path id="plant-pot" data-z="-16.3" data-stock="terracotta" data-hinge="bottom" data-cut="knife"
+    d="M11.1 31.4 L11.5 28.9 H13.7 L14.1 31.4 Z M11.2 28.9 V28.3 H14 V28.9 Z" />
   <path id="plant" data-z="-16.5" data-stock="leaf" data-hinge="bottom"
-    d="M11.1 31.4 L11.5 28.9 H13.7 L14.1 31.4 Z
-       M12.4 29 C11.1 27.9 10.3 26.3 10.8 25.1 C12 25.9 12.7 27.4 12.8 29 Z
+    d="M12.4 29 C11.1 27.9 10.3 26.3 10.8 25.1 C12 25.9 12.7 27.4 12.8 29 Z
        M12.7 29 C12.6 27 13.2 24.9 14.3 24.1 C14.6 25.8 13.9 27.7 13.1 29 Z
        M13 29 C13.8 27.8 15.2 27.2 16 27.6 C15.4 28.5 14.2 29.1 13.2 29.2 Z" />
   <path id="side-table" data-z="-16" data-stock="woodDeep" data-hinge="bottom" data-cut="knife"
@@ -72,11 +73,6 @@
   <path id="floor-books" data-z="-14" data-stock="plum" data-hinge="bottom" data-cut="knife"
     d="M24.2 40 V38.6 H28.4 V40 Z M24.6 38.6 V37.3 H27.8 V38.6 Z M24.3 37.3 L24.5 36 L28.1 36.2 L27.9 37.3 Z" />
 
-  <!-- the cable's plug (accent) in its floor socket: where the guiding path begins -->
-  <path id="socket" data-z="-12.8" data-stock="graphite" data-hinge="bottom" data-cut="knife"
-    d="M9.6 40 V38.2 H11.8 V40 Z" data-holes="M10.1 38.8 H10.45 V39.4 H10.1 Z M10.95 38.8 H11.3 V39.4 H10.95 Z" />
-  <path id="plug" data-z="-12.3" data-stock="accent" data-hinge="bottom"
-    d="M8.5 40 V38.9 C8.5 38.5 8.8 38.3 9.2 38.3 H10.4 V40 Z M10.4 38.9 H11.1 V39.35 H10.4 Z" />
 
   <!-- detail, closest to the arch: a toolbox, and a paper crane hiding behind the right wing -->
   <path id="toolbox" data-z="-6" data-stock="tomato" data-hinge="bottom" data-cut="knife"

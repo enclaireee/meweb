@@ -5,7 +5,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { camera as cam } from "@/design/tokens";
 import { clamp } from "@/lib/math";
-import { fast, store, useScene } from "./store";
+import { advanceLoading, fast, store, useScene } from "./store";
 import { setAmbient, startLoop, wake } from "./loop";
 import { dprFor, stepDown } from "./quality/tier";
 import { CameraRig } from "./camera/rig";
@@ -43,6 +43,7 @@ export default function Scene() {
   const [debug] = useState(() => location.search.includes("debug"));
 
   useEffect(() => {
+    advanceLoading(0.6);
     const smooth = !store.getState().reducedMotion;
     const loop = startLoop({ smooth, onSlow: () => store.setState((s) => ({ tier: stepDown(s.tier) })) });
     // ambient life (drift, sway, fidgets) renders at half rate, and not at all on the low tier or under
@@ -114,12 +115,26 @@ export default function Scene() {
   }, []);
 
   // first station built: wait one rendered frame behind the poster, then the entrance
+  // first station built: one frame behind the curtain, then 100%; the entrance waits for the curtain
   const onFirstStation = useCallback(() => {
     if (started.current) return;
     started.current = true;
     prepareEntrance();
+    advanceLoading(0.92);
     wake(500);
-    setTimeout(runEntrance, 120);
+    setTimeout(() => {
+      advanceLoading(1);
+      const go = () => setTimeout(runEntrance, 180);
+      if (store.getState().curtainOpen) go();
+      else {
+        const unsub = store.subscribe((s) => {
+          if (s.curtainOpen) {
+            unsub();
+            go();
+          }
+        });
+      }
+    }, 120);
   }, []);
 
   return (
@@ -133,6 +148,7 @@ export default function Scene() {
         gl={{ antialias: true, alpha: false, stencil: false, powerPreference: "high-performance" }}
         camera={{ fov: cam.fovLandscape, near: cam.near, far: cam.far, position: [0, cam.restY, cam.restDistance] }}
         onCreated={({ gl }) => {
+          advanceLoading(0.72);
           paperMaterial();
           glowMaterial();
           gl.domElement.addEventListener("webglcontextlost", (e) => {

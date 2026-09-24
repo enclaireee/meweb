@@ -4,6 +4,8 @@ import type { Role } from "./types";
 export const experience = [
   {
     id: "pgncom",
+    kind: "work",
+    summary: "Automated SCADA and network telemetry and alarms across Wonderware, Reliance and Zabbix, on national gas transmission.",
     title: "SCADA & Automation Engineer Intern",
     org: "PT PGAS Telekomunikasi Nusantara",
     dates: { start: "2026-06", end: "2026-08" },
@@ -14,6 +16,8 @@ export const experience = [
   },
   {
     id: "ime-rnd",
+    kind: "leadership",
+    summary: "Lead an 11-analyst team advising 12 divisions, with quarterly HRE and gap-analysis reports to 150+ staff.",
     title: "Head of Research and Development",
     org: "IME FTUI 2026",
     dates: { start: "2026-01", end: null },
@@ -24,6 +28,8 @@ export const experience = [
   },
   {
     id: "ftui-ta",
+    kind: "work",
+    summary: "Two terms co-teaching Computational Thinking (Python) to every FTUI engineering major.",
     title: "Teaching Assistant, Computational Thinking",
     org: "Fakultas Teknik UI",
     dates: { start: "2025-08", end: "2026-06" },
@@ -34,6 +40,8 @@ export const experience = [
   },
   {
     id: "exertion",
+    kind: "leadership",
+    summary: "Built the first flagship event's competitions from scratch: 3 competitions, 150+ participants.",
     title: "Director of Events",
     org: "EXERTION UI 2025",
     dates: { start: "2025-04", end: "2025-09" },
@@ -44,6 +52,8 @@ export const experience = [
   },
   {
     id: "exercise-swe",
+    kind: "work",
+    summary: "Shipped full-stack client websites in React, Next.js, Node.js and Tailwind CSS.",
     title: "Software Engineer Team",
     org: "EXERCISE FTUI 2025",
     place: "Depok",
@@ -56,6 +66,8 @@ export const experience = [
   },
   {
     id: "wsj",
+    kind: "leadership",
+    summary: "Led a 30-member Indonesian contingent through a heatwave and a typhoon evacuation.",
     title: "Contingent Team Leader",
     org: "25th World Scout Jamboree",
     place: "South Korea",

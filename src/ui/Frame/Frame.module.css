@@ -1,0 +1,111 @@
+.frame {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+}
+
+.cast,
+.corners {
+  position: absolute;
+  inset: 0;
+}
+/* each sheet shadows the one beneath it, inward, the way the light falls (design.md §5.4) */
+.shadowSoft {
+  filter: drop-shadow(calc(var(--light-x) * -2px) calc(2px + var(--light-y) * -2px) 3px rgb(0 0 0 / 0.35));
+}
+.shadowDeep {
+  filter: drop-shadow(calc(var(--light-x) * -4px) calc(4px + var(--light-y) * -3px) 7px rgb(0 0 0 / 0.45));
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  transition: background-color var(--dur-light) var(--ease-paper);
+}
+.outer {
+  background: #5a3a26;
+  clip-path: var(--ring-outer);
+}
+.mat {
+  background: var(--paper);
+  clip-path: var(--ring-mat);
+}
+.stripe {
+  background: #e2ad3b;
+  clip-path: var(--ring-stripe);
+}
+/* fibre, clipped with the sheet (the shared .grain class would reposition the layer) */
+.outer::after,
+.mat::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("/textures/grain-rough.webp") repeat;
+  background-size: 256px;
+  mix-blend-mode: multiply;
+  opacity: 0.14;
+}
+:global([data-light="morning"]) .outer {
+  background: #6f4a31;
+}
+
+/* photo corners: little kraft triangles holding the view in, on the mat */
+.corners span {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  background: #b58e66;
+}
+.tl {
+  left: 20px;
+  top: 20px;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+.tr {
+  right: 20px;
+  top: 20px;
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+}
+.bl {
+  left: 20px;
+  bottom: 20px;
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
+}
+.br {
+  right: 20px;
+  bottom: 20px;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+@media (max-width: 639.98px) {
+  .outer {
+    clip-path: var(--ring-outer-m);
+  }
+  .mat {
+    clip-path: var(--ring-mat-m);
+  }
+  .stripe {
+    clip-path: var(--ring-stripe-m);
+  }
+  .corners span {
+    width: 16px;
+    height: 16px;
+  }
+  .tl,
+  .bl {
+    left: 11px;
+  }
+  .tr,
+  .br {
+    right: 11px;
+  }
+  .tl,
+  .tr {
+    top: 11px;
+  }
+  .bl,
+  .br {
+    bottom: 11px;
+  }
+}

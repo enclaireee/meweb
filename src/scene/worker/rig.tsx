@@ -2,7 +2,8 @@
 
 import { useMemo, type ReactNode, type RefObject } from "react";
 import type { BufferGeometry, Group } from "three";
-import { sheet as sheetTok } from "@/design/tokens";
+import { isGlow, sheet as sheetTok } from "@/design/tokens";
+import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { glowMaterial, paperMaterial } from "@/scene/paper/material";
 import { sheetGeometry } from "@/scene/paper/sheet";
 import type { CutFile, CutSheet } from "@/scene/paper/cut";
@@ -15,25 +16,28 @@ import type { Pose } from "./walk";
  */
 const art = artJson as unknown as CutFile;
 
-/** All mounts share one plane behind the whole figure, so they outline him instead of covering parts. */
-const MOUNT_Z = Math.min(...art.sheets.map((s) => s.z)) - sheetTok.thickness - 0.08;
+type Part = { sheet: CutSheet; geometry: BufferGeometry; offset: [number, number, number] };
 
-type Part = { sheet: CutSheet; geometry: BufferGeometry; backing?: BufferGeometry; offset: [number, number, number] };
-
+/**
+ * Each part carries its own ink mount, seated *inside* the part's thickness: from the front the part's
+ * face covers it, from behind its back face does, and only the outline shows either way. So he's in
+ * colour on both sides when he turns about. Mount and part share one geometry: one draw call.
+ */
 function buildParts(): Part[] {
   const byId = new Map(art.sheets.map((s) => [s.id, s]));
   return art.sheets.map((s) => {
     const pivot = s.pivot ?? [0, 0];
     const parent = s.parent ? byId.get(s.parent) : undefined;
     const pp = parent?.pivot ?? [0, 0];
-    const geometry = sheetGeometry(s, 0, pivot);
-    // ink on ink shows nothing: only paper and accent parts need their mount (fewer draw calls)
-    const backing = s.backing?.length && s.stock !== "ink" && s.stock !== "glow"
-      ? sheetGeometry({ ...s, id: s.id + "-mount", stock: "ink", z: MOUNT_Z, pieces: s.backing }, 0, pivot)
-      : undefined;
+    let geometry = sheetGeometry(s, 0, pivot);
+    if (s.backing?.length && !isGlow(s.stock)) {
+      const t = sheetTok.thickness;
+      const mount = sheetGeometry({ ...s, id: s.id + "-mount", stock: "ink", z: s.z - t / 3, pieces: s.backing }, 0, pivot, t / 3);
+      geometry = mergeGeometries([geometry, mount], false) ?? geometry;
+    }
     // a child's group sits at its pin, in its parent's pin space
     const offset: [number, number, number] = parent ? [pivot[0] - pp[0], pivot[1] - pp[1], 0] : [pivot[0], pivot[1], 0];
-    return { sheet: s, geometry, backing, offset };
+    return { sheet: s, geometry, offset };
   });
 }
 
@@ -56,23 +60,22 @@ export function WorkerRig({ joints }: { joints: RefObject<Joints> }) {
             if (el) joints.current.set(p.sheet.id, el);
           }}
         >
-          <mesh geometry={p.geometry} material={p.sheet.stock === "glow" ? glowMaterial() : mat} castShadow={!NO_SHADOW.has(p.sheet.id)} />
-          {p.backing && <mesh geometry={p.backing} material={mat} />}
+          <mesh geometry={p.geometry} material={isGlow(p.sheet.stock) ? glowMaterial() : mat} castShadow={!NO_SHADOW.has(p.sheet.id)} />
           {render(p.sheet.id)}
         </group>
       ));
   return <>{render(undefined)}</>;
 }
 
-/** Pose → joints. `extra` carries the idle business: a look up, the clipboard, the hat tip. */
-export function applyPose(j: Joints, p: Pose, extra = { head: 0, clip: 0, hat: 0 }) {
+/** Pose → joints. `extra` carries the head, the clipboard and the hat tip on top of the body pose. */
+export function applyPose(j: Joints, p: Pose, extra = { head: 0, clip: 0, hat: 0, lift: 0 }) {
   const set = (id: string, rz: number) => {
     const part = j.get(id);
     if (part) part.rotation.z = rz;
   };
   const torso = j.get("torso");
   if (torso) {
-    torso.position.y = p.hipY;
+    torso.position.y = p.hipY + extra.lift;
     torso.rotation.z = p.lean;
   }
   set("leg-front-thigh", p.hipFront);

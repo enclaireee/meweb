@@ -17,9 +17,9 @@ import { shadows } from "./shadows";
 export const lightState = { p: 0, glow: 1, lampScale: 1 };
 
 // ponytail: intensities tuned by eye on screenshots so front-facing stock reads close to its token.
-const SPOT_INTENSITY = 430;
+const SPOT_INTENSITY = 560;
 const SUN_INTENSITY = 3.4;
-const HEMI = { night: 1.6, morning: 1.05 };
+const HEMI = { night: 2.3, morning: 1.15 };
 
 const mapSize = (tier: Tier) => (tier === "high" ? L.shadow.mapSize : L.shadow.mapSizeLow);
 

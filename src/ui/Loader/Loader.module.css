@@ -1,0 +1,252 @@
+@property --p {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+/* Only with JS: without it there's nothing to wait for. */
+.loader {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow: hidden;
+  transition: --p 160ms linear;
+}
+:global(html[data-js]) .loader {
+  display: block;
+}
+
+/* --- the curtain: flat red paper, folds cut as bands (paper has no gradients) --- */
+.curtain {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 51%;
+  background: repeating-linear-gradient(
+    90deg,
+    #8e2a21 0 30px,
+    #a8362a 30px 52px,
+    #b9412f 52px 60px,
+    #7a2019 60px 66px
+  );
+  box-shadow: 0 0 40px rgb(0 0 0 / 0.45);
+  transition: translate 1.15s var(--ease-paper);
+}
+.curtain::after {
+  /* the hem: a darker band along the bottom */
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 26px;
+  background: #5e1a14;
+}
+.left {
+  left: 0;
+}
+.right {
+  right: 0;
+}
+
+.valance {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 74px;
+  background: #e2ad3b;
+  /* a scalloped hem, cut */
+  mask:
+    radial-gradient(circle at 50% 100%, transparent 15px, #000 15.5px) 0 100% / 44px 22px repeat-x,
+    linear-gradient(#000, #000) 0 0 / 100% calc(100% - 21px) no-repeat;
+  -webkit-mask:
+    radial-gradient(circle at 50% 100%, transparent 15px, #000 15.5px) 0 100% / 44px 22px repeat-x,
+    linear-gradient(#000, #000) 0 0 / 100% calc(100% - 21px) no-repeat;
+  filter: drop-shadow(0 6px 8px rgb(0 0 0 / 0.35));
+  transition: translate 0.8s var(--ease-paper);
+}
+
+/* --- the card in front --- */
+.stage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(520px, calc(100vw - 32px));
+  translate: -50% -50%;
+  transition:
+    opacity 0.45s var(--ease-paper),
+    translate 0.45s var(--ease-paper);
+}
+.card {
+  padding: 30px 32px 24px;
+  clip-path: var(--clip-plate, none);
+}
+.title {
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 3rem);
+  line-height: 1.05;
+  font-weight: 450;
+  margin-top: 8px;
+  font-variation-settings: "opsz" 72;
+}
+
+.cut {
+  position: relative;
+  height: 96px;
+  margin-top: 30px;
+}
+
+/* the strip: uncut ahead of the scissors, parted behind them */
+.strip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 70px;
+  height: 18px;
+}
+.strip::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--ink) 55%, transparent) 0 7px, transparent 7px 12px) 0 50% / 100% 1.5px no-repeat,
+    #c9a27e;
+  clip-path: inset(0 0 0 calc(var(--p) * 100%));
+}
+.stripTop,
+.stripBottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: #c9a27e;
+  clip-path: inset(0 calc((1 - var(--p)) * 100%) 0 0);
+}
+.stripTop {
+  top: 0;
+  translate: 0 -3px;
+  rotate: -0.4deg;
+}
+.stripBottom {
+  bottom: 0;
+  translate: 0 3px;
+  rotate: 0.3deg;
+}
+
+/* the worker walks the scissors along the line */
+.walker {
+  position: absolute;
+  left: calc(var(--p) * 100%);
+  top: 0;
+  width: 0;
+  height: 100%;
+}
+.scissors {
+  position: absolute;
+  left: -8px;
+  top: 64px;
+  width: 44px;
+  height: 30px;
+  filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.3));
+}
+.puppet {
+  position: absolute;
+  left: -58px;
+  top: -18px;
+  width: 38px;
+  height: 89px;
+  overflow: visible;
+}
+
+.bladeTop,
+.bladeBottom,
+.legFront,
+.legBack,
+.armFront,
+.armBack {
+  transform-box: view-box;
+}
+.bladeTop,
+.bladeBottom {
+  transform-origin: 0 0;
+  animation: snip 0.34s var(--ease-paper) infinite alternate;
+}
+.bladeBottom {
+  animation-name: snipBack;
+}
+.legFront,
+.legBack {
+  transform-origin: 0 3.62px;
+  animation: stride 0.62s ease-in-out infinite alternate;
+}
+.legBack {
+  animation-direction: alternate-reverse;
+}
+.armFront,
+.armBack {
+  transform-origin: 0 2.4px;
+  animation: stride 0.62s ease-in-out infinite alternate-reverse;
+}
+.armBack {
+  animation-direction: alternate;
+}
+
+@keyframes snip {
+  from {
+    rotate: -14deg;
+  }
+  to {
+    rotate: 0deg;
+  }
+}
+@keyframes snipBack {
+  from {
+    rotate: 14deg;
+  }
+  to {
+    rotate: 0deg;
+  }
+}
+@keyframes stride {
+  from {
+    rotate: -18deg;
+  }
+  to {
+    rotate: 18deg;
+  }
+}
+
+.status {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  color: var(--ink-soft);
+}
+
+/* --- parting --- */
+.loader[data-open] {
+  pointer-events: none;
+}
+.loader[data-open] .left {
+  translate: -102% 0;
+}
+.loader[data-open] .right {
+  translate: 102% 0;
+}
+.loader[data-open] .valance {
+  translate: 0 -110%;
+  transition-delay: 0.25s;
+}
+.loader[data-open] .stage {
+  opacity: 0;
+  translate: -50% calc(-50% - 18px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader[data-open] {
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .loader[data-open] .left,
+  .loader[data-open] .right,
+  .loader[data-open] .valance {
+    translate: 0 0;
+  }
+}

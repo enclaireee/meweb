@@ -1,7 +1,7 @@
 .hint {
   position: fixed;
   z-index: 65;
-  left: calc(var(--mat) + 16px);
+  left: 49vw;
   bottom: calc(var(--mat) + 16px);
   opacity: 0;
   translate: 0 8px;

@@ -10,10 +10,15 @@ export const projects = {
     dates: { start: "2026-09", end: "2026-09" },
     caption: "Every product gets the forecast that actually won.",
     facts: [
-      { value: "2", label: "foundation models racing classical baselines" },
-      { value: "Per SKU", label: "model chosen by ADI/CV² class" },
-      { value: "Rp", label: "reorder policy measured in rupiah" },
+      { value: "2", label: "foundation models" },
+      { value: "Per SKU", label: "model selection" },
+      { value: "Rp", label: "policy, costed" },
     ],
+    story: {
+      problem: "Forecasting tools assume clean data. Mid-market distributors have arbitrary ERP exports, so they never get to use them.",
+      built: "A schema-agnostic ingestion pipeline that maps any Indonesian ERP export to one canonical model, then a model race per series: TiRex-2 and TimesFM-3 against Croston, TSB and seasonal baselines, judged by rolling-origin backtests on WAPE and MASE.",
+      result: "Every SKU is served by the model that measurably won, and forecasts become ranked reorder quantities per branch, priced in rupiah against a baseline on fill rate, stockouts and inventory held.",
+    },
     stack: ["Next.js 16", "FastAPI", "Docker", "TiRex-2", "TimesFM-3"],
     bullets: [
       "Implemented a schema-agnostic ingestion pipeline (Next.js 16, FastAPI, Docker) that maps arbitrary Indonesian ERP exports to a canonical model, removing the clean-data assumption that blocks mid-market distributors from adopting forecasting tools.",
@@ -30,10 +35,15 @@ export const projects = {
     dates: { start: "2026-06", end: "2026-08" },
     caption: "Four kinds of plant equipment, one catalog. The alarms write themselves.",
     facts: [
-      { value: "4", label: "OT/ICS asset classes: PLC, HMI, network, gas instrumentation" },
-      { value: "3", label: "health tiers: Good, Underperform, Failed" },
-      { value: "7.0", label: "Zabbix, provisioned from YAML" },
+      { value: "4", label: "asset classes" },
+      { value: "3", label: "health tiers" },
+      { value: "7.0", label: "Zabbix API" },
     ],
+    story: {
+      problem: "Monitoring plant equipment in Zabbix means hosts, templates, items and triggers for every asset: PLCs, HMIs, network gear and gas instrumentation.",
+      built: "A YAML catalog of those four asset classes and a Python engine that provisions all of it through the Zabbix 7.0 API, fed by a synthetic SCADA telemetry simulator.",
+      result: "A three-tier health model (Good, Underperform, Failed) with correlation-based failure-chain detection across SNMP parameters.",
+    },
     stack: ["Python", "Zabbix 7.0", "Zabbix API", "YAML", "SNMP"],
     bullets: [
       "Designed a YAML-driven Zabbix 7.0 provisioning framework across 4 OT/ICS asset classes (PLC, HMI, network, gas instrumentation), with a Python engine automating host, template, item, and trigger creation via the Zabbix API.",
@@ -49,10 +59,15 @@ export const projects = {
     dates: { start: "2025-02", end: "2025-04" },
     caption: "A game that listens to your attention, and meets it halfway.",
     facts: [
-      { value: "DB-6", label: "wavelet feature extraction from live EEG" },
-      { value: "5", label: "GMM models in the attention ensemble" },
-      { value: "2nd", label: "place, ProtoTech, IEEE ITB 2025" },
+      { value: "DB-6", label: "wavelet features" },
+      { value: "5", label: "GMM ensemble" },
+      { value: "2nd", label: "ProtoTech 2025" },
     ],
+    story: {
+      problem: "A nonpharmacological therapy for ADHD: training attention with a closed loop between the brain and a game.",
+      built: "Live EEG from a NeuroSky Mindwave Mobile 2 streams through Python into a Godot game. DB-6 wavelet features feed a five-model GMM ensemble that recognises attention states.",
+      result: "The game adapts its difficulty from the Low Beta/Theta ratio in real time. It took 2nd place and Best Presentation at ProtoTech, IEEE ITB 2025.",
+    },
     stack: ["Python", "Godot", "NeuroSky Mindwave Mobile 2"],
     bullets: [
       "Built a closed-loop BCI neurofeedback system (Python, Godot, NeuroSky Mindwave Mobile 2) as nonpharmacological ADHD therapy, streaming real-time EEG into a game that adapts difficulty from the user's Low Beta/Theta ratio.",
@@ -72,9 +87,15 @@ export const projects = {
     dates: { start: "2025-03", end: "2025-08" },
     caption: "A nationwide maths competition, drafted, built and kept running.",
     facts: [
-      { value: "Nationwide", label: "mathematics competition website" },
-      { value: "1", label: "admin dashboard with registration and payments" },
+      { value: "Next 15", label: "full-stack" },
+      { value: "1", label: "admin dashboard" },
+      { value: "CD", label: "Vercel + GitHub" },
     ],
+    story: {
+      problem: "A nationwide mathematics competition needed a site participants could register and pay on, and a way for the organisers to run it.",
+      built: "The full-stack site in Next.js 15, Tailwind CSS v4 and Framer Motion, fully responsive, with an admin dashboard for registration and payments.",
+      result: "Deployed on Vercel with continuous delivery from GitHub, and maintained from March to August 2025.",
+    },
     stack: ["Next.js 15", "Tailwind CSS v4", "Framer Motion", "Vercel"],
     bullets: [
       "Built and maintained the full-stack site (Next.js 15, Tailwind CSS v4, Framer Motion) for a nationwide mathematics competition, delivering a fully responsive participant frontend.",
@@ -90,9 +111,15 @@ export const projects = {
     dates: { start: "2026-05", end: "2026-06" },
     caption: "Sunlight in, lamplight out, and a small screen keeping count.",
     facts: [
-      { value: "2", label: "sensor array: INA219 power + LDR light" },
-      { value: "0.96″", label: "I²C OLED showing live efficiency" },
+      { value: "2", label: "sensors" },
+      { value: "0.96″", label: "OLED readout" },
+      { value: "PV", label: "self-powered" },
     ],
+    story: {
+      problem: "The Embedded Systems final project: a light that powers itself, and shows how well it's doing it.",
+      built: "A photovoltaic panel, an Arduino and a two-sensor array (INA219 for power, an LDR for light) driving an LED lighting system.",
+      result: "Real-time power and efficiency, live on a 0.96″ I²C OLED, under changing light.",
+    },
     stack: ["Arduino", "C/C++", "INA219", "LDR", "I²C OLED"],
     bullets: [
       "Designed and built a solar-powered LED lighting system (photovoltaic panel, Arduino, 2-sensor array) as the Embedded Systems final project.",

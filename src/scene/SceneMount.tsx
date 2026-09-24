@@ -2,13 +2,16 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { store, useScene } from "./store";
+import { advanceLoading, store, useScene } from "./store";
 import { initialTier } from "./quality/tier";
 
 // the whole 3D chunk (three, R3F, GSAP, Lenis): never in the initial bundle (architecture.md §2.3)
 const Scene = dynamic(() => import("./Scene"), { ssr: false });
 
-/** Decides whether the scene may load at all, then waits for load + idle before fetching it (§2.2). */
+/**
+ * Decides whether the scene may load at all, then fetches it while the loading curtain is down (§2.2;
+ * the page underneath is complete HTML regardless).
+ */
 export function SceneMount() {
   const tier = useScene((s) => s.tier);
   const [go, setGo] = useState(false);
@@ -16,21 +19,20 @@ export function SceneMount() {
   useEffect(() => {
     const t = initialTier();
     store.setState({ tier: t });
-    if (t === "none") return;
-    // after the page has fully loaded and the main thread is idle: the readable page never waits on it
-    let idle = 0;
-    const start = () => {
-      const ric = window.requestIdleCallback;
-      idle = ric ? ric(() => setGo(true), { timeout: 3000 }) : window.setTimeout(() => setGo(true), 1200);
-    };
-    if (document.readyState === "complete") start();
-    else addEventListener("load", start, { once: true });
-    return () => {
-      removeEventListener("load", start);
-      if (window.cancelIdleCallback) window.cancelIdleCallback(idle);
-      else clearTimeout(idle);
-    };
+    if (t === "none") {
+      // nothing to build: the curtain can part as soon as the type is in
+      document.fonts?.ready.then(() => advanceLoading(1));
+      return;
+    }
+    // the loading screen is up, so start straight away: every millisecond now is time spent waiting
+    advanceLoading(0.4);
+    queueMicrotask(() => setGo(true));
   }, []);
+
+  // a tier can fall to none mid-load (context lost, too slow): don't leave the curtain down
+  useEffect(() => {
+    if (tier === "none") advanceLoading(1);
+  }, [tier]);
 
   if (!go || tier === "none") return null;
   return <Scene />;

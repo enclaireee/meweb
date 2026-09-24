@@ -18,7 +18,9 @@ export type Project = {
   caption: string;
   facts: Fact[];
   stack: string[];
-  /** Plate back: the full CV bullets. */
+  /** Plate back: the story, told in three beats (paraphrased from the CV, nothing added). */
+  story: { problem: string; built: string; result: string };
+  /** The CV bullets, verbatim: kept as the source the story is written from. */
   bullets: string[];
   /** Empty until provided: never fabricate a URL. */
   links: { repo?: string; live?: string };
@@ -27,10 +29,14 @@ export type Project = {
 
 export type Role = {
   id: string;
+  /** which board it hangs on at the Wall: jobs and teaching, or running things */
+  kind: "work" | "leadership";
   title: string;
   org: string;
   place?: string;
   dates: Dates;
+  /** one line for the card (paraphrased from the CV lines) */
+  summary: string;
   lines: string[];
 };
 

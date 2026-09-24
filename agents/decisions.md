@@ -42,3 +42,24 @@ Where the docs were silent or contradicted themselves, these are the calls made 
 - **Dev routes** (`/dev/art`, `/dev/tokens`, `/dev/worker`) return 404 in production unless built with `ALLOW_DEV_ROUTES=1`.
 - **Copy:** plate captions for Refocus, KOMAT and Solar, the Wall's title/caption and the Window heading were written in the portfolio_concept.md §8 voice (the doc only gave samples for two plates). Facts are all drawn from the CV.
 - **Budgets:** everything meets §9 except initial JS: **136 kB gz against 90 kB**. React DOM + the Next App Router runtime alone are ~116 kB, and the site's own client code is ~17 kB. The 90 kB target isn't reachable on Next 16 + React 19. The scene chunk is 240 kB gz (≤300). Draw calls are 80 during the entrance, 47–60 at rest. Lighthouse (observed mobile throttling): 96 / 100 / 100 / 100, LCP 1.6 s, CLS 0.
+
+## 2026-09-24: revision rounds 1–4 (user feedback; later entries win)
+
+- **Worker:** drawn 2× (`worker.scale`), with a coloured back as well as front. The cable is gone: he walks ahead of the camera (`followPoint`, meander in x) and runs a different routine of jobs in each room (`routines.ts`, reshuffled every loop). He sits on the bed in the last room (`sit`).
+- **He talks:** hardcoded lines in `scene/worker/lines.ts`, shown in a paper bubble (`speech.ts`):
+  - A greeting after the entrance.
+  - A reply on hover or focus (this replaced the "Walk on" label) and a line when clicked.
+  - Chatter every 11–20 s, for his room or a general line.
+  - Sometimes a line when he starts a job, when you sprint-scroll, or when you go back a room.
+  - A line when the light changes.
+  - Lines are dealt from a shuffled deck, so none repeats until its list runs out. The lines are flavour only: no facts beyond what the cards say.
+- **Loader:** a curtain with the worker cutting a strip of paper as the progress bar.
+- **Rooms:** each room is its own paper pack (`rooms[]` in tokens), with a shell (walls, wainscot, ceiling, rug, back-wall doorway) so nothing reads hollow. The last room is a **bedroom**: a low bed, a nightstand with a lamp, slippers, fairy lights, a picture and a dresser, all within the band that the nav and the contact card leave clear.
+- **Cards (showcase rooms):** many small papers on strings (`ui/Hang`) around the room, never over the doorway. They're lowered in when the room arrives and hauled up when it leaves, with pointer parallax by depth. Paper-cut icons are drawn in `ui/Icon`.
+- **Practical rooms (Wall, Window):** tidy pinned boards (`ui/Board`), no tilt. The Wall is two even, slim boards, one down each side: experience as one line per role (tap for the summary, a `<details>` accordion) on the left, skills and ribbons on the right. Contact is a single board. Role `kind` (work / leadership) is in content.
+- **Nav:** the depth tag is replaced by a compact strip at the left middle (`ui/SiteNav`): Who I am, Projects, Experience, Skills, Contact. Left-side card slots start right of it.
+- **Phones get their own layout, not a trimmed desktop:** a clothesline across the lower half (`--line`). Each room's papers are pegged to it and swiped sideways (scroll-snap), while scrolling up and down still walks between rooms.
+  - A flat board comes apart into one card per role, skill group or award, with coloured section tags.
+  - A "swipe →" hint fades as you swipe (scroll-driven, behind `@supports`), and "↓ next room" ends each line.
+- **Frame:** layered paper rings (outer, mat, pinstripe) with grain and photo corners.
+- **Fix:** before the scene is live, the desk loads wherever the camera is. A deep link to a far room (e.g. `#contact`) used to leave that room empty forever.

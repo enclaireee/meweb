@@ -115,7 +115,7 @@ const toHex = (c: number[]) => "#" + c.map((v) => Math.round(Math.max(0, Math.mi
 export function nightOf(day: string): string {
   const d = hex(day);
   const n = hex("#2E3470");
-  return toHex(d.map((v, i) => (v + (n[i]! - v) * 0.26) * 0.8));
+  return toHex(d.map((v, i) => (v + (n[i]! - v) * 0.2) * 0.88));
 }
 
 /** Resolve a sheet stock to its colour in a light state. */
@@ -132,17 +132,24 @@ export function stockColor(stock: Stock, mode: LightMode): string {
   return u.ink;
 }
 
-/** Each station's room: its side walls and ceiling (paper packs, in route order). */
-export const rooms: { wall: Paper; ceiling: Paper }[] = [
-  { wall: "kraft", ceiling: "woodDeep" },
-  { wall: "mustard", ceiling: "ochreDeep" },
-  { wall: "teal", ceiling: "tealDeep" },
-  { wall: "plum", ceiling: "plumDeep" },
-  { wall: "blueprint", ceiling: "blueprintDeep" },
-  { wall: "peach", ceiling: "terracottaDeep" },
-  { wall: "brick", ceiling: "brickDeep" },
-  { wall: "navy", ceiling: "navyDeep" },
+/**
+ * Each station's room shell (decisions.md, "not a hollow room"): papered walls with stripes, a
+ * wainscot and rail, a lowered ceiling with beams, a rug, and a back wall with a doorway to the next room.
+ */
+export type Room = { wall: Paper; stripe: Paper; wainscot: Paper; trim: Paper; ceiling: Paper; rug: Paper; rugBorder: Paper };
+export const rooms: Room[] = [
+  { wall: "kraft", stripe: "cream", wainscot: "woodDeep", trim: "woodDeep", ceiling: "woodDeep", rug: "tomato", rugBorder: "mustard" },
+  { wall: "mustard", stripe: "sunflower", wainscot: "ochreDeep", trim: "ochreDeep", ceiling: "ochreDeep", rug: "blueprint", rugBorder: "sky" },
+  { wall: "teal", stripe: "mint", wainscot: "tealDeep", trim: "copper", ceiling: "tealDeep", rug: "mustard", rugBorder: "copper" },
+  { wall: "plum", stripe: "violet", wainscot: "plumDeep", trim: "pink", ceiling: "plumDeep", rug: "cyan", rugBorder: "pink" },
+  { wall: "blueprint", stripe: "blueprintLight", wainscot: "blueprintDeep", trim: "sunflower", ceiling: "blueprintDeep", rug: "tomato", rugBorder: "white" },
+  { wall: "peach", stripe: "cream", wainscot: "terracotta", trim: "terracottaDeep", ceiling: "terracottaDeep", rug: "leaf", rugBorder: "sunflower" },
+  { wall: "brick", stripe: "brickLight", wainscot: "brickDeep", trim: "sunflower", ceiling: "brickDeep", rug: "teal", rugBorder: "cream" },
+  { wall: "navy", stripe: "blueprint", wainscot: "navyDeep", trim: "brass", ceiling: "navyDeep", rug: "mustard", rugBorder: "tomato" },
 ];
+
+/** Shell geometry, station-local (see Room.tsx). */
+export const shell = { halfWidth: 34, ceiling: 44, backWallZ: -43.5, frontZ: 36.5, wainscot: 12, doorHalf: 9, doorTop: 26 } as const;
 
 /** design.md §4.1: camera. */
 export const camera = {
@@ -152,11 +159,12 @@ export const camera = {
   restDistance: 35,
   restY: 14,
   pitchDeg: -6,
-  pointerX: 2.5,
-  pointerY: 1.2,
-  tiltYawDeg: 3,
-  tiltPitchDeg: 2,
-  driftX: 0.8,
+  // stronger than design.md's 2.5/1.2/3°/2°: the depth has to be felt (decisions.md, "more parallax")
+  pointerX: 6,
+  pointerY: 2.6,
+  tiltYawDeg: 6,
+  tiltPitchDeg: 3.5,
+  driftX: 1.6,
   driftPeriod: 16,
   portraitLookUp: 4,
   near: 0.5,
@@ -195,7 +203,7 @@ export const light = {
   // arch header shadowing the whole stage.
   sun: { color: "#F2F4FF", direction: [0.2, -0.5, -0.84] as const, nudgeDeg: 5 },
   hemi: {
-    night: { sky: "#3A466B", ground: "#0F1222" },
+    night: { sky: "#5C5FA6", ground: "#2A1E24" },
     morning: { sky: "#F4EBDD", ground: "#677084" },
   },
   shadow: { mapSize: 1024, mapSizeLow: 512, radius: 4, bias: -0.0005, normalBias: 0.02 },
@@ -211,7 +219,7 @@ export const motion = {
   slow: 0.7,
   light: 1.2,
   stagger: 0.06,
-  pointerLambda: 2.5,
+  pointerLambda: 3.2,
   lenisLerp: 0.08,
   spring: { stiffness: 40, damping: 5, mass: 1 },
   entrance: { sheet: 0.6, stagger: 0.09, fade: 0.3, flicker: 0.25, total: 1.8, returnTotal: 0.8 },

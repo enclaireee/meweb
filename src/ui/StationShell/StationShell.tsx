@@ -3,31 +3,20 @@ import { stations } from "@/sections/stations";
 import styles from "./StationShell.module.css";
 
 /**
- * One <section> per station (design.md §3): 160svh tall, the plate sticky in the right column
- * (bottom card on phones). `flow` lets long content (the Wall) scroll with the page instead.
+ * One <section> per station (design.md §3): it gives the scroll its length and the anchor its target.
+ * Its cards live in a layer fixed over the scene: only the active room's cards are lowered in
+ * (ui/Hang). Without JS the layer is just the section's content, in order.
  */
-export function StationShell({
-  index,
-  labelledBy,
-  flow = false,
-  children,
-}: {
-  index: number;
-  labelledBy: string;
-  flow?: boolean;
-  children: ReactNode;
-}) {
+export function StationShell({ index, labelledBy, children }: { index: number; labelledBy: string; children: ReactNode }) {
   const station = stations[index]!;
   return (
-    <section
-      id={station.slug}
-      aria-labelledby={labelledBy}
-      data-station={index}
-      className={styles.station}
-      data-flow={flow || undefined}
-    >
-      <div className={styles.sticky}>
-        <div className={styles.column}>{children}</div>
+    <section id={station.slug} aria-labelledby={labelledBy} data-station={index} className={styles.station}>
+      <div className={styles.layer}>
+        {children}
+        {/* phones: tells you the line goes on to the right; fades once you swipe */}
+        <span className={styles.swipe} aria-hidden>
+          swipe <span className={styles.nudge}>→</span>
+        </span>
       </div>
     </section>
   );

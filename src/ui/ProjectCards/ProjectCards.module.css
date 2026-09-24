@@ -1,0 +1,99 @@
+.set {
+  display: contents;
+}
+
+/* the room's paper, as a tab across the top of the title tag */
+.tab {
+  display: block;
+  height: 10px;
+  margin: -26px -20px 16px;
+  background: var(--tone);
+  clip-path: var(--clip-strip, none);
+}
+.title {
+  padding-top: 26px;
+}
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  padding-right: 26px;
+}
+.meta time {
+  white-space: nowrap;
+}
+.name {
+  margin-top: 8px;
+  font-size: clamp(1.7rem, 1.2rem + 1.5vw, 2.4rem);
+  line-height: 1.02;
+  font-weight: 480;
+  letter-spacing: -0.01em;
+  font-variation-settings: "opsz" 72;
+}
+.hook {
+  margin-top: 8px;
+  font-size: clamp(0.98rem, 0.94rem + 0.2vw, 1.08rem);
+  line-height: 1.4;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+.ribbon {
+  position: absolute;
+  top: 18px;
+  right: 14px;
+}
+
+/* a number on a tag */
+.stat {
+  text-align: center;
+  padding: 24px 12px 12px;
+}
+.value {
+  display: block;
+  font-size: clamp(1.5rem, 1.15rem + 1vw, 2.1rem);
+  line-height: 1;
+  font-weight: 600;
+  color: var(--ink-tone);
+  font-variant-numeric: lining-nums tabular-nums;
+  white-space: nowrap;
+}
+.label {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.8rem;
+  line-height: 1.25;
+  color: var(--ink-soft);
+}
+
+/* one beat of the story */
+.beatHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+}
+.beatText {
+  margin-top: 6px;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 8px;
+}
+.chip {
+  padding: 4px 8px 3px;
+  font-size: 0.64rem;
+  letter-spacing: 0.13em;
+  background: color-mix(in srgb, var(--tone) 24%, var(--paper));
+  clip-path: var(--clip-strip, none);
+}
+.links {
+  display: flex;
+  gap: 14px;
+  margin-top: 10px;
+}

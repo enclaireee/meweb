@@ -43,7 +43,18 @@ export function ClientBoot() {
     );
     sections.forEach((s) => io.observe(s));
 
+    // keyboard and screen readers can reach every room's cards: focusing one brings its room in
+    const onFocus = (e: FocusEvent) => {
+      const sec = (e.target as HTMLElement).closest<HTMLElement>("section[data-station]");
+      if (sec && !("active" in sec.dataset)) {
+        const y = sec.offsetTop + sec.offsetHeight / 2 - innerHeight / 2;
+        scrollTo({ top: y, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+      }
+    };
+    document.addEventListener("focusin", onFocus);
+
     return () => {
+      document.removeEventListener("focusin", onFocus);
       io.disconnect();
       mq.removeEventListener("change", syncMotion);
       delete html.dataset.stations;

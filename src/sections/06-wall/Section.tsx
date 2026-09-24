@@ -1,80 +1,113 @@
+import type { CSSProperties } from "react";
 import { experience } from "@/content/experience";
 import { skills } from "@/content/skills";
 import { awards } from "@/content/awards";
-import { seeded } from "@/lib/rng";
+import { formatDates } from "@/lib/dates";
+import { papers, rooms } from "@/design/tokens";
 import { StationShell } from "@/ui/StationShell/StationShell";
-import { PunchedCard } from "@/ui/PunchedCard/PunchedCard";
-import { PegTag } from "@/ui/PegTag/PegTag";
+import { Board, BoardRow, boardItem } from "@/ui/Board/Board";
+import { Icon, type IconName } from "@/ui/Icon/Icon";
 import { Ribbon } from "@/ui/Ribbon/Ribbon";
 import styles from "./Section.module.css";
 
-/** Hand-placed: every card and tag sits a little off-true, the same way every build (architecture.md §7.1 #8). */
-const tilt = (id: string, max: number) => (seeded(id)() * 2 - 1) * max;
+const skillIcons: IconName[] = ["code", "layers", "chart"];
 
+/**
+ * The Wall: two slim, even boards, one down each side, so the room stays in view between them.
+ * Experience on the left, one line a role (tap for the story); skills and ribbons on the right.
+ */
 export default function Section() {
+  let n = 0;
+  // every piece is also a card on the phone clothesline, lowered in turn
+  const item = (extra = "", tag = false) => ({
+    className: `${boardItem} ${extra}`,
+    style: { "--n": n++ } as CSSProperties,
+    ...(tag ? { "data-tag": "" } : {}),
+  });
+  const tone = { "--tone": papers[rooms[6]!.wall], "--ink-tone": papers[rooms[6]!.ceiling] } as CSSProperties;
+
   return (
-    <StationShell index={6} labelledBy="wall-title" flow>
-      <div className={`cast ${styles.board}`}>
-        <div className={`${styles.header} paper grain`}>
-          <p className="text-kicker uppercase text-ink-soft">Plate 06 · The Wall</p>
-          <h2 id="wall-title" className="text-plate-title mt-2">
-            Logbook, tools and ribbons
-          </h2>
-          <p className="text-caption italic mt-2">Everything else that was cut here, pinned where it can be seen.</p>
-        </div>
-      </div>
+    <StationShell index={6} labelledBy="wall-title">
+      <div style={tone} className={styles.set}>
+        <BoardRow>
+          <Board i={0} flat>
+            <header {...item(styles.head)}>
+              <p className="text-kicker uppercase text-ink-soft">Plate 06 · The Wall</p>
+              <h2 id="wall-title" className={styles.title}>
+                Experience and skills
+              </h2>
+            </header>
+            <section aria-labelledby="experience-title" className={styles.part}>
+              <h3 id="experience-title" {...item(styles.label, true)}>
+                <Icon name="briefcase" badge className={styles.badge} />
+                Experience
+              </h3>
+              <ol className={`${styles.list} ${styles.part}`}>
+                {experience.map((r) => (
+                  <li key={r.id} {...item(styles.role)}>
+                    <details name="roles" className={styles.details}>
+                      <summary className={styles.summaryRow}>
+                        <Icon name={r.kind === "work" ? "briefcase" : "flag"} className={styles.kind} />
+                        <span className={styles.roleText}>
+                          <span id={`role-${r.id}`} className={styles.roleTitle}>
+                            {r.title}
+                          </span>
+                          <span className={styles.org}>
+                            {r.org} · <time dateTime={r.dates.start}>{formatDates(r.dates)}</time>
+                          </span>
+                        </span>
+                        <span className={styles.plus} aria-hidden />
+                      </summary>
+                      <p className={styles.summary}>{r.summary}</p>
+                    </details>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          </Board>
 
-      <section aria-labelledby="corkboard-title" className={styles.group}>
-        <h3 id="corkboard-title" className={`${styles.label} text-kicker uppercase`}>
-          Corkboard · experience
-        </h3>
-        <ol className={styles.cards}>
-          {experience.map((r) => (
-            <PunchedCard key={r.id} role={r} tilt={tilt(r.id, 1.2)} />
-          ))}
-        </ol>
-      </section>
-
-      <section aria-labelledby="pegboard-title" className={styles.group}>
-        <h3 id="pegboard-title" className={`${styles.label} text-kicker uppercase`}>
-          Pegboard · tools
-        </h3>
-        <div className={styles.pegboard}>
-          {skills.map((g) => (
-            <div key={g.label} className={styles.row}>
-              <h4 className="text-caption italic">{g.label}</h4>
-              <ul className={styles.pegs}>
-                {g.items.map((s) => (
-                  <PegTag key={s} tilt={tilt(s, 3)}>
-                    {s}
-                  </PegTag>
+          <Board i={1} flat>
+            <section id="skills" aria-labelledby="skills-title" className={styles.part}>
+              <h3 id="skills-title" {...item(styles.label, true)}>
+                <Icon name="wrench" badge className={styles.badge} />
+                Skills
+              </h3>
+              {skills.map((g, k) => (
+                <div key={g.label} {...item(styles.group)}>
+                  <h4 className={styles.groupTitle}>
+                    <Icon name={skillIcons[k] ?? "chip"} /> {g.label}
+                  </h4>
+                  <ul className={styles.chips}>
+                    {g.items.map((s) => (
+                      <li key={s} className={`${styles.chip} text-kicker uppercase`}>
+                        {s}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </section>
+            <section aria-labelledby="awards-title" className={`${styles.part} ${styles.ribbons}`}>
+              <h3 id="awards-title" {...item(styles.label, true)}>
+                <span aria-hidden className={styles.rosette}>
+                  <Ribbon small label="Ribbons" />
+                </span>
+                Ribbons
+              </h3>
+              <ul className={`${styles.list} ${styles.part}`}>
+                {awards.map((a) => (
+                  <li key={a.title} {...item(styles.award)}>
+                    <p className={styles.awardTitle}>{a.title}</p>
+                    <p className={styles.org}>
+                      {a.issuer}, {a.year}
+                    </p>
+                  </li>
                 ))}
               </ul>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section aria-labelledby="ribbons-title" className={styles.group}>
-        <h3 id="ribbons-title" className={`${styles.label} text-kicker uppercase`}>
-          Ribbons · awards
-        </h3>
-        <ul className={styles.ribbons}>
-          {awards.map((a) => (
-            <li key={a.title} className={`cast ${styles.award}`}>
-              <div className={`${styles.awardFace} paper grain`}>
-                <Ribbon label={a.title} />
-                <div>
-                  <p className="text-body leading-snug">{a.title}</p>
-                  <p className="text-caption italic text-ink-soft">
-                    {a.issuer}, {a.year}
-                  </p>
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </section>
+            </section>
+          </Board>
+        </BoardRow>
+      </div>
     </StationShell>
   );
 }

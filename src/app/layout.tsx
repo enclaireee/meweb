@@ -5,6 +5,7 @@ import { profile } from "@/content/profile";
 import { contact, siteUrl } from "@/content/contact";
 import { lightBootScript } from "@/scene/store";
 import { ClientBoot } from "@/ui/ClientBoot";
+import { Frame } from "@/ui/Frame/Frame";
 import "./globals.css";
 import "@/ui/clips.generated.css";
 
@@ -71,7 +72,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <span className="paper grain block px-4 py-2 text-caption italic">Skip to the plates</span>
         </a>
         {children}
-        <div className="frame-mat" aria-hidden />
+        <Frame />
         <ClientBoot />
       </body>
     </html>

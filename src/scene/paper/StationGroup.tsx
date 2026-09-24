@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { BoxGeometry, type Group, type Mesh } from "three";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
-import { box, isGlow } from "@/design/tokens";
+import { box, isGlow, shell } from "@/design/tokens";
 import { DEG } from "@/lib/math";
 import { seeded } from "@/lib/rng";
 import { store, useScene } from "@/scene/store";
@@ -30,7 +30,7 @@ export type StationProps = {
 /** Hinged sheets waiting for the pop-up entrance (station 00), back to front. */
 export const hinges: { group: Group; z: number }[] = [];
 
-const CEILING = 40;
+const CEILING = shell.ceiling;
 
 /**
  * A station built from its cut file (architecture.md §6.2, §6.4): everything static merged into one

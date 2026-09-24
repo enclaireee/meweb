@@ -1,0 +1,222 @@
+/* without JS: sheets in the page */
+.board {
+  position: relative;
+  margin: 14px 0;
+}
+.sheet {
+  position: relative;
+  padding: 30px 20px 20px;
+  clip-path: var(--clip-plate, none);
+  box-shadow: inset calc(var(--light-x) * -2px) calc(var(--light-y) * 2px) 0 rgb(255 255 255 / 0.35);
+}
+/* the room's paper across the top, like the project title tags */
+.tab {
+  display: block;
+  height: 8px;
+  margin: -30px -20px 18px;
+  background: var(--tone);
+  clip-path: var(--clip-strip, none);
+}
+.pin {
+  position: absolute;
+  top: 16px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--stage);
+  box-shadow: 0 0 0 2.5px color-mix(in srgb, var(--ink) 14%, var(--paper));
+}
+.pinL {
+  left: 16%;
+}
+.pinR {
+  right: 16%;
+}
+.string {
+  display: none;
+}
+
+/* with JS: hung on two strings, lowered in one after another, hauled up */
+:global(html[data-js]) .board {
+  margin: 0;
+  z-index: 5;
+  pointer-events: auto;
+  translate: 0 -125vh;
+  transition: translate 0.55s cubic-bezier(0.55, 0, 0.85, 0.35) calc((4 - var(--i)) * 40ms);
+}
+:global(html[data-js]) [data-active] .board {
+  translate: 0 0;
+  transition: translate 1s cubic-bezier(0.2, 1.2, 0.4, 1) calc(200ms + var(--i) * 110ms);
+}
+:global(html[data-js]) .board:not(:where([data-active] *)) {
+  pointer-events: none;
+}
+:global(html[data-js]) .string {
+  display: block;
+  position: absolute;
+  bottom: calc(100% - 20px);
+  width: 1px;
+  height: 130vh;
+  background: color-mix(in srgb, var(--ink) 75%, transparent);
+  z-index: 1;
+}
+:global(html[data-js]) .left {
+  left: calc(16% + 4px);
+}
+:global(html[data-js]) .right {
+  right: calc(16% + 4px);
+}
+:global(html[data-js]) .parallax {
+  transform: translate(calc(var(--light-x) * -8px), calc((var(--light-y) + 0.4) * 5px));
+  transition: transform 0.25s linear;
+}
+
+@media (min-width: 640px) {
+  /* even boards, tops level, pushed to the sides: the middle of the room stays open */
+  :global(html[data-js]) .row {
+    position: absolute;
+    left: calc(var(--mat) + 196px);
+    right: calc(var(--mat) + 2.5vw);
+    top: calc(var(--mat) + 9vh);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2.6vw;
+    pointer-events: none;
+  }
+  :global(html[data-js]) .col {
+    position: relative;
+    flex: 0 1 min(300px, 22vw);
+    min-width: 0;
+  }
+  :global(html[data-js]) .col .sheet {
+    max-height: calc(100svh - 2 * var(--mat) - 12vh);
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+  :global(html[data-js]) .narrow {
+    position: absolute;
+    right: calc(var(--mat) + 4vw);
+    top: 50%;
+    width: min(460px, 38vw);
+    margin-top: -190px;
+  }
+}
+/* tablets: a little wider, still one down each side */
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  :global(html[data-js]) .col {
+    flex-basis: 34vw;
+  }
+}
+
+/* phones: pegged to the clothesline (StationShell) */
+@media (max-width: 639.98px) {
+  .sheet {
+    padding: 24px 16px 18px;
+  }
+  .tab {
+    margin: -24px -16px 14px;
+  }
+  :global(html[data-js]) .row {
+    display: contents;
+  }
+  :global(html[data-js]) .board {
+    position: relative;
+    flex: 0 0 auto;
+    width: 84vw;
+    scroll-snap-align: start;
+    translate: 0 -110svh;
+  }
+  :global(html[data-js]) .string {
+    top: -8px;
+    bottom: auto;
+    width: 9px;
+    height: 24px;
+    border-radius: 2px;
+    background: var(--peg);
+    box-shadow: 0 2px 3px rgb(0 0 0 / 0.3);
+    z-index: 2;
+  }
+  :global(html[data-js]) .pin {
+    display: none;
+  }
+  :global(html[data-js]) .parallax {
+    transform: none;
+  }
+
+  /* a flat board comes apart: every piece is its own pegged card on the line */
+  :global(html[data-js]) .flat,
+  :global(html[data-js]) .flat .parallax,
+  :global(html[data-js]) .flat :global(.cast),
+  :global(html[data-js]) .flat .sheet {
+    display: contents;
+  }
+  :global(html[data-js]) .flat .string,
+  :global(html[data-js]) .flat .tab {
+    display: none;
+  }
+  :global(html[data-js]) .item {
+    position: relative;
+    isolation: isolate;
+    flex: 0 0 auto;
+    width: 72vw;
+    margin: 0;
+    padding: 24px 16px 14px;
+    background: var(--paper);
+    color: var(--ink);
+    clip-path: none;
+    filter: var(--paper-shadow);
+    scroll-snap-align: start;
+    translate: 0 -110svh;
+    transition: translate 0.55s cubic-bezier(0.55, 0, 0.85, 0.35);
+  }
+  :global(html[data-js]) [data-active] .item {
+    translate: 0 0;
+    transition: translate 1s cubic-bezier(0.2, 1.2, 0.4, 1) calc(160ms + min(var(--n, 0), 4) * 95ms);
+  }
+  :global(html[data-js]) .item::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: -8px;
+    width: 9px;
+    height: 24px;
+    translate: -50% 0;
+    border-radius: 2px;
+    background: var(--peg);
+    box-shadow: 0 2px 3px rgb(0 0 0 / 0.3);
+  }
+  :global(html[data-js]) .item::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: url("/textures/grain-rough.webp") repeat;
+    background-size: 256px;
+    mix-blend-mode: multiply;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  /* the section tags between the cards: in the room's colour */
+  :global(html[data-js]) .item[data-tag] {
+    width: auto;
+    padding: 24px 14px 12px;
+    background: var(--tone);
+    color: var(--paper);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :global(html[data-js]) .board,
+  :global(html[data-js]) [data-active] .board,
+  :global(html[data-js]) .item,
+  :global(html[data-js]) [data-active] .item {
+    translate: 0 0;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  :global(html[data-js]) [data-active] .board,
+  :global(html[data-js]) [data-active] .item {
+    opacity: 1;
+  }
+}
