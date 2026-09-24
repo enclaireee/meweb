@@ -101,6 +101,8 @@
     margin: auto;
     scale: var(--z, 1);
     transform-origin: 50% 43%;
+    /* the room ahead, through the doorway of the room being left (ui/Deck/wiring.ts) */
+    clip-path: var(--door, none);
   }
   :global(html[data-js]) .station[data-moving] .band img {
     will-change: scale;

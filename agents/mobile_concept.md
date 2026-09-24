@@ -72,7 +72,7 @@ The phone keeps the desktop's promise: **scroll to walk deeper into the workshop
 
 - **Scroll length:** each station `<section>` is `--room-len` (40svh) of page, with `scroll-snap-type: y mandatory` on the page and `scroll-snap-align: start; scroll-snap-stop: always` on each section. One flick walks one room. A drag past the halfway point (~180px) commits to the next room; a shorter one springs back. **The last section is `100lvh`**, so the page ends a whole screen after the last room starts. Without it, the Wall and the Window started past the bottom of the scroll, and only anchors could reach them.
 - **Camera coordinate:** `s = scrollY / room length`, from 0 to 7. `ui/Deck/wiring.ts` (phones only, lazy-loaded) runs on scroll (rAF-throttled). For every room r with |s − r| < 1, it sets each band's `--z` (a CSS `scale` about the vanishing point, `transform-origin: 50% 43%`) and its opacity:
-  - **Rooms ahead** (d = s − r < 0) are smaller by the distance still to walk (d × 80 units), and fade in over the first 30% of the walk.
+  - **Rooms ahead** (d = s − r < 0) are smaller by the distance still to walk (d × 80 units), and fade in over the first 30% of the walk. The room ahead's B0 is clipped to the doorway of the room being left, at that back wall's scale (`--door`, projected from `scene/paper/door.ts` through the bake camera), until you're through. Unclipped, its edges lay across this room's floor and walls.
   - **Rooms being left** (d > 0): each sheet swells as D / (D − 80d) and fades by **distance, not size**, from 14 units away down to 4. The back wall must frame the doorway until you're through it.
   - **Band depths** from the camera at rest: B0 120, B1 78, B2 67, B3 50, B4 36.
 - **Stacking:** every band is its own fixed layer (the stage is `display: contents`), so rooms interleave. From the bottom: every room's B0 (the room itself; later rooms higher, so the room ahead covers the one you're leaving), then every room's sheets B1–B4 (earlier rooms higher, because you look through this room's doorway into the next).
@@ -91,7 +91,7 @@ The phone keeps the desktop's promise: **scroll to walk deeper into the workshop
 | B4 | The arch, detail and wings, ≥ −9 | 1 |
 
 - **B0 is the room, not a slice.** Wherever the sheets in front part or pass during a walk, the room's own walls and floor are behind them. (A sliced B0 showed purple haze around the doorway in mid-walk.)
-- **Slices reach 2 units** into the band behind them, over floor and walls only (the depth gaps between sheet clusters leave room for this). Tilting then shows paper at the seams.
+- **Slices hold camera-facing cards only:** the sheets, the back wall with its doorway, the trims and the beams. The floor, the ceiling, the side walls and the rugs recede, so no single scale fits them. A strip of floor inside a slice drifted off its neighbours mid-walk and opened dark gaps across the floor. They live in B0 alone (the shell is split into a facing mesh and a receding one, tagged `userData.recede`). The sky card behind the window starts at floor level, for the same reason.
 - **Baking:** run `npm run rooms` (`scripts/rooms.mts`) against a production build.
   - With `?bake`, the scene skips the worker, doesn't step its tier down, drops the view offset, and exposes `__bakeGo(station)` and `__bake(station, band)` (`scene/bake.tsx`).
   - Slices are global clipping planes in world z. B0 hides the station's own group, tagged `userData.station`.

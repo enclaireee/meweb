@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 import { stations } from "@/sections/stations";
+import { Decor } from "@/ui/Decor/Decor";
 import styles from "./StationShell.module.css";
 
 /** Tilt weight of each baked band, back (the haze) to front (the arch) (mobile_concept.md §4.2). */
@@ -46,7 +47,10 @@ export function StationShell({ index, labelledBy, children }: { index: number; l
           </div>
         ))}
       </div>
-      <div className={styles.layer}>{children}</div>
+      <div className={styles.layer}>
+        <Decor index={index} />
+        {children}
+      </div>
     </section>
   );
 }

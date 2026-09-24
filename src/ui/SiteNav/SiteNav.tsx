@@ -14,32 +14,32 @@ export const items: { label: string; href: string; on: number[]; icon: IconName 
 ];
 
 /**
- * The navigation (decisions.md): a compact paper strip at the left middle of the frame. Plain anchors
- * (works without JS); the room you're in gets the punched washer.
+ * The navigation (decisions.md): five paper tokens threaded on a cord pinned at the left of the frame,
+ * each with its icon cut through. The room you're in wears the accent washer and shows its label on a
+ * slip; the others slip theirs out on hover or focus (the label is always the link's text, so screen
+ * readers get it either way). Plain anchors: it works without JS.
  */
 export function SiteNav() {
   const station = useScene((s) => s.station);
   return (
-    <nav aria-label="Sections" className={`cast ${styles.nav}`}>
-      <div className={`${styles.strip} paper grain`}>
-        <p className={styles.who}>
-          Fatih <span className="text-ink-soft">Zamzami</span>
-        </p>
-        <ol className={styles.list}>
-          {items.map((it) => {
-            const here = it.on.includes(station);
-            return (
-              <li key={it.label}>
-                <a href={it.href} className={styles.link} aria-current={here ? "location" : undefined}>
-                  <span className={styles.punch} aria-hidden />
+    <nav aria-label="Sections" className={styles.nav}>
+      <span className={styles.cord} aria-hidden />
+      <ol className={styles.list}>
+        {items.map((it) => (
+          <li key={it.label}>
+            <a href={it.href} className={styles.link} aria-current={it.on.includes(station) ? "location" : undefined}>
+              <span className={`cast ${styles.token}`}>
+                <span className={`${styles.disc} paper grain`}>
                   <Icon name={it.icon} className={styles.icon} />
-                  {it.label}
-                </a>
-              </li>
-            );
-          })}
-        </ol>
-      </div>
+                </span>
+              </span>
+              <span className={`cast ${styles.slip}`}>
+                <span className={`${styles.label} paper`}>{it.label}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ol>
     </nav>
   );
 }

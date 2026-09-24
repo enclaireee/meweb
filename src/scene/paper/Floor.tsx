@@ -42,10 +42,11 @@ export function Floor() {
   return (
     <group>
       <Rooms />
-      <mesh geometry={floor} material={mat} receiveShadow matrixAutoUpdate={false} />
+      <mesh geometry={floor} material={mat} receiveShadow matrixAutoUpdate={false} userData={{ recede: true }} />
       {/* the sky beyond the window at the end of the route */}
-      <mesh position={[0, 30, box.windowWallZ - 30]} material={mat}>
-        <planeGeometry args={[400, 200]} onUpdate={(g) => paint(g, "sky", 0)} />
+      {/* from the floor up: below it the sky is never seen, and the phone bake slices it without a floor */}
+      <mesh position={[0, 70, box.windowWallZ - 30]} material={mat}>
+        <planeGeometry args={[400, 140]} onUpdate={(g) => paint(g, "sky", 0)} />
       </mesh>
     </group>
   );

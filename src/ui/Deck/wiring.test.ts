@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { band } from "./wiring";
+import { band, doorway } from "./wiring";
 
 describe("the layered dolly", () => {
   it("rests every band at its baked size, fully shown", () => {
@@ -24,5 +24,15 @@ describe("the layered dolly", () => {
   it("swells nearer sheets faster", () => {
     expect(band(0.3, 4).z).toBeGreaterThan(band(0.3, 3).z);
     expect(band(0.3, 3).z).toBeGreaterThan(band(0.3, 1).z);
+  });
+
+  it("finds each room's doorway in its stills: centred on the aisle, around the vanishing point", () => {
+    const d = doorway();
+    const xs = d.map(([u]) => u);
+    const ys = d.map(([, v]) => v);
+    expect((Math.min(...xs) + Math.max(...xs)) / 2).toBeCloseTo(50, 1);
+    // the vanishing point (43%) looks through the doorway, which stands on the floor below it
+    expect(Math.min(...ys)).toBeLessThan(43);
+    expect(Math.max(...ys)).toBeGreaterThan(43);
   });
 });

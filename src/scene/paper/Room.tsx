@@ -6,6 +6,7 @@ import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { box, paper, rooms, shell, type Stock } from "@/design/tokens";
 import { paperMaterial } from "./material";
 import { paint, relightOrder } from "./sheet";
+import { doorOutline } from "./door";
 
 /**
  * The rooms (decisions.md, "not a hollow room"): each station is built as a room, not a tunnel.
@@ -56,18 +57,8 @@ function flat(x0: number, x1: number, z0: number, z1: number, y: number, stock: 
   return finish(g, stock, "xz");
 }
 
-/** the doorway's curve: jambs up to `spring`, then a flattened arch to `top` */
-function doorPoints(half: number, spring: number, top: number, n = 16): Vector2[] {
-  const pts = [new Vector2(-half, 0), new Vector2(-half, spring)];
-  const c = 2 * top - spring; // quadratic control so the apex lands on `top`
-  for (let i = 1; i < n; i++) {
-    const t = i / n;
-    const u = 1 - t;
-    pts.push(new Vector2(u * u * -half + 2 * u * t * 0 + t * t * half, u * u * spring + 2 * u * t * c + t * t * spring));
-  }
-  pts.push(new Vector2(half, spring), new Vector2(half, 0));
-  return pts;
-}
+/** the doorway's curve (door.ts), as three points */
+const doorPoints = (half: number, spring: number, top: number) => doorOutline(half, spring, top).map(([x, y]) => new Vector2(x, y));
 
 function shapeCard(pts: Vector2[], z: number, stock: Stock) {
   const g = new ShapeGeometry(new Shape(pts), 1);
@@ -75,7 +66,12 @@ function shapeCard(pts: Vector2[], z: number, stock: Stock) {
   return finish(g, stock, "xy");
 }
 
-function buildRoom(i: number): BufferGeometry[] {
+/**
+ * A room in two parts: the cards that face the camera (the back wall and its doorway, trims, beams) and
+ * the planes that recede from it (side walls, ceiling, rugs). The phone bake needs them apart: a facing
+ * card scales exactly as the camera walks up to it, a receding plane doesn't (mobile_concept.md §4.2).
+ */
+function buildRoom(i: number): { facing: BufferGeometry[]; receding: BufferGeometry[] } {
   const r = rooms[i]!;
   const Z = -box.length * i;
   const last = i === rooms.length - 1;
@@ -84,6 +80,7 @@ function buildRoom(i: number): BufferGeometry[] {
   const zFront = Z + (i === 0 ? 44 : shell.frontZ);
   const zBack = Z + (last ? -50 : shell.backWallZ);
   const out: BufferGeometry[] = [];
+  const facing: BufferGeometry[] = [];
 
   // side walls: paper, a wainscot below a rail, stripes cut from a lighter sheet, a skirting board
   for (const x of [-W, W]) {
@@ -97,7 +94,7 @@ function buildRoom(i: number): BufferGeometry[] {
 
   // the ceiling, lowered, with two beams
   out.push(flat(-W, W, zFront, zBack, H, r.ceiling, true));
-  for (const bz of [-8, -28]) out.push(front(-W, W, H - 2.4, H, Z + bz, r.trim));
+  for (const bz of [-8, -28]) facing.push(front(-W, W, H - 2.4, H, Z + bz, r.trim));
 
   // a rug on the boards, in the room's colours
   out.push(flat(-11.5, 11.5, Z + 3, Z - 30, 0.04, r.rugBorder));
@@ -109,30 +106,40 @@ function buildRoom(i: number): BufferGeometry[] {
     const zb = Z + shell.backWallZ;
     const door = doorPoints(shell.doorHalf, shell.doorTop - 6, shell.doorTop);
     const wall = [new Vector2(-W, 0), ...door, new Vector2(W, 0), new Vector2(W, H), new Vector2(-W, H)];
-    out.push(shapeCard(wall, zb, r.wall));
+    facing.push(shapeCard(wall, zb, r.wall));
     const d = shell.doorHalf;
-    out.push(front(-W, -d, 0, shell.wainscot, zb + 0.05, r.wainscot));
-    out.push(front(d, W, 0, shell.wainscot, zb + 0.05, r.wainscot));
-    out.push(front(-W, -d - 1.2, shell.wainscot - 0.2, shell.wainscot + 0.7, zb + 0.1, r.trim));
-    out.push(front(d + 1.2, W, shell.wainscot - 0.2, shell.wainscot + 0.7, zb + 0.1, r.trim));
-    for (let x = -W + 3; x < -d - 3; x += 5.5) out.push(front(x, x + 1.4, shell.wainscot + 0.7, H, zb + 0.08, r.stripe));
-    for (let x = d + 3; x < W - 2; x += 5.5) out.push(front(x, x + 1.4, shell.wainscot + 0.7, H, zb + 0.08, r.stripe));
+    facing.push(front(-W, -d, 0, shell.wainscot, zb + 0.05, r.wainscot));
+    facing.push(front(d, W, 0, shell.wainscot, zb + 0.05, r.wainscot));
+    facing.push(front(-W, -d - 1.2, shell.wainscot - 0.2, shell.wainscot + 0.7, zb + 0.1, r.trim));
+    facing.push(front(d + 1.2, W, shell.wainscot - 0.2, shell.wainscot + 0.7, zb + 0.1, r.trim));
+    for (let x = -W + 3; x < -d - 3; x += 5.5) facing.push(front(x, x + 1.4, shell.wainscot + 0.7, H, zb + 0.08, r.stripe));
+    for (let x = d + 3; x < W - 2; x += 5.5) facing.push(front(x, x + 1.4, shell.wainscot + 0.7, H, zb + 0.08, r.stripe));
     // the door frame: a cut strip around the opening
     const outer = doorPoints(d + 1.3, shell.doorTop - 5.6, shell.doorTop + 1.3);
     const inner = doorPoints(d, shell.doorTop - 6, shell.doorTop).reverse();
-    out.push(shapeCard([...outer, ...inner], zb + 0.14, r.trim));
+    facing.push(shapeCard([...outer, ...inner], zb + 0.14, r.trim));
   }
-  return out;
+  return { facing, receding: out };
 }
 
+function merge(parts: BufferGeometry[]) {
+  const merged = mergeGeometries(parts, false);
+  parts.forEach((p) => p.dispose());
+  merged?.computeBoundingSphere();
+  return merged;
+}
+
+/** Every room's shell: two meshes, the facing cards and the receding planes (tagged for the bake). */
 export function Rooms() {
-  const geometry = useMemo(() => {
-    const parts = rooms.flatMap((_, i) => buildRoom(i));
-    const merged = mergeGeometries(parts, false);
-    parts.forEach((p) => p.dispose());
-    merged?.computeBoundingSphere();
-    return merged;
+  const { facing, receding } = useMemo(() => {
+    const built = rooms.map((_, i) => buildRoom(i));
+    return { facing: merge(built.flatMap((b) => b.facing)), receding: merge(built.flatMap((b) => b.receding)) };
   }, []);
-  if (!geometry) return null;
-  return <mesh geometry={geometry} material={paperMaterial()} receiveShadow matrixAutoUpdate={false} />;
+  const mat = paperMaterial();
+  return (
+    <>
+      {facing && <mesh geometry={facing} material={mat} receiveShadow matrixAutoUpdate={false} />}
+      {receding && <mesh geometry={receding} material={mat} receiveShadow matrixAutoUpdate={false} userData={{ recede: true }} />}
+    </>
+  );
 }

@@ -15,8 +15,10 @@ export const baking = () => typeof location !== "undefined" && location.search.i
  * The five depth bands, as local z ranges [near, far] inside a station module (design.md §4.2).
  * B0 is not a slice: it's the whole box without this station's own sheets (the room's walls, floor
  * and ceiling, and everything through the doorway), so wherever the sheets in front part or pass, the
- * room itself is behind them. The rest are slices, each reaching 2 units into the one behind it over
- * floor and walls only. The last room has nothing behind it but sky, so its B1 runs to the end.
+ * room itself is behind them. The rest are slices of the cards that face the camera only: the floor,
+ * the ceiling and the side walls recede, so no single scale fits them (a strip of floor in a slice
+ * drifts off its neighbours mid-walk and opens a gap); they live in B0 alone. The last room has
+ * nothing behind it but sky, so its B1 runs to the end.
  */
 function bands(station: number): [number, number][] {
   const back = station === LAST_STATION ? -Infinity : -47;
@@ -53,9 +55,9 @@ export function BakeHook() {
       if (far !== -Infinity) planes.push(new Plane(new Vector3(0, 0, 1), -(Z + far)));
       const bg = scene.background;
       if (band > 0) scene.background = null;
-      // B0 is the room without its own sheets
+      // B0 is the room without its own sheets; the slices are the facing cards without the receding shell
       const sheets: { visible: boolean }[] = [];
-      if (band === 0) scene.traverse((o) => o.userData.station === station && sheets.push(o));
+      scene.traverse((o) => (band === 0 ? o.userData.station === station : o.userData.recede) && sheets.push(o));
       sheets.forEach((o) => (o.visible = false));
       gl.setClearColor(clear, 0);
       gl.clippingPlanes = planes;

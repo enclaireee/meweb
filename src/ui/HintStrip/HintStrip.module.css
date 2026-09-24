@@ -1,7 +1,8 @@
 .hint {
   position: fixed;
   z-index: 65;
-  left: 49vw;
+  /* bottom-left (design.md §3): the cards gather on the right */
+  left: calc(var(--mat) + 16px);
   bottom: calc(var(--mat) + 16px);
   opacity: 0;
   translate: 0 8px;

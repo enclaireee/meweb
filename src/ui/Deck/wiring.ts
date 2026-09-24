@@ -5,7 +5,8 @@
  * runs per frame unless the page is scrolling or the tilt is settling.
  */
 import type { LightMode } from "@/design/tokens";
-import { box } from "@/design/tokens";
+import { box, camera, shell } from "@/design/tokens";
+import { doorOutline } from "@/scene/paper/door";
 import { stations } from "@/sections/stations";
 import { store } from "@/scene/store";
 import { pick } from "@/scene/worker/speech";
@@ -47,6 +48,36 @@ export function band(d: number, b: number): { z: number; o: number } {
   // (by distance, not size: the back wall has to frame the doorway until you're through it)
   return { z, o: clamp01((left - PASS_BY) / (PASS_FROM - PASS_BY)) };
 }
+
+/**
+ * A room's doorway in its baked stills, in % of the still (x right, y down): the doorway outline
+ * (scene/paper/door.ts, widened to hide under its frame) projected through the bake's camera (35 in
+ * front of the arch, 14 up, pitched 6° down, 74° portrait lens on a 4:5 still, no view offset).
+ */
+export function doorway(): [number, number][] {
+  const pitch = (-camera.pitchDeg * Math.PI) / 180;
+  const t = Math.tan((camera.fovPortrait * Math.PI) / 360);
+  const dz = shell.backWallZ - camera.restDistance;
+  return doorOutline(shell.doorHalf + 0.6, shell.doorTop - 5.8, shell.doorTop + 0.6).map(([x, y]) => {
+    const dy = y - camera.restY;
+    const yc = dy * Math.cos(pitch) - dz * Math.sin(pitch);
+    const zc = dy * Math.sin(pitch) + dz * Math.cos(pitch);
+    return [50 + (50 * x) / (-zc * t * 0.8), 50 - (50 * yc) / (-zc * t)];
+  });
+}
+
+/** the vanishing point every band scales about (StationShell.module.css: transform-origin 50% 43%) */
+const VP = 43;
+
+/**
+ * The room ahead only shows through the doorway of the room you're leaving: its B0 is the whole room,
+ * so unclipped its edges lay across this room's floor and walls mid-walk. The clip is the doorway at
+ * the back wall's scale, written in the ahead still's own (unscaled) space: scaled about the vanishing
+ * point by `--k` = back wall's scale ÷ the still's.
+ */
+const doorClip = `polygon(${doorway()
+  .map(([u, v]) => `calc(50% + ${(u - 50).toFixed(2)}% * var(--k)) calc(${VP}% + ${(v - VP).toFixed(2)}% * var(--k))`)
+  .join(", ")})`;
 
 export type DeckApi = { stop: () => void; tilt: (x: number, y: number) => void; poke: () => void };
 
@@ -121,6 +152,14 @@ export function startDeck(): DeckApi {
         const { z, o } = Math.abs(d) >= 1 ? { z: 1, o: 0 } : reduced.matches ? { z: 1, o: Math.abs(d) < 0.5 ? 1 : 0 } : band(d, b);
         el.style.setProperty("--z", Number.isFinite(z) ? z.toFixed(4) : "1");
         el.style.opacity = o.toFixed(3);
+        // the room ahead's B0, seen through the doorway of the room being left (until you're through)
+        if (b === 0) {
+          const through = d < 0 && d > -1 && !reduced.matches ? band(d + 1, 1) : null;
+          if (through && through.o > 0 && Number.isFinite(through.z)) {
+            el.style.setProperty("--k", (through.z / z).toFixed(4));
+            if (el.style.getPropertyValue("--door") !== doorClip) el.style.setProperty("--door", doorClip);
+          } else if (el.style.getPropertyValue("--door")) el.style.removeProperty("--door");
+        }
       });
     });
   };
