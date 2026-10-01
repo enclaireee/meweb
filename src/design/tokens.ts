@@ -139,6 +139,7 @@ export function stockColor(stock: Stock, mode: LightMode): string {
 export type Room = { wall: Paper; stripe: Paper; wainscot: Paper; trim: Paper; ceiling: Paper; rug: Paper; rugBorder: Paper };
 export const rooms: Room[] = [
   { wall: "kraft", stripe: "cream", wainscot: "woodDeep", trim: "woodDeep", ceiling: "woodDeep", rug: "tomato", rugBorder: "mustard" },
+  { wall: "sage", stripe: "cream", wainscot: "woodDeep", trim: "brass", ceiling: "woodDeep", rug: "ochreDeep", rugBorder: "mustard" },
   { wall: "mustard", stripe: "sunflower", wainscot: "ochreDeep", trim: "ochreDeep", ceiling: "ochreDeep", rug: "blueprint", rugBorder: "sky" },
   { wall: "teal", stripe: "mint", wainscot: "tealDeep", trim: "copper", ceiling: "tealDeep", rug: "mustard", rugBorder: "copper" },
   { wall: "plum", stripe: "violet", wainscot: "plumDeep", trim: "pink", ceiling: "plumDeep", rug: "cyan", rugBorder: "pink" },
@@ -168,7 +169,7 @@ export const camera = {
   driftPeriod: 16,
   portraitLookUp: 4,
   near: 0.5,
-  far: 600,
+  far: 900,
 } as const;
 
 /** design.md §4.2: station module (local z, negative = deeper). */
@@ -186,8 +187,8 @@ export const box = {
   farZ: -42,
   hungTopY: 36,
   aisleHalf: 8,
-  /** station 07's arch at −560, the window wall 50 behind it */
-  windowWallZ: -610,
+  /** station 08's arch at −640, the window wall 50 behind it */
+  windowWallZ: -690,
 } as const;
 
 /** design.md §4.3: sheet geometry. */

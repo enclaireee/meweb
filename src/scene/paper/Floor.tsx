@@ -17,8 +17,8 @@ function grainUV(g: BufferGeometry, w: number, h: number) {
 /** The floor of the whole route: warm wood boards. Room.tsx builds the rest. */
 export function Floor() {
   const floor = useMemo(() => {
-    const len = 700;
-    const g = new PlaneGeometry(120, len, 1, 70);
+    const len = 780;
+    const g = new PlaneGeometry(120, len, 1, 78);
     g.rotateX(-Math.PI / 2);
     g.translate(0, 0, 40 - len / 2);
     grainUV(g, 120, len);
@@ -26,7 +26,7 @@ export function Floor() {
     // floorboards: seams cut from a darker sheet, running the length of the route
     const seams: BufferGeometry[] = [g.toNonIndexed()];
     for (let x = -32; x <= 32; x += 3.2) {
-      const s = new PlaneGeometry(0.14, len, 1, 70);
+      const s = new PlaneGeometry(0.14, len, 1, 78);
       s.rotateX(-Math.PI / 2);
       s.translate(x, 0.02, 40 - len / 2);
       grainUV(s, 0.14, len);

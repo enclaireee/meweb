@@ -7,7 +7,7 @@ export const profile = {
   kicker: "Electrical Engineering · Universitas Indonesia",
   role: "Electrical Engineering undergraduate",
   summary:
-    "Control systems, full-stack software and industrial monitoring, cut and pinned into eight stations.",
+    "Control systems, full-stack software and industrial monitoring, cut and pinned into nine stations.",
   /** CV summary, used for meta descriptions and the desk plate. */
   about:
     "Electrical Engineering undergraduate at Universitas Indonesia working across control systems, full-stack development, and industrial OT/SCADA monitoring, with experience leading technical and organisational teams.",

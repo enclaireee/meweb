@@ -6,8 +6,8 @@ const project = projects["refocus"];
 
 export default function Section() {
   return (
-    <StationShell index={3} labelledBy={`${project.slug}-title`}>
-      <ProjectCards index={3} project={project} />
+    <StationShell index={4} labelledBy={`${project.slug}-title`}>
+      <ProjectCards index={4} project={project} />
     </StationShell>
   );
 }

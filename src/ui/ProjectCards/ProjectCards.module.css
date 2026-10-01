@@ -2,186 +2,345 @@
   display: contents;
 }
 
-/* the room's paper, as a tab across the top of the title tag */
+/* Without JS: real, readable HTML in the page flow */
+.dossierHang {
+  position: relative;
+  margin: 16px auto;
+  width: min(520px, 100%);
+}
+
+.plate {
+  position: relative;
+  display: block;
+  padding: 28px 24px 22px;
+  clip-path: var(--clip-plate, none);
+  box-shadow: inset calc(var(--light-x) * -2px) calc(var(--light-y) * 2px) 0 rgb(255 255 255 / 0.35);
+}
+
 .tab {
   display: block;
-  height: 10px;
-  margin: -26px -20px 16px;
+  height: 8px;
+  margin: -28px -24px 16px;
   background: var(--tone);
   clip-path: var(--clip-strip, none);
 }
-.title {
-  padding-top: 26px;
+
+.pin {
+  position: absolute;
+  top: 14px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--stage);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ink) 14%, var(--paper));
 }
-.meta {
+
+.pinL {
+  left: 20%;
+}
+.pinR {
+  right: 20%;
+}
+
+.string {
+  display: none;
+}
+
+.header {
+  position: relative;
+  margin-bottom: 14px;
+}
+
+.metaRow {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: baseline;
-  gap: 2px 10px;
-  padding-right: 26px;
+  gap: 4px 10px;
+  padding-right: 24px;
 }
-.meta time {
-  white-space: nowrap;
+
+.ribbon {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
+
 .name {
-  margin-top: 8px;
-  font-size: clamp(1.7rem, 1.2rem + 1.5vw, 2.4rem);
-  line-height: 1.02;
-  font-weight: 480;
+  margin-top: 6px;
+  font-size: clamp(1.7rem, 1.35rem + 1.1vw, 2.3rem);
+  line-height: 1.05;
+  font-weight: 500;
   letter-spacing: -0.01em;
   font-variation-settings: "opsz" 72;
 }
+
 .hook {
-  margin-top: 8px;
-  font-size: clamp(0.98rem, 0.94rem + 0.2vw, 1.08rem);
+  margin-top: 6px;
+  font-size: clamp(0.92rem, 0.88rem + 0.15vw, 1.02rem);
   line-height: 1.4;
   font-style: italic;
   color: var(--ink-soft);
 }
-.ribbon {
-  position: absolute;
-  top: 18px;
-  right: 14px;
+
+/* --------------------------------------------------------------------------
+ * Key metrics strip: compact, lining-nums, unified
+ * ------------------------------------------------------------------------ */
+.factsBar {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  margin: 12px 0 14px;
+  padding: 8px 12px;
+  background: color-mix(in srgb, var(--tone) 14%, var(--paper));
+  border-left: 2.5px solid var(--accent);
+  clip-path: var(--clip-strip, none);
 }
 
-/* a number on a tag */
-.stat {
-  text-align: center;
-  padding: 24px 12px 12px;
+.factItem {
+  flex: 1;
+  min-width: 0;
 }
-.value {
+
+.factValue {
   display: block;
-  font-size: clamp(1.5rem, 1.15rem + 1vw, 2.1rem);
-  line-height: 1;
+  font-size: clamp(1.15rem, 1rem + 0.5vw, 1.45rem);
+  line-height: 1.1;
   font-weight: 600;
-  color: var(--ink-tone);
+  color: var(--ink);
   font-variant-numeric: lining-nums tabular-nums;
   white-space: nowrap;
 }
-.label {
+
+.factLabel {
   display: block;
-  margin-top: 4px;
-  font-size: 0.8rem;
+  margin-top: 2px;
+  font-size: 0.72rem;
   line-height: 1.25;
   color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
-/* one beat of the story */
+/* --------------------------------------------------------------------------
+ * Story narrative: three clean beats on a dashed thread
+ * ------------------------------------------------------------------------ */
+.storySection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 12px 0;
+  padding: 10px 0;
+  border-top: 1px dashed color-mix(in srgb, var(--ink) 20%, transparent);
+  border-bottom: 1px dashed color-mix(in srgb, var(--ink) 20%, transparent);
+}
+
+.beatItem {
+  position: relative;
+}
+
 .beatHead {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  font-weight: 600;
   color: var(--ink);
 }
+
 .beatText {
-  margin-top: 6px;
-  font-size: 0.9rem;
+  margin: 3px 0 0 10px;
+  padding: 2px 0 2px 14px;
+  border-left: 1.5px dashed color-mix(in srgb, var(--ink-tone, var(--ink)) 35%, transparent);
+  font-size: 0.88rem;
   line-height: 1.45;
+  color: color-mix(in srgb, var(--ink) 92%, transparent);
+}
+
+/* --------------------------------------------------------------------------
+ * Footer: Tech stack & links
+ * ------------------------------------------------------------------------ */
+.footerSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.stackRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
 }
 
 .stack {
-  display: flex;
+  display: inline-flex;
   flex-wrap: wrap;
   gap: 5px;
-  margin-top: 8px;
 }
+
 .chip {
-  padding: 4px 8px 3px;
-  font-size: 0.64rem;
-  letter-spacing: 0.13em;
+  padding: 3px 8px 2px;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
   background: color-mix(in srgb, var(--tone) 24%, var(--paper));
   clip-path: var(--clip-strip, none);
 }
+
 .links {
   display: flex;
-  gap: 14px;
-  margin-top: 10px;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
 }
 
-/*
- * Phones (the card panel, ui/StationShell): the title, then what it was built with, then the story.
- * With JS it's one sheet: a mark of the room's colour, the plate and the dates, the name, the hook;
- * the stack as chips and the links as buttons; the story as three beats on one stitched thread.
- */
+.linkButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px 4px;
+  font-size: 0.78rem;
+  font-weight: 560;
+  text-decoration: none;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--tone) 16%, var(--paper));
+  border: 1px solid color-mix(in srgb, var(--ink) 25%, transparent);
+  clip-path: var(--clip-strip, none);
+  transition: transform 0.18s ease, background 0.18s ease;
+}
+
+.linkButton:hover {
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--tone) 32%, var(--paper));
+}
+
+.linkArrow {
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  transition: transform 0.18s ease;
+}
+
+.linkButton:hover .linkArrow {
+  transform: translate(2px, -2px);
+}
+
+/* --------------------------------------------------------------------------
+ * Desktop & Tablet (≥ 640px)
+ * Pinned in the right column, never overlaps, handles zoom perfectly
+ * ------------------------------------------------------------------------ */
+@media (min-width: 640px) {
+  :global(html[data-js]) .dossierHang {
+    position: absolute;
+    right: calc(var(--mat) + 2.5vw);
+    top: calc(var(--mat) + 5vh);
+    margin: 0;
+    width: min(420px, 32vw);
+    pointer-events: auto;
+    translate: 0 -125vh;
+    transition: translate 0.55s cubic-bezier(0.55, 0, 0.85, 0.35);
+  }
+
+  :global(html[data-js]) [data-active] .dossierHang {
+    translate: 0 0;
+    transition: translate 0.95s cubic-bezier(0.2, 1.25, 0.4, 1) 180ms;
+    animation: plateSettle 2.4s ease-out 500ms backwards;
+  }
+
+  :global(html[data-js]) .dossierHang:not(:where([data-active] *)) {
+    pointer-events: none;
+  }
+
+  /* Two hanging strings from above the frame */
+  :global(html[data-js]) .string {
+    display: block;
+    position: absolute;
+    bottom: calc(100% - 18px);
+    width: 1px;
+    height: 130vh;
+    background: color-mix(in srgb, var(--ink) 75%, transparent);
+    z-index: 1;
+  }
+
+  :global(html[data-js]) .stringLeft {
+    left: calc(20% + 4px);
+  }
+
+  :global(html[data-js]) .stringRight {
+    right: calc(20% + 4px);
+  }
+
+  :global(html[data-js]) .parallax {
+    transform: translate(calc(var(--light-x) * -9px), calc((var(--light-y) + 0.4) * 6px));
+    transition: transform 0.25s linear;
+  }
+
+  :global(html[data-js]) .plate {
+    max-height: calc(100svh - 2 * var(--mat) - 10vh);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--ink) 25%, transparent) transparent;
+  }
+
+  @keyframes plateSettle {
+    0% {
+      rotate: 0.8deg;
+    }
+    30% {
+      rotate: -0.5deg;
+    }
+    60% {
+      rotate: 0.2deg;
+    }
+    100% {
+      rotate: 0deg;
+    }
+  }
+}
+
+/* Tablet adjustments (640px – 1023.98px) */
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  :global(html[data-js]) .dossierHang {
+    width: min(390px, 44vw);
+    right: calc(var(--mat) + 2vw);
+    top: calc(var(--mat) + 4vh);
+  }
+}
+
+/* --------------------------------------------------------------------------
+ * Phone adaptations (< 640px)
+ * ------------------------------------------------------------------------ */
 @media (max-width: 639.98px) {
-  .set > :has(.stackCard) {
-    order: 1;
-  }
-  .set > :has(.beat) {
-    order: 2;
-  }
-
-  :global(html[data-js]) .tab {
-    width: 36px;
-    height: 5px;
-    margin: 0 0 14px;
-    border-radius: 3px;
-    clip-path: none;
-  }
-  :global(html[data-js]) .title {
-    padding-top: 0;
-  }
-  :global(html[data-js]) .meta {
-    padding-right: 40px;
-    font-size: 0.7rem;
-  }
-  :global(html[data-js]) .ribbon {
-    top: -6px;
-    right: 0;
-  }
-  :global(html[data-js]) .name {
-    margin-top: 10px;
-    font-size: 2.1rem;
-    line-height: 1.02;
-  }
-  :global(html[data-js]) .hook {
-    margin-top: 8px;
-    font-size: 1rem;
-    line-height: 1.45;
+  .dossierHang {
+    grid-column: 1 / -1;
+    width: 100%;
+    margin: 0;
   }
 
-  /* built with: tidy chips, links as buttons */
-  :global(html[data-js]) .stack {
-    gap: 6px;
-    margin-top: 10px;
+  .plate {
+    padding: 20px 16px 18px;
   }
-  :global(html[data-js]) .chip {
-    padding: 6px 10px 5px;
-    font-size: 0.66rem;
-    background: color-mix(in srgb, var(--tone) 20%, var(--paper));
+
+  .tab {
+    margin: -20px -16px 14px;
   }
-  :global(html[data-js]) .links {
+
+  .pin,
+  .string {
+    display: none;
+  }
+
+  .name {
+    font-size: 2rem;
+  }
+
+  .hook {
+    font-size: 0.98rem;
+  }
+
+  .factsBar {
     flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 14px;
-  }
-  :global(html[data-js]) .links a {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    min-height: 40px;
-    padding: 0 16px;
-    border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
-    border-radius: 999px;
-    text-decoration: none;
-    font-style: normal;
-  }
-
-  /* the story: one thread, stitched from each beat's badge down past its sentence */
-  :global(html[data-js]) .set > :has(.beat) + :has(.beat) {
-    padding-top: 2px;
-    border-top: 0;
-  }
-  :global(html[data-js]) .beatHead {
-    gap: 10px;
-    font-size: 0.7rem;
-  }
-  :global(html[data-js]) .beatText {
-    margin: 4px 0 0 14px;
-    padding: 2px 0 4px 24px;
-    border-left: 1.5px dashed color-mix(in srgb, var(--ink-tone, var(--ink)) 45%, transparent);
-    font-size: 0.97rem;
-    line-height: 1.5;
+    gap: 8px 16px;
   }
 }

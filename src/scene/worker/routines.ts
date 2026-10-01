@@ -15,7 +15,13 @@ export const routines: Job[][] = [
     [{ go: [5.6, -11.2] }, { face: 1 }, { act: "point" }, { act: "lookUp" }],
     [{ go: [-2, -9.5] }, { face: -1 }, { act: "stretch" }],
   ],
-  // 01 Storeroom: heave a crate onto the pallet; count the racks
+  // 01 Study: pull a book from the bookcase; write notes at the desk; admire the schematics
+  [
+    [{ go: [-5.8, -11] }, { face: -1 }, { act: "reach" }, { act: "inspect" }],
+    [{ go: [5.4, -11] }, { face: 1 }, { act: "write" }, { act: "lookUp" }],
+    [{ go: [-1.5, -9.5] }, { face: -1 }, { act: "scratch" }, { act: "stretch" }],
+  ],
+  // 02 Storeroom: heave a crate onto the pallet; count the racks
   [
     [{ go: [6.2, -11] }, { face: 1 }, { act: "lift" }, { act: "write" }],
     [{ go: [-6, -11.6] }, { face: -1 }, { act: "point" }, { act: "scratch" }],

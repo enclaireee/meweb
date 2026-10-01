@@ -3,7 +3,8 @@
  * `slug` is the anchor (#slug), `label` goes on the depth tag.
  */
 export const stations = [
-  { id: "desk", slug: "about", label: "Desk" },
+  { id: "desk", slug: "intro", label: "Desk" },
+  { id: "study", slug: "about", label: "Study" },
   { id: "storeroom", slug: "demandx", label: "Storeroom", project: "demandx" },
   { id: "control-room", slug: "ot-observability-lab", label: "Control Room", project: "ot-lab" },
   { id: "arcade", slug: "refocus", label: "Arcade Corner", project: "refocus" },

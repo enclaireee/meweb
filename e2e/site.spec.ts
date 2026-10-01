@@ -9,7 +9,7 @@ test.describe("readable first (no JavaScript)", () => {
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Muhammad Fatih Zamzami");
     for (const t of titles) await expect(page.getByRole("heading", { level: 2, name: t })).toBeVisible();
-    await expect(page.locator("section[data-station]")).toHaveCount(8);
+    await expect(page.locator("section[data-station]")).toHaveCount(9);
     // the back of every plate is readable without JS (both faces stack)
     await expect(page.getByText("schema-agnostic ingestion pipeline", { exact: false })).toBeVisible();
     await expect(page.getByRole("link", { name: /muhfatihzamzami@gmail\.com/ })).toBeVisible();
@@ -67,7 +67,7 @@ test.describe("interaction", () => {
     await page.keyboard.press("Tab");
     await expect(page.getByRole("link", { name: "Skip to the plates" })).toBeFocused();
     await expect(page.locator("h1")).toHaveCount(1);
-    await expect(page.locator("section[data-station] h2")).toHaveCount(7);
+    await expect(page.locator("section[data-station] h2")).toHaveCount(8);
   });
 });
 
@@ -113,7 +113,7 @@ test.describe("edge cases", () => {
       page.on("request", (r) => /three|fiber/i.test(r.url()) && scene.push(r.url()));
       await page.goto("/");
       await expect(page.locator("html")).toHaveAttribute("data-deck", "");
-      await expect(page.locator("#about")).toHaveAttribute("data-active", "");
+      await expect(page.locator("#intro")).toHaveAttribute("data-active", "");
       await expect(page.getByRole("heading", { level: 1 })).toBeInViewport();
       await expect(page.locator("canvas")).toHaveCount(0);
       expect(scene).toEqual([]);

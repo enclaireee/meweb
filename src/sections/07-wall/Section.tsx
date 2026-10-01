@@ -17,15 +17,15 @@ const skillIcons: IconName[] = ["code", "layers", "chart"];
  * Experience on the left, one line a role (tap for the story); skills and ribbons on the right.
  */
 export default function Section() {
-  const tone = { "--tone": papers[rooms[6]!.wall], "--ink-tone": papers[rooms[6]!.ceiling] } as CSSProperties;
+  const tone = { "--tone": papers[rooms[7]!.wall], "--ink-tone": papers[rooms[7]!.ceiling] } as CSSProperties;
 
   return (
-    <StationShell index={6} labelledBy="wall-title">
+    <StationShell index={7} labelledBy="wall-title">
       <div style={tone} className={styles.set}>
         <BoardRow>
           <Board i={0}>
             <header className={styles.head}>
-              <p className="text-kicker uppercase text-ink-soft">Plate 06 · The Wall</p>
+              <p className="text-kicker uppercase text-ink-soft">Plate 07 · The Wall</p>
               <h2 id="wall-title" className={styles.title}>
                 Experience and skills
               </h2>

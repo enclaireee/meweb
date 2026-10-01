@@ -5,53 +5,53 @@
 .nameTag {
   container-type: inline-size;
 }
+
 .name {
   margin-top: 8px;
-  /* design.md's clamp is the ceiling; the tag's width caps it so the name never overflows */
-  font-size: min(clamp(2.5rem, 1.6rem + 4vw, 4.75rem), 17cqi);
+  /* Newsreader variable opsz 72; scaled to fit without overflowing on zoom */
+  font-size: min(clamp(2.4rem, 1.6rem + 3.2vw, 4.2rem), 18cqi);
   line-height: 1;
   font-weight: 450;
   font-variation-settings: "opsz" 72;
 }
 
 .focus {
-  padding: 24px 12px 12px;
+  padding: 22px 10px 10px;
   text-align: center;
   font-style: italic;
-  font-size: 0.98rem;
+  font-size: 0.94rem;
   line-height: 1.25;
 }
 
-.text {
-  margin-top: 6px;
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-
-.chips {
+.scrollCue {
   display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-top: 8px;
-}
-.chip {
-  padding: 4px 8px 3px;
-  font-size: 0.62rem;
-  letter-spacing: 0.12em;
-  background: color-mix(in srgb, var(--tone) 30%, var(--paper));
-  clip-path: var(--clip-strip, none);
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px dashed color-mix(in srgb, var(--ink) 18%, transparent);
 }
 
-/* phones, one sheet (ui/StationShell): the name big, the three threads as chips right under it, then
-   the schooling */
+.scrollLine {
+  display: inline-block;
+  width: 14px;
+  height: 1px;
+  background: var(--ink-soft);
+}
+
+/* --------------------------------------------------------------------------
+ * Phone Adaptation (< 640px)
+ * ------------------------------------------------------------------------ */
 @media (max-width: 639.98px) {
   :global(html[data-js]) .name {
     font-size: 2.6rem;
   }
+
   :global(html[data-js]) .set > :has(.focus) {
     padding: 0 0 18px;
     border-top: 0;
   }
+
   :global(html[data-js]) .set .focus.focus {
     display: grid;
     place-items: center;
@@ -60,8 +60,5 @@
     font-size: 0.82rem;
     background: color-mix(in srgb, var(--tone) 22%, var(--paper));
     clip-path: var(--clip-strip, none);
-  }
-  :global(html[data-js]) .text {
-    font-size: 1rem;
   }
 }

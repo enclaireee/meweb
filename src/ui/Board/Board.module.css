@@ -77,13 +77,13 @@
   /* even boards, tops level, pushed to the sides: the middle of the room stays open */
   :global(html[data-js]) .row {
     position: absolute;
-    left: calc(var(--mat) + 196px);
+    left: calc(var(--mat) + 160px);
     right: calc(var(--mat) + 2.5vw);
-    top: calc(var(--mat) + 9vh);
+    top: calc(var(--mat) + 7vh);
     display: flex;
     align-items: flex-start;
-    justify-content: space-between;
-    gap: 2.6vw;
+    justify-content: flex-end;
+    gap: 2vw;
     pointer-events: none;
   }
   :global(html[data-js]) .col {
@@ -91,7 +91,8 @@
     flex: 0 1 min(300px, 22vw);
     min-width: 0;
   }
-  :global(html[data-js]) .col .sheet {
+  :global(html[data-js]) .col .sheet,
+  :global(html[data-js]) .narrow .sheet {
     max-height: calc(100svh - 2 * var(--mat) - 12vh);
     overflow-y: auto;
     scrollbar-width: thin;
@@ -99,15 +100,21 @@
   :global(html[data-js]) .narrow {
     position: absolute;
     right: calc(var(--mat) + 4vw);
-    top: 50%;
-    width: min(460px, 38vw);
-    margin-top: -190px;
+    top: max(calc(var(--mat) + 6vh), calc(50% - 190px));
+    width: min(440px, 36vw);
   }
 }
 /* tablets: a little wider, still one down each side */
 @media (min-width: 640px) and (max-width: 1023.98px) {
+  :global(html[data-js]) .row {
+    left: calc(var(--mat) + 20px);
+    gap: 1.5vw;
+  }
   :global(html[data-js]) .col {
-    flex-basis: 34vw;
+    flex-basis: 38vw;
+  }
+  :global(html[data-js]) .narrow {
+    width: min(420px, 48vw);
   }
 }
 

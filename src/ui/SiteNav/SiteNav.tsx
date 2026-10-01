@@ -6,11 +6,11 @@ import styles from "./SiteNav.module.css";
 
 /** The five things you might come for, each pointing at its room. `on` = the stations it covers. */
 export const items: { label: string; href: string; on: number[]; icon: IconName }[] = [
-  { label: "Who I am", href: "#about", on: [0], icon: "person" },
-  { label: "Projects", href: "#demandx", on: [1, 2, 3, 4, 5], icon: "folder" },
-  { label: "Experience", href: "#experience", on: [6], icon: "briefcase" },
+  { label: "Who I am", href: "#about", on: [0, 1], icon: "person" },
+  { label: "Projects", href: "#demandx", on: [2, 3, 4, 5, 6], icon: "folder" },
+  { label: "Experience", href: "#experience", on: [7], icon: "briefcase" },
   { label: "Skills", href: "#experience", on: [], icon: "wrench" },
-  { label: "Contact", href: "#contact", on: [7], icon: "mail" },
+  { label: "Contact", href: "#contact", on: [8], icon: "mail" },
 ];
 
 /**

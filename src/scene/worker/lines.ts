@@ -27,7 +27,16 @@ export const rooms: string[][] = [
     "Tidy desk, tidy mind. This is a messy desk.",
     "Scroll down. There's a lot more workshop back there.",
   ],
-  // 01 Storeroom (DemandX)
+  // 01 Study (About Me)
+  [
+    "A quiet corner for reading and scheming.",
+    "Systems, circuits, and interfaces. The whole stack.",
+    "Coursework on the wall, experiments on the desk.",
+    "Undergrad at UI. Solving the hard equations.",
+    "He likes software that actually touches physical things.",
+    "Lots of late-night reading in this room.",
+  ],
+  // 02 Storeroom (DemandX)
   [
     "Crates, crates, crates. Each one has a forecast.",
     "Croston for the lumpy ones. Don't ask me why.",

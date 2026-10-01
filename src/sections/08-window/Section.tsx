@@ -12,12 +12,12 @@ const breakable = (text: string) => text.split(/(?=@)|(?<=\/)/).flatMap((part, i
 
 /** The last room: say hello, on one clear card. */
 export default function Section() {
-  const tone = { "--tone": papers[rooms[7]!.wall], "--ink-tone": papers[rooms[7]!.ceiling] } as React.CSSProperties;
+  const tone = { "--tone": papers[rooms[8]!.wall], "--ink-tone": papers[rooms[8]!.ceiling] } as React.CSSProperties;
   return (
-    <StationShell index={7} labelledBy="contact-title">
+    <StationShell index={8} labelledBy="contact-title">
       <div style={tone} className={styles.set}>
         <Board size="narrow">
-          <p className="text-kicker uppercase text-ink-soft">Plate 07 · The Window</p>
+          <p className="text-kicker uppercase text-ink-soft">Plate 08 · The Window</p>
           <h2 id="contact-title" className={styles.title}>
             Say hello
           </h2>

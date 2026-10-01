@@ -1,0 +1,245 @@
+.set {
+  display: contents;
+}
+
+.tagline {
+  padding: 22px 10px 10px;
+  text-align: center;
+  font-style: italic;
+  font-size: 0.94rem;
+  line-height: 1.25;
+}
+
+/* Without JS: real, readable HTML in the page flow */
+.dossierHang {
+  position: relative;
+  margin: 16px auto;
+  width: min(520px, 100%);
+}
+
+.plate {
+  position: relative;
+  display: block;
+  padding: 28px 24px 22px;
+  clip-path: var(--clip-plate, none);
+  box-shadow: inset calc(var(--light-x) * -2px) calc(var(--light-y) * 2px) 0 rgb(255 255 255 / 0.35);
+}
+
+.tab {
+  display: block;
+  height: 8px;
+  margin: -28px -24px 16px;
+  background: var(--tone);
+  clip-path: var(--clip-strip, none);
+}
+
+.pin {
+  position: absolute;
+  top: 14px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--stage);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ink) 14%, var(--paper));
+}
+
+.pinL {
+  left: 20%;
+}
+.pinR {
+  right: 20%;
+}
+
+.string {
+  display: none;
+}
+
+.header {
+  position: relative;
+  margin-bottom: 14px;
+}
+
+.metaRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.title {
+  margin-top: 6px;
+  font-size: clamp(1.8rem, 1.4rem + 1.2vw, 2.4rem);
+  line-height: 1.05;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  font-variation-settings: "opsz" 72;
+}
+
+.subtitle {
+  margin-top: 6px;
+  font-size: clamp(0.92rem, 0.88rem + 0.15vw, 1.02rem);
+  line-height: 1.45;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+.noteSection,
+.studySection,
+.syllabusSection {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed color-mix(in srgb, var(--ink) 20%, transparent);
+}
+
+.sectionHead {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.bodyText {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--ink) 92%, transparent);
+}
+
+.degreeText {
+  font-size: 0.92rem;
+  font-weight: 560;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 6px;
+}
+
+.chip {
+  padding: 3px 8px 2px;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  background: color-mix(in srgb, var(--tone) 24%, var(--paper));
+  clip-path: var(--clip-strip, none);
+}
+
+/* --------------------------------------------------------------------------
+ * Desktop & Tablet (≥ 640px)
+ * Single master plate in right column with smooth scroll and zero collisions
+ * ------------------------------------------------------------------------ */
+@media (min-width: 640px) {
+  :global(html[data-js]) .dossierHang {
+    position: absolute;
+    right: calc(var(--mat) + 2.5vw);
+    top: calc(var(--mat) + 5vh);
+    margin: 0;
+    width: min(420px, 32vw);
+    pointer-events: auto;
+    translate: 0 -125vh;
+    transition: translate 0.55s cubic-bezier(0.55, 0, 0.85, 0.35);
+  }
+
+  :global(html[data-js]) [data-active] .dossierHang {
+    translate: 0 0;
+    transition: translate 0.95s cubic-bezier(0.2, 1.25, 0.4, 1) 180ms;
+    animation: plateSettle 2.4s ease-out 500ms backwards;
+  }
+
+  :global(html[data-js]) .dossierHang:not(:where([data-active] *)) {
+    pointer-events: none;
+  }
+
+  /* Two hanging strings */
+  :global(html[data-js]) .string {
+    display: block;
+    position: absolute;
+    bottom: calc(100% - 18px);
+    width: 1px;
+    height: 130vh;
+    background: color-mix(in srgb, var(--ink) 75%, transparent);
+    z-index: 1;
+  }
+
+  :global(html[data-js]) .stringLeft {
+    left: calc(20% + 4px);
+  }
+
+  :global(html[data-js]) .stringRight {
+    right: calc(20% + 4px);
+  }
+
+  :global(html[data-js]) .parallax {
+    transform: translate(calc(var(--light-x) * -9px), calc((var(--light-y) + 0.4) * 6px));
+    transition: transform 0.25s linear;
+  }
+
+  :global(html[data-js]) .plate {
+    max-height: calc(100svh - 2 * var(--mat) - 10vh);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--ink) 25%, transparent) transparent;
+  }
+
+  @keyframes plateSettle {
+    0% {
+      rotate: 0.8deg;
+    }
+    30% {
+      rotate: -0.5deg;
+    }
+    60% {
+      rotate: 0.2deg;
+    }
+    100% {
+      rotate: 0deg;
+    }
+  }
+}
+
+/* Tablet adjustments (640px – 1023.98px) */
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  :global(html[data-js]) .dossierHang {
+    width: min(390px, 44vw);
+    right: calc(var(--mat) + 2vw);
+    top: calc(var(--mat) + 4vh);
+  }
+}
+
+/* --------------------------------------------------------------------------
+ * Phone adaptations (< 640px)
+ * ------------------------------------------------------------------------ */
+@media (max-width: 639.98px) {
+  .dossierHang {
+    grid-column: 1 / -1;
+    width: 100%;
+    margin: 0;
+  }
+
+  .plate {
+    padding: 20px 16px 18px;
+  }
+
+  .tab {
+    margin: -20px -16px 14px;
+  }
+
+  .pin,
+  .string {
+    display: none;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 0.98rem;
+  }
+}

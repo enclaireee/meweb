@@ -11,16 +11,17 @@ import { advanceLoading, store } from "./store";
 import { reachFor } from "./quality/tier";
 import { wake } from "./loop";
 import Desk from "@/sections/00-desk/Station";
-import Storeroom from "@/sections/01-storeroom/Station";
-import ControlRoom from "@/sections/02-control-room/Station";
-import Arcade from "@/sections/03-arcade/Station";
-import Drafting from "@/sections/04-drafting/Station";
-import Sill from "@/sections/05-sill/Station";
-import Wall from "@/sections/06-wall/Station";
-import Window from "@/sections/07-window/Station";
+import Study from "@/sections/01-study/Station";
+import Storeroom from "@/sections/02-storeroom/Station";
+import ControlRoom from "@/sections/03-control-room/Station";
+import Arcade from "@/sections/04-arcade/Station";
+import Drafting from "@/sections/05-drafting/Station";
+import Sill from "@/sections/06-sill/Station";
+import Wall from "@/sections/07-wall/Station";
+import Window from "@/sections/08-window/Station";
 
 /** Station components in route order. Their art is fetched lazily; the components themselves are tiny. */
-export const stationComponents: ComponentType<StationProps>[] = [Desk, Storeroom, ControlRoom, Arcade, Drafting, Sill, Wall, Window];
+export const stationComponents: ComponentType<StationProps>[] = [Desk, Study, Storeroom, ControlRoom, Arcade, Drafting, Sill, Wall, Window];
 
 /**
  * Load a station's art when the camera is within 2 stations; keep it mounted after that, and only
