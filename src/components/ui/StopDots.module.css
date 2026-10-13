@@ -1,0 +1,143 @@
+.nav {
+  position: fixed;
+  left: 50%;
+  translate: -50% 0;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  z-index: var(--z-chrome);
+  max-width: calc(100% - 2 * 12px - 2 * 48px - 8px);
+}
+@media (min-width: 960px) {
+  .nav {
+    left: 100px;
+    translate: none;
+  }
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  position: relative;
+}
+
+/* thin paper ribbon */
+.list::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 50%;
+  height: 2px;
+  margin-top: -1px;
+  background: var(--c-paper-dim);
+  opacity: 0.5;
+}
+
+.hit {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 48px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--c-paper);
+  background-image: var(--paper-tex);
+  background-size: var(--paper-tex-size);
+  background-blend-mode: multiply;
+  box-shadow: inset 0 1px 1px rgb(3 6 12 / 0.45);
+  opacity: 0.4;
+  transition: transform var(--dur-hover) var(--ease-paper), opacity var(--dur-hover) linear;
+}
+
+.hit[data-visited] .dot {
+  opacity: 1;
+}
+
+.hit[aria-current="step"] .dot {
+  opacity: 1;
+  background-color: var(--c-lantern);
+  transform: scale(1.6);
+  /* raised disc: light top-left bevel, dark bottom-right, soft lantern glow */
+  box-shadow: inset 1px 1px 0 rgb(255 255 255 / 0.55), inset -1px -1px 0 rgb(0 0 0 / 0.25), 0 1px 2px rgb(3 6 12 / 0.6), 0 0 8px 2px rgb(255 180 84 / 0.5);
+}
+
+@media (hover: hover) {
+  .hit:hover .dot {
+    transform: scale(1.4);
+    opacity: 1;
+  }
+
+  .hit[aria-current="step"]:hover .dot {
+    transform: scale(1.7);
+  }
+}
+
+.hit:active .dot {
+  transform: scale(0.85);
+}
+
+.hit:focus-visible {
+  outline-offset: -2px;
+}
+
+.tip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  translate: -50% 0;
+  padding: 2px var(--sp-2);
+  background-color: var(--c-paper);
+  background-image: var(--paper-tex);
+  background-size: var(--paper-tex-size);
+  background-blend-mode: multiply;
+  color: var(--c-ink);
+  font-size: var(--fs-small);
+  line-height: 1.4;
+  white-space: nowrap;
+  box-shadow: var(--edge-light);
+  filter: var(--sh-stack-1);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-hover) linear;
+}
+
+.hit:focus-visible .tip {
+  opacity: 1;
+}
+
+@media (hover: hover) {
+  .hit:hover .tip {
+    opacity: 1;
+  }
+}
+
+@media (min-width: 640px) {
+  .nav {
+    bottom: max(5px, calc(var(--frame) / 2 - 22px));
+    max-width: none;
+  }
+
+  .hit {
+    width: 44px;
+    height: 44px;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+  }
+
+  .hit[aria-current="step"] .dot {
+    transform: scale(1.6);
+  }
+}

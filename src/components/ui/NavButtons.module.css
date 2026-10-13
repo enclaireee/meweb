@@ -1,0 +1,99 @@
+.wrap {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-chrome);
+  pointer-events: none;
+}
+
+.btn {
+  --size: 48px;
+  position: absolute;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  display: grid;
+  place-items: center;
+  width: var(--size);
+  height: var(--size);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background-color: var(--c-paper);
+  background-image: var(--paper-tex);
+  background-size: var(--paper-tex-size);
+  background-blend-mode: multiply;
+  color: var(--c-ink);
+  box-shadow: var(--edge-light), var(--edge-dark), inset 0 0 0 3px rgb(255 255 255 / 0.12);
+  filter: var(--sh-stack-1);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: transform var(--dur-hover) var(--ease-paper), filter var(--dur-hover) var(--ease-paper);
+}
+
+/* The arrow is a hole cut in the paper: the dark frame shows through. */
+.btn svg {
+  fill: var(--c-frame-1);
+}
+
+.prev {
+  left: calc(12px + env(safe-area-inset-left));
+}
+
+.next {
+  right: calc(12px + env(safe-area-inset-right));
+}
+
+.prev svg {
+  transform: scaleX(-1);
+}
+
+@media (hover: hover) {
+  .btn:not([aria-disabled="true"]):hover {
+    transform: translateY(-2px);
+  }
+}
+
+.btn:not([aria-disabled="true"]):active {
+  transform: translateY(1px) scale(0.97);
+  filter: var(--sh-stack-0);
+}
+
+.btn[aria-disabled="true"] {
+  opacity: 0.45;
+  filter: none;
+  cursor: default;
+}
+
+/* Gentle glow at stop 0 until the first step. Drawn as an outside ring: a z-index:-1 pseudo would paint over the paper inside the filter's stacking context. */
+.next[data-pulse] {
+  animation: pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    box-shadow: var(--edge-light), var(--edge-dark), inset 0 0 0 3px rgb(255 255 255 / 0.12), 0 0 0 6px rgb(from var(--c-lantern) r g b / 0.55);
+  }
+}
+
+@media (min-width: 640px) {
+  .btn {
+    --size: 56px;
+    bottom: max(8px, calc(var(--frame) / 2 - 28px));
+  }
+
+  .prev {
+    left: 28px;
+  }
+
+  .next {
+    right: 28px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .next[data-pulse] {
+    animation: none;
+  }
+}
+
+html[data-motion="reduced"] .next[data-pulse] {
+  animation: none;
+}

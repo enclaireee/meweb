@@ -1,285 +1,263 @@
-@import "tailwindcss";
+/* Paper River tokens. Values: agents/design-tokens.md (names are final). */
+:root {
+  /* night ramp */
+  --ramp-0: #070b14;
+  --ramp-1: #0d1626;
+  --ramp-2: #14233a;
+  --ramp-3: #1d3552;
+  --ramp-4: #2b4a6b;
+  --ramp-5: #43698a;
+  --ramp-6: #6e93ab;
+  --ramp-7: #a9c4d2;
+  --c-ink-night: #04070d;
+  --c-haze: #7fa3b8;
+  --c-shadow: #03060c;
 
-/* ---------------------------------------------------------------------------
- * Tokens: design.md §1.1, §2, §3, §7.1, mirrored from src/design/tokens.ts.
- * Light states are attributes on <html>: data-light="night" | "morning".
- * ------------------------------------------------------------------------- */
+  /* water */
+  --water-1: #122b45;
+  --water-2: #0f2540;
+  --water-3: #0a1b30;
+  --water-hi: #3a6a8c;
 
-:root,
-[data-light="night"] {
-  --paper: #e9dfcc;
-  --ink: #2b2521;
-  --ink-soft: #5a4f46;
-  --accent: #e8742f;
-  --accent-text: #c4531f;
-  --glow: #ffd58a;
-  --shadow: rgba(10, 13, 31, 0.55);
-  --fog: #6f7fa3;
-  --sky: #8fa0c0;
-  /* the room behind the canvas before the poster paints */
-  --stage: #212843;
+  /* light */
+  --c-moon: #f4efd8;
+  --c-moon-shade: #cfc9ac;
+  --c-lantern: #ffb454;
+  --c-lantern-core: #ffe2a8;
+  --c-ember: #e0733a;
+  --c-window: #ffc46b;
+  --c-firefly: #d9f26b;
+  --c-dawn-rose: #e59c98;
+  --c-dawn-gold: #f2c77a;
+  --c-bamboo: #c79a5e;
+
+  /* paper UI */
+  --c-paper: #f1e8d4;
+  --c-paper-2: #e6dac0;
+  --c-paper-dim: #a9a18c;
+  --c-ink: #1a1f2b;
+  --c-ink-soft: #3f4450;
+  --c-accent: #9a4a12;
+  --c-focus: #ffb454;
+  --c-focus-ink: #1a1f2b;
+  --c-wall: #0a0d14;
+  --c-frame-1: #1b2230;
+  --c-frame-2: #232c3d;
+  --c-frame-3: #2d384c;
+  --c-frame-4: #38455c;
+
+  /* type */
+  --ff-display: var(--font-fraunces), Georgia, serif;
+  --ff-body: var(--font-figtree), system-ui, sans-serif;
+  --fs-kicker: 12px;
+  --fs-small: 13px;
+  --fs-body: 16px;
+  --fs-tag-title: 22px;
+  --fs-card-title: clamp(28px, 3vw, 40px);
+  --fs-hero: clamp(36px, 5vw, 56px);
+  --fs-plate: 15px;
+
+  /* spacing */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+  --gutter: 16px;
+  --r-chip: 4px;
+
+  /* UI shadows */
+  --sh-tag: 0 10px 18px -6px rgb(3 6 12 / 0.55), 0 2px 3px rgb(3 6 12 / 0.4);
+  --sh-card: 0 24px 48px -12px rgb(3 6 12 / 0.65), 0 4px 8px rgb(3 6 12 / 0.4);
+  --sh-btn: 0 5px 10px -3px rgb(3 6 12 / 0.55), 0 1px 2px rgb(3 6 12 / 0.4);
+  --sh-btn-pressed: 0 1px 2px rgb(3 6 12 / 0.5);
+  --edge-light: inset 1.5px 1.5px 0 rgb(255 255 255 / 0.35);
+  --edge-dark: inset -1.5px -1.5px 0 rgb(0 0 0 / 0.18);
+
+
+  /* paper surface: fibre grain + soft mottling, multiplied into a colour.
+     Use: background-color + background-image: var(--paper-tex) + background-size: var(--paper-tex-size) + background-blend-mode: multiply */
+  --paper-grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='g' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' seed='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.14  0 0 0 0 0.14  0 0 0 0 0.14  1.1 0 0 0 -0.5'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>");
+  --paper-mottle: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='420'><filter id='m' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='0.012 0.02' numOctaves='3' seed='9' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.32  0 0 0 0 0.26  0 0 0 0 0.18  1.5 0 0 0 -0.68'/></filter><rect width='100%' height='100%' filter='url(%23m)'/></svg>");
+  --paper-tex: var(--paper-grain), var(--paper-mottle);
+  --paper-tex-size: 200px 200px, 420px 420px;
+  /* light fibre for dark card (use with blend mode screen) */
+  --paper-grain-lt: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='l' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' seed='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.9  0 0 0 0 0.9  0 0 0 0 0.9  1.6 0 0 0 -0.68'/></filter><rect width='100%' height='100%' filter='url(%23l)'/></svg>");
+
+  /* manila tag, twine, text-safe accent on grained paper */
+  --c-manila: #ecdbb0;
+  --c-manila-dark: #cdb682;
+  --c-twine: #8c7347;
+  --c-twine-2: #c7b183;
+  --c-accent-ink: #6e320a;
+
+  /* stacked drop-shadows (filter lists, follow torn edges): contact + mid + ambient */
+  --sh-stack-0: drop-shadow(0 0 0 rgb(3 6 12 / 0.5)) drop-shadow(0 1px 1px rgb(3 6 12 / 0.4)) drop-shadow(0 1px 3px rgb(3 6 12 / 0.25));
+  --sh-stack-1: drop-shadow(0 1px 0 rgb(3 6 12 / 0.55)) drop-shadow(0 3px 4px rgb(3 6 12 / 0.4)) drop-shadow(0 6px 10px rgb(3 6 12 / 0.25));
+  --sh-stack-2: drop-shadow(0 1px 1px rgb(3 6 12 / 0.55)) drop-shadow(0 5px 7px rgb(3 6 12 / 0.4)) drop-shadow(0 14px 18px rgb(3 6 12 / 0.3));
+  --sh-stack-2-up: drop-shadow(0 2px 2px rgb(3 6 12 / 0.55)) drop-shadow(0 9px 12px rgb(3 6 12 / 0.4)) drop-shadow(0 22px 28px rgb(3 6 12 / 0.3));
+  --sh-stack-3: drop-shadow(0 2px 2px rgb(3 6 12 / 0.55)) drop-shadow(0 10px 14px rgb(3 6 12 / 0.4)) drop-shadow(0 26px 40px rgb(3 6 12 / 0.4));
+
+  /* z-order */
+  --z-world: 0;
+  --z-grain: 10;
+  --z-tag: 15;
+  --z-frame: 20;
+  --z-chrome: 30;
+  --z-hint: 35;
+  --z-dim: 40;
+  --z-card: 50;
+
+  /* motion */
+  --dur-step: 1200ms;
+  --dur-card-in: 480ms;
+  --dur-card-out: 320ms;
+  --dur-hover: 160ms;
+  --dur-bob: 4500ms;
+  --dur-sway: 5000ms;
+  --dur-settle: 2400ms;
+  --ease-glide: cubic-bezier(0.45, 0.05, 0.25, 1);
+  --ease-paper: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* frame */
+  --frame: 23px;
+  --ring-1: 8px;
+  --ring-2: 6px;
+  --ring-3: 5px;
+  --ring-4: 4px;
+
   color-scheme: dark;
 }
 
-[data-light="morning"] {
-  --paper: #f2eadb;
-  --ink: #2b2521;
-  --ink-soft: #5a4f46;
-  --accent: #d9622b;
-  --accent-text: #b84a1a;
-  --shadow: rgba(59, 46, 38, 0.35);
-  --fog: #ede3d3;
-  --sky: #f7f0e4;
-  --stage: #dcd6cf;
-  color-scheme: light;
-}
-
-:root {
-  /* light aim, written by the scene (design.md §5.4); centred until then */
-  --light-x: 0;
-  --light-y: -0.4;
-
-  --ease-paper: cubic-bezier(0.45, 0, 0.2, 1);
-  --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
-  --dur-quick: 180ms;
-  --dur-base: 320ms;
-  --dur-slow: 700ms;
-  --dur-light: 1200ms;
-
-  /* the frame's full depth: outer frame + mat + pinstripe (ui/Frame) */
-  --mat: 23px;
-  --paper-shadow: drop-shadow(
-    calc(var(--light-x) * -8px) calc(6px + var(--light-y) * -6px) 14px var(--shadow)
-  );
-}
-
-@media (max-width: 639.98px) {
+@media (min-width: 640px) {
   :root {
-    --mat: 13px;
-    /* the layered dolly (ui/StationShell): the room in the top half, its card in the bottom half, and
-       how far you scroll to walk from one room to the next */
-    --stage-h: 50svh;
-    --room-len: 40svh;
+    --frame: 36px;
+    --ring-1: 12px;
+    --ring-2: 10px;
+    --ring-3: 8px;
+    --ring-4: 6px;
   }
 }
 
-@theme inline {
-  --font-serif: var(--font-newsreader), ui-serif, Georgia, serif;
-
-  --color-paper: var(--paper);
-  --color-ink: var(--ink);
-  --color-ink-soft: var(--ink-soft);
-  --color-accent: var(--accent);
-  --color-accent-text: var(--accent-text);
-  --color-glow: var(--glow);
-
-  --text-kicker: 0.75rem;
-  --text-kicker--letter-spacing: 0.18em;
-  --text-kicker--font-weight: 560;
-  --text-kicker--line-height: 1.3;
-  --text-caption: clamp(0.94rem, 0.9rem + 0.2vw, 1rem);
-  --text-caption--line-height: 1.45;
-  --text-body: clamp(1rem, 0.96rem + 0.2vw, 1.06rem);
-  --text-body--line-height: 1.55;
-  --text-fact: 1.5rem;
-  --text-fact--line-height: 1.1;
-  --text-fact--font-weight: 600;
-  --text-plate-title: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem);
-  --text-plate-title--line-height: 1.1;
-  --text-plate-title--font-weight: 500;
-  --text-hero: clamp(2.5rem, 1.6rem + 4vw, 4.75rem);
-  --text-hero--line-height: 1;
-  --text-hero--font-weight: 450;
-
-  --ease-paper: var(--ease-paper);
-  --ease-settle: var(--ease-settle);
+@media (min-width: 1024px) {
+  :root {
+    --gutter: 24px;
+    --frame: 54px;
+    --ring-1: 18px;
+    --ring-2: 14px;
+    --ring-3: 12px;
+    --ring-4: 10px;
+  }
 }
 
-/* ---------------------------------------------------------------------------
- * Base
- * ------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
-html {
-  background: var(--stage);
-  transition: background-color var(--dur-light) var(--ease-paper);
-  -webkit-text-size-adjust: 100%;
+html,
+body {
+  margin: 0;
+  background: var(--c-wall);
+  color: var(--c-paper);
 }
 
 body {
-  overflow-x: clip;
-  font-family: var(--font-serif);
-  color: var(--ink);
-  font-optical-sizing: auto;
-  font-feature-settings: "kern", "liga";
-  text-rendering: optimizeLegibility;
+  font-family: var(--ff-body);
+  font-size: var(--fs-body);
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-::selection {
-  background: var(--accent);
-  color: var(--paper);
+/* With JS the river is the page: no document scroll behind it. */
+html.js,
+html.js body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
-/* The focus stitch (design.md §6): visible everywhere, never removed. */
+h1,
+h2,
+h3 {
+  font-family: var(--ff-display);
+  font-variation-settings: "SOFT" 100, "WONK" 0;
+  font-weight: 600;
+  margin: 0;
+}
+
+img,
+svg {
+  display: block;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: inherit;
+}
+
 :focus-visible {
-  outline: 2px dashed var(--ink);
+  outline: 2px solid var(--c-focus);
   outline-offset: 3px;
 }
 
-/* Paper stock that follows the light change (colour transitions are slow, design.md §8). */
-.paper {
-  background-color: var(--paper);
-  color: var(--ink);
-  transition:
-    background-color var(--dur-light) var(--ease-paper),
-    color var(--dur-light) var(--ease-paper);
-}
-
-/* Fibre on HTML paper: the same grain tile as the scene, multiplied in. */
-.grain {
-  position: relative;
-  isolation: isolate;
-}
-.grain::after {
-  content: "";
+.sr-only {
   position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: url("/textures/grain-rough.webp") repeat;
-  background-size: 256px;
-  mix-blend-mode: multiply;
-  opacity: 0.08;
-}
-
-/* Wrapper that casts the lit-side shadow for a clipped paper child. */
-.cast {
-  filter: var(--paper-shadow);
-}
-
-/* Scrap button (design.md §6): a torn scrap that lifts when picked up. Global, not a CSS module: its only
-   user is the root not-found boundary, whose module CSS Next preloads on every page and then never uses. */
-.scrap {
-  display: inline-block;
-  text-decoration: none;
-  color: var(--ink);
-  transition:
-    translate var(--dur-quick) var(--ease-paper),
-    rotate var(--dur-quick) var(--ease-paper),
-    filter var(--dur-quick) var(--ease-paper);
-}
-.scrap-face {
-  display: block;
-  padding: 12px 22px 13px;
-  clip-path: var(--clip-scrap, none);
-  box-shadow: inset calc(var(--light-x) * -2px) calc(var(--light-y) * 2px) 0 rgb(255 255 255 / 0.35);
-}
-.scrap:hover,
-.scrap:focus-visible {
-  translate: 0 -2px;
-  rotate: -1.5deg;
-  filter: drop-shadow(calc(var(--light-x) * -11px) calc(9px + var(--light-y) * -7px) 18px var(--shadow));
-}
-.scrap:active {
-  translate: 0 0;
-  rotate: 0deg;
-}
-
-/* Perforation divider (design.md §6). */
-.perforation {
-  height: 3px;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
   border: 0;
-  background: radial-gradient(circle, color-mix(in srgb, var(--ink) 30%, transparent) 1.5px, transparent 1.6px) 0 0 / 8px 3px repeat-x;
-}
-
-/* The poster: a still of the composed desk (LCP), fixed behind everything. It fades once the
-   canvas has drawn, and stays as the whole backdrop when there's no WebGL (design.md §10). */
-.poster {
-  position: fixed;
-  inset: 0;
-  background: var(--stage) url("/poster/desk-night.avif") center / cover no-repeat;
-  transition: opacity 300ms var(--ease-paper);
-}
-[data-light="morning"] .poster {
-  background-image: url("/poster/desk-morning.avif");
-}
-@media (orientation: portrait) {
-  .poster {
-    background-image: url("/poster/desk-night-portrait.avif");
-  }
-  [data-light="morning"] .poster {
-    background-image: url("/poster/desk-morning-portrait.avif");
-  }
-}
-html[data-scene="live"] .poster {
-  opacity: 0;
-}
-
-/* Copy with a phone cut: `.long` is the full text, `.brief` the short one (content `brief`). */
-.brief {
-  display: none;
-}
-@media (max-width: 639.98px) {
-  .brief {
-    display: inline;
-  }
-  .long {
-    display: none;
-  }
-}
-
-/* Phones: the layered dolly (mobile_concept.md). One snap per room; no 3D, so no poster (each room's
-   stage is its own still). */
-@media (max-width: 639.98px) {
-  html[data-js] {
-    scroll-snap-type: y mandatory;
-  }
-  .poster {
-    display: none;
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  html:not(.lenis) {
-    scroll-behavior: smooth;
-  }
 }
 
 .skip-link {
   position: fixed;
-  left: calc(var(--mat) + 12px);
-  top: calc(var(--mat) + 12px);
-  z-index: 80;
+  left: var(--gutter);
+  top: var(--gutter);
+  z-index: 100;
+  padding: var(--sp-2) var(--sp-4);
+  background: var(--c-paper);
+  color: var(--c-ink);
+  font-weight: 600;
   transform: translateY(-200%);
 }
+
+html:not(.js) .skip-link {
+  display: none; /* no chrome to skip without the river */
+}
+
 .skip-link:focus-visible {
   transform: none;
-}
-
-.visually-hidden {
-  position: absolute !important;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
-/* Lenis (scene chunk) */
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-.lenis:not(.lenis-autoToggle).lenis-stopped {
-  overflow: clip;
+  outline-color: var(--c-focus-ink);
 }
 
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
   }
+}
+
+html[data-motion="reduced"] *,
+html[data-motion="reduced"] *::before,
+html[data-motion="reduced"] *::after {
+  animation-duration: 1ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 1ms !important;
 }

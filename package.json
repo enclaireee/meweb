@@ -6,14 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "test": "vitest run",
-    "cut": "tsx scripts/cut/index.mts",
-    "cut:check": "tsx scripts/cut/index.mts --check",
-    "grain": "tsx scripts/grain.mts",
-    "poster": "tsx scripts/poster.mts",
-    "e2e": "playwright test",
-    "rooms": "tsx scripts/rooms.mts"
+    "lint": "eslint"
   },
   "dependencies": {
     "@react-three/drei": "10.7.8",

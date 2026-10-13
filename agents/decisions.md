@@ -1,107 +1,59 @@
-# Portfolio decisions
+# Decisions and open questions
 
-Portfolio built on `concept.md` (Paper-Cut Diorama). Log of what's been decided, newest last.
+Where documents disagree, this file wins. Newest at the bottom of each table.
 
-## 2026-09-24
+## Decided
+| # | Decision | Why |
+|---|---|---|
+| D1 | Start fresh, using nothing from the earlier versions | The earlier "night workshop" was too heavy and too 3D |
+| D2 | Audience: craft and design community first | Sets the polish bar |
+| D3 | Frame = fixed paper shadowbox; the world is a sliding panorama behind it; the viewer stays still | The user's core idea: "the scene moves, not you" |
+| D4 | Navigation is step-based (buttons, keys, swipe, one wheel gesture = one step) | Calm, accessible, predictable on every device |
+| D5 | World = one tropical night river, spring to sea, dusk to first light | One coherent, beautiful place; not a literal illustration of projects |
+| D6 | Projects are not literal scenes; content hangs at stops | The user wants one amazing world, not themed levels |
+| D7 | Real depth from 2D: 13 art layers, 3 water strips, 3 firefly depths, wide parallax | The user asked for depth even though the scenes are 2D |
+| D8 | Art is coded SVG, art-directed by screenshot | The user chose it; Claude generates the art |
+| D9 | Mood = warm night with glowing lamps | The user's pick |
+| D10 | Voice = warm and wry | The user's pick |
+| D11 | Content = mixed: short hung tag in the world + full paper card | The user's pick |
+| D12 | A small, silent paper traveller in a boat | The user's pick; adds life and scale |
+| D13 | Contact = email, LinkedIn, CV download. No GitHub, no phone | The user's pick |
+| D14 | Project media = image slots, no external links | The user's pick |
+| D15 | No references; Awwwards-level bar | The user's pick |
+| D16 | No three.js, no WebGL; CSS + SVG/raster; one layout for phone and desktop with a phone merge profile | Lightness |
+| D17 | Moon is the only key light; shadow direction (0.5, 1) always | Coherence |
+| D18 | Eight stops, order: Spring, Terraces, Gorge, Pond, Mangroves, Estuary, Village, Lighthouse | `world.md` |
+| D19 | Step glides 1200 ms with `--ease-glide`; same easing for every layer, no stagger | Reads as one camera move |
+| D20 | Pitch P = 1700 art units; artboard height 1000; speeds in `layers.md`; strip length 7·s·P + 2400; rest-fan x = s·(i·P + 260) | Consistent maths |
+| D21 | Traveller anchor 0.30 of opening width (0.34 on phone portrait); hanger 260 units ahead | `frame-and-layout.md` |
+| D22 | Blur and shadows are baked; no live filters on moving layers | Performance |
+| D23 | Docs only until the user starts wiring | The user's instruction |
 
-- **Structure:** the diorama is the home and the navigation. Content (projects, about, experience) lives on readable paper objects inside the same world: plates, cards, tags. Text is real HTML, readable with motion off.
-- **Audience:** recruiters and craft-lovers equally. There's a fast path to name, role, projects and contact; depth and play are there for people who want them.
-- **Subject:** a night workshop / maker's desk. The desk lamp is the single light source (§4.3), and the projects are objects on the bench.
-- **Content:** comes from the user's new CV (pending). Old content at git `7e64f50` is only a fallback reference.
-- **Hero:** a small paper worker. Clicking him starts a slow walk: jointed puppet limbs swinging on split pins, with a gentle bob at each step. No hopping.
-- **Projects / navigation (supersedes "Structure" above where they conflict):** an immersive depth journey. Scrolling moves the camera deeper into the workshop (§4.6), and each project is its own depth layer with a readable paper plate. A jump-to-depth tag gives the fast path. Only the layers near the camera are rendered.
-- **Worker as guide:** he walks the guiding path ahead of the camera and reaches each depth first. concept.md §9 has been amended to allow this.
-- **The route (Claude's call):** desk (intro, lamp, hero) → one workshop station per project, each framed by a paper doorway or shelving arch that slides past the screen edges → a window over the city at night (contact). The guiding path is a cable running along the floor through every station.
-- **Lighting states:** night (desk lamp, default) and morning (daylight through a window). This doubles as the dark/light theme.
-- ~~Tech direction: CSS 3D + SVG, no libraries.~~ Replaced below.
-- **Tech direction (user: "not pure HTML, super optimized"):** WebGL via three.js + React Three Fiber, lazy-loaded over a server-rendered HTML + poster shell. Full reasoning in `tech-research.md`.
-- **Stack locked:** three.js + React Three Fiber over an HTML shell, **plus GSAP + ScrollTrigger from the start** (user's choice) for choreography: pop-up entrance, lighting roll, camera path. Lenis handles smoothing, and GSAP is lazy-loaded with the scene. Still skipped: postprocessing, WebGPU, KTX2.
-- **Art:** Claude draws all paper shapes as SVG outlines in code; a build script bakes the edge wobble and extrusion.
-- **CV** is at `agents/CV_Muhammad Fatih Zamzami.md` and is the content source.
-- **Docs:** `portfolio_concept.md` (the experience and content map) and `design.md` (tokens and numbers). Stop before `globals.css` until the user says go.
-- **Geometry fixes found during the spec:** stations are toy-theatre wings with an open aisle (no per-station back walls, which would block the journey). Fog provides the moving back-light/front-dark ramp. The worker is a profile puppet walking a zigzag cable, so he's never edge-on.
-- **Confirmed by user:** contact = email + GitHub + LinkedIn (no phone/WhatsApp). Station order: Desk, DemandX, OT Lab, Refocus, KOMAT, Solar, Wall, Window. Font: Newsreader. ProtoTech awards (2nd place + Best Presentation) belong to Refocus, with a ribbon on its plate.
-- **Architecture:** `architecture.md` is the engineering rulebook (folders per station, one loop, one paper material, the cut pipeline, budgets, 8 gated phases). It supersedes the earlier "mount only nearby stations" note: stations load lazily and then stay mounted with `visible` toggled.
+## Open (needs the user)
+| # | Question | Blocks | Default if unanswered |
+|---|---|---|---|
+| Q1 | Confirm type: Fraunces (display) + Figtree (body) | Phase 2 | Use them |
+| Q2 | LinkedIn URL | Phase 4 | Placeholder button hidden until given |
+| Q3 | CV PDF file and its path (`public/cv/Muhammad-Fatih-Zamzami-CV.pdf`) | Phase 4 | Download button disabled |
+| Q4 | Project images (cover and thumb per project) | Phase 4 | "Image soon" placeholder |
+| Q5 | Are the ProtoTech awards tied to Refocus? | Phase 4 | Shown on the Refocus card; move if wrong |
+| Q6 | Friendly name for the solar project tag ("Sunlight Meter") | Phase 4 | Use the formal title |
+| Q7 | Approve removing unused dependencies (three, R3F, drei, gsap, lenis, zustand, etc.) | Phase 1 | Leave them |
+| Q8 | Hosting and domain | Phase 7 | Vercel preview URL |
+| Q9 | Keep 8 stops, or merge Spring into the title and make 7? | Phase 2 | 8 |
+| Q10 | Final palette tuning after first render | Phase 3 | Tokens as written |
+| Q11 | Include optional ambient creatures and hidden details? | Phase 6 | Yes, after the core |
 
-## 2026-09-24: build notes (implementation calls, later entries win)
+## To decide during the build
+| # | Question | When | How |
+|---|---|---|---|
+| B1 | SVG versus AVIF per layer | End of Phase 1 | Measured frame time and memory |
+| B2 | Whether the lite profile is needed | Phase 7 | Real-device tests |
+| B3 | Tabbed or accordion roles card on phone | Phase 4 | Try both at 320 px |
+| B4 | Whether to add a quiet sound toggle later | After launch | Out of scope now |
 
-Where the docs were silent or contradicted themselves, these are the calls made during the build. Each is also marked in code.
+## Out of scope
+Sound, 3D, a CMS, a blog, dark/light themes, languages other than English, analytics beyond privacy-friendly basics, a contact form.
 
-- **Geometry:** module length **80, not 60** (stations are 42 deep, so from a rest 35 in front of an arch the previous station's far sheets would stand between the camera and the arch). The window wall is at z −610. FOV is **62° landscape / 74° portrait** (the 32°/50° "tune" values can't show a 56×34 arch from 35 units away). The plate column is cleared with an off-axis view offset (12% desktop, 10% tablet, 20% up on phones), not by moving the camera.
-- **The box:** dark side walls at x ±40 and a ceiling card at y 60.5 close the shadowbox, so the view never escapes past the wings.
-- **Arches don't cast shadows** (`data-cast="false"`). A proscenium shadowing its whole stage read as a bug.
-- **Daylight direction** is (0.2, −0.5, −0.84). design.md's (−0.4, −0.7, +0.6) travels toward the camera and backlights every sheet front. Grain `normalScale` is 0.28 (0.35 was too crunchy under raking daylight). Night fill: the hemisphere at 1.6, the lamp at 430, both tuned on screenshots.
-- **The worker slides like a stick puppet** when the journey is faster than a walk. His cadence caps at brisk, and the feet slip beyond that, as in a toy theatre; 80 units a station at a 1.45 u/s walk would take a minute. Ink mounts only go behind paper and accent parts (ink on ink is invisible, and it saves draw calls). He enters at the desk on the entrance, then guides by heading for the scroll target's nearest station.
-- **Stations** load one at a time (nearest first, only the desk before the scene is live) and build in idle time, then stay mounted with `visible` toggled. The desk merges its hinged sheets back into one mesh once the pop-up has played.
-- **The scene starts** after the `load` event and idle, not just idle. The blocking time dropped from 4.2 s to under 0.2 s on throttled mobile.
-- **Poster** is a CSS background (night/morning × landscape/portrait via `[data-light]` and orientation), not `next/image`, so only the matching one downloads. It's rendered from the real scene by `scripts/poster.mts`.
-- **HTML clip-paths** are generated as CSS custom properties (`src/ui/clips.generated.css`, `--clip-*`), not TS.
-- **Authoring format:** holes come from `data-holes` (subtracted from the union of the path's subpaths), not `fill-rule`. It's orientation-proof, and the lint catches any solid that falls inside a hole.
-- **The title `<h1>`** sets one word per line, and its size is capped by the tag width (`16.5cqi`) under design.md's clamp. The wrap is identical before and after the font swap: CLS 0.
-- **Dependencies:** drei, maath and svg-path-properties are dropped (unused: our own FPS monitor, `damp` in `lib/math.ts`, our own flattening). r3f-perf/stats-gl are not added: `?debug` logs `gl.info` instead. `@types/node` is ^24 (vitest 5 needs ≥22).
-- **Dev routes** (`/dev/art`, `/dev/tokens`, `/dev/worker`) return 404 in production unless built with `ALLOW_DEV_ROUTES=1`.
-- **Copy:** plate captions for Refocus, KOMAT and Solar, the Wall's title/caption and the Window heading were written in the portfolio_concept.md §8 voice (the doc only gave samples for two plates). Facts are all drawn from the CV.
-- **Budgets:** everything meets §9 except initial JS: **136 kB gz against 90 kB**. React DOM + the Next App Router runtime alone are ~116 kB, and the site's own client code is ~17 kB. The 90 kB target isn't reachable on Next 16 + React 19. The scene chunk is 240 kB gz (≤300). Draw calls are 80 during the entrance, 47–60 at rest. Lighthouse (observed mobile throttling): 96 / 100 / 100 / 100, LCP 1.6 s, CLS 0.
-
-## 2026-09-24: revision rounds 1–4 (user feedback; later entries win)
-
-- **Worker:** drawn 2× (`worker.scale`), with a coloured back as well as front. The cable is gone: he walks ahead of the camera (`followPoint`, meander in x) and runs a different routine of jobs in each room (`routines.ts`, reshuffled every loop). He sits on the bed in the last room (`sit`).
-- **He talks:** hardcoded lines in `scene/worker/lines.ts`, shown in a paper bubble (`speech.ts`):
-  - A greeting after the entrance.
-  - A reply on hover or focus (this replaced the "Walk on" label) and a line when clicked.
-  - Chatter every 11–20 s, for his room or a general line.
-  - Sometimes a line when he starts a job, when you sprint-scroll, or when you go back a room.
-  - A line when the light changes.
-  - Lines are dealt from a shuffled deck, so none repeats until its list runs out. The lines are flavour only: no facts beyond what the cards say.
-- **Loader:** a curtain with the worker cutting a strip of paper as the progress bar.
-- **Rooms:** each room is its own paper pack (`rooms[]` in tokens), with a shell (walls, wainscot, ceiling, rug, back-wall doorway) so nothing reads hollow. The last room is a **bedroom**: a low bed, a nightstand with a lamp, slippers, fairy lights, a picture and a dresser, all within the band that the nav and the contact card leave clear.
-- **Cards (showcase rooms):** many small papers on strings (`ui/Hang`) around the room, never over the doorway. They're lowered in when the room arrives and hauled up when it leaves, with pointer parallax by depth. Paper-cut icons are drawn in `ui/Icon`.
-- **Practical rooms (Wall, Window):** tidy pinned boards (`ui/Board`), no tilt. The Wall is two even, slim boards, one down each side: experience as one line per role (tap for the summary, a `<details>` accordion) on the left, skills and ribbons on the right. Contact is a single board. Role `kind` (work / leadership) is in content.
-- **Nav:** the depth tag is replaced by a compact strip at the left middle (`ui/SiteNav`): Who I am, Projects, Experience, Skills, Contact. Left-side card slots start right of it.
-- **Phones get their own layout, not a trimmed desktop:** a clothesline across the lower half (`--line`). Each room's papers are pegged to it and swiped sideways (scroll-snap), while scrolling up and down still walks between rooms.
-  - A flat board comes apart into one card per role, skill group or award, with coloured section tags.
-  - A "swipe →" hint fades as you swipe (scroll-driven, behind `@supports`), and "↓ next room" ends each line.
-- **Frame:** layered paper rings (outer, mat, pinstripe) with grain and photo corners.
-- **Fix:** before the scene is live, the desk loads wherever the camera is. A deep link to a far room (e.g. `#contact`) used to leave that room empty forever.
-
-## 2026-09-24: performance + polish pass (later entries win)
-
-- **The curtain never gates the page for long.** It parts when the desk is built or **2 s after navigation start**, whichever comes first (slow 4G + 4× CPU: readable at 2.3 s, was 6.4 s). Tier `none` skips it. The canvas stays transparent until the scene is live, then cross-fades over the poster in 300 ms (§7.2), so nobody sees a half-built box.
-- **Going live waits for the room you're in.** Before the scene is live the desk *and* the station at the camera are built (someone who scrolled on while it loaded never sees a bare room fill in). The worker is off stage until his entrance: at the desk he walks in and greets on arrival; deeper in he's simply in your room.
-- **Shadows re-render only when the lamp, the tilt or a caster moves.** The lamp ignores the idle drift (it moves the eye, not the light). Ambient motion (hung sway, idle pivots) refreshes the shadow map at ≤10 Hz, and the low tier at ≤4 Hz with one final render at rest. Worker fidgets ride the half-rate ambient frames.
-- **The worker rests** after 45 s without input: he finishes the job in hand and only fidgets until someone moves. Idle cost measured: 30 fps and ~19 shadow passes/s (was 60/60 indefinitely).
-- **Both lights' programs compile at station build** (which light casts is part of the program key): the relight compiles nothing mid-roll.
-- **FPS monitor:** the median of back-to-back full-rate frames over ≥2 s, sampled only once the scene is live, and frames of any length count. The old one ignored frames over 60 ms, so a truly slow device never stepped down.
-- **One poke, one station.** Pokes while a walk-on is in flight are ignored (4 s window).
-- **Deep links** land on their room's rest: Lenis used to take over mid-way through the browser's smooth anchor scroll and stop a room short.
-- **Camera tokens:** `pointerX/Y`, tilt and `driftX` stay above design.md's values (a "more parallax" call referenced in `tokens.ts`); `pointerLambda` is back to design.md's 2.5 (it had drifted to 3.2 with no recorded reason).
-- **Cache headers** for `/poster` and `/textures` are `max-age=86400, stale-while-revalidate=604800`, not `immutable`: the scripts regenerate those files under the same names.
-- **Phones:** hauled-up cards clear the top by their own height; the Window's line rides higher so the whole contact card fits; the last room shows no swipe hint.
-- **Budgets (measured this pass):** initial JS 138 kB gz (the 90 kB target stays unreachable on Next 16 + React 19); scene chunks 238 + 64 = **302 kB gz** against 300 (three can't be tree-shaken under R3F); CSS 16 kB gz; 36 draws a frame at the desk.
-- **Left as-is:** Newsreader stays variable with `opsz` (279 KB preloaded, both styles). next/font 16.3 rejects weight ranges, dropping `opsz` breaks design.md §2, and splitting italic out would make browsers synthesize it. The `THREE.Clock` deprecation warning comes from R3F 9.8 (the latest stable) constructing a Clock; it goes away with R3F 10.
-
-## 2026-09-24: mobile revamp (supersedes the phone clothesline)
-
-- **Phones (< 640px) become a Kamishibai paper theatre.** See `mobile_concept.md`. Swipe pulls the front card out to show the next room behind it. The rooms are baked AVIF layers with CSS parallax, so phones never load three.js. The worker only narrates (one line per card, no walking). Tablets and desktop are unchanged.
-- **Why (user):** the clothesline swipe didn't work, and phones were laggy and slow to load. iOS was also getting the high tier.
-- **Built (phases 1–5 of `mobile_concept.md`):**
-  - **The pull:** a plain snap row. The still `<section>` is the snap target and the view timeline, and the inner `.card` is held in place while it enters. Sticky cards broke scrolling in Chromium and anchors in WebKit, and a snap target that moves with its own timeline stuck the deck at 135px.
-  - **Rooms:** baked by `npm run rooms` through global z clipping planes: 5 bands × 8 rooms × 2 lights, 1.0 MB in total, ~50 kB per room per light. Re-run it after any art, paper or light change.
-  - **Storyteller:** a server-rendered SVG of `worker.cut.json`.
-  - **Layout:** the hanging-card JS layout is gated to ≥ 640px, and the clothesline is removed (`Board`'s `flat` and `boardItem` are gone).
-  - **`TiltToggle`** now takes `onTilt`, so it no longer imports the scene loop.
-  - **Not checked yet:** a real device.
-
-## 2026-09-24: phones, round 2: the layered dolly (supersedes the kamishibai above)
-
-- **User:** the card pull "isn't working", the cards covered the scene when scrolling, and the animated depth was missed. The user chose a **layered dolly** driven by **scrolling the scene**, with the card in the **bottom half only**.
-- **Built** (`mobile_concept.md`):
-  - The page scrolls and snaps one room per 40svh. The wiring scales every nearby room's baked bands by D / (D − Δ) about the vanishing point, and each band is its own fixed layer, so rooms interleave.
-  - B0 is re-baked as the whole room without its own sheets, so mid-walk gaps show walls and floor, not haze.
-  - The card panel is fixed to the bottom half and scrolls on its own.
-  - Without JS, phones get the plain readable stack.
-- **Removed:** the horizontal deck, the view-timeline hold, and the "reading" state.
-- **Fix:** on phones the last two rooms couldn't be reached by scrolling: 8 × 40svh of page minus one screen stops short of where the Wall and the Window start. The last section is now `100lvh`, and an e2e test scrolls to both.
-- **Phone copy, shorter:** projects carry a `brief` (one sentence per story beat, cut from `story`), shown on phones via `.long` / `.brief`. The desk's "Desk notes" and "On the syllabus" cards are dropped on phones.
-- **Phone project cards (user):** title → "Built with" → the story. The big-number tags are hidden on phones.
-- **Phone card redesign (user: "so packed, like a dump from desktop"):** the bottom panel is one grained sheet, and the pieces are sections of it (no per-piece paper, holes, tilt or shadows). Projects get a room-colour mark, a bigger title, stack chips with link buttons, and the story as a stitched thread. The clappers are a dark bar. All of it is CSS under `html[data-js]` at < 640px; desktop is untouched.
+## Change log
+- Docs set written in `agents/`: concept, world, art-direction, depth-system, layers, traveller, motion, frame-and-layout, ui-components, content, design-tokens, art-pipeline, tech-architecture, build-order, decisions.

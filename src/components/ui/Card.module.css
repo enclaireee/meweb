@@ -1,0 +1,293 @@
+.card {
+  /* The dialog carries the stacked drop-shadow (it follows the torn sheet and the under-sheets). */
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--c-ink);
+  overflow: visible;
+  z-index: var(--z-card);
+  width: min(560px, calc(100% - 24px));
+  max-width: none;
+  max-height: 84dvh;
+  margin: auto auto 12px;
+  filter: var(--sh-stack-3);
+  /* Overridden from the tag's rect on open (Card.tsx). */
+  --from-x: 0px;
+  --from-y: 40px;
+  --from-s: 0.9;
+  transform-origin: 50% 0;
+}
+
+/* Under-sheets peeking out behind the main sheet. */
+.card::before,
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--paper-tex);
+  background-size: var(--paper-tex-size);
+  background-blend-mode: multiply;
+  box-shadow: var(--edge-light);
+}
+
+.card::before {
+  background-color: var(--c-paper-2);
+  transform: translate(-3px, 5px) rotate(-1.2deg);
+}
+
+.card::after {
+  background-color: #d9cba9;
+  transform: translate(4px, 3px) rotate(1.1deg);
+  -webkit-mask-image: url(/art/ui/deckle-bottom.svg), linear-gradient(#000 0 0);
+  mask-image: url(/art/ui/deckle-bottom.svg), linear-gradient(#000 0 0);
+  -webkit-mask-size: 240px 12px, 100% calc(100% - 11px);
+  mask-size: 240px 12px, 100% calc(100% - 11px);
+  -webkit-mask-position: left bottom, left top;
+  mask-position: left bottom, left top;
+  -webkit-mask-repeat: repeat-x, no-repeat;
+  mask-repeat: repeat-x, no-repeat;
+}
+
+.card[open] {
+  display: flex;
+  animation: unfold var(--dur-card-in) var(--ease-out) both;
+}
+
+.card[data-closing] {
+  animation: fold var(--dur-card-out) var(--ease-paper) both;
+}
+
+.card::backdrop {
+  background: rgb(3 6 12 / 0.55);
+  z-index: var(--z-dim);
+}
+
+/* Phones: a full-width sheet at the top or bottom, so the stop's focal point stays in view. */
+.card[data-y="top"] {
+  margin: 12px auto auto;
+}
+
+@media (min-width: 640px) {
+  .card {
+    max-height: 78dvh;
+    margin: auto;
+  }
+  /* Each stop opens its card beside the scene's focal point (site.ts card.at). */
+  .card[data-x="left"] {
+    margin-left: max(5vw, 40px);
+  }
+  .card[data-x="right"] {
+    margin-right: max(5vw, 40px);
+  }
+  .card[data-y="top"] {
+    margin-top: 64px;
+  }
+  .card[data-y="bottom"] {
+    margin-bottom: 64px;
+  }
+  .card[data-w="narrow"] {
+    width: min(460px, calc(100% - 80px));
+  }
+  .card[data-w="wide"] {
+    width: min(880px, calc(100% - 80px));
+  }
+}
+
+/* Refocus: a dark lab poster. Tokens flip, the layout CSS stays the same. */
+.card[data-layout="poster"] {
+  --c-paper: #1d2333;
+  --c-paper-2: #2a3245;
+  --c-paper-dim: #4c566c;
+  --c-ink: #f1e8d4;
+  --c-ink-soft: #c2bba8;
+  --c-accent: #ffb454;
+  --c-accent-ink: #ffc46b;
+  --c-focus-ink: #ffb454;
+}
+
+.card[data-layout="poster"] .sheet {
+  background-blend-mode: soft-light;
+}
+
+/* Short viewports: full-height sheet. */
+@media (max-height: 460px) {
+  .card {
+    max-height: none;
+    height: calc(100dvh - 24px);
+    margin-block: 12px;
+  }
+}
+
+.sheet {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  background-color: var(--c-paper);
+  background-image: var(--paper-tex);
+  background-size: var(--paper-tex-size);
+  background-blend-mode: multiply;
+  box-shadow: var(--edge-light), var(--edge-dark);
+  /* torn top (deckle strip) over a body that keeps the notched bottom corners */
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px));
+  -webkit-mask-image: url(/art/ui/deckle-top.svg), linear-gradient(#000 0 0);
+  mask-image: url(/art/ui/deckle-top.svg), linear-gradient(#000 0 0);
+  -webkit-mask-size: 240px 12px, 100% calc(100% - 11px);
+  mask-size: 240px 12px, 100% calc(100% - 11px);
+  -webkit-mask-position: left top, left bottom;
+  mask-position: left top, left bottom;
+  -webkit-mask-repeat: repeat-x, no-repeat;
+  mask-repeat: repeat-x, no-repeat;
+}
+
+.scroller {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--c-paper-dim) transparent;
+}
+
+.scroller[data-scrollable] {
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 28px), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 28px), transparent);
+}
+
+.close {
+  position: absolute;
+  top: 14px;
+  right: var(--sp-2);
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background-color: var(--c-paper-2);
+  background-image: var(--paper-tex);
+  background-size: var(--paper-tex-size);
+  background-blend-mode: multiply;
+  color: var(--c-ink);
+  cursor: pointer;
+  box-shadow: var(--edge-light), var(--edge-dark);
+  filter: var(--sh-stack-1);
+  transition: transform var(--dur-hover) var(--ease-paper), filter var(--dur-hover) var(--ease-paper);
+}
+
+.close:focus-visible {
+  outline-color: var(--c-focus-ink);
+}
+
+@media (hover: hover) {
+  .close:hover svg {
+    transform: rotate(90deg);
+  }
+}
+
+.close svg {
+  transition: transform 200ms var(--ease-paper);
+}
+
+.close:active {
+  transform: scale(0.96);
+  filter: var(--sh-stack-0);
+}
+
+@keyframes unfold {
+  from {
+    opacity: 0;
+    transform: translate(var(--from-x), var(--from-y)) scale(var(--from-s)) perspective(900px) rotateX(-24deg);
+  }
+  35% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fold {
+  to {
+    opacity: 0;
+    transform: translate(var(--from-x), var(--from-y)) scale(var(--from-s)) perspective(900px) rotateX(-24deg);
+  }
+}
+
+/* Card content follows the sheet in, line by line. */
+.card[open]:not([data-closing]) .scroller > * > * {
+  animation: rise 520ms var(--ease-out) both;
+}
+.card[open] .scroller > * > :nth-child(2) { animation-delay: 140ms; }
+.card[open] .scroller > * > :nth-child(3) { animation-delay: 180ms; }
+.card[open] .scroller > * > :nth-child(4) { animation-delay: 220ms; }
+.card[open] .scroller > * > :nth-child(5) { animation-delay: 260ms; }
+.card[open] .scroller > * > :nth-child(n + 6) { animation-delay: 300ms; }
+.card[open] .scroller > * > :first-child { animation-delay: 100ms; }
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    translate: 0 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card[open],
+  .card[data-closing] {
+    animation-name: fade;
+    animation-duration: 120ms;
+  }
+  .card .scroller > * > * {
+    animation: none !important;
+  }
+  .close svg {
+    transition: none;
+  }
+  .close:hover svg {
+    transform: none;
+  }
+}
+
+html[data-motion="reduced"] .card[open],
+html[data-motion="reduced"] .card[data-closing] {
+  animation-name: fade;
+  animation-duration: 120ms !important;
+}
+
+html[data-motion="reduced"] .card .scroller > * > * {
+  animation: none !important;
+}
+
+html[data-motion="reduced"] .close svg {
+  transition: none;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card[data-closing] {
+    animation-direction: reverse;
+  }
+}
+
+html[data-motion="reduced"] .card[data-closing] {
+  animation-direction: reverse;
+}
+
+.card[data-layout="poster"]::after {
+  background-color: var(--c-paper-dim);
+}

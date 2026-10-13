@@ -1,0 +1,49 @@
+.slot {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: var(--c-paper-2);
+}
+
+.cover {
+  aspect-ratio: 16 / 9;
+}
+
+.thumb {
+  aspect-ratio: 7 / 5;
+}
+
+.empty {
+  display: grid;
+  place-items: center;
+  color: var(--c-paper-dim);
+}
+
+.art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+.label {
+  position: relative;
+  align-self: end;
+  margin-bottom: var(--sp-3);
+  padding: 2px var(--sp-2);
+  background: var(--c-paper);
+  color: var(--c-ink-soft);
+  font-size: var(--fs-small);
+  font-weight: 600;
+}
+
+/* Paper mat around a real image. */
+.filled.cover {
+  border: 6px solid var(--c-paper);
+  box-shadow: var(--edge-light), 0 6px 14px -4px rgb(3 6 12 / 0.45);
+}
+
+.img {
+  object-fit: cover;
+}

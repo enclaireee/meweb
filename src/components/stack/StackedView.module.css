@@ -1,0 +1,78 @@
+.stack {
+  display: grid;
+  gap: var(--sp-5);
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--sp-6) var(--gutter);
+  color: var(--c-paper);
+}
+
+.h1 {
+  font-size: var(--fs-hero);
+  line-height: 1.05;
+}
+
+.lead,
+.foot {
+  margin: 0;
+}
+
+.stop {
+  position: relative;
+  display: grid;
+  padding-block: 10px;
+  color: var(--c-ink);
+  scroll-margin-top: var(--sp-5);
+  /* shadow follows the torn paper in ::before */
+  filter: var(--sh-stack-3);
+}
+
+.stop::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--c-paper);
+  background-image: var(--paper-tex);
+  background-size: var(--paper-tex-size);
+  background-blend-mode: multiply;
+  box-shadow: var(--edge-light), var(--edge-dark);
+  -webkit-mask-image: url(/art/ui/deckle-top.svg), url(/art/ui/deckle-bottom.svg), linear-gradient(#000 0 0);
+  mask-image: url(/art/ui/deckle-top.svg), url(/art/ui/deckle-bottom.svg), linear-gradient(#000 0 0);
+  -webkit-mask-size: 240px 12px, 240px 12px, 100% calc(100% - 22px);
+  mask-size: 240px 12px, 240px 12px, 100% calc(100% - 22px);
+  -webkit-mask-position: left top, left bottom, left 11px;
+  mask-position: left top, left bottom, left 11px;
+  -webkit-mask-repeat: repeat-x, repeat-x, no-repeat;
+  mask-repeat: repeat-x, repeat-x, no-repeat;
+}
+
+.stop:focus-within {
+  outline: 2px solid var(--c-focus);
+}
+
+.tag {
+  margin: 0;
+  padding: var(--sp-3) var(--sp-5);
+  border-bottom: 1px solid rgb(26 31 43 / 0.18);
+  color: var(--c-ink-soft);
+  font-size: var(--fs-small);
+  line-height: 1.4;
+}
+
+.tag strong {
+  color: var(--c-ink);
+}
+
+/* With JS the river is the UI: keep this document for crawlers and screen readers only. */
+:global(html.js) .stack {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

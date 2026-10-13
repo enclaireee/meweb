@@ -1,0 +1,85 @@
+/* Top-right corner of the frame, at every width. The bottom band belongs to navigation. */
+.controls {
+  position: fixed;
+  top: max(6px, env(safe-area-inset-top));
+  right: calc(8px + env(safe-area-inset-right));
+  z-index: var(--z-chrome);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+@media (min-width: 640px) {
+  .controls {
+    top: max(6px, calc(var(--frame) / 2 - 22px));
+    right: 28px;
+    gap: var(--sp-3);
+  }
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 var(--sp-3);
+  border: 0;
+  background-color: var(--c-frame-2);
+  background-image: var(--paper-grain-lt);
+  background-size: 200px 200px;
+  background-blend-mode: screen;
+  box-shadow: inset 1px 1px 0 rgb(255 255 255 / 0.14), inset -1px -1px 0 rgb(0 0 0 / 0.3);
+  filter: var(--sh-stack-1);
+  color: var(--c-paper);
+  cursor: pointer;
+}
+
+.moon,
+.sun {
+  transition: opacity var(--dur-hover) linear, color var(--dur-hover) linear;
+}
+.sun {
+  opacity: 0.45;
+}
+.toggle[aria-checked="true"] .moon {
+  opacity: 0.45;
+}
+.toggle[aria-checked="true"] .sun {
+  opacity: 1;
+  color: var(--c-lantern);
+}
+
+.track {
+  position: relative;
+  width: 34px;
+  height: 18px;
+  background-color: var(--c-frame-4);
+  box-shadow: inset 0 0 0 1.5px var(--c-paper-dim), inset 0 2px 2px rgb(3 6 12 / 0.5);
+  transition: background-color var(--dur-hover) linear;
+}
+
+.knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 12px;
+  height: 12px;
+  background-color: var(--c-paper);
+  box-shadow: var(--edge-light);
+  transition: transform var(--dur-hover) var(--ease-paper);
+}
+
+.toggle[aria-checked="true"] .track {
+  background-color: var(--c-lantern);
+}
+
+.toggle[aria-checked="true"] .knob {
+  transform: translateX(16px);
+  background-color: var(--c-ink);
+}
+
+@media (hover: hover) {
+  .toggle:hover .track {
+    box-shadow: inset 0 0 0 1.5px var(--c-paper), inset 0 2px 2px rgb(3 6 12 / 0.5);
+  }
+}

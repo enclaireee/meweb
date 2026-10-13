@@ -1,8 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- the worker's hard hat, cut from orange stock on a night card -->
-  <rect width="32" height="32" rx="6" fill="#212843"/>
-  <path d="M7.6 20.4 C7.4 14.2 11 9.8 16.1 9.8 C21.2 9.8 24.8 14 24.6 20.4 Z" fill="#E8742F"/>
-  <path d="M5.2 20 H27.2 C28 20 28 22.8 27.2 22.8 H5.2 C4.6 22.8 4.6 20 5.2 20 Z" fill="#E8742F"/>
-  <path d="M15 9.9 H17.2 V13.6 H15 Z" fill="#C4531F"/>
-  <circle cx="21.4" cy="15.2" r="1.7" fill="#FFD58A"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#121a2c"/><path d="M16 4v4" stroke="#e9dfc9" stroke-width="2"/><rect x="10" y="8" width="12" height="16" rx="5" fill="#f5a142"/><path d="M10 13h12M10 19h12" stroke="#c7712a" stroke-width="1.5"/><path d="M13 24h6v3h-6z" fill="#e9dfc9"/></svg>

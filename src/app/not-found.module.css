@@ -1,0 +1,33 @@
+.page {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: var(--gutter);
+  background: radial-gradient(ellipse at 50% 30%, var(--ramp-2), var(--c-wall) 70%);
+}
+
+.card {
+  display: grid;
+  gap: var(--sp-4);
+  justify-items: start;
+  width: min(480px, 100%);
+  padding: var(--sp-6) var(--sp-5);
+  background: var(--c-paper);
+  color: var(--c-ink);
+  box-shadow: var(--sh-card), var(--edge-light), var(--edge-dark);
+  clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+}
+
+.code {
+  margin: 0;
+  font-size: var(--fs-kicker);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--c-accent);
+}
+
+.title {
+  font-size: var(--fs-card-title);
+  line-height: 1.1;
+}

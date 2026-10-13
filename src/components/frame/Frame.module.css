@@ -1,0 +1,155 @@
+/* The frame box is capped at 2200px opening + frame, centred; the wall shows beyond. */
+.frame {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  width: min(100%, calc(2200px + 2 * var(--frame)));
+  pointer-events: none;
+  z-index: var(--z-world);
+}
+
+.opening {
+  position: absolute;
+  inset: var(--frame);
+  overflow: hidden;
+  isolation: isolate;
+  pointer-events: auto;
+  background: var(--ramp-0);
+}
+
+.grain {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-grain);
+  pointer-events: none;
+  opacity: 0.14;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Frame casts shadow into the box: darkest top and left. */
+.depth {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-grain);
+  pointer-events: none;
+  box-shadow:
+    inset 14px 18px 36px -6px rgb(3 6 12 / 0.7),
+    inset -4px -6px 18px -6px rgb(3 6 12 / 0.4);
+}
+
+/* Each ring is a separate cardstock mat: ::before is the textured, annulus-clipped paper,
+   the ring itself carries the stacked drop-shadow so it follows the cut. Outer rings sit on top
+   and cast onto the next ring inward. */
+.ring {
+  position: absolute;
+  --b: var(--ring-1);
+  --ring-c: var(--c-frame-1);
+  z-index: var(--z-frame);
+  filter:
+    drop-shadow(1px 1px 0 rgb(3 6 12 / 0.45))
+    drop-shadow(2px 3px 4px rgb(3 6 12 / 0.45))
+    drop-shadow(3px 7px 10px rgb(3 6 12 / 0.3));
+}
+
+.ring::before,
+.ring::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.ring::before {
+  background-color: var(--ring-c);
+  background-image: var(--paper-grain-lt);
+  background-size: 200px 200px;
+  background-blend-mode: screen;
+  /* light top-left bevel on the outer edge */
+  box-shadow: inset 1px 1px 0 rgb(255 255 255 / 0.2), inset -1px -1px 0 rgb(0 0 0 / 0.35);
+  clip-path: polygon(
+    evenodd,
+    0 0, 100% 0, 100% 100%, 0 100%, 0 0,
+    var(--b) var(--b), var(--b) calc(100% - var(--b)), calc(100% - var(--b)) calc(100% - var(--b)), calc(100% - var(--b)) var(--b), var(--b) var(--b)
+  );
+}
+
+/* bevelled cut edge facing inward (light top-left, dark bottom-right) */
+.ring::after {
+  inset: calc(var(--b) - 1px);
+  border: 1px solid;
+  border-color: rgb(255 255 255 / 0.22) rgb(0 0 0 / 0.4) rgb(0 0 0 / 0.4) rgb(255 255 255 / 0.22);
+}
+
+.r1 {
+  inset: 0;
+  --b: var(--ring-1);
+  --ring-c: var(--c-frame-1);
+  z-index: calc(var(--z-frame) + 3);
+}
+
+.r2 {
+  inset: var(--ring-1);
+  --b: var(--ring-2);
+  --ring-c: var(--c-frame-2);
+  z-index: calc(var(--z-frame) + 2);
+}
+
+.r3 {
+  inset: calc(var(--ring-1) + var(--ring-2));
+  --b: var(--ring-3);
+  --ring-c: var(--c-frame-3);
+  z-index: calc(var(--z-frame) + 1);
+}
+
+.r4 {
+  inset: calc(var(--ring-1) + var(--ring-2) + var(--ring-3));
+  --b: var(--ring-4);
+  --ring-c: var(--c-frame-4);
+}
+
+.corner {
+  position: absolute;
+  z-index: calc(var(--z-frame) + 4);
+  filter: drop-shadow(1px 2px 2px rgb(3 6 12 / 0.5));
+  width: calc(var(--frame) * 1.1);
+  height: calc(var(--frame) * 1.1);
+}
+
+.bracket {
+  fill: var(--c-frame-3);
+  stroke: var(--c-frame-4);
+  stroke-width: 1;
+}
+
+.motif {
+  fill: none;
+  stroke: var(--c-paper-dim);
+  stroke-width: 1.2;
+  opacity: 0.7;
+}
+
+.tl {
+  top: 0;
+  left: 0;
+}
+
+.tr {
+  top: 0;
+  right: 0;
+  transform: scaleX(-1);
+}
+
+.bl {
+  bottom: 0;
+  left: 0;
+  transform: scaleY(-1);
+}
+
+.br {
+  bottom: 0;
+  right: 0;
+  transform: scale(-1);
+}

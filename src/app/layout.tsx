@@ -1,80 +1,64 @@
 import type { Metadata, Viewport } from "next";
-import { Newsreader } from "next/font/google";
-import { preload } from "react-dom";
-import { profile } from "@/content/profile";
-import { contact, siteUrl } from "@/content/contact";
-import { lightBootScript } from "@/scene/store";
-import { ClientBoot } from "@/ui/ClientBoot";
-import { Frame } from "@/ui/Frame/Frame";
+import { Figtree, Fraunces } from "next/font/google";
+import { person, site } from "@/content/site";
 import "./globals.css";
-import "@/ui/clips.generated.css";
 
-const newsreader = Newsreader({
-  variable: "--font-newsreader",
+const fraunces = Fraunces({
   subsets: ["latin"],
-  style: ["normal", "italic"],
-  axes: ["opsz"],
+  axes: ["SOFT", "WONK"],
+  variable: "--font-fraunces",
   display: "swap",
 });
 
-const title = `${profile.name}: Electrical Engineering, UI`;
+const figtree = Figtree({ subsets: ["latin"], variable: "--font-figtree", display: "swap" });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
-  title,
-  description: profile.about,
+  metadataBase: new URL(site.url),
+  title: site.title,
+  description: site.description,
   alternates: { canonical: "/" },
   openGraph: {
     type: "profile",
-    title,
-    description: profile.summary,
+    title: site.title,
+    description: site.description,
     url: "/",
-    siteName: "The Night Workshop",
-    locale: "en_US",
+    siteName: "Paper River",
   },
-  twitter: { card: "summary_large_image", title, description: profile.summary },
+  twitter: { card: "summary_large_image", title: site.title, description: site.description },
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#212843" },
-    { media: "(prefers-color-scheme: light)", color: "#DCD6CF" },
-  ],
+  themeColor: "#0A0D14",
+  colorScheme: "dark",
+  viewportFit: "cover",
 };
 
-const personJsonLd = {
+const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
-  name: profile.name,
-  jobTitle: profile.role,
-  alumniOf: { "@type": "CollegeOrUniversity", name: profile.education.school },
+  name: person.name,
+  email: `mailto:${person.email}`,
+  url: site.url,
+  jobTitle: "Electrical engineering student",
+  affiliation: { "@type": "CollegeOrUniversity", name: "Universitas Indonesia" },
   address: { "@type": "PostalAddress", addressLocality: "Depok", addressRegion: "Jawa Barat", addressCountry: "ID" },
-  email: "mailto:muhfatihzamzami@gmail.com",
-  url: siteUrl,
-  sameAs: contact.filter((c) => c.id !== "email").map((c) => c.href),
+  knowsAbout: ["Control systems", "SCADA", "Time-series forecasting", "Next.js", "Python"],
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
-  // the paper grain tile is on every plate, so it's the LCP image: fetch it with the fonts, not after the CSS
-  preload("/textures/grain-rough.webp", { as: "image", fetchPriority: "high" });
+// Runs before paint: marks JS on, and restores the day/night switch (DayToggle).
+const boot = `document.documentElement.classList.add('js');try{if(localStorage.getItem('time')==='day')document.documentElement.dataset.time='day'}catch(e){}`;
+
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" data-light="night" className={newsreader.variable} suppressHydrationWarning>
+    <html lang="en" className={`${fraunces.variable} ${figtree.variable}`} suppressHydrationWarning>
       <head>
-        {/* sets data-light before first paint: no flash of the wrong light */}
-        <script dangerouslySetInnerHTML={{ __html: lightBootScript }} />
+        <script dangerouslySetInnerHTML={{ __html: boot }} />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd).replace(/</g, "\\u003c") }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
         />
       </head>
-      <body>
-        <a href="#main" className="skip-link cast">
-          <span className="paper grain block px-4 py-2 text-caption italic">Skip to the plates</span>
-        </a>
-        {children}
-        <Frame />
-        <ClientBoot />
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
