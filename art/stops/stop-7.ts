@@ -1,8 +1,10 @@
-// Stop 7, The Lighthouse (first light): open sea, a rocky point, a banded tower with its lamp still lit.
-import { C, arc, darken, lighten, poly, post, raw, sheet, lantern, type ArtModule, type Piece, type Pt } from "../helpers";
+// Stop 7, The Lighthouse (morning): open sea, a rocky point, a banded tower with its lamp still lit.
+import { C, arc, darken, lighten, mix, poly, post, raw, sheet, lantern, type ArtModule, type Piece, type Pt } from "../helpers";
 import { bank, blob, frame, quad, ribbon, tone } from "./shared-b";
 
-const I = 7;
+const I = 9;
+/** Morning tint baked in: the night ramp warmed toward sunlit paper (no runtime filter). */
+const morn = (id: string, k = 0) => lighten(mix(tone(id, I, k), "#E8C79E", 0.16), 0.05);
 const TOWER_U = 640; // screen u of the tower axis on layer 07
 
 /** Pale cut-paper foam: a curl of a ribbon, slightly translucent. */
@@ -14,7 +16,7 @@ const art: ArtModule = {
   "07": (c) => {
     const { X, u0, u1 } = frame(c);
     const r = c.rng;
-    const fill = darken(tone("07", I, 0.1), 0.12);
+    const fill = darken(morn("07", 0.1), 0.12);
     const out: Piece[] = [];
     out.push(sheet([...bank(X(-100), X(0), 0, 0, r, 0).slice(0, 0), [X(-200), 640], [X(-120), 590], [X(-60), 584], [X(10), 596], [X(40), 640]], fill, r)); // skerry
     // the point: a ridge of rock rising to the tower, stepping down to the sea on both sides
@@ -55,7 +57,7 @@ const art: ArtModule = {
   "09": (c) => {
     const { lx, x1 } = c;
     const r = c.rng;
-    const fill = tone("09", I);
+    const fill = morn("09");
     const out: Piece[] = [];
     const dxa = lx + 40;
     const dxb = Math.min(x1 - 10, lx + 960);
@@ -82,7 +84,7 @@ const art: ArtModule = {
   "10": (c) => {
     const { X, u0, u1 } = frame(c);
     const r = c.rng;
-    const fill = tone("10", I, 0.25);
+    const fill = morn("10", 0.25);
     const out: Piece[] = [];
     out.push(sheet(bank(X(u0), X(u1), 990, 1100, r, 6), fill, r));
     for (const [u, rx, ry] of [[-540, 130, 90], [-380, 90, 60], [980, 140, 80], [1180, 100, 64], [800, 70, 44]] as const) {
@@ -97,7 +99,7 @@ const art: ArtModule = {
   "11": (c) => {
     const { X } = frame(c);
     const r = c.rng;
-    const fill = tone("11", I, 0.3);
+    const fill = morn("11", 0.3);
     const out: Piece[] = [sheet(bank(X(-800), X(1500), 975, 1100, r, 10, 60), fill, r)];
     for (const [u, rx, ry] of [[-520, 210, 190], [1230, 230, 210]] as const) {
       out.push(sheet(blob(X(u), 1020, rx, ry, r, 12, 0.3), fill, r));
@@ -110,7 +112,7 @@ const art: ArtModule = {
   "12": (c) => {
     const { X } = frame(c);
     const r = c.rng;
-    const fill = tone("12", I);
+    const fill = morn("12");
     return [
       sheet(blob(X(-580), 1060, 230, 180, r, 12, 0.3), fill, r),
       sheet(ribbon(quad([X(1180), 1030], [X(1250), 930], [X(1330), 960], 7), 20, 3), fill, r, { rim: false }),

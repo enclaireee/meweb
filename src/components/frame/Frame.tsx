@@ -27,7 +27,6 @@ export function Frame({ children }: { children: ReactNode }) {
       <div className={`${styles.ring} ${styles.r1}`} aria-hidden="true" />
       <div className={`${styles.ring} ${styles.r2}`} aria-hidden="true" />
       <div className={`${styles.ring} ${styles.r3}`} aria-hidden="true" />
-      <div className={`${styles.ring} ${styles.r4}`} aria-hidden="true" />
       <Kawung className={styles.tl} />
       <Kawung className={styles.tr} />
       <Kawung className={styles.bl} />

@@ -2,7 +2,7 @@
 import { C, darken, lighten, palm, poly, post, sheet, type ArtModule, type Piece, type Pt } from "../helpers";
 import { bank, blob, frame, spray, tone } from "./shared-b";
 
-const I = 5;
+const I = 6;
 
 /** Sandbar: a low lens that tapers to the water at both ends. */
 const bar = (xa: number, xb: number, y: number, r: Parameters<typeof bank>[4]): Pt[] => {

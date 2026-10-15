@@ -1,0 +1,162 @@
+/* Lantern loader (Loader.tsx): sits inside the Frame opening, over the stage. */
+.root {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-5);
+  padding: var(--sp-4);
+  background: var(--c-ink-night);
+  transition: opacity 260ms linear;
+}
+/* The lantern's light opens a hole in the night from the boat (--lx/--ly, set on landing). The circle lives here, on one
+   flat overlay, not as a clip-path on the world: ending a clip over 20 GPU layers re-rastered them all and blanked a frame. */
+@property --r {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+.root[data-phase="fade"] {
+  pointer-events: none;
+  mask: radial-gradient(circle at var(--lx, 50%) var(--ly, 60%), transparent var(--r), #000 calc(var(--r) + 1.5px));
+  animation: open 1100ms var(--ease-out) forwards;
+}
+@keyframes open {
+  to {
+    --r: 150vmax;
+  }
+}
+
+.lantern {
+  position: relative;
+  width: clamp(72px, 16vmin, 128px);
+  aspect-ratio: 3 / 5;
+  transition: transform 520ms var(--ease-paper), opacity 120ms linear;
+  will-change: transform;
+}
+.root[data-phase="fade"] .lantern {
+  opacity: 0;
+}
+.lantern svg,
+.litClip {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+/* The lit lantern shows through a window rising from the bottom: the window slides down by --cut and its lantern slides
+   back up by the same, so only translate animates (a clip-path transition blanked the lantern for a frame at its end). */
+.litClip,
+.litWin {
+  overflow: hidden;
+}
+.litWin {
+  position: absolute;
+  inset: 0;
+  translate: 0 var(--cut);
+}
+.litWin,
+.litWin svg {
+  transition: translate 350ms var(--ease-out);
+}
+.litWin svg {
+  translate: 0 calc(-1 * var(--cut));
+}
+.glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 360%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  background: radial-gradient(circle, rgb(255 180 84 / 0.28), rgb(255 180 84 / 0) 60%);
+  transition: opacity 350ms var(--ease-out);
+  pointer-events: none;
+}
+.root[data-phase="fly"] .glow {
+  opacity: 0 !important;
+  transition-duration: 300ms;
+}
+
+.shadow {
+  fill: var(--c-shadow);
+}
+.cord {
+  fill: none;
+  stroke: var(--c-twine);
+  stroke-width: 2;
+}
+.rib {
+  fill: none;
+  stroke-width: 2.5;
+}
+.unlit .body {
+  fill: var(--ramp-2);
+}
+.unlit .cap {
+  fill: var(--ramp-3);
+}
+.unlit .rib {
+  stroke: var(--ramp-1);
+}
+.unlit .motif {
+  fill: var(--ramp-3);
+}
+.lit .body {
+  fill: var(--c-lantern);
+}
+.lit .cap {
+  fill: var(--c-ember);
+}
+.lit .rib {
+  stroke: var(--c-ember);
+}
+.lit .motif {
+  fill: var(--c-lantern-core);
+}
+.lit .shadow,
+.lit .cord {
+  display: none;
+}
+
+.label {
+  margin: 0;
+  max-width: 100%;
+  font-size: var(--fs-kicker);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-paper-dim);
+  text-align: center;
+  transition: opacity 200ms linear;
+}
+.root:not([data-phase="load"]) .label {
+  opacity: 0;
+}
+.pct {
+  margin-left: var(--sp-2);
+  color: var(--c-lantern);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root[data-phase="fade"] {
+    mask: none;
+    animation: none;
+    opacity: 0;
+  }
+  .lantern,
+  .litWin,
+  .litWin svg,
+  .glow {
+    transition: none;
+  }
+}
+:global(html[data-motion="reduced"]) .root[data-phase="fade"] {
+  mask: none;
+  animation: none;
+  opacity: 0;
+}

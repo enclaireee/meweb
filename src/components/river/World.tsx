@@ -1,13 +1,21 @@
 "use client";
 // The layered world: art tiles per layer, fireflies at three depths and the traveller, in draw order (layers.md).
 // Nothing here re-renders per frame: movement is CSS reading --pos/--px/--py from the stage.
+// Every tile and firefly stays mounted for the whole visit: any DOM change inside a layer makes the compositor
+// re-raster it at the current camera scale, and the layer blanks for a frame (the flicker).
 import { memo, type CSSProperties, type RefCallback, type RefObject } from "react";
 import manifest from "../../../public/art/desktop/manifest.json";
-import { dials } from "@/content/site";
-import { visibleTiles, type Layout } from "@/lib/layout";
+import { dials, stops } from "@/content/site";
+import type { Layout } from "@/lib/layout";
 import { Ambient } from "./Ambient";
 import { TRAVELLER_SVG } from "./traveller.generated";
 import s from "./river.module.css";
+import i from "./intro.module.css";
+
+/** Total reveal time (ms): the staggered rise. River flips intro to "done" after this. */
+export const INTRO_MS = 2000; // last layer: ~22 × 48 ms stagger + 900 ms rise
+
+type Intro = "wait" | "play" | "done";
 
 type LayerM = { id: string; name: string; s: number; fx?: string; length: number; tiles: { f: string; x: number; w: number }[] };
 const LAYERS = manifest.layers as LayerM[];
@@ -26,11 +34,13 @@ const hash = (...n: number[]) => {
   return ((h >>> 0) % 10007) / 10007;
 };
 
-function Fireflies({ depth, stops, active, phone }: { depth: 0 | 1 | 2; stops: number[]; active: number; phone: boolean }) {
+const ALL = stops.map((st) => st.i);
+
+function Fireflies({ depth, active, phone, ri, cls }: { depth: 0 | 1 | 2; active: number; phone: boolean; ri: number; cls: string }) {
   const d = FF[depth];
   return (
-    <div className={s.layer} style={{ "--s": d.s } as CSSProperties}>
-      {stops.map((i) => {
+    <div className={`${s.layer} ${cls}`} style={{ "--s": d.s, "--ri": ri } as CSSProperties}>
+      {ALL.map((i) => {
         const n = Math.ceil(dials[i]!.ff[depth] / (phone ? 2 : 1));
         return (
           <div key={i} className={s.ffSet} data-on={i === active}>
@@ -56,10 +66,6 @@ function Fireflies({ depth, stops, active, phone }: { depth: 0 | 1 | 2; stops: n
 
 type Props = {
   L: Layout;
-  /** Pos range the tiles must cover (the current move, or [stop, stop] at rest). */
-  lo: number;
-  hi: number;
-  ffStops: number[];
   ffActive: number;
   travellerState: string;
   /** Collects layer elements that need per-frame fx (opacity/offset by pos). */
@@ -69,30 +75,30 @@ type Props = {
   /** Stop whose ambient life plays, and whether it shows (at rest only). */
   lifeStop: number;
   lifeOn: boolean;
+  intro: Intro;
 };
 
-export const World = memo(function World({ L, lo, hi, ffStops, ffActive, travellerState, fxRef, skyRef, lifeStop, lifeOn }: Props) {
+export const World = memo(function World({ L, ffActive, travellerState, fxRef, skyRef, lifeStop, lifeOn, intro }: Props) {
   const phone = L.profile === "phone";
   const out: React.ReactNode[] = [];
+  const cls = intro === "done" ? "" : i.rise!;
+  let ri = 0;
   for (const layer of LAYERS) {
-    const idx = visibleTiles(layer.tiles, layer.s, lo, hi, L);
     out.push(
       <div
         key={layer.id}
-        className={s.layer}
+        className={`${s.layer} ${cls}`}
         data-layer={layer.id}
-        style={{ "--s": layer.s } as CSSProperties} ref={layer.fx ? fxRef(layer.id, layer.fx) : undefined}>
-        {idx.map((i) => {
-          const t = layer.tiles[i]!;
-          return (
-            // eslint-disable-next-line @next/next/no-img-element -- pre-built SVG art tiles, next/image adds nothing here
-            <img key={t.f} className={s.tile} src={`/art/desktop/${t.f}`} alt="" decoding="async" draggable={false} style={{ "--x": t.x, "--w": t.w } as CSSProperties} />
-          );
-        })}
+        style={{ "--s": layer.s, "--len": layer.length, "--ri": ri++ } as CSSProperties}
+        ref={layer.fx ? fxRef(layer.id, layer.fx) : undefined}>
+        {layer.tiles.map((t) => (
+          // eslint-disable-next-line @next/next/no-img-element -- pre-built SVG art tiles, next/image adds nothing here
+          <img key={t.f} className={s.tile} src={`/art/desktop/${t.f}`} alt="" draggable={false} style={{ "--x": t.x, "--w": t.w } as CSSProperties} />
+        ))}
       </div>,
     );
     FF.forEach((d, depth) => {
-      if (d.after === layer.id) out.push(<Fireflies key={`ff${depth}`} depth={depth as 0 | 1 | 2} stops={ffStops} active={ffActive} phone={phone} />);
+      if (d.after === layer.id) out.push(<Fireflies key={`ff${depth}`} depth={depth as 0 | 1 | 2} active={ffActive} phone={phone} ri={ri++} cls={cls} />);
     });
     if (layer.id === "w2") {
       out.push(
@@ -106,7 +112,7 @@ export const World = memo(function World({ L, lo, hi, ffStops, ffActive, travell
     }
   }
   return (
-    <div className={s.world} aria-hidden="true">
+    <div className={`${s.world} ${intro === "play" ? i.play : ""}`} data-world aria-hidden="true">
       <div className={s.sky} ref={skyRef} />
       {out}
     </div>

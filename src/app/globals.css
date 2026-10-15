@@ -126,9 +126,8 @@
   /* frame */
   --frame: 23px;
   --ring-1: 8px;
-  --ring-2: 6px;
-  --ring-3: 5px;
-  --ring-4: 4px;
+  --ring-2: 8px;
+  --ring-3: 7px;
 
   color-scheme: dark;
 }
@@ -137,9 +136,8 @@
   :root {
     --frame: 36px;
     --ring-1: 12px;
-    --ring-2: 10px;
-    --ring-3: 8px;
-    --ring-4: 6px;
+    --ring-2: 12px;
+    --ring-3: 12px;
   }
 }
 
@@ -147,10 +145,9 @@
   :root {
     --gutter: 24px;
     --frame: 54px;
-    --ring-1: 18px;
-    --ring-2: 14px;
-    --ring-3: 12px;
-    --ring-4: 10px;
+    --ring-1: 20px;
+    --ring-2: 18px;
+    --ring-3: 16px;
   }
 }
 

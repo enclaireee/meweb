@@ -45,8 +45,8 @@ const jsonLd = {
   knowsAbout: ["Control systems", "SCADA", "Time-series forecasting", "Next.js", "Python"],
 };
 
-// Runs before paint: marks JS on, and restores the day/night switch (DayToggle).
-const boot = `document.documentElement.classList.add('js');try{if(localStorage.getItem('time')==='day')document.documentElement.dataset.time='day'}catch(e){}`;
+// Runs before paint: marks JS on.
+const boot = `document.documentElement.classList.add('js');`;
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (

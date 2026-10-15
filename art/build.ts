@@ -2,7 +2,7 @@
 // Run: npx tsx art/build.ts
 import { mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { gzipSync } from "node:zlib";
-import { glowIds, rng, type ArtModule, type Piece } from "./helpers";
+import { C, glowIds, rng, sheet, type ArtModule, type Piece } from "./helpers";
 import { H, LAYERS, OVERSCAN, PAD, P, TILE, landmarkX, stripLength, type LayerDef } from "./layers";
 import far from "./far";
 import water from "./water";
@@ -15,37 +15,44 @@ import stop4 from "./stops/stop-4";
 import stop5 from "./stops/stop-5";
 import stop6 from "./stops/stop-6";
 import stop7 from "./stops/stop-7";
+import { buildMarket } from "./market/build";
 
-const STOPS: ArtModule[] = [stop0, stop1, stop2, stop3, stop4, stop5, stop6, stop7];
-const OUT = "public/art/desktop";
+/** One river strip: its stops (with the rng seed each module has always used), where each sits on the 9-stop timeline, and where it is written. */
+export type Strip = { name: "main" | "channel"; out: string; stops: { mod: ArtModule; seed: number }[]; tl: readonly number[] };
+export const STRIPS: Record<Strip["name"], Strip> = {
+  main: { name: "main", out: "public/art/desktop", tl: [2, 3, 7, 9], stops: [{ mod: stop0, seed: 0 }, { mod: stop3, seed: 3 }, { mod: stop6, seed: 6 }, { mod: stop7, seed: 7 }] },
+  // ponytail: kept, the live site still loads public/art/channel (River.tsx CHANNEL_TILES, projects cascade) and art/preview.ts renders it; only `main` is rebuilt by main().
+  channel: { name: "channel", out: "public/art/channel", tl: [2, 3, 4, 5, 6], stops: [{ mod: stop1, seed: 1 }, { mod: stop2, seed: 2 }, { mod: stop3, seed: 3 }, { mod: stop4, seed: 4 }, { mod: stop5, seed: 5 }] },
+};
 const SEED = 20261013;
 
 const f = (n: number) => (Math.round(n * 10) / 10).toString();
 
 /** Stop i owns the half-pitch either side of its landmark (first/last stop run to the strip ends). */
-export const ownRange = (s: number, i: number, length: number): [number, number] => [
+export const ownRange = (s: number, i: number, count: number, length: number): [number, number] => [
   i === 0 ? 0 : landmarkX(s, i) - (s * P) / 2,
-  i === STOPS.length - 1 ? length : landmarkX(s, i) + (s * P) / 2,
+  i === count - 1 ? length : landmarkX(s, i) + (s * P) / 2,
 ];
 
-export function piecesFor(L: LayerDef): Piece[] {
-  const length = stripLength(L.s);
+export function piecesFor(L: LayerDef, S: Strip): Piece[] {
+  const count = S.stops.length;
+  const length = stripLength(L.s, count);
   const seed = SEED + L.id.charCodeAt(0) * 131 + (L.id.charCodeAt(1) || 0) * 17;
   const out: Piece[] = [];
   for (const mod of [far, water]) {
     const g = mod[L.id];
-    if (g) out.push(...g({ layer: L, i: -1, x0: 0, x1: length, lx: NaN, length, rng: rng(seed) }));
+    if (g) out.push(...g({ layer: L, i: -1, x0: 0, x1: length, lx: NaN, length, count, tl: S.tl, rng: rng(seed) }));
   }
-  STOPS.forEach((mod, i) => {
+  S.stops.forEach(({ mod, seed: n }, i) => {
     const g = mod[L.id];
     if (!g) return;
-    const [x0, x1] = ownRange(L.s, i, length);
-    out.push(...g({ layer: L, i, x0, x1, lx: landmarkX(L.s, i), length, rng: rng(seed + i * 7919) }));
+    const [x0, x1] = ownRange(L.s, i, count, length);
+    out.push(...g({ layer: L, i, x0, x1, lx: landmarkX(L.s, i), length, count, tl: S.tl, rng: rng(seed + n * 7919) }));
   });
   return out;
 }
 
-const GLOW_DEF = (id: string) =>
+export const GLOW_DEF = (id: string) =>
   `<radialGradient id="${id}"><stop offset="0" stop-color="#${id.slice(5)}" stop-opacity=".9"/><stop offset=".35" stop-color="#${id.slice(5)}" stop-opacity=".35"/><stop offset="1" stop-color="#${id.slice(5)}" stop-opacity="0"/></radialGradient>`;
 
 /* ---------- papercut, baked into geometry (no <filter>: filters made Chrome rasterise late = flicker) ---------- */
@@ -96,7 +103,7 @@ export function deckle(markup: string, amp: number): string {
 }
 
 /** Paper fibre grain: one 160-unit cell (rotated so the repeat never lines up) of short light/dark strands, drawn as a cheap pattern shader. */
-const GRAIN = (() => {
+export const GRAIN = (() => {
   const r = rng(SEED + 11);
   let s = "";
   for (let k = 0; k < 180; k++) {
@@ -144,9 +151,9 @@ export function tileSvg(L: LayerDef, pieces: Piece[], x: number, w: number): str
 export type TileInfo = { f: string; x: number; w: number };
 export type LayerManifest = { id: string; name: string; s: number; fx?: string; length: number; tiles: TileInfo[] };
 
-export function buildLayer(L: LayerDef): { m: LayerManifest; svgs: Map<string, string> } {
-  const length = stripLength(L.s);
-  const pieces = piecesFor(L);
+export function buildLayer(L: LayerDef, S: Strip): { m: LayerManifest; svgs: Map<string, string> } {
+  const length = stripLength(L.s, S.stops.length);
+  const pieces = piecesFor(L, S);
   const margin = (L.shadow ? L.shadow[0] + L.shadow[2] * 1.5 : 0) + (L.blur ?? 0) * 3 + (L.deckle ?? 0) + 30;
   const tiles: TileInfo[] = [];
   const svgs = new Map<string, string>();
@@ -184,34 +191,73 @@ export function deckleMasks(dir = "public/art/ui") {
   writeFileSync(`${dir}/deckle-left.svg`, svg(j([[12, 0], [12, 240], ...edge.slice().reverse().map(([x, y]) => [12 - y, x] as const)]), 12, 240));
 }
 
-function main() {
-  deckleMasks();
+/**
+ * Reed curtains for the UI (public/art/ui/reeds-{left,right}.svg), 700x1000: four stacked paper sheets, back (lightest) to
+ * front (darkest), each solid from the outer edge and ending in long ragged reed blades pointing inward. Opaque; two
+ * of them sliding in from both sides overlap into a full cover.
+ */
+export function reedCurtains(dir = "public/art/ui") {
+  const ramp = [C.ramp3, C.ramp2, C.ramp1, C.ramp0];
+  const mk = (right: boolean) => {
+    const r = rng(SEED + 9);
+    const X = (x: number) => (right ? 700 - x : x);
+    let svg = "";
+    ramp.forEach((fill, k) => {
+      const solid = 540 - k * 110;
+      const pts: [number, number][] = [[X(0), -20]];
+      for (let y = -10; y < 1010; ) {
+        const gap = r.range(26, 52) * (1 + k * 0.1);
+        const w = r.range(16, 34) + k * 3;
+        const len = r.range(70, 150) * (1 - k * 0.1);
+        const lift = r.range(-120, 10);
+        const e = solid + r.range(-14, 14);
+        pts.push([X(e), y], [X(e + len * 0.6), y + w * 0.35 + lift * 0.3], [X(e + len), y + w * 0.5 + lift], [X(e + len * 0.5), y + w * 0.85 + lift * 0.1], [X(e), y + w]);
+        y += w + gap * 0.3;
+      }
+      pts.push([X(0), 1020]);
+      svg += sheet(pts, fill, r).svg;
+    });
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="700" height="1000" viewBox="0 0 700 1000" preserveAspectRatio="none">${svg}</svg>`;
+  };
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(`${dir}/reeds-left.svg`, mk(false));
+  writeFileSync(`${dir}/reeds-right.svg`, mk(true));
+}
+
+function buildStrip(S: Strip) {
   // Overwrite in place, never delete/rename the folder: ~/Documents is iCloud-synced and a fast
   // rm+rename makes iCloud keep a "desktop 2" conflict copy, leaving the site with no art folder.
-  mkdirSync(OUT, { recursive: true });
+  mkdirSync(S.out, { recursive: true });
   const layers: LayerManifest[] = [];
   const keep = new Set(["manifest.json"]);
   let total = 0;
   for (const L of LAYERS) {
-    const { m, svgs } = buildLayer(L);
+    const { m, svgs } = buildLayer(L, S);
     layers.push(m);
     let gz = 0;
     for (const [file, svg] of svgs) {
-      writeFileSync(`${OUT}/${file}`, svg);
+      writeFileSync(`${S.out}/${file}`, svg);
       keep.add(file);
       gz += gzipSync(svg).length;
     }
     total += gz;
-    console.log(`${L.id} ${L.name.padEnd(12)} ${m.tiles.length} tiles  ${(gz / 1024).toFixed(0)} KB gz`);
+    console.log(`${S.name} ${L.id} ${L.name.padEnd(12)} ${m.tiles.length} tiles  ${(gz / 1024).toFixed(0)} KB gz`);
   }
   // Drop tiles no longer produced (old .webp, cache.json), then publish the manifest last.
-  for (const f of readdirSync(OUT)) if (!keep.has(f)) rmSync(`${OUT}/${f}`);
-  writeFileSync(`${OUT}/manifest.json`, JSON.stringify({ P, PAD, H, seed: SEED, layers }));
+  for (const f of readdirSync(S.out)) if (!keep.has(f)) rmSync(`${S.out}/${f}`);
+  writeFileSync(`${S.out}/manifest.json`, JSON.stringify({ P, PAD, H, seed: SEED, layers }));
+  console.log(`${S.name} total ${(total / 1024).toFixed(0)} KB gz`);
+}
+
+function main() {
+  deckleMasks();
+  reedCurtains();
+  buildMarket();
+  buildStrip(STRIPS.main);
   writeFileSync(
     "src/components/river/traveller.generated.ts",
     `// Generated by art/build.ts from art/traveller.ts. Do not edit.\nexport const TRAVELLER_SVG = ${JSON.stringify(traveller())};\n`,
   );
-  console.log(`total ${(total / 1024).toFixed(0)} KB gz`);
 }
 
 if (process.argv[1]?.endsWith("build.ts")) main();

@@ -6,7 +6,7 @@ import s from "./river.module.css";
 
 type Fx = "mist" | "leaves" | "stars" | "birds" | "beam";
 // ponytail: hand-picked per stop from the art; add a dial if a stop's art changes.
-const LIFE: Fx[][] = [["mist", "birds"], ["leaves"], ["stars", "mist"], ["stars"], ["leaves", "mist"], ["birds"], ["birds"], ["beam", "birds"]];
+const LIFE: Fx[][] = [["mist", "birds"], ["mist"], ["birds"], ["beam", "birds"]]; // Spring, Market pier, Village, Lighthouse
 
 const hash = (...n: number[]) => {
   let h = 2166136261;

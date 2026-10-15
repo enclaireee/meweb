@@ -1,10 +1,10 @@
 // All words on the page. Source: agents/content.md (which follows the CV).
 
 /** Every stop's card has its own look (CardBody.tsx). */
-export type CardLayout = "cv" | "pipeline" | "spec" | "poster" | "ticket" | "datasheet" | "timeline" | "letter";
+export type CardLayout = "cv" | "stalls" | "pipeline" | "spec" | "poster" | "ticket" | "datasheet" | "timeline" | "letter";
 
-/** Where the card opens over the scene (desktop/tablet), beside the stop's focal point. Phones: top or bottom sheet. */
-export type CardAt = { x: "left" | "center" | "right"; y: "top" | "center" | "bottom"; w?: "narrow" | "wide" };
+/** A paper note's centre in art units: x from the stop's boat, y from the artboard top; then its tilt in degrees. */
+export type Spot = [x: number, y: number, deg: number];
 
 export type ImageRef = {
   alt: string;
@@ -15,10 +15,12 @@ export type ImageRef = {
 
 export type Stop = {
   i: number;
-  id: string; // "stop-0"
+  id: string; // "stop-0" on the main river, "made-1" on the projects river
   place: string; // "The Spring"
   time: string; // "Dusk"
   kicker: string; // "00 · The Spring"
+  /** Where this stop's notes lie (desktop/tablet), one per note in noteKinds() order (src/lib/notes.ts). */
+  spots: Spot[];
   tag: {
     title: string;
     date?: string;
@@ -28,7 +30,6 @@ export type Stop = {
   };
   card: {
     layout: CardLayout;
-    at: CardAt;
     title: string;
     subtitle?: string;
     date?: string;
@@ -72,11 +73,8 @@ export const copy = {
   prev: "Previous place",
   next: "Next place",
   dotsLabel: "Places along the river",
-  hintTouch: "Swipe to drift downstream",
-  hintPointer: "Press → or scroll once",
   close: "Close",
   imageEmpty: "Image soon",
-  dayMode: "Day mode",
   downloadCv: "Download CV",
   copyEmail: "Copy email",
   copied: "Copied",
@@ -84,21 +82,30 @@ export const copy = {
   noJs: "The river is quieter without JavaScript. Here is everything, in order.",
   notFound: "You drifted off the map.",
   notFoundLink: "Back to the river.",
-  openTag: "Open",
+  made: "Things I made",
+  madeCount: "5 projects, 5 stalls",
+  backToMain: "Back to the river",
+  levelsLabel: "Stalls along the lane",
+  /** The booklet on each stall's counter (Market.tsx): one page per section, drawn from the project's own fields. */
+  pages: ["Overview", "How it works", "What I built", "Stack & results"],
+  enterStall: "Walk to this stall",
+  loading: "Lighting the lantern",
   howToExplore: "Use the arrows, swipe, or press → to float downstream.",
   contactLine:
     "Open to internships, collaborations and good conversations about control, data and web.",
 };
 
 const kick = (i: number, place: string) => `0${i} · ${place}`;
-
+/** The main river: Spring (landing), Market Pier (into the projects), Village (skills & experience), Lighthouse (contact). */
 export const stops: Stop[] = [
   {
     i: 0,
     id: "stop-0",
     place: "The Spring",
-    time: "Dusk",
+    time: "Night",
     kicker: kick(0, "The Spring"),
+    // ponytail: the landing (Landing.tsx) lays out its own name and card line; spots unused.
+    spots: [],
     tag: {
       title: "Hello, I'm Fatih",
       hook: "Engineer in training, builder of things that measure and decide.",
@@ -106,20 +113,70 @@ export const stops: Stop[] = [
     },
     card: {
       layout: "cv",
-      at: { x: "right", y: "center" },
       title: "Muhammad Fatih Zamzami",
       subtitle:
         "Electrical engineering undergraduate · Universitas Indonesia · Depok, Jawa Barat",
       summary:
-        "I work across control systems, full-stack development and industrial OT/SCADA monitoring, and I have led technical and organisational teams along the way. This river is how I'd show you around: eight stops, one lantern each.",
+        "I work across control systems, full-stack development and industrial OT/SCADA monitoring, and I have led technical and organisational teams along the way. This river is how I'd show you around, with a night market for the things I've built.",
     },
   },
   {
     i: 1,
     id: "stop-1",
-    place: "The Terraces",
+    place: "The Market Pier",
+    time: "Night",
+    kicker: kick(1, "The Market Pier"),
+    spots: [[365, 358, 0], [640, 533, 0]],
+    tag: {
+      title: "Things I made",
+      hook: "Five projects, five stalls. Pick one and walk the lane.",
+    },
+    card: {
+      layout: "stalls",
+      title: "Things I made",
+      summary: "Forecasting, plant monitoring, a game, an event and a solar lamp, each one a stall in the night market.",
+    },
+  },
+  {
+    i: 2,
+    id: "stop-2",
+    place: "The Stilt Village",
+    time: "Dawn",
+    kicker: kick(2, "The Stilt Village"),
+    spots: [[365, 344, 0], [800, 591, 0]],
+    tag: {
+      title: "Skills & experience",
+      date: "2023 to now",
+      hook: "Teams I've led, courses I've taught, sites I've shipped.",
+      facts: [["11", "analysts led"], ["3", "SCADA platforms"], ["30", "scouts led abroad"]],
+    },
+    card: {
+      layout: "timeline",
+      title: "Skills & experience",
+      date: "2023 to now",
+    },
+  },
+  {
+    i: 3,
+    id: "stop-3",
+    place: "The Lighthouse",
+    time: "Morning",
+    kicker: kick(3, "The Lighthouse"),
+    spots: [[365, 344, 0], [845, 626, 0]],
+    tag: { title: "Say hello", hook: "Morning on the sea, and the lamp is still lit." },
+    card: { layout: "letter", title: "Say hello", summary: copy.contactLine },
+  },
+];
+
+/** The projects night market: one stall per project, down the lane from the pier at the Spring. */
+export const projects: Stop[] = [
+  {
+    i: 0,
+    id: "made-1",
+    place: "The Grain Stall",
     time: "Early night",
-    kicker: kick(1, "The Terraces"),
+    kicker: kick(1, "The Grain Stall"),
+    spots: [[365, 335, 0], [706, 417, 0]],
     tag: {
       title: "DemandX",
       date: "Sep 2026",
@@ -128,7 +185,6 @@ export const stops: Stop[] = [
     },
     card: {
       layout: "pipeline",
-      at: { x: "right", y: "top" },
       steps: ["Ingest anything", "Let models compete", "Decide what to reorder"],
       spec: [["Foundation models", "TiRex-2 · TimesFM-3"], ["Classic baselines", "Croston · TSB · seasonal naive"]],
       title: "DemandX",
@@ -146,11 +202,12 @@ export const stops: Stop[] = [
     },
   },
   {
-    i: 2,
-    id: "stop-2",
-    place: "The Gorge",
+    i: 1,
+    id: "made-2",
+    place: "The Repair Stall",
     time: "Deep night",
-    kicker: kick(2, "The Gorge"),
+    kicker: kick(2, "The Repair Stall"),
+    spots: [[365, 358, 0], [640, 533, 0]],
     tag: {
       title: "OT Observability Lab",
       date: "Jun to Aug 2026",
@@ -159,7 +216,6 @@ export const stops: Stop[] = [
     },
     card: {
       layout: "spec",
-      at: { x: "right", y: "bottom" },
       spec: [["PLC", "controllers"], ["HMI", "operator panels"], ["Network", "switches and links"], ["Gas", "instrumentation"]],
       legend: ["Good", "Underperform", "Failed"],
       title: "OT Observability Lab",
@@ -177,11 +233,12 @@ export const stops: Stop[] = [
     },
   },
   {
-    i: 3,
-    id: "stop-3",
-    place: "The Still Pond",
+    i: 2,
+    id: "made-3",
+    place: "The Game Stall",
     time: "Midnight",
-    kicker: kick(3, "The Still Pond"),
+    kicker: kick(3, "The Game Stall"),
+    spots: [[365, 344, 0], [650, 156, 0]],
     tag: {
       title: "Refocus",
       date: "Feb to Apr 2025",
@@ -190,7 +247,6 @@ export const stops: Stop[] = [
     },
     card: {
       layout: "poster",
-      at: { x: "center", y: "top", w: "narrow" },
       steps: ["The loop", "The pattern"],
       title: "Refocus",
       subtitle: "Refocusing ADHD using EEG and a neuro-adaptive video game",
@@ -211,11 +267,12 @@ export const stops: Stop[] = [
     },
   },
   {
-    i: 4,
-    id: "stop-4",
-    place: "The Mangroves",
+    i: 3,
+    id: "made-4",
+    place: "The Ticket Booth",
     time: "Late night",
-    kicker: kick(4, "The Mangroves"),
+    kicker: kick(4, "The Ticket Booth"),
+    spots: [[365, 360, 0], [795, 421, 0]],
     tag: {
       title: "KOMAT UNPAR 2025",
       date: "Mar to Aug 2025",
@@ -224,7 +281,6 @@ export const stops: Stop[] = [
     },
     card: {
       layout: "ticket",
-      at: { x: "left", y: "bottom", w: "wide" },
       spec: [["Event", "KOMAT UNPAR 2025"], ["Reach", "Nationwide"], ["Run", "Mar to Aug 2025"], ["Ships via", "Vercel CD"]],
       title: "KOMAT UNPAR 2025",
       subtitle: "Competition website for a nationwide mathematics competition",
@@ -241,11 +297,12 @@ export const stops: Stop[] = [
     },
   },
   {
-    i: 5,
-    id: "stop-5",
-    place: "The Estuary",
+    i: 4,
+    id: "made-5",
+    place: "The Lamp Seller",
     time: "Pre-dawn",
-    kicker: kick(5, "The Estuary"),
+    kicker: kick(5, "The Lamp Seller"),
+    spots: [[365, 344, 0], [834, 584, 0]],
     tag: {
       title: "Sunlight Meter", // placeholder: true (decisions.md Q6)
       date: "May to Jun 2026",
@@ -254,7 +311,6 @@ export const stops: Stop[] = [
     },
     card: {
       layout: "datasheet",
-      at: { x: "right", y: "center" },
       spec: [["Source", "Photovoltaic panel"], ["Controller", "Arduino"], ["Power sensor", "INA219"], ["Light sensor", "LDR"], ["Display", '0.96" I2C OLED']],
       title: "Solar-Powered Lighting System",
       subtitle: "With real-time efficiency monitoring · Embedded Systems final project",
@@ -269,34 +325,6 @@ export const stops: Stop[] = [
       chips: ["Arduino", "INA219", "LDR", "I2C OLED", "Photovoltaic"],
       image: { alt: "The solar lamp prototype with its OLED display" },
     },
-  },
-  {
-    i: 6,
-    id: "stop-6",
-    place: "The Stilt Village",
-    time: "Dawn",
-    kicker: kick(6, "The Stilt Village"),
-    tag: {
-      title: "Roles & Craft",
-      date: "2023 to now",
-      hook: "Teams I've led, courses I've taught, sites I've shipped.",
-      facts: [["11", "analysts led"], ["3", "SCADA platforms"], ["30", "scouts led abroad"]],
-    },
-    card: {
-      layout: "timeline",
-      at: { x: "center", y: "bottom", w: "wide" },
-      title: "Roles & Craft",
-      date: "2023 to now",
-    },
-  },
-  {
-    i: 7,
-    id: "stop-7",
-    place: "The Lighthouse",
-    time: "First light",
-    kicker: kick(7, "The Lighthouse"),
-    tag: { title: "Say hello", hook: "Last light before the sea." },
-    card: { layout: "letter", at: { x: "left", y: "center", w: "narrow" }, title: "Say hello", summary: copy.contactLine },
   },
 ];
 
@@ -398,14 +426,11 @@ export const awards = [
   "Best BPH (Board of Officers), Research & Development Division, Ikatan Mahasiswa Elektro FTUI (2026)",
 ];
 
-/** Per-stop dials (design-tokens.md). `cam` is the diorama camera shot for the stop (src/lib/camera.ts). */
+/** Per-stop dials (design-tokens.md). `cam` is the diorama camera shot for the stop (src/lib/camera.ts). Main river. */
 export const dials = [
   { ff: [4, 2, 0], glow: 0.8, haze: 0.6, cam: { yaw: -6.4, pitch: 0, lift: 0, dolly: 0 } },
-  { ff: [8, 5, 1], glow: 0.9, haze: 0.6, cam: { yaw: 4.8, pitch: -1.5, lift: -22.5, dolly: 65 } },
-  { ff: [12, 8, 3], glow: 1, haze: 1, cam: { yaw: 1.6, pitch: -3.8, lift: -45, dolly: 143 } },
-  { ff: [14, 10, 5], glow: 1, haze: 0.7, cam: { yaw: -2.4, pitch: 6, lift: 45, dolly: 91 } },
-  { ff: [8, 6, 2], glow: 1, haze: 1, cam: { yaw: -9.6, pitch: 0.8, lift: 0, dolly: 52 } },
-  { ff: [6, 4, 1], glow: 0.7, haze: 0.3, cam: { yaw: 3.2, pitch: -4.5, lift: -60, dolly: 0 } },
+  { ff: [3, 1, 0], glow: 0.9, haze: 0.5, cam: { yaw: 4, pitch: 0, lift: 0, dolly: 30 } },
   { ff: [2, 0, 0], glow: 0.5, haze: 0.4, cam: { yaw: 8, pitch: 3, lift: 30, dolly: 78 } },
   { ff: [0, 0, 0], glow: 0.6, haze: 0.3, cam: { yaw: 0, pitch: 0, lift: 0, dolly: 26 } },
 ] as const;
+

@@ -34,17 +34,9 @@
   perspective: calc(2000 * var(--k));
   perspective-origin: var(--ox) var(--oy);
 }
-.world {
-  animation: enter 1000ms 200ms ease-out both;
-}
 .stage[data-fade="true"] .world,
 .stage[data-fade="true"] .tags {
   opacity: 0;
-}
-@keyframes enter {
-  from {
-    opacity: 0;
-  }
 }
 
 .sky {
@@ -61,6 +53,10 @@
   position: absolute;
   left: 0;
   top: 0;
+  /* Fixed box over the whole strip: tiles mount/unmount around the current stop, and if that moved the layer's bounds
+     the compositor re-rastered the entire layer, dropping it for a frame (the flicker). */
+  width: calc(var(--len, 26600) * var(--k));
+  height: calc(1000 * var(--k));
   --z: calc(600 * (var(--s) - 1));
   transform-origin: var(--ox) var(--oy);
   transform: var(--cam) translateZ(calc(var(--z) * var(--k))) scale(calc(1 - var(--z) / 2000))
@@ -99,6 +95,9 @@
 .ffSet[data-on="false"] {
   opacity: 0;
 }
+.ffSet[data-on="false"] .ff {
+  animation-play-state: paused;
+}
 .ff {
   position: absolute;
   left: calc(var(--x) * var(--k));
@@ -134,15 +133,6 @@
   to {
     opacity: 0.35;
   }
-}
-
-/* Tags ride the action plane (s = 1), drawn above layer 12 so the near layers never cover them. */
-.tagAt {
-  position: absolute;
-  left: calc(var(--x) * var(--k));
-  top: calc(300 * var(--k));
-  width: 0;
-  height: 0;
 }
 
 /* Traveller: fixed at the anchor on the waterline; the inline SVG's part groups animate by state (traveller.md). */
@@ -250,16 +240,6 @@
   }
 }
 
-/* Entrance: the sheets drop into the box back to front (low speed = far = first). */
-.world .layer {
-  animation: rise 1100ms var(--ease-out) both;
-  animation-delay: calc(150ms + min(var(--s), 1.6) * 380ms);
-}
-@keyframes rise {
-  from {
-    translate: 0 calc(70px - min(var(--s), 1.6) * 20px);
-  }
-}
 
 /* Ambient life (Ambient.tsx): screen units u from the anchor, on the camera plane. Fades in on arrival, out on a glide. */
 .ambient {
@@ -457,46 +437,80 @@
   transition: scale 900ms ease-in;
 }
 
-/* Card open: the scene steps back and leans away from the card (Card placement, data-card on the stage). */
-.world {
-  transition: opacity 125ms linear, translate 700ms var(--ease-paper), scale 700ms var(--ease-paper);
+
+/* Always-on way into the projects cascade (and back): a paper tab on the top frame band, opposite the controls. */
+.made {
+  position: fixed;
+  top: calc(var(--frame) / 2);
+  left: calc(44px + env(safe-area-inset-left));
+  --my: -50%;
+  translate: 0 var(--my);
+  z-index: var(--z-chrome);
+  min-height: 32px;
+  padding: 0 var(--sp-3);
+  border: 0;
+  border-radius: 3px;
+  background-color: var(--c-paper);
+  background-image: var(--paper-tex);
+  background-size: var(--paper-tex-size);
+  background-blend-mode: multiply;
+  color: var(--c-ink);
+  box-shadow: var(--edge-light), var(--edge-dark), inset 3px 0 0 var(--c-lantern);
+  filter: var(--sh-stack-1);
+  font: 600 12px/1 var(--ff-body, inherit);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  animation: tab-in 500ms var(--ease-paper) both;
+  transition: translate var(--dur-hover) var(--ease-paper), filter var(--dur-hover) var(--ease-paper);
 }
-.stage[data-card="right"] .world {
-  translate: -4% 0;
-  scale: 1.08;
+.made[data-cascade] {
+  background-color: var(--c-lantern);
 }
-.stage[data-card="left"] .world {
-  translate: 4% 0;
-  scale: 1.08;
+@media (hover: hover) {
+  .made:hover {
+    translate: 0 calc(var(--my) - 2px);
+  }
 }
-.stage[data-card="bottom"] .world {
-  translate: 0 -4%;
-  scale: 1.08;
+.made:active {
+  translate: 0 calc(var(--my) + 1px);
+  filter: var(--sh-stack-0);
+}
+@keyframes tab-in {
+  from {
+    opacity: 0;
+    translate: 0 -120%;
+  }
+}
+/* Phones: the band is full with the day switch and CV (Footer .controls, 6 + 44px), so the tab hangs just under them. */
+@media (max-width: 639px) {
+  .made {
+    top: 58px;
+    --my: 0px;
+  }
+}
+@media (min-width: 640px) {
+  .made {
+    left: 72px;
+    min-height: 36px;
+    font-size: 13px;
+  }
 }
 
-/* Day mode (DayToggle): the night tiles are lifted and warmed, no stars, moon or fireflies. Night is the art's own look. */
-:global(html[data-time="day"]) .world [data-layer="00"],
-:global(html[data-time="day"]) .world [data-layer="01"],
-:global(html[data-time="day"]) .ffSet,
-:global(html[data-time="day"]) .star {
+/* The main river waits under the cascade: kept mounted (decoded, no flicker on return), not painted. */
+.stage[data-away] {
   visibility: hidden;
 }
-:global(html[data-time="day"]) .world .layer[data-layer] {
-  filter: brightness(1.9) saturate(0.8) sepia(0.12);
+
+/* Bow turn: the boat foreshortens and noses into the side channel before the glide (River TURN_MS). */
+.traveller :global(svg) {
+  transition: scale 420ms var(--ease-paper), rotate 420ms var(--ease-paper), translate 420ms var(--ease-paper);
 }
-:global(html[data-time="day"]) .world::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(to bottom, rgb(255 240 210 / 0.35), rgb(170 210 235 / 0.2));
-  mix-blend-mode: soft-light;
-}
-:global(html[data-time="day"]) .glint {
-  background: rgb(255 255 255 / 0.9);
-}
-:global(html[data-time="day"]) .beam {
-  opacity: 0.3;
+.traveller[data-state="turning"] :global(svg) {
+  scale: 0.8 0.96;
+  rotate: -4deg;
+  translate: 4% -3%;
 }
 
 /* Live region: visually hidden. */

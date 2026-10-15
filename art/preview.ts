@@ -1,16 +1,18 @@
 // Renders the composed scene at a stop to a PNG, no browser needed.
-// Run: npx tsx art/preview.ts <stop 0-7 or fractional> [--size=1600x900] [--only=07,09] [--out=art/.preview]
+// Run: npx tsx art/preview.ts <local stop, fractional ok> [--route=main|channel] [--size=1600x900] [--only=07,09] [--out=art/.preview]
 import { mkdirSync } from "node:fs";
 import sharp from "sharp";
 import { computeLayout, HOOK_Y } from "../src/lib/layout";
 import { skyAt } from "../src/lib/sky";
 import { layerFx } from "../src/lib/fx";
-import { buildLayer } from "./build";
+import type { Route } from "../src/lib/route";
+import { buildLayer, STRIPS } from "./build";
 import { LAYERS, PAD, P } from "./layers";
 import traveller from "./traveller";
 
 const args = process.argv.slice(2);
 const opt = (k: string) => args.find((a) => a.startsWith(`--${k}=`))?.split("=")[1];
+const route = (opt("route") ?? "main") as Route;
 const pos = Number(args.find((a) => !a.startsWith("--")) ?? 0);
 const [vw, vh] = (opt("size") ?? "1600x900").split("x").map(Number) as [number, number];
 const only = opt("only")?.split(",");
@@ -26,7 +28,7 @@ function nest(svg: string, x: number, y: number, w: number, h: number, opacity =
   return `<image href="${href}" x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(h)}" preserveAspectRatio="none"${opacity < 1 ? ` opacity="${f(opacity)}"` : ""}/>`;
 }
 
-const sky = skyAt(pos);
+const sky = skyAt(pos, route);
 const h = sky.horizon / 10;
 const skyRect =
   `<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">` +
@@ -40,8 +42,8 @@ const DRAW_TRAVELLER_AFTER = "w2";
 
 for (const layer of LAYERS) {
   if (!only || only.includes(layer.id)) {
-    const { m, svgs } = buildLayer(layer);
-    const fx = layerFx(m.fx, pos);
+    const { m, svgs } = buildLayer(layer, STRIPS[route]);
+    const fx = layerFx(m.fx, pos, route);
     for (const t of m.tiles) {
       const x = anchor + (t.x - PAD - layer.s * pos * P) * k;
       const w = t.w * k;
@@ -66,6 +68,6 @@ parts.push(
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${ow}" height="${oh}" viewBox="0 0 ${ow} ${oh}"><rect width="100%" height="100%" fill="#0A0D14"/>${parts.join("")}</svg>`;
 mkdirSync(out, { recursive: true });
-const file = `${out}/stop-${pos}-${vw}x${vh}${only ? "-" + only.join("_") : ""}.png`;
+const file = `${out}/${route}-${pos}-${vw}x${vh}${only ? "-" + only.join("_") : ""}.png`;
 void sharp(Buffer.from(svg), { limitInputPixels: false, unlimited: true }).png().toFile(file).then(() => console.log(file));
 

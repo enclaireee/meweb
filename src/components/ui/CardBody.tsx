@@ -1,4 +1,4 @@
-import { awards, copy, education, person, roles, skills, type Stop } from "@/content/site";
+import { awards, education, person, projects, roles, skills, type Stop } from "@/content/site";
 import CopyEmail from "./CopyEmail";
 import CvButton from "./CvButton";
 import ImageSlot from "./ImageSlot";
@@ -133,7 +133,22 @@ export function CardBody({ stop, headingId, stacked = false }: Props) {
             </p>
             <Chips items={education.coursework} />
           </section>
-          <p className={styles.hint}>{copy.howToExplore}</p>
+        </div>
+      );
+
+    case "stalls":
+      return (
+        <div className={styles.body} data-layout="stalls">
+          <Head stop={stop} headingId={headingId} />
+          {summary}
+          <ol className={styles.stalls}>
+            {projects.map((p) => (
+              <li key={p.id}>
+                <strong>{p.tag.title}</strong>
+                <span>{p.tag.hook}</span>
+              </li>
+            ))}
+          </ol>
         </div>
       );
 

@@ -20,7 +20,7 @@ const BASE: Record<string, string> = {
   "11": darken(C.ramp0, 0.45),
   "12": darken(C.inkNight, 0.7),
 };
-const LIFT = [0, 0, 0, 0, 0, 0.1, 0.32, 0.5];
+const LIFT = [0, 0, 0, 0, 0, 0, 0.1, 0.32, 0.5, 0.7];
 const W: Record<string, number> = { "07": 1, "08": 1.1, "09": 0.4, "10": 0.2, "11": 0.08, "12": 0 };
 export const tone = (id: string, i: number, k = 0) => mix(mix(BASE[id]!, "#6F93B0", LIFT[i]! * W[id]!), C.leaf1, k);
 /** Night-shifted blue-green for foliage on a layer. */

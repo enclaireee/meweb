@@ -51,7 +51,7 @@ const art: ArtModule = {
     }
     for (const d of [-300, -160, -10, 240, 520, 650]) out.push(...reeds(lx + d, b + 6, r, 8, r.range(70, 120), tone.moss08));
     // Shrine with a lit window and lantern.
-    const sx = lx + 330;
+    const sx = lx + 288;
     out.push(sheet(rect(sx - 44, b - 20, 88, 28), tone.rock08, r));
     out.push(sheet(rect(sx - 14, b - 68, 28, 34), C.window, r, { rim: false }));
     out.push(sheet(rect(sx - 28, b - 80, 56, 62), tone.rock08, r, { holes: [poly([[sx - 14, b - 68], [sx + 14, b - 68], [sx + 14, b - 34], [sx - 14, b - 34]])] }));
@@ -74,8 +74,8 @@ const art: ArtModule = {
     out.push(sheet([[mx - 9, 548], [mx + 9, 540], [mx + 9, 650], [mx - 9, 650]], tone.rock09, r));
     for (const y of [572, 584, 596]) out.push(sheet(poly([[mx - 14, y], [mx, y - 5], [mx + 14, y], [mx, y + 5]]), darken(tone.bamboo09, 0.2), r));
     // Mossy boulders in the shallows and reed clumps.
-    for (const [d, w, h] of [[-690, 170, 74], [-570, 90, 46], [300, 150, 70], [410, 100, 46], [600, 140, 62]] as const) out.push(...boulder(lx + d, 652, w, h, r, tone.rock09, tone.moss09));
-    out.push(...reeds(lx + 70, 650, r, 6, 70, tone.moss09), ...reeds(lx - 640, 650, r, 7, 130, tone.moss09), ...reeds(lx + 720, 650, r, 7, 100, tone.moss09));
+    for (const [d, w, h] of [[-690, 170, 74], [-570, 90, 46]] as const) out.push(...boulder(lx + d, 652, w, h, r, tone.rock09, tone.moss09));
+    out.push(...reeds(lx + 70, 650, r, 6, 70, tone.moss09), ...reeds(lx - 640, 650, r, 7, 130, tone.moss09));
     return out;
   },
 

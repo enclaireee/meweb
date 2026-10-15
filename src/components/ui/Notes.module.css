@@ -1,0 +1,1032 @@
+/* The stop's pieces: signs, planks, tickets, tags. Paper cut and hung into the scene, not notes floating on it.
+   Desktop/tablet: .set rides the action plane (River's tags layer), each piece centred on its spot. Phones: .strip, a
+   scrolling column in screen space. All stops stay mounted (no layer churn, see river.module.css .layer), so showing
+   and hiding is opacity, translate and visibility only.
+   Material: the shared paper skin (paper.module.css): a deckled .sheet inside a wrapper (.mat) that carries the art's
+   layered drop-shadow, tinted per stop by data-stop. Cords are twine tied to eyelets.
+   Motion: every animation only starts from a hidden state and ends on the piece's base style, and only moves opacity
+   and transform/rotate/translate, so reduced motion just turns the animations off and everything is fully visible. */
+
+.set {
+  position: absolute;
+  left: calc(var(--x) * var(--k));
+  top: 0;
+  width: 0;
+  height: 0;
+}
+
+.piece {
+  --w: 260px;
+  --rope: 70px;
+  --wood: color-mix(in srgb, var(--ramp-1) 58%, var(--c-twine));
+  --wood-hi: color-mix(in srgb, var(--ramp-1) 45%, var(--c-twine));
+  --stone: color-mix(in srgb, var(--ramp-3) 80%, var(--ramp-4));
+  --brass: var(--c-bamboo);
+  --mat: var(--wood);
+  --pad: var(--sp-3);
+  --ty: -50%;
+  position: absolute;
+  left: calc(var(--nx) * var(--k));
+  top: calc(var(--ny) * var(--k));
+  width: var(--w);
+  translate: var(--tx, -50%) var(--ty);
+  rotate: var(--r);
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: left;
+  pointer-events: auto;
+  transition:
+    opacity 140ms linear,
+    translate 300ms var(--ease-paper),
+    visibility 0s;
+}
+
+[data-on="false"] > .piece {
+  opacity: 0;
+  translate: var(--tx, -50%) calc(var(--ty) - 12px);
+  visibility: hidden;
+  transition:
+    opacity 250ms var(--ease-paper),
+    translate 250ms var(--ease-paper),
+    visibility 0s 250ms;
+}
+
+/* Wrapper: holds the shadow so it follows the sheet's cut edge. Its own background stays clear. */
+.mat {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  padding: var(--pad);
+  filter: var(--sh-paper);
+}
+/* Props that still paint their own face (the projects river's gauge, crates, medal, LED) */
+.piece:is([data-kind="gauge"], [data-kind="crates"], [data-kind="medal"], [data-kind="led"]) .mat {
+  background-color: var(--mat);
+  box-shadow:
+    inset 2px 2px 0 rgb(255 255 255 / 0.14),
+    inset -2px -2px 0 rgb(0 0 0 / 0.3);
+}
+
+.piece p,
+.piece h2,
+.piece ul,
+.piece ol,
+.piece dl {
+  margin: 0;
+}
+.piece ul,
+.piece ol {
+  padding: 0;
+  list-style: none;
+}
+
+/* ---- Kinds: width and anchor ---- */
+
+/* Pieces that stand on something: the spot is their bottom edge. */
+.piece:is([data-kind="led"], [data-kind="windows"], [data-kind="contact"], [data-kind="tickets"]) {
+  --ty: -100%;
+}
+
+/* Hanging cluster: the sign hangs from the post arm by two twine cords, the plank hangs below it by two short ones.
+   Top-anchored: the spot is the sign's top edge. --rope is in art units so the cords reach the arm at any scale. */
+.piece:is([data-kind="sign"], [data-kind="namecard"]) {
+  --w: 250px;
+  --ty: 0%;
+  --rope: calc(var(--k) * 80);
+}
+.hang {
+  display: grid;
+  gap: 30px;
+  transform-origin: 50% calc(var(--rope) * -1);
+}
+.signMat {
+  --pad: var(--sp-5) var(--sp-4) var(--sp-3);
+}
+.signMat::before,
+.signMat::after,
+.plankMat::before,
+.plankMat::after {
+  content: "";
+  position: absolute;
+  width: 2px;
+  background: var(--twine);
+  box-shadow: 1px 0 1px rgb(3 6 12 / 0.3);
+  z-index: 1;
+}
+.signMat::before,
+.signMat::after {
+  bottom: calc(100% - 14px);
+  height: var(--rope);
+}
+.plankMat::before,
+.plankMat::after {
+  bottom: calc(100% - 8px);
+  height: 38px;
+}
+.signMat::before,
+.plankMat::before {
+  left: 17px;
+}
+.signMat::after,
+.plankMat::after {
+  right: 17px;
+}
+
+.plankMat {
+  --pad: var(--sp-4) var(--sp-4) var(--sp-3);
+  --eye-y: 8px;
+  font-size: 12.5px;
+}
+.plankMat .summary {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ---- Text ---- */
+
+.title {
+  position: relative;
+  font-family: var(--ff-display);
+  font-variation-settings: "SOFT" 100, "WONK" 0;
+  font-weight: 600;
+  font-size: var(--fs-tag-title);
+  line-height: 1.15;
+  color: var(--accent);
+}
+/* Glow layer (night only): only its opacity animates. */
+.title::before {
+  content: "";
+  position: absolute;
+  inset: -10px -18px;
+  z-index: -1;
+  pointer-events: none;
+  display: none;
+  background: radial-gradient(ellipse at 40% 50%, color-mix(in srgb, var(--c-lantern) 26%, transparent), transparent 70%);
+}
+[data-stop="stop-1"] .title::before {
+  display: block;
+}
+
+.hook {
+  font-size: 14px;
+}
+.summary {
+  font-size: 13px;
+  line-height: 1.45;
+}
+.meta {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+.hint {
+  font-family: var(--ff-display);
+  font-style: italic;
+  font-size: 14px;
+}
+
+.facts {
+  display: flex;
+  gap: var(--sp-3);
+  margin-top: var(--sp-1) !important;
+  padding-top: var(--sp-2);
+  border-top: 1px dotted var(--rule);
+}
+.facts > div {
+  display: flex;
+  flex: 1;
+  flex-direction: column-reverse;
+  min-width: 0;
+}
+.facts dd {
+  margin: 0;
+  font-family: var(--ff-display);
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1.05;
+  color: var(--accent);
+}
+.facts dt {
+  font-size: 11px;
+  line-height: 1.25;
+  color: var(--ink-soft);
+}
+
+.bullets {
+  display: grid;
+  gap: 4px;
+}
+.bullets li {
+  position: relative;
+  padding-left: 14px;
+}
+.bullets li::before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 0.55em;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 1px;
+  rotate: 45deg;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.chips li {
+  padding: 0 6px;
+  font-size: 11px;
+  line-height: 1.6;
+  background: var(--chip);
+  border-radius: 3px;
+}
+
+/* ---- Props ---- */
+
+/* Crates stencilled with the steps, text knocked out to the night behind. */
+.piece[data-kind="crates"] {
+  --w: 252px;
+  --ty: -100%;
+  --mat: transparent;
+  --pad: 0;
+}
+.piece[data-kind="crates"] .mat {
+  box-shadow: none;
+}
+.crates {
+  display: flex;
+  gap: 6px;
+}
+.crate {
+  display: grid;
+  place-items: center;
+  flex: 1;
+  min-width: 0;
+  aspect-ratio: 1;
+  padding: 8px;
+  background-color: color-mix(in srgb, var(--c-bamboo) 88%, var(--ramp-1));
+  box-shadow:
+    inset 0 0 0 4px rgb(0 0 0 / 0.2),
+    inset 6px 6px 0 rgb(255 255 255 / 0.16),
+    inset -6px -6px 0 rgb(0 0 0 / 0.14);
+  color: var(--ramp-1);
+  text-align: center;
+  font-weight: 800;
+  font-size: 9.5px;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.crate span {
+  position: relative;
+  overflow-wrap: anywhere;
+}
+
+/* Brass gauge: arc, needle, legend in the lower half of the face. */
+.piece[data-kind="gauge"] {
+  --w: 176px;
+  --mat: var(--ramp-1);
+}
+.piece[data-kind="gauge"] .mat {
+  width: 176px;
+  height: 176px;
+  padding: 0;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 7px var(--brass),
+    0 0 0 9px rgb(0 0 0 / 0.3),
+    inset 3px 3px 0 rgb(255 255 255 / 0.12),
+    inset -3px -3px 0 rgb(0 0 0 / 0.4);
+}
+.gauge {
+  position: relative;
+  height: 100%;
+}
+.arc {
+  position: absolute;
+  left: 28px;
+  top: 28px;
+  width: 120px;
+  height: 60px;
+  background: conic-gradient(from 270deg at 50% 100%, #4f8a4b 0 60deg, #c99a2e 60deg 120deg, #b2412e 120deg 180deg);
+  -webkit-mask: radial-gradient(circle at 50% 100%, transparent 40px, #000 41px 59px, transparent 60px);
+  mask: radial-gradient(circle at 50% 100%, transparent 40px, #000 41px 59px, transparent 60px);
+}
+.needle {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 3px;
+  height: 52px;
+  margin-left: -1.5px;
+  background: var(--c-paper);
+  transform-origin: 50% 100%;
+  rotate: -58deg;
+}
+.hub {
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  border-radius: 50%;
+  background: var(--brass);
+}
+.legend {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 104px;
+  display: grid;
+  justify-items: center;
+  gap: 1px;
+  font-size: 11px;
+  line-height: 1.3;
+}
+.legend li::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 5px;
+  border-radius: 50%;
+  background: #4f8a4b;
+}
+.legend li:nth-child(2)::before {
+  background: #c99a2e;
+}
+.legend li:nth-child(3)::before {
+  background: #b2412e;
+}
+
+/* Medallion: brass coin on a short plate of awards. */
+.piece[data-kind="medal"] {
+  --w: 190px;
+  --ty: 0%;
+  --mat: var(--wood-hi);
+}
+.piece[data-kind="medal"] .mat {
+  justify-items: center;
+  padding: 44px var(--sp-3) var(--sp-3);
+  margin-top: 90px;
+}
+.coin {
+  position: absolute;
+  left: calc(50% - 36px);
+  top: -36px;
+  width: 72px;
+  height: 72px;
+  fill: var(--ramp-1);
+  filter: drop-shadow(2px 4px 0 rgb(0 0 0 / 0.28));
+  transform-origin: 50% 50%;
+}
+.coinRim {
+  fill: var(--brass);
+  stroke: color-mix(in srgb, var(--brass) 55%, var(--ramp-1));
+  stroke-width: 1.5;
+}
+.caption {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+  font-size: 12.5px;
+  text-align: left;
+}
+.caption .bullets {
+  gap: 3px;
+}
+
+/* Ticket stub, tied with string. Paper, so it keeps paper ink. */
+.piece[data-kind="stub"] {
+  --w: 200px;
+  --ty: 0%;
+  --mat: transparent;
+  --pad: 0;
+  color: var(--c-ink);
+}
+.piece[data-kind="stub"] .mat {
+  margin-top: 54px;
+  box-shadow: none;
+  transform-origin: 50% -54px;
+}
+.tie {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% - var(--tie-in, 14px));
+  width: 2px;
+  height: 54px;
+  background: var(--c-twine-2);
+  box-shadow: 1px 0 0 rgb(0 0 0 / 0.35);
+  rotate: 7deg;
+  transform-origin: 50% 100%;
+}
+.stub {
+  display: grid;
+  gap: 3px;
+  padding: 26px var(--sp-4) var(--sp-3);
+  background-color: var(--c-manila);
+  background-image: radial-gradient(circle at 50% 14px, var(--c-ink-night) 0 3px, transparent 3.5px);
+  box-shadow:
+    inset 1.5px 1.5px 0 rgb(255 255 255 / 0.35),
+    inset -1.5px -1.5px 0 rgb(0 0 0 / 0.18);
+  -webkit-mask:
+    radial-gradient(circle at 0 62%, transparent 7px, #000 7.5px),
+    radial-gradient(circle at 100% 62%, transparent 7px, #000 7.5px);
+  -webkit-mask-composite: source-in;
+  mask:
+    radial-gradient(circle at 0 62%, transparent 7px, #000 7.5px),
+    radial-gradient(circle at 100% 62%, transparent 7px, #000 7.5px);
+  mask-composite: intersect;
+}
+.stub > div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding-bottom: 2px;
+  border-bottom: 1px dotted var(--c-paper-dim);
+}
+.stub dt {
+  font-weight: 600;
+}
+.stub dd {
+  margin: 0;
+  text-align: right;
+  color: var(--c-ink-soft);
+  overflow-wrap: anywhere;
+}
+
+/* LED readout: segmented look from a monospace face, warm glow. */
+.piece[data-kind="led"] {
+  --w: 250px;
+  --mat: var(--ramp-0);
+}
+.piece[data-kind="led"] .mat {
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-4);
+  box-shadow:
+    0 0 0 4px var(--wood-hi),
+    0 0 0 6px rgb(0 0 0 / 0.3),
+    inset 2px 2px 0 rgb(255 255 255 / 0.1),
+    inset -2px -2px 0 rgb(0 0 0 / 0.5);
+  margin: 4px;
+}
+.led {
+  display: grid;
+  gap: 6px;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+.led > div {
+  display: grid;
+}
+.led dt {
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ramp-7);
+}
+.led dd {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-lantern);
+  text-shadow:
+    0 0 6px rgb(255 180 84 / 0.75),
+    0 0 14px rgb(255 180 84 / 0.4);
+}
+
+/* Role tags: cut paper tags on a line, each with an eyelet and a short string. Dawn-tinted by the stop. */
+.piece[data-kind="windows"] {
+  --w: 400px;
+}
+.piece[data-kind="windows"] .mat {
+  padding: 0;
+}
+.tags {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  row-gap: var(--sp-3);
+}
+.tagLi {
+  position: relative;
+  padding: 0 5px;
+  min-width: 0;
+}
+/* the line, one stretch per cell so the row reads as one run of twine */
+.tagLi::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  background: var(--twine);
+  box-shadow: 0 1px 1px rgb(3 6 12 / 0.3);
+}
+.string {
+  display: block;
+  width: 2px;
+  height: 12px;
+  margin: 0 auto;
+  background: var(--twine);
+}
+.tag {
+  --eye-x: 50%;
+  --eye-y: 10px;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  align-content: start;
+  gap: 2px;
+  min-height: 64px;
+  padding: 20px var(--sp-2) var(--sp-2);
+  text-align: center;
+}
+.tag > .sheet {
+  clip-path: polygon(13px 0, calc(100% - 15px) 1px, 100% 14px, 99.5% 100%, 55% 99%, 0.5% 100%, 0 15px);
+}
+.wRole {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+.wDates {
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+
+/* Tickets, one per project: torn stub on the left, punched hole, number; each a button into its stall. */
+.piece[data-kind="tickets"] {
+  --w: 340px;
+  --tx: -22%;
+}
+.strip > .piece[data-kind="tickets"] {
+  --tx: 0;
+}
+.piece[data-kind="tickets"] .mat {
+  padding: 0;
+}
+.tickets {
+  display: grid;
+  gap: var(--sp-2);
+}
+.ticket {
+  min-width: 0;
+}
+.ticketBtn {
+  --stub: 52px;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: var(--stub) minmax(0, 1fr);
+  align-items: center;
+  width: 100%;
+  min-height: 52px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform var(--dur-hover) var(--ease-paper);
+}
+.ticketBtn > .sheet {
+  border-radius: 2px;
+  /* torn stub edge on the left, punched notches over the perforation */
+  clip-path: polygon(0 4%, 2.5px 0, 5px 6%, 7.5px 0, 100% 1px, 99.4% 50%, 100% 99%, 7.5px 100%, 5px 93%, 2.5px 100%, 0 95%, 1.5px 70%, 0 48%, 1.5px 26%);
+  -webkit-mask:
+    radial-gradient(circle at var(--stub) 0, transparent 5px, #000 5.5px),
+    radial-gradient(circle at var(--stub) 100%, transparent 5px, #000 5.5px);
+  -webkit-mask-composite: source-in;
+  mask:
+    radial-gradient(circle at var(--stub) 0, transparent 5px, #000 5.5px),
+    radial-gradient(circle at var(--stub) 100%, transparent 5px, #000 5.5px);
+  mask-composite: intersect;
+}
+/* perforation and punched hole, drawn over the sheet */
+.ticketBtn::before {
+  content: "";
+  position: absolute;
+  inset: 6px auto 6px var(--stub);
+  width: 0;
+  border-left: 2px dotted var(--rule);
+  z-index: -1;
+}
+.ticketBtn::after {
+  content: "";
+  position: absolute;
+  left: 9px;
+  top: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgb(3 6 12 / 0.55);
+  box-shadow: inset 1px 1px 1px rgb(0 0 0 / 0.4);
+  z-index: -1;
+}
+.tNo {
+  justify-self: center;
+  font-family: var(--ff-display);
+  font-variation-settings: "SOFT" 100, "WONK" 0;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--accent);
+}
+.tMain {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: var(--sp-2);
+  row-gap: 1px;
+  min-width: 0;
+  padding: var(--sp-2) var(--sp-3) var(--sp-2) var(--sp-3);
+}
+.tName {
+  font-family: var(--ff-display);
+  font-variation-settings: "SOFT" 100, "WONK" 0;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.15;
+  color: var(--accent);
+}
+.tHook {
+  grid-row: 2;
+  grid-column: 1 / -1;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1.3;
+}
+.tDate {
+  grid-row: 1;
+  grid-column: 2;
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+@media (hover: hover) {
+  .ticketBtn:hover {
+    transform: translateX(-4px) rotate(-0.6deg);
+  }
+}
+.ticketBtn:active {
+  transform: translateX(-1px);
+}
+.ticketBtn:focus-visible {
+  outline: 2px solid var(--c-focus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Business card and contact slip at the lighthouse. */
+.piece:is([data-kind="namecard"], [data-kind="contact"]) {
+  --w: 270px;
+}
+.piece[data-kind="namecard"] .mat {
+  padding: var(--sp-4);
+}
+/* The lamp's light, behind the card. */
+.piece[data-kind="namecard"]::before {
+  content: "";
+  position: absolute;
+  inset: -70px;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(circle, color-mix(in srgb, var(--c-lantern) 55%, transparent), transparent 66%);
+}
+.piece[data-kind="contact"] .mat {
+  padding: var(--sp-4);
+  gap: var(--sp-2);
+}
+.bizName {
+  font-family: var(--ff-display);
+  font-weight: 600;
+  font-size: 19px;
+  line-height: 1.2;
+}
+.line {
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.link {
+  font-weight: 600;
+  color: inherit;
+  min-height: 24px;
+}
+.link:focus-visible {
+  outline: 2px solid var(--c-focus-ink);
+  outline-offset: 2px;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2) var(--sp-3);
+  margin-top: var(--sp-1) !important;
+}
+
+/* ---- Arrival choreography. Base style is the finished state; keyframes only name where it starts. ---- */
+
+[data-on="true"] .hang {
+  animation:
+    drop 700ms var(--ease-paper) both,
+    sway 6s ease-in-out 800ms infinite;
+}
+[data-on="true"] .piece[data-kind="contact"] .mat {
+  animation: rise 560ms var(--ease-paper) calc(var(--n) * 140ms) both;
+}
+[data-on="true"] .plankMat {
+  animation: rise 500ms var(--ease-paper) 120ms both;
+}
+[data-on="true"] .piece[data-kind="tickets"] .ticket {
+  animation: rise 460ms var(--ease-paper) calc(160ms + var(--ti) * 70ms) both;
+}
+[data-on="true"] .title::before {
+  animation: glow 700ms ease-out 850ms both;
+}
+[data-on="true"] .crate {
+  animation: crate 760ms cubic-bezier(0.3, 0, 0.4, 1) calc(260ms + var(--ci) * 150ms) both;
+}
+[data-on="true"] .piece[data-kind="gauge"] .mat {
+  animation: rise 400ms var(--ease-paper) 250ms both;
+}
+[data-on="true"] .needle {
+  animation: needle 1100ms ease-out 600ms both;
+}
+[data-on="true"] .piece[data-kind="medal"] .mat {
+  animation: rise 500ms var(--ease-paper) 200ms both;
+}
+[data-on="true"] .coin {
+  animation: spin 1000ms var(--ease-paper) 450ms both;
+}
+[data-on="true"] .piece[data-kind="stub"] .mat {
+  animation:
+    flutter 1200ms ease-out 250ms both,
+    sway 4s ease-in-out 1500ms infinite;
+}
+[data-on="true"] .piece[data-kind="led"] .mat {
+  animation: rise 400ms var(--ease-paper) 250ms both;
+}
+[data-on="true"] .led > div {
+  animation: led 700ms steps(7, end) calc(600ms + var(--li) * 220ms) both;
+}
+[data-on="true"] .tagLi {
+  animation: rise 420ms var(--ease-paper) calc(120ms + var(--wi) * 60ms) both;
+}
+[data-on="true"] .piece[data-kind="namecard"]::before {
+  animation: lamp 1400ms ease-out 300ms both;
+}
+
+@keyframes drop {
+  0% {
+    opacity: 0;
+    transform: rotate(-9deg) translateY(-34px);
+  }
+  18% {
+    opacity: 1;
+  }
+  42% {
+    transform: rotate(5deg) translateY(4px);
+  }
+  62% {
+    transform: rotate(-2.6deg);
+  }
+  82% {
+    transform: rotate(1deg);
+  }
+}
+@keyframes sway {
+  0%,
+  100% {
+    rotate: -0.6deg;
+  }
+  50% {
+    rotate: 0.6deg;
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+}
+@keyframes glow {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes crate {
+  0% {
+    opacity: 0;
+    transform: translateY(-150px);
+  }
+  12% {
+    opacity: 1;
+  }
+  58% {
+    transform: translateY(0);
+  }
+  74% {
+    transform: translateY(-14px);
+  }
+  88% {
+    transform: translateY(0);
+  }
+  94% {
+    transform: translateY(-3px);
+  }
+}
+@keyframes needle {
+  0% {
+    rotate: -90deg;
+  }
+  38% {
+    rotate: -24deg;
+  }
+  58% {
+    rotate: -72deg;
+  }
+  76% {
+    rotate: -52deg;
+  }
+}
+@keyframes spin {
+  0% {
+    opacity: 0;
+    transform: rotateY(-720deg) scale(0.4);
+  }
+  20% {
+    opacity: 1;
+  }
+}
+@keyframes flutter {
+  0% {
+    opacity: 0;
+    transform: rotate(16deg) translateY(-18px);
+  }
+  15% {
+    opacity: 1;
+  }
+  35% {
+    transform: rotate(-9deg);
+  }
+  55% {
+    transform: rotate(5deg);
+  }
+  75% {
+    transform: rotate(-2.5deg);
+  }
+}
+@keyframes led {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.7;
+  }
+  45% {
+    opacity: 0.1;
+  }
+  60% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 0.4;
+  }
+}
+@keyframes lamp {
+  from {
+    opacity: 0.1;
+  }
+  45% {
+    opacity: 0.55;
+  }
+  60% {
+    opacity: 0.4;
+  }
+}
+
+/* ---- Phones: the same pieces stacked in a scrolling strip, no absolute positioning. ---- */
+.strip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  /* ends above the bottom nav (StopDots 44px tall + 5px), so the dots never sit over a piece's button */
+  bottom: calc(52px + env(safe-area-inset-bottom));
+  max-height: var(--strip-max, 46%);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--sp-5) var(--gutter) var(--sp-4);
+  display: grid;
+  justify-items: center;
+  gap: var(--sp-4);
+  z-index: var(--z-tag);
+  mask-image: linear-gradient(transparent, #000 var(--sp-5), #000 calc(100% - var(--sp-3)), transparent);
+}
+.strip > .piece {
+  position: relative;
+  left: auto;
+  top: auto;
+  translate: none;
+  rotate: none;
+  width: min(var(--w), 100%);
+  min-width: 0;
+}
+.strip[data-on="false"] > .piece {
+  translate: 0 12px;
+}
+.strip .signMat::before,
+.strip .signMat::after,
+.strip .plankMat::before,
+.strip .plankMat::after,
+.strip .tie {
+  display: none;
+}
+.strip .signMat,
+.strip .plankMat {
+  --pad: var(--sp-4);
+  --eye-x: 50%;
+}
+.strip .piece {
+  --ty: 0%;
+}
+.strip .hang {
+  gap: var(--sp-2);
+}
+.strip .piece:is([data-kind="stub"], [data-kind="medal"]) .mat {
+  margin-top: 0;
+}
+.strip .piece[data-kind="medal"] .mat {
+  margin-top: 36px;
+}
+.strip .piece[data-kind="medal"] .tie {
+  display: none;
+}
+.strip .piece[data-kind="stub"] .stub {
+  padding-top: var(--sp-3);
+  background-image: none;
+}
+.strip .piece[data-kind="namecard"]::before {
+  inset: -30px;
+}
+.strip .piece[data-kind="gauge"] .mat {
+  margin: 9px;
+}
+.strip .piece[data-kind="windows"] {
+  --w: 340px;
+}
+.strip .tags {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+/* the mask fades the strip's ends; keep the shadow room on the sides */
+.strip {
+  padding-inline: max(var(--gutter), 12px);
+}
+
+/* ---- Reduced motion: no animation at all; the base style is the finished piece, so it just fades. ---- */
+@media (prefers-reduced-motion: reduce) {
+  .piece,
+  .piece::before,
+  .piece::after,
+  .piece *,
+  .piece *::before,
+  .piece *::after {
+    animation: none !important;
+    transition-property: opacity, visibility !important;
+  }
+  [data-on="false"] > .piece {
+    translate: var(--tx, -50%) var(--ty);
+  }
+  .strip[data-on="false"] > .piece {
+    translate: none;
+  }
+}
+:global(html[data-motion="reduced"]) .piece,
+:global(html[data-motion="reduced"]) .piece::before,
+:global(html[data-motion="reduced"]) .piece::after,
+:global(html[data-motion="reduced"]) .piece *,
+:global(html[data-motion="reduced"]) .piece *::before,
+:global(html[data-motion="reduced"]) .piece *::after {
+  animation: none !important;
+  transition-property: opacity, visibility !important;
+}
+:global(html[data-motion="reduced"]) [data-on="false"] > .piece {
+  translate: var(--tx, -50%) var(--ty);
+}
+:global(html[data-motion="reduced"]) .strip[data-on="false"] > .piece {
+  translate: none;
+}

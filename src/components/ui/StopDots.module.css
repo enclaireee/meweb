@@ -34,6 +34,11 @@
   opacity: 0.5;
 }
 
+/* Cascade: the ribbon turns lantern-coloured, the thread of the projects river. */
+.nav[data-cascade] .list::before {
+  background: var(--c-lantern);
+}
+
 .hit {
   position: relative;
   display: grid;

@@ -80,3 +80,78 @@
   flex-wrap: wrap;
   gap: var(--sp-2);
 }
+
+/* ---- The shared paper skin for the river's pieces (Notes.tsx) and their cards. Defined once, used everywhere.
+   .skin goes on the stop's section (data-stop picks the time of day); .sheet is the paper itself, an absolutely
+   positioned child of a wrapper that carries the drop-shadow, so the shadow follows the cut edge. ---- */
+.skin {
+  /* the art's own layered shadow, as on the frame rings */
+  --sh-paper: drop-shadow(1px 1px 0 rgb(3 6 12 / 0.45)) drop-shadow(2px 3px 4px rgb(3 6 12 / 0.45))
+    drop-shadow(3px 7px 10px rgb(3 6 12 / 0.3));
+  /* morning (and any stop without a tint): warm cream, ink text */
+  --sheet: var(--c-paper);
+  --ink: var(--c-ink);
+  --ink-soft: var(--c-ink-soft);
+  --accent: var(--c-accent-ink);
+  --rule: rgb(26 31 43 / 0.16);
+  --chip: rgb(26 31 43 / 0.08);
+  --light: rgb(255 196 107 / 0.3);
+  --sheet-tex: var(--paper-tex);
+  --sheet-tex-size: var(--paper-tex-size);
+  --sheet-blend: multiply, multiply;
+  /* twine: 2px, slightly twisted (used as `background` on the cords) */
+  --twine: repeating-linear-gradient(172deg, var(--c-twine-2) 0 2px, var(--c-twine) 2px 3.5px);
+}
+/* night: deep indigo paper, cream text, warm light */
+.skin[data-stop="stop-0"],
+.skin[data-stop="stop-1"] {
+  --sheet: #262a57;
+  --ink: var(--c-moon);
+  --ink-soft: color-mix(in srgb, var(--c-moon) 84%, transparent);
+  --accent: var(--c-lantern);
+  --rule: rgb(244 239 216 / 0.2);
+  --chip: rgb(4 7 13 / 0.3);
+  --light: rgb(255 180 84 / 0.2);
+  --sheet-tex: var(--paper-grain-lt), linear-gradient(transparent, transparent);
+  --sheet-tex-size: 200px 200px, auto;
+  --sheet-blend: soft-light, normal;
+}
+/* dawn: rose and peach tinted cream, dark ink */
+.skin[data-stop="stop-2"] {
+  --sheet: color-mix(in srgb, var(--c-paper) 72%, #f0a08e);
+  --light: rgb(255 214 160 / 0.4);
+}
+
+.sheet {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 3px;
+  background-color: var(--sheet);
+  /* lantern light from the top left, a faint darker rim, then the paper fibre */
+  background-image:
+    radial-gradient(120% 140% at 0% 0%, var(--light), transparent 62%),
+    radial-gradient(ellipse at 50% 50%, transparent 58%, rgb(3 6 12 / 0.16)),
+    var(--sheet-tex);
+  background-size: auto, auto, var(--sheet-tex-size);
+  background-blend-mode: normal, normal, var(--sheet-blend);
+  clip-path: polygon(0 1px, 9% 0, 27% 1.5px, 52% 0, 77% 1px, 100% 0, 99.4% 22%, 100% 58%, 99.2% 100%, 80% 98.8%, 56% 100%, 31% 99%, 10% 100%, 0 99%, 0.6% 66%, 0 31%);
+}
+/* three cut variants; the wrapper (sheet's parent) says which, by piece index */
+[data-v="1"] > .sheet {
+  clip-path: polygon(1px 0, 22% 1px, 45% 0, 71% 1.5px, 100% 1px, 99% 35%, 100% 74%, 100% 100%, 85% 99%, 61% 100%, 36% 98.8%, 14% 100%, 0 99.4%, 1% 62%, 0 24%);
+}
+[data-v="2"] > .sheet {
+  clip-path: polygon(0 0, 18% 1.5px, 39% 0, 66% 1px, 91% 0, 100% 2px, 99.2% 44%, 100% 82%, 98.8% 100%, 73% 99%, 47% 100%, 22% 98.8%, 0 100%, 0.8% 55%);
+}
+
+/* eyelets for the twine: one pair at --eye-x/--eye-y (give both the same x to get a single one) */
+.eyes::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at var(--eye-x, 18px) var(--eye-y, 14px), rgb(3 6 12 / 0.7) 0 1.8px, var(--c-twine-2) 2.4px 4.2px, transparent 4.8px),
+    radial-gradient(circle at calc(100% - var(--eye-x, 18px)) var(--eye-y, 14px), rgb(3 6 12 / 0.7) 0 1.8px, var(--c-twine-2) 2.4px 4.2px, transparent 4.8px);
+}

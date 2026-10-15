@@ -3,7 +3,7 @@
 import { copy } from "@/content/site";
 import styles from "./NavButtons.module.css";
 
-type Props = { onPrev(): void; onNext(): void; atStart: boolean; atEnd: boolean };
+type Props = { onPrev(): void; onNext(): void; atStart: boolean; atEnd: boolean; vertical?: boolean };
 
 function Arrow() {
   return (
@@ -14,9 +14,9 @@ function Arrow() {
 }
 
 /** Two round paper buttons, fixed bottom-left and bottom-right. Disabled at the ends via aria-disabled (stays focusable). */
-export function NavButtons({ onPrev, onNext, atStart, atEnd }: Props) {
+export function NavButtons({ onPrev, onNext, atStart, atEnd, vertical = false }: Props) {
   return (
-    <div className={styles.wrap}>
+    <div className={styles.wrap} data-vertical={vertical || undefined}>
       <button
         type="button"
         className={`${styles.btn} ${styles.prev}`}

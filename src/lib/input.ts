@@ -1,4 +1,5 @@
 // Wheel, touch and keyboard normalised into step/jump intents (motion.md "Inputs").
+import { LAST, STOPS } from "./nav";
 
 export type Intent = { step: -1 | 1 } | { jump: number };
 
@@ -62,7 +63,7 @@ export function keyIntent(e: { key: string; shiftKey: boolean }, onControl: bool
     case "Home":
       return { jump: 0 };
     case "End":
-      return { jump: 7 };
+      return { jump: LAST };
   }
-  return /^[1-8]$/.test(e.key) ? { jump: Number(e.key) - 1 } : null;
+  return /^[1-9]$/.test(e.key) && Number(e.key) <= STOPS ? { jump: Number(e.key) - 1 } : null;
 }

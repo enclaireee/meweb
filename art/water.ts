@@ -1,5 +1,5 @@
 // Water strips W1-W3 across the whole journey: scalloped paper edges, lens-shaped ribbons and highlight slivers.
-import { C, darken, mix, poly, raw, type ArtModule, type Piece, type Pt, type Rng } from "./helpers";
+import { C, darken, mix, tlAt, poly, raw, type ArtModule, type Piece, type Pt, type Rng } from "./helpers";
 import { LANTERN_DX, POST_DX } from "./helpers";
 import { HANG, P, PAD, WATERLINE } from "./layers";
 
@@ -45,7 +45,7 @@ const ring = (cx: number, cy: number, rx: number, ry: number, a0: number, a1: nu
 type Strip = { top: number; per: number; amp: number; bottom: number; body: string; lip: string; lipT: number };
 
 /** Chunked body: scalloped top edge (cusps at `top`, arcs bulging up), light lip then body shifted down. */
-function body(S: Strip, length: number): Piece[] {
+function body(S: Strip, length: number, sun: (x: number) => number = () => 0): Piece[] {
   const chunk = S.per * 5;
   const step = S.per / 5;
   const out: Piece[] = [];
@@ -57,7 +57,9 @@ function body(S: Strip, length: number): Piece[] {
     const d = (dy: number) => poly([...pts.map((p) => [p[0], p[1] + dy] as Pt), [xe, S.bottom], [x, S.bottom]]);
     // lip is a thin band only, so abutting chunks never show a lighter seam
     const band = poly([...pts, ...pts.map((p) => [p[0], p[1] + S.lipT + 8] as Pt).reverse()]);
-    out.push(raw(x, xe, `<path d="${band}" fill="${S.lip}"/><path d="${d(S.lipT)}" fill="${S.body}"/>`));
+    const k = sun(x);
+    const warm = (c: string) => (k ? mix(c, "#9CC3D6", k) : c);
+    out.push(raw(x, xe, `<path d="${band}" fill="${warm(S.lip)}"/><path d="${d(S.lipT)}" fill="${warm(S.body)}"/>`));
   }
   return out;
 }
@@ -90,22 +92,25 @@ function rippleSets(length: number, r: Rng, y0: number, y1: number, perTile: num
   return out;
 }
 
+/** Morning lift: 0 until the dawn stop (timeline 7), up to 0.45 at 9, so the water around the lighthouse reads sunlit. */
+const morning = (s: number, tl: readonly number[]) => (x: number) => Math.max(0, Math.min(1, (tlAt(tl, (x - PAD) / (s * P)) - 7) / 2)) * 0.45;
+
 const hi = (t: number) => mix(C.water2, C.waterHi, t);
 
 const art: ArtModule = {
-  w1: ({ length, rng: r }) => [
-    ...body({ top: 590, per: 64, amp: 4, bottom: 650, body: C.water1, lip: mix(C.water1, C.waterHi, 0.35), lipT: 2.5 }, length),
+  w1: ({ length, tl, rng: r }) => [
+    ...body({ top: 590, per: 64, amp: 4, bottom: 650, body: C.water1, lip: mix(C.water1, C.waterHi, 0.35), lipT: 2.5 }, length, morning(0.85, tl)),
     ...rippleSets(length, r, 600, 616, 7, 90, C.waterHi, 0.55),
     ...ribbons(length, r, 598, 614, 6, [120, 260], 3.2, C.waterHi, 0.3),
     ...ribbons(length, r, 600, 618, 5, [90, 220], 3.5, darken(C.water1, 0.4), 0.55),
   ],
-  w2: ({ length, rng: r }) => {
-    const out: Piece[] = body({ top: WATERLINE + 1, per: 72, amp: 3.5, bottom: 1000, body: C.water2, lip: mix(C.water2, C.waterHi, 0.4), lipT: 2.5 }, length);
+  w2: ({ length, count, tl, rng: r }) => {
+    const out: Piece[] = body({ top: WATERLINE + 1, per: 72, amp: 3.5, bottom: 1000, body: C.water2, lip: mix(C.water2, C.waterHi, 0.4), lipT: 2.5 }, length, morning(1, tl));
     out.push(...ribbons(length, r, 640, 990, 11, [160, 520], 9, darken(C.water2, 0.3), 0.8, 1.5));
     out.push(...ribbons(length, r, 640, 980, 10, [140, 460], 7, hi(0.12), 0.9, 1.4));
     out.push(...rippleSets(length, r, 640, 760, 6, 120, C.waterHi, 0.45));
     out.push(...ribbons(length, r, 630, 800, 14, [30, 110], 3.4, C.waterHi, 0.5, 1.6));
-    for (let i = 0; i <= 7; i++) {
+    for (let i = 0; i < count; i++) {
       // rings the boat leaves at its rest position (boat sits at strip x = PAD + i*P)
       const bx = PAD + i * P;
       let svg = "";
@@ -123,8 +128,8 @@ const art: ArtModule = {
     }
     return out;
   },
-  w3: ({ length, rng: r }) => [
-    ...body({ top: 872, per: 140, amp: 9, bottom: 1000, body: C.water3, lip: mix(C.water3, C.waterHi, 0.3), lipT: 4 }, length),
+  w3: ({ length, tl, rng: r }) => [
+    ...body({ top: 872, per: 140, amp: 9, bottom: 1000, body: C.water3, lip: mix(C.water3, C.waterHi, 0.3), lipT: 4 }, length, morning(1.4, tl)),
     ...ribbons(length, r, 900, 990, 8, [220, 520], 10, darken(C.water3, 0.35), 0.8),
     ...rippleSets(length, r, 905, 975, 4, 260, C.waterHi, 0.4),
     ...ribbons(length, r, 890, 985, 8, [90, 260], 4.5, C.waterHi, 0.4),

@@ -2,7 +2,7 @@
 import { C, boat, darken, ellipse, lighten, palm, poly, post, sheet, raw, type ArtModule, type Piece, type Pt, type Rng } from "../helpers";
 import { bank, ground, blade, blob, frame, lit, mist, quad, ribbon, spray, tone } from "./shared-b";
 
-const I = 6;
+const I = 7;
 
 /** Stilt house: piles, deck, body, hip roof, ladder. Lit windows at the given relative x positions. */
 function house(x: number, yDeck: number, w: number, h: number, r: Rng, fill: string, roof: string, win: number[] = [], pile = 660): Piece[] {

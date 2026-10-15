@@ -1,6 +1,6 @@
 // Layers 00-06 (stars, moon/clouds, volcano, far range, haze, hills, ridge, mid haze) across the whole journey.
 // Strip x of stop i's landmark on layer s is PAD + s*(i*P + HANG); the screen shows ~[x-565, x+1320] around the boat.
-import { C, arc, darken, diamond, ellipse, hazed, lighten, mix, palm, poly, raw, sheet, type ArtModule, type Piece, type Pt, type Rng } from "./helpers";
+import { C, arc, darken, diamond, ellipse, hazed, lighten, mix, palm, poly, raw, sheet, tlAt, type ArtModule, type Piece, type Pt, type Rng } from "./helpers";
 import { HANG, P, PAD } from "./layers";
 
 const f = (n: number) => (Math.round(n * 10) / 10).toString();
@@ -42,7 +42,7 @@ function stars(length: number, r: Rng): Piece[] {
 }
 
 /* ---------- 01 moon and clouds ---------- */
-const MOON_X = 1080;
+const MOON_X0 = 1080;
 const MOON_Y = 140;
 
 function cloud(cx: number, cy: number, w: number, h: number, fill: string, r: Rng, op = 1): Piece {
@@ -59,7 +59,8 @@ function cloud(cx: number, cy: number, w: number, h: number, fill: string, r: Rn
   return sheet(pts, fill, r, { opacity: op });
 }
 
-function moonClouds(length: number, r: Rng): Piece[] {
+function moonClouds(length: number, r: Rng, dx: number): Piece[] {
+  const MOON_X = MOON_X0 + dx; // keeps the moon where it sat on the 9-stop timeline at this strip's first stop
   const out: Piece[] = [];
   out.push({ x0: MOON_X - 140, x1: MOON_X + 140, top: true, svg: `<circle cx="${MOON_X}" cy="${MOON_Y}" r="140" fill="url(#glow-F4EFD8)" opacity=".28"/>` });
   const ring = sheet(ellipse(MOON_X, MOON_Y, 61, 61, 30), "#FBF8EA", r, { rim: false });
@@ -80,9 +81,9 @@ function moonClouds(length: number, r: Rng): Piece[] {
 }
 
 /* ---------- 02 volcano, 02b far range ---------- */
-function volcano(r: Rng): Piece[] {
+function volcano(r: Rng, dx: number): Piece[] {
   const col = hazed(C.ramp6, 0.3);
-  const pk = 1360;
+  const pk = 1360 + dx;
   const top = 150;
   const base = 690;
   const slope = (xb: number, xt: number, yt: number, yb: number, p: number, n: number): Pt[] =>
@@ -118,7 +119,7 @@ function volcano(r: Rng): Piece[] {
   return out;
 }
 
-function farRange(length: number, r: Rng): Piece[] {
+function farRange(length: number, r: Rng, dx: number): Piece[] {
   const out: Piece[] = [];
   const x0 = 700;
   /** Irregular range: peaks of varied height/width with broken shoulders; settles lower towards the sea. */
@@ -127,7 +128,7 @@ function farRange(length: number, r: Rng): Piece[] {
     const peaks: [Pt, Pt][] = [];
     let x = x0;
     while (x < length + 200) {
-      const fall = Math.min(1, Math.max(0, (x - 1500) / 1400));
+      const fall = Math.min(1, Math.max(0, (x + dx - 1585) / 1400));
       const tall = r() < 0.22 ? r.range(-45, -15) : r.range(0, 55);
       const peak: Pt = [x + r.range(40, 120), hTop + tall + fall * 85];
       const valley: Pt = [peak[0] + r.range(50, 170), hTop + 70 + r.range(0, 40) + fall * 75];
@@ -160,19 +161,19 @@ function band(tag: string, cx: number, cy: number, rx: number, ry: number, col: 
     `<defs><radialGradient id="${id}"><stop offset="0" stop-color="${col}" stop-opacity="${f(op)}"/><stop offset=".55" stop-color="${col}" stop-opacity="${f(op * 0.6)}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></radialGradient></defs><ellipse cx="${f(cx)}" cy="${f(cy)}" rx="${f(rx)}" ry="${f(ry)}" fill="url(#${id})"/>`,
   );
 }
-const DIAL = [0.6, 0.6, 1, 0.7, 1, 0.3, 0.4, 0.3];
+const DIAL = [0.6, 0.6, 0.6, 1, 0.7, 1, 0.3, 0.4, 0.3, 0.3];
 const dialAt = (u: number) => {
-  const i = Math.max(0, Math.min(6, Math.floor(u)));
+  const i = Math.max(0, Math.min(8, Math.floor(u)));
   return lerp(DIAL[i]!, DIAL[i + 1]!, Math.min(1, Math.max(0, u - i)));
 };
 /** Dawn warmth 0..1 from stop 4.5 onward (haze turns pearly pink/gold). */
-const warmAt = (u: number) => Math.max(0, Math.min(1, (u - 4.5) / 2.5));
+const warmAt = (u: number) => Math.max(0, Math.min(1, (u - 5.5) / 2.5));
 
-function hazeFar(length: number, r: Rng): Piece[] {
+function hazeFar(length: number, r: Rng, tl: readonly number[]): Piece[] {
   const out: Piece[] = [];
   for (const row of [0, 1]) {
     for (let x = 100 + row * 330; x < length; x += r.range(560, 760)) {
-      const u = (x - PAD) / (0.08 * P);
+      const u = tlAt(tl, (x - PAD) / (0.08 * P));
       const col = mix(C.haze, C.dawnRose, warmAt(u) * 0.35);
       out.push(band("h3", x, 410 + row * 70 + r.range(-25, 25), r.range(420, 620), r.range(46, 72), col, 0.34 - row * 0.06));
     }
@@ -180,10 +181,10 @@ function hazeFar(length: number, r: Rng): Piece[] {
   return out;
 }
 
-function hazeMid(length: number, r: Rng): Piece[] {
+function hazeMid(length: number, r: Rng, tl: readonly number[]): Piece[] {
   const out: Piece[] = [];
   for (let x = 40; x < length; x += r.range(300, 420)) {
-    const u = (x - PAD) / (0.3 * P);
+    const u = tlAt(tl, (x - PAD) / (0.3 * P));
     const d = dialAt(u);
     const col = mix(lighten(C.haze, 0.1), C.dawnGold, warmAt(u) * 0.3);
     out.push(band("h6", x, r.range(560, 610), r.range(380, 560), 55 + 90 * d + r.range(0, 25), col, 0.3 + 0.2 * d));
@@ -194,14 +195,14 @@ function hazeMid(length: number, r: Rng): Piece[] {
 
 /* ---------- hills (04) and ridge (05): skyline blended from one profile per stop ---------- */
 type Prof = (x: number) => number;
-type RidgeCfg = { s: number; z0: number; fill: string; back: string; base: number; spread: number; profs: Prof[]; dip?: number };
+type RidgeCfg = { s: number; z0: number; fill: string; back: string; base: number; spread: number; profs: Prof[]; fine: boolean[]; dip?: number };
 
 function ridge(L: number, c: RidgeCfg, r: Rng) {
   const lm0 = PAD + c.s * HANG;
   const step = c.s * P;
   const z0 = c.z0; // zone i is centred where stop i's focus sits on screen, right of the boat
   const weights = (x: number) => {
-    const u = Math.max(0, Math.min(7, (x - z0) / step));
+    const u = Math.max(0, Math.min(c.profs.length - 1, (x - z0) / step));
     const w = c.profs.map((_, i) => Math.max(0, 1 - Math.abs(u - i) / 1.5));
     const t = w.reduce((a, b) => a + b, 0);
     return w.map((v) => v / t);
@@ -210,14 +211,14 @@ function ridge(L: number, c: RidgeCfg, r: Rng) {
     const w = weights(x);
     let y = 0;
     for (let i = 0; i < w.length; i++) if (w[i]! > 0.001) y += w[i]! * c.profs[i]!(x);
-    if (c.dip) for (let i = 0; i < 8; i++) y += c.dip * gauss(x, lm0 + i * step, step * 0.17);
+    if (c.dip) for (let i = 0; i < c.profs.length; i++) y += c.dip * gauss(x, lm0 + i * step, step * 0.17);
     return y;
   };
   const pts: Pt[] = [];
   const backPts: Pt[] = [];
   for (let x = 0; x <= L; ) {
     const w = weights(x);
-    const fine = w[1]! + w[6]!;
+    const fine = w.reduce((a, v, i) => a + (c.fine[i] ? v : 0), 0);
     pts.push([x, yAt(x)]);
     backPts.push([x, yAt(x * 1.07 + 311) - 26 - 14 * sm(x, 190, 4)]);
     x += 32 - 22 * Math.min(1, fine * 1.6);
@@ -233,6 +234,8 @@ const mossy = (b: number): Prof => (x) => b + 38 * sm(x, 170) + 14 * sm(x, 62, 2
 const terraced = (b: number, q: number): Prof => (x) => b + Math.round((90 * sm(x, 300, 5)) / q) * q - 18 * sm(x, 70, 6);
 const jungle = (b: number, a: number): Prof => (x) => b + a * (0.65 - jag(x, 44, 7)) * 1.2 - a * 0.5 * jag(x, 17, 8) + 14 * sm(x, 400, 9);
 const lowRound = (b: number, a: number): Prof => (x) => b + a * sm(x, 210, 10);
+/** The fork: a low, open skyline between the spring cliff and the terraces. */
+const forkHill = (b: number): Prof => (x) => b + 22 * sm(x, 240, 17) + 6 * sm(x, 70, 18);
 const canopy = (b: number, a: number, l: number): Prof => (x) => b + 18 * sm(x, 260, 11) - a * Math.sin(Math.PI * ((x / l) % 1));
 const shore = (b: number): Prof => (x) => b + 12 * sm(x, 210, 12) + 3 * sm(x, 30, 13);
 const roofs = (b: number, w: number): Prof => (x) => {
@@ -242,52 +245,64 @@ const roofs = (b: number, w: number): Prof => (x) => {
 };
 const flatSea = (b: number, head: number): Prof => (x) => b + 3 * sm(x, 120, 15) - head * gauss(x, 0, 1);
 
-function hills(length: number, r: Rng): Piece[] {
+/** Local stop index of timeline stop t on this strip (fractional t allowed), or null when the strip has no stop that near. */
+const localOf = (tl: readonly number[], t: number): number | null => {
+  const k = tl.findIndex((v) => Math.abs(v - t) < 1.5);
+  return k < 0 ? null : k + (t - tl[k]!);
+};
+
+function hills(length: number, r: Rng, tl: readonly number[]): Piece[] {
   const col = hazed(C.ramp5, 0.1);
   const lm0 = 1400;
   const step = 0.14 * P;
-  const headland: Prof = (x) => 508 + 3 * sm(x, 120, 15) - 52 * gauss(x, lm0 + step * 7.15, 170) - 18 * gauss(x, lm0 + step * 7.9, 120);
-  const g = ridge(length, { s: 0.14, z0: 1400, fill: col, back: hazed(C.ramp5, 0.45), base: 700, spread: 1.5, profs: [mossy(440), terraced(392, 14), jungle(392, 105), lowRound(470, 40), canopy(446, 20, 36), shore(492), roofs(500, 44), headland] }, r);
+  const headland: Prof = (x) => 508 + 3 * sm(x, 120, 15) - 52 * gauss(x, lm0 + step * ((localOf(tl, 9) ?? 0) + 0.15), 170) - 18 * gauss(x, lm0 + step * ((localOf(tl, 9) ?? 0) + 0.9), 120);
+  const g = ridge(length, { s: 0.14, z0: 1400, fill: col, back: hazed(C.ramp5, 0.45), base: 700, spread: 1.5, profs: tl.map((t) => [mossy(440), forkHill(450), terraced(392, 14), jungle(392, 105), lowRound(470, 40), canopy(446, 20, 36), shore(492), roofs(500, 44), headland, headland][t]!), fine: tl.map((t) => t === 2 || t === 7 || t === 9) }, r);
   const out = [...g.sheets];
   // shore palms (stops 4.6-5.6) and a handful of warm windows on the village rooftops
   const palmFill = darken(col, 0.18);
+  const shoreAt = tl.includes(6) ? localOf(tl, 6) : null;
   for (let k = 0; k < 5; k++) {
-    const x = g.lm0 + g.step * (4.9 + k * 0.2) + r.range(-6, 6);
-    out.push(...palm(x, g.yAt(x) + 6, r.range(42, 60), r, palmFill));
+    const x = g.lm0 + g.step * ((shoreAt ?? 0) - 0.1 + k * 0.2) + r.range(-6, 6);
+    if (shoreAt !== null) out.push(...palm(x, g.yAt(x) + 6, r.range(42, 60), r, palmFill));
   }
   // warm windows in the middle of the village houses (house width 44)
-  for (let k = 0; k < 7; k++) {
-    const x = (Math.floor((g.lm0 + g.step * 5.7) / 44) + k * 2 + 0.5) * 44 - 2;
+  const village = tl.includes(7) ? localOf(tl, 6.7) : null;
+  for (let k = 0; village !== null && k < 7; k++) {
+    const x = (Math.floor((g.lm0 + g.step * village) / 44) + k * 2 + 0.5) * 44 - 2;
     const y = g.yAt(x) + 16;
     out.push(sheet([[x, y], [x + 4, y], [x + 4, y + 5], [x, y + 5]], mix(C.window, col, 0.2), r, { rim: false }));
   }
   return out;
 }
 
-function ridge05(length: number, r: Rng): Piece[] {
+function ridge05(length: number, r: Rng, tl: readonly number[]): Piece[] {
   const col = hazed(C.ramp4, 0.04);
   const lm0 = 1400;
   const step = 0.22 * P;
-  const lowSea: Prof = (x) => 565 + 4 * sm(x, 100, 16) - 20 * gauss(x, lm0 + step * 7.2, 160);
-  const g = ridge(length, { s: 0.22, z0: 1400, fill: col, back: hazed(C.ramp4, 0.35), base: 720, spread: 1.5, dip: 42, profs: [mossy(480), terraced(448, 16), jungle(440, 115), lowRound(505, 34), canopy(486, 26, 44), shore(540), roofs(548, 48), lowSea] }, r);
+  const lowSea: Prof = (x) => 565 + 4 * sm(x, 100, 16) - 20 * gauss(x, lm0 + step * ((localOf(tl, 9) ?? 0) + 0.2), 160);
+  const g = ridge(length, { s: 0.22, z0: 1400, fill: col, back: hazed(C.ramp4, 0.35), base: 720, spread: 1.5, dip: 42, profs: tl.map((t) => [mossy(480), forkHill(492), terraced(448, 16), jungle(440, 115), lowRound(505, 34), canopy(486, 26, 44), shore(540), roofs(548, 48), lowSea, lowSea][t]!), fine: tl.map((t) => t === 2 || t === 7 || t === 9) }, r);
   const out = [...g.sheets];
   const palmFill = darken(col, 0.2);
+  const shoreAt = tl.includes(6) ? localOf(tl, 6) : null;
   for (let k = 0; k < 6; k++) {
-    const x = g.lm0 + g.step * (4.7 + k * 0.3) + r.range(-8, 8);
-    out.push(...palm(x, g.yAt(x) + 8, r.range(70, 100), r, palmFill));
+    const x = g.lm0 + g.step * ((shoreAt ?? 0) - 0.3 + k * 0.3) + r.range(-8, 8);
+    if (shoreAt !== null) out.push(...palm(x, g.yAt(x) + 8, r.range(70, 100), r, palmFill));
   }
   return out;
 }
 
+/** How far (strip units) a slow layer's first stop sits from where the 9-stop timeline had it. */
+const lead = (tl: readonly number[], sp: number) => sp * P * tl[0]!;
+
 const art: ArtModule = {
   "00": ({ length, rng }) => stars(length, rng),
-  "01": ({ length, rng }) => moonClouds(length, rng),
-  "02": ({ rng }) => volcano(rng),
-  "02b": ({ length, rng }) => farRange(length, rng),
-  "03": ({ length, rng }) => hazeFar(length, rng),
-  "04": ({ length, rng }) => hills(length, rng),
-  "05": ({ length, rng }) => ridge05(length, rng),
-  "06": ({ length, rng }) => hazeMid(length, rng),
+  "01": ({ length, tl, rng }) => moonClouds(length, rng, lead(tl, 0.03)),
+  "02": ({ tl, rng }) => volcano(rng, lead(tl, 0.05)),
+  "02b": ({ length, tl, rng }) => farRange(length, rng, lead(tl, 0.05)),
+  "03": ({ length, tl, rng }) => hazeFar(length, rng, tl),
+  "04": ({ length, tl, rng }) => hills(length, rng, tl),
+  "05": ({ length, tl, rng }) => ridge05(length, rng, tl),
+  "06": ({ length, tl, rng }) => hazeMid(length, rng, tl),
 };
 
 export default art;

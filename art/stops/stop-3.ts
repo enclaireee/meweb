@@ -1,5 +1,6 @@
-// Stop 3, The Still Pond (midnight): a neuron-forking old tree on the bank, low mirrored hills with a lone lit hut, a trunk and branch for the tag, arching reeds and lotus.
+// Stop 3, The Market Pier (night; was The Still Pond): a neuron-forking old tree on the bank, low mirrored hills with a lone lit hut, a trunk and branch for the tag, arching reeds and lotus.
 import { C, boat, glow, hazed, lantern, leaf, lighten, mix, poly, post, rect, reeds, sheet, type ArtModule, type Piece, type Pt, type Rng } from "../helpers";
+import { gate } from "./fork";
 import { blade, corners, edge, flat, fork, gauss, mass, noise, scallop, scr, tone, tufts } from "./shared-a";
 
 /** Reeds arching from `base` toward `dir` (+1 right, -1 left), with a few lotus buds on taller stems. */
@@ -80,7 +81,8 @@ const art: ArtModule = {
     out.push(blade(lx + 40, 258, -40, -50, -0.2, 8, 2, tone.rock09, r), blade(lx - 10, 256, -30, -34, 0.2, 6, 2, tone.rock09, r));
     for (const d of [-20, 30, 80]) out.push(leaf(lx + d, 268, 180 + r.range(-25, 25), r.range(34, 48), 9, tone.moss09, r, false));
     out.push(...post(lx, r));
-    for (const d of [-700, -610, 640, 730]) out.push(...reeds(lx + d, 650, r, 8, r.range(90, 150), tone.moss09));
+    for (const d of [-700, -610]) out.push(...reeds(lx + d, 650, r, 8, r.range(90, 150), tone.moss09));
+    out.push(...gate(lx, r)); // the lit pier: entrance to the night market
     return out;
   },
 

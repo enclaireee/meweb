@@ -59,20 +59,3 @@ export const landmarkX = (s: number, i: number) => PAD + s * (i * P + HANG);
 /** Screen x (px from opening left) of strip x on a layer of speed s at fractional stop pos. */
 export const screenX = (L: Pick<Layout, "anchor" | "k">, s: number, x: number, pos: number) =>
   L.anchor + (x - PAD - s * pos * P) * L.k;
-
-/**
- * Indices of tiles a layer needs while pos runs over [lo, hi]: everything on screen at any point of the move,
- * plus a quarter-viewport margin and the pointer-parallax shift.
- */
-export function visibleTiles(
-  tiles: readonly { x: number; w: number }[],
-  s: number,
-  lo: number,
-  hi: number,
-  L: Pick<Layout, "anchor" | "k" | "ow">,
-): number[] {
-  const m = (0.25 * L.ow) / L.k + 14 * s;
-  const a = PAD + s * lo * P - L.anchor / L.k - m;
-  const b = PAD + s * hi * P + (L.ow - L.anchor) / L.k + m;
-  return tiles.flatMap((t, i) => (t.x < b && t.x + t.w > a ? [i] : []));
-}

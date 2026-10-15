@@ -1,0 +1,31 @@
+/* World intro (World.tsx): the layers rise into place, back to front, while the loader's light circle opens over them.
+   Only translate animates. */
+.rise {
+  translate: 0 8%;
+}
+.play .rise {
+  animation: rise 900ms var(--ease-paper) calc(var(--ri) * 48ms) both;
+}
+@keyframes rise {
+  from {
+    translate: 0 calc(6% + var(--ri) * 0.5%);
+  }
+  to {
+    translate: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise {
+    translate: none;
+  }
+  .play .rise {
+    animation: none;
+  }
+}
+:global(html[data-motion="reduced"]) .rise {
+  translate: none;
+}
+:global(html[data-motion="reduced"]) .play .rise {
+  animation: none;
+}

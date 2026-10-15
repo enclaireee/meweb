@@ -1,23 +1,23 @@
 "use client";
 
-import { copy, stops } from "@/content/site";
+import type { Stop } from "@/content/site";
 import styles from "./StopDots.module.css";
 
-type Props = { current: number; visited: Set<number> | number[]; onJump(i: number): void };
+type Props = { items: Stop[]; label: string; current: number; visited: string[]; cascade?: boolean; onJump(i: number): void };
 
-export function StopDots({ current, visited, onJump }: Props) {
-  const seen = (i: number) => (visited instanceof Set ? visited.has(i) : visited.includes(i));
+/** One dot per place on the current river: the 3 main stops, or the 5 pools down the cascade (lantern thread). */
+export function StopDots({ items, label, current, visited, cascade = false, onJump }: Props) {
   return (
-    <nav className={styles.nav} aria-label={copy.dotsLabel}>
+    <nav className={styles.nav} aria-label={label} data-cascade={cascade || undefined}>
       <ul className={styles.list}>
-        {stops.map((s) => (
-          <li key={s.i}>
+        {items.map((s) => (
+          <li key={s.id}>
             <button
               type="button"
               className={styles.hit}
               aria-label={s.place}
               aria-current={s.i === current ? "step" : undefined}
-              data-visited={seen(s.i) || undefined}
+              data-visited={visited.includes(s.id) || undefined}
               onClick={() => onJump(s.i)}
             >
               <span className={styles.dot} aria-hidden="true" />

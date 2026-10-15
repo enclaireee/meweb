@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { createWheelGate, keyIntent, swipeStep } from "./input";
-import { visibleTiles, computeLayout } from "./layout";
 
 describe("wheel gate", () => {
   it("one trackpad gesture with inertia = one step", () => {
@@ -46,20 +45,8 @@ describe("swipe and keys", () => {
     expect(keyIntent({ key: "ArrowRight", shiftKey: false }, false)).toEqual({ step: 1 });
     expect(keyIntent({ key: " ", shiftKey: true }, false)).toEqual({ step: -1 });
     expect(keyIntent({ key: " ", shiftKey: false }, true)).toBeNull();
-    expect(keyIntent({ key: "4", shiftKey: false }, false)).toEqual({ jump: 3 });
-    expect(keyIntent({ key: "End", shiftKey: false }, false)).toEqual({ jump: 7 });
-  });
-});
-
-describe("visible tiles", () => {
-  it("mounts the tiles around the stop and along a jump", () => {
-    const L = computeLayout(1600, 900);
-    const tiles = Array.from({ length: 10 }, (_, i) => ({ x: i * 1700, w: 1701 }));
-    const at0 = visibleTiles(tiles, 1, 0, 0, L);
-    expect(at0).toEqual([0, 1]); // screen spans strip x ≈ 640…3000 incl. margin
-    const jump = visibleTiles(tiles, 1, 0, 3, L);
-    expect(jump[0]).toBe(0);
-    expect(jump.at(-1)).toBeGreaterThanOrEqual(4);
-    expect(visibleTiles(tiles, 1, 5, 5, L)).not.toContain(0);
+    expect(keyIntent({ key: "3", shiftKey: false }, false)).toEqual({ jump: 2 });
+    expect(keyIntent({ key: "5", shiftKey: false }, false)).toBeNull();
+    expect(keyIntent({ key: "End", shiftKey: false }, false)).toEqual({ jump: 3 });
   });
 });

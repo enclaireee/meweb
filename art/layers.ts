@@ -46,7 +46,7 @@ export const LAYERS: LayerDef[] = [
 ];
 
 /** Strip length in art units: pad + journey + visible width right of the anchor + margin. */
-export const stripLength = (s: number) => Math.ceil(PAD + 7 * s * P + 1600);
+export const stripLength = (s: number, count: number) => Math.ceil(PAD + (count - 1) * s * P + 1600);
 
 /** Rest-fan: x of stop i's landmark on a layer of speed s (incl. pad). */
 export const landmarkX = (s: number, i: number) => PAD + s * (i * P + HANG);

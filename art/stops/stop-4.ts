@@ -2,7 +2,7 @@
 import { C, darken, ellipse, poly, post, sheet, type ArtModule, type Piece, type Pt } from "../helpers";
 import { bank, ground, blade, blob, frame, green, mangrove, mist, quad, ribbon, spray, tone } from "./shared-b";
 
-const I = 4;
+const I = 5;
 
 const art: ArtModule = {
   // Environment: a maze of mangroves on the left and centre, mudflat with crabs, channel opening right.

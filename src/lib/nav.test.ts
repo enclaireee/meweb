@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { arrived, closeCard, easeGlide, initial, jump, moveDuration, openCard, step, stopFromHash } from "./nav";
+import { arrived, easeGlide, hashFor, initial, jump, moveDuration, placeFromHash, step } from "./nav";
 import { computeLayout, landmarkX, screenX } from "./layout";
 
 describe("nav", () => {
@@ -14,18 +14,13 @@ describe("nav", () => {
     expect(s).toMatchObject({ stop: 1, to: 2, phase: "moving", queued: 0 });
     s = arrived(s);
     expect(s).toMatchObject({ stop: 2, phase: "rest" });
-    expect(step(initial(7), 1).phase).toBe("rest");
+    expect(step(initial(3), 1).phase).toBe("rest");
   });
 
-  it("jumps and locks while the card is open", () => {
-    let s = jump(initial(0), 5);
-    expect(s.to).toBe(5);
-    s = arrived(s);
-    s = openCard(s);
-    expect(step(s, 1)).toBe(s);
-    expect(jump(s, 0)).toBe(s);
-    expect(closeCard(s).phase).toBe("rest");
-    expect(openCard(jump(s, 1))).toBe(s); // jump ignored in card
+  it("jumps", () => {
+    const s = jump(initial(0), 5);
+    expect(s.to).toBe(3); // clamped to the main river
+    expect(arrived(s)).toMatchObject({ stop: 3, phase: "rest" });
   });
 
   it("durations, hash and easing", () => {
@@ -33,9 +28,12 @@ describe("nav", () => {
     expect(moveDuration(3)).toBe(1500);
     expect(moveDuration(7)).toBe(2100);
     expect(moveDuration(12)).toBe(2200);
-    expect(stopFromHash("#stop-3")).toBe(3);
-    expect(stopFromHash("#stop-9")).toBe(7);
-    expect(stopFromHash("#about")).toBeNull();
+    expect(placeFromHash("#stop-1")).toEqual({ route: "main", n: 1 });
+    expect(placeFromHash("#stop-9")).toEqual({ route: "main", n: 3 });
+    expect(placeFromHash("#made-1")).toEqual({ route: "channel", n: 0 });
+    expect(placeFromHash("#made-9")).toEqual({ route: "channel", n: 4 });
+    expect(placeFromHash("#about")).toBeNull();
+    expect([hashFor("main", 2), hashFor("channel", 0)]).toEqual(["#stop-2", "#made-1"]);
     expect(easeGlide(0)).toBe(0);
     expect(easeGlide(1)).toBe(1);
     expect(easeGlide(0.5)).toBeGreaterThan(0.5);

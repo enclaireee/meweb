@@ -389,7 +389,7 @@
   border-top: 1px solid var(--c-paper-dim);
 }
 
-/* ---------- poster: dark lab poster (colours come from Card.module.css) ---------- */
+/* ---------- poster: dark lab poster ---------- */
 .body[data-layout="poster"] .title {
   font-size: clamp(40px, 6vw, 64px);
   letter-spacing: -0.03em;
@@ -748,4 +748,28 @@
 
 .body[data-layout="letter"] > :last-child {
   justify-self: start;
+}
+
+/* Stalls: the projects as a short list of paper tickets (the river's own tickets live in Notes). */
+.stalls {
+  display: grid;
+  gap: var(--sp-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.stalls li {
+  display: grid;
+  gap: 2px;
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: 4px;
+  background: var(--c-paper-2);
+  box-shadow: var(--edge-light), var(--edge-dark);
+}
+.stalls strong {
+  font-family: var(--ff-display);
+  color: var(--c-accent-ink);
+}
+.stalls span {
+  color: var(--c-ink-soft);
 }

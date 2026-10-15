@@ -21,7 +21,19 @@ export type Ctx = {
   lx: number;
   /** Strip length. */
   length: number;
+  /** Stops on this strip, and each local stop's index on the original 9-stop timeline (art/route.ts timeline). */
+  count: number;
+  tl: readonly number[];
   rng: Rng;
+};
+
+/** Local fractional stop -> fractional original-timeline position (linear between stops, slope 1 beyond the ends). */
+export const tlAt = (tl: readonly number[], u: number) => {
+  const n = tl.length;
+  if (u >= n - 1) return tl[n - 1]! + (u - (n - 1));
+  if (u <= 0) return tl[0]! + u;
+  const i = Math.floor(u);
+  return tl[i]! + (tl[i + 1]! - tl[i]!) * (u - i);
 };
 
 export type Gen = (ctx: Ctx) => Piece[];
