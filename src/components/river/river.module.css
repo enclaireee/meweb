@@ -14,7 +14,7 @@
 .stage {
   position: absolute;
   inset: 0;
-  overflow: hidden;
+  overflow: clip; /* hidden still lets focus scroll it sideways */
   contain: strict;
   background: var(--c-ink-night);
   --pos: 0;
