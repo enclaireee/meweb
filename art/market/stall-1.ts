@@ -1,6 +1,6 @@
 // Stall 1, DemandX: a grain and goods stall (sacks, dacin balance, crates, ledger, red tarp). Also holds the shared stall kit.
 // Every stall is drawn in "L space" (lane on the right, open counter + board on the right); finish() mirrors it for right-hand stalls.
-import { C, darken, ellipse, glow, lantern, lighten, mix, poly, rect, sheet, type Piece, type Pt, type Rng, type SheetOpts } from "../helpers";
+import { C, darken, ellipse, glow, lantern, lighten, mix, rect, sheet, type Piece, type Pt, type Rng, type SheetOpts } from "../helpers";
 import { M, SW, type Side, type Slots, type StallArt, type StallGen } from "./types";
 
 export const PI = Math.PI;
@@ -23,7 +23,10 @@ export function kit(r: Rng) {
   const planks = (x: number, y: number, w: number, h: number, fill: string, step = 34, vertical = false) => {
     B(x, y, w, h, fill, NR);
     const seam = darken(fill, 0.5);
-    for (let t = step; t < (vertical ? w : h); t += step) vertical ? B(x + t, y, 2.5, h, seam, NR) : B(x, y + t, w, 2.5, seam, NR);
+    for (let t = step; t < (vertical ? w : h); t += step) {
+      if (vertical) B(x + t, y, 2.5, h, seam, NR);
+      else B(x, y + t, w, 2.5, seam, NR);
+    }
   };
   /** Lower edge of a tarp: `n` semicircular scallops between x0 and x1 hanging from y. */
   const scallops = (x0: number, x1: number, y: number, depth: number, n: number, fills: string[]) => {

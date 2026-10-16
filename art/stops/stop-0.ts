@@ -1,5 +1,5 @@
 // Stop 0, The Spring (dusk): mossy rock spring with a trickle, bamboo grove and a lit shrine, bamboo tag pole, taro leaves.
-import { C, bamboo, darken, hazed, glow, lantern, leaf, lighten, mix, poly, post, raw, rect, reeds, sheet, type ArtModule, type Piece } from "../helpers";
+import { C, bamboo, darken, hazed, glow, lantern, leaf, lighten, mix, poly, post, rect, reeds, sheet, type ArtModule, type Piece } from "../helpers";
 import { boulder, cap, cluster, corners, edge, fern, flat, gauss, mass, noise, scr, tone, tufts } from "./shared-a";
 
 const art: ArtModule = {

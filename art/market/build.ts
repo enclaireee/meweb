@@ -41,7 +41,10 @@ export function paperSvg(groups: Group[], vx: number, w: number, h: number): str
       body += through(i, "#03060C", o * 0.45, dx, dy) + through(i, "#03060C", Math.min(0.8, o + 0.2), dx * 0.25 + 1, dy * 0.25 + 1);
     }
     body += `<use href="#a${i}"/>`;
-    if (g.grain) (grain = true), (body += through(i, "url(#g)", 0.35));
+    if (g.grain) {
+      grain = true;
+      body += through(i, "url(#g)", 0.35);
+    }
   });
   const d = (grain ? GRAIN : "") + defs + glowIds(all).map(GLOW_DEF).join("");
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="${vx} 0 ${w} ${h}" preserveAspectRatio="none">${d ? `<defs>${d}</defs>` : ""}${body}${tops}</svg>`;
@@ -61,10 +64,13 @@ export function buildMarket() {
   const wide = W + 2 * OVER;
   const g = gate(rng(SEED + 3));
   const s = string(rng(SEED + 4));
+  const r1 = (v: number) => Math.round(v * 10) / 10;
   const stalls = [stall1, stall2, stall3, stall4, stall5].map((gen, n) => {
     const side = sideOf(n);
     const art = gen(rng(SEED + 100 + n * 131), side);
-    return { f: put(`stall-${n + 1}`, paperSvg([{ pieces: art.pieces, shadow: [7, 12, 0.5], back: true, grain: true, deckle: 1.6 }], 0, SW, SH)), w: SW, h: SH, side, slots: art.slots, glows: art.glows ?? [], steam: art.steam ?? [] };
+    const glows = (art.glows ?? []).map(([x, y, rad]) => [r1(x), r1(y), r1(rad)] as [number, number, number]);
+    const steam = (art.steam ?? []).map(([x, y]) => [r1(x), r1(y)] as [number, number]);
+    return { f: put(`stall-${n + 1}`, paperSvg([{ pieces: art.pieces, shadow: [7, 12, 0.5], back: true, grain: true, deckle: 1.6 }], 0, SW, SH)), w: SW, h: SH, side, slots: art.slots, glows, steam };
   });
   const plays: Play[] = [play1, play2, play3, play4, play5];
   const play: MarketManifest["play"] = {

@@ -34,7 +34,6 @@ function Lantern({ lit }: { lit: boolean }) {
 
 export function Loader(p: { progress: number; ready: boolean; onLanded: () => void; onGone: () => void }) {
   const { progress, ready } = p;
-  const [fill, setFill] = useState(0);
   const [phase, setPhase] = useState<"load" | "fly" | "fade">("load");
   const lantern = useRef<HTMLDivElement>(null);
   const root = useRef<HTMLDivElement>(null);
@@ -43,9 +42,8 @@ export function Loader(p: { progress: number; ready: boolean; onLanded: () => vo
     cb.current = p;
   });
 
-  // The fill only ever grows.
-  const target = ready ? 1 : Math.min(1, Math.max(0, progress));
-  if (target > fill) setFill(target);
+  // `progress` from preload() only ever grows; `ready` snaps it to 1.
+  const fill = ready ? 1 : Math.min(1, Math.max(0, progress));
 
   useEffect(() => {
     if (!ready) return;

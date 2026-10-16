@@ -1,5 +1,5 @@
 // Stall 3, Refocus: a carnival game stall (ring toss, paper targets, plush prizes, arcade cabinet, hanging EEG headband), striped tent top.
-import { C, darken, lighten, mix, type Pt } from "../helpers";
+import { C, lighten, mix, type Pt } from "../helpers";
 import { M, type Slots, type StallGen } from "./types";
 import { finish, kit, NR, PI, type K } from "./stall-1";
 

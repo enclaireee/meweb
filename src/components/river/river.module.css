@@ -55,7 +55,7 @@
   top: 0;
   /* Fixed box over the whole strip: tiles mount/unmount around the current stop, and if that moved the layer's bounds
      the compositor re-rastered the entire layer, dropping it for a frame (the flicker). */
-  width: calc(var(--len, 26600) * var(--k));
+  width: calc(var(--len, 13000) * var(--k));
   height: calc(1000 * var(--k));
   --z: calc(600 * (var(--s) - 1));
   transform-origin: var(--ox) var(--oy);
@@ -250,6 +250,9 @@
 }
 .ambient[data-on="false"] {
   opacity: 0;
+}
+.ambient[data-on="false"] * {
+  animation-play-state: paused;
 }
 @keyframes lifeIn {
   from {
@@ -523,8 +526,9 @@
   white-space: nowrap;
 }
 
-/* Hidden tab: freeze ambient life. */
-:global(html[data-paused]) .stage * {
+/* Hidden tab or away in the cascade: freeze ambient life. */
+:global(html[data-paused]) .stage *,
+.stage[data-away] * {
   animation-play-state: paused !important;
 }
 

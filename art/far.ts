@@ -243,7 +243,6 @@ const roofs = (b: number, w: number): Prof => (x) => {
   const fr = (x % w) / w;
   return b - 18 * hash(i + 77) - 20 * (1 - Math.abs(2 * fr - 1)) + 6 * sm(x, 300, 14);
 };
-const flatSea = (b: number, head: number): Prof => (x) => b + 3 * sm(x, 120, 15) - head * gauss(x, 0, 1);
 
 /** Local stop index of timeline stop t on this strip (fractional t allowed), or null when the strip has no stop that near. */
 const localOf = (tl: readonly number[], t: number): number | null => {

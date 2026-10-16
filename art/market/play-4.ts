@@ -1,5 +1,5 @@
 // KOMAT UNPAR 2025's shadow play: four scenes, one per booklet page. See play.ts for the kit.
-import { C, ellipse, rect, type Pt } from "../helpers";
+import { C, rect, type Pt } from "../helpers";
 import { FEET, hc, hp, hr, rot, type Play, type Scene } from "./play";
 
 /** The student: the same crownless wayang in all four scenes. */

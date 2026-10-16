@@ -1,5 +1,5 @@
 // Stall 5, Sunlight Meter: a lamp seller (dozens of hanging lamps, solar panel on a thatch roof, needle meter on the counter).
-import { C, darken, lighten, mix, type Pt } from "../helpers";
+import { C, darken, mix, type Pt } from "../helpers";
 import { M, type Slots, type StallGen } from "./types";
 import { finish, kit, NR, PI, type K } from "./stall-1";
 

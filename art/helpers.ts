@@ -177,8 +177,8 @@ export function extent(src: Pt[] | string): [number, number] {
     }
   } else
     for (const p of src) {
-      lo = Math.min(lo, p[0]);
-      hi = Math.max(hi, p[0]);
+      if (p[0] < lo) lo = p[0];
+      if (p[0] > hi) hi = p[0];
     }
   return [lo, hi];
 }
@@ -197,10 +197,13 @@ export type SheetOpts = {
  * Rim: a lighter copy offset up-left and a darker copy down-right peek out by 1.5 units.
  */
 export function sheet(shape: string | Pt[], fill: string, r: Rng, o: SheetOpts = {}): Piece {
+  const [x0, x1] = typeof shape === "string" ? extent(shape) : (() => {
+    const [lo, hi] = extent(shape);
+    return [lo - 1, hi + 1] as [number, number];
+  })();
   const d = typeof shape === "string" ? shape : facet(shape, r);
   const holes = o.holes?.join("") ?? "";
   const full = d + holes;
-  const [x0, x1] = extent(d);
   const op = o.opacity !== undefined ? ` opacity="${o.opacity}"` : "";
   const rim =
     o.rim === false

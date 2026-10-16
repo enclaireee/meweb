@@ -117,7 +117,7 @@ const art: ArtModule = {
 
   // Near-2: root tangles at both edges with cut gaps, hanging roots from the top, soft mud slab.
   "11": (c) => {
-    const { X, u0, u1 } = frame(c);
+    const { X } = frame(c);
     const r = c.rng;
     const fill = tone("11", I, 0.5);
     const out: Piece[] = [];

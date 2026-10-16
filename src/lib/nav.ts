@@ -54,13 +54,14 @@ export function placeFromHash(hash: string): { route: "main" | "channel"; n: num
 
 export const hashFor = (route: "main" | "channel", n: number) => (route === "main" ? `#stop-${n}` : `#made-${n + 1}`);
 
+const [X1, Y1, X2, Y2] = [0.45, 0.05, 0.25, 1];
+const bx = (t: number) => 3 * X1 * t * (1 - t) ** 2 + 3 * X2 * t * t * (1 - t) + t ** 3;
+const by = (t: number) => 3 * Y1 * t * (1 - t) ** 2 + 3 * Y2 * t * t * (1 - t) + t ** 3;
+
 /** Glide easing, cubic-bezier(0.45, 0.05, 0.25, 1), solved for y at time x. */
 export function easeGlide(x: number): number {
-  const [x1, y1, x2, y2] = [0.45, 0.05, 0.25, 1];
   if (x <= 0) return 0;
   if (x >= 1) return 1;
-  const bx = (t: number) => 3 * x1 * t * (1 - t) ** 2 + 3 * x2 * t * t * (1 - t) + t ** 3;
-  const by = (t: number) => 3 * y1 * t * (1 - t) ** 2 + 3 * y2 * t * t * (1 - t) + t ** 3;
   let lo = 0;
   let hi = 1;
   for (let i = 0; i < 24; i++) {

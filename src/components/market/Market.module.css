@@ -823,3 +823,11 @@
 :global(html[data-motion="reduced"]) .stall .bannerText {
   transition: none;
 }
+
+/* Hidden tab: freeze market animations. */
+:global(html[data-paused]) .root *,
+:global(html[data-paused]) .root *::before,
+:global(html[data-paused]) .root *::after {
+  animation-play-state: paused !important;
+}
+

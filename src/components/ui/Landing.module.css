@@ -9,12 +9,6 @@
   width: 0;
   height: 0;
 }
-.set,
-.flow {
-  transition:
-    opacity 300ms var(--ease-paper),
-    visibility 0s;
-}
 [data-on="false"].set,
 [data-on="false"].flow {
   opacity: 0;
@@ -43,31 +37,33 @@
   font-weight: 640;
   line-height: 0.86;
   letter-spacing: -0.035em;
-  filter: drop-shadow(0 2px 2px rgb(3 6 12 / 0.5)) drop-shadow(0 12px 18px rgb(3 6 12 / 0.45));
 }
 .ch {
   display: inline-grid;
 }
 .lyr {
-  /* positioned, so the translated layers keep DOM order instead of painting over the face */
+  /* positioned, so the translated layers keep DOM order instead of painting over the face;
+     padded with matching negative margin so background-clip: text never slices Fraunces's overhangs */
   position: relative;
   grid-area: 1 / 1;
+  padding: 0.15em 0.08em;
+  margin: -0.15em -0.08em;
 }
 .lyr[data-l="0"] {
   color: rgb(5 8 18 / 0.9);
   translate: 0.05em 0.06em;
+  text-shadow:
+    0 2px 2px rgb(3 6 12 / 0.5),
+    0 12px 18px rgb(3 6 12 / 0.45);
 }
 .lyr[data-l="1"] {
   color: color-mix(in srgb, var(--c-lantern) 62%, #7a3410);
   translate: 0.024em 0.03em;
 }
-/* the lit face: moon paper, warmer toward the post's lantern above, with the paper grain */
+/* the lit face: moon paper, warmer toward the post's lantern above */
 .lyr[data-l="2"] {
   color: transparent;
-  background-color: var(--c-moon);
-  background-image: linear-gradient(175deg, rgb(255 196 107 / 0.55), transparent 55%), var(--paper-grain);
-  background-size: auto, 200px 200px;
-  background-blend-mode: normal, multiply;
+  background-image: linear-gradient(175deg, color-mix(in srgb, #ffc46b 55%, var(--c-moon)), var(--c-moon) 55%);
   -webkit-background-clip: text;
   background-clip: text;
 }
@@ -126,7 +122,7 @@
   transform-origin: 50% 0;
 }
 /* after the intro, the cards lean with the pointer (River smooths --px), each its own way */
-.follow {
+[data-on="true"] .follow {
   rotate: calc(var(--px, 0) * var(--sw) * 3.5deg);
 }
 .cord {
@@ -331,13 +327,13 @@
 
 /* ---- Intro: the letters drop and split, the cards swing in, the lanterns light in order ---- */
 [data-on="true"] .ch {
-  animation: fall 760ms var(--ease-paper) calc(var(--i) * 60ms) both;
+  animation: fall 760ms var(--ease-paper) calc(180ms + var(--i) * 60ms) both;
 }
 [data-on="true"] .lyr:not([data-l="2"]) {
-  animation: split 560ms var(--ease-paper) calc(420ms + var(--i) * 60ms) both;
+  animation: split 560ms var(--ease-paper) calc(540ms + var(--i) * 60ms) both;
 }
 [data-on="true"] .sub {
-  animation: rise 600ms var(--ease-paper) 620ms both;
+  animation: rise 600ms var(--ease-paper) 680ms both;
 }
 [data-on="true"] .twine {
   animation: fade 500ms linear 300ms both;
@@ -371,6 +367,11 @@
     translate: 0 0.03em;
     rotate: 1.5deg;
   }
+  100% {
+    opacity: 1;
+    translate: 0 0;
+    rotate: 0deg;
+  }
 }
 @keyframes split {
   from {
@@ -382,10 +383,17 @@
     opacity: 0;
     translate: 0 10px;
   }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
 }
 @keyframes fade {
   from {
     opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 /* a damped pendulum about the peg */
@@ -512,6 +520,12 @@
 
 /* ---- Reduced motion: the finished frame, no swinging ---- */
 @media (prefers-reduced-motion: reduce) {
+  .set,
+  .flow {
+    transition:
+      opacity 300ms var(--ease-paper),
+      visibility 0s;
+  }
   .set *,
   .flow * {
     animation: none !important;
@@ -519,6 +533,12 @@
   .follow {
     rotate: none;
   }
+}
+:global(html[data-motion="reduced"]) .set,
+:global(html[data-motion="reduced"]) .flow {
+  transition:
+    opacity 300ms var(--ease-paper),
+    visibility 0s;
 }
 :global(html[data-motion="reduced"]) .set *,
 :global(html[data-motion="reduced"]) .flow * {

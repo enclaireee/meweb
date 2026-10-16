@@ -1,5 +1,5 @@
 // Sunlight Meter's shadow play: four scenes, one per booklet page. See play.ts for the kit.
-import { C, ellipse, rect } from "../helpers";
+import { ellipse, rect } from "../helpers";
 import { FEET, hc, hp, hr, rot, type Play, type Scene } from "./play";
 
 const SUN = "#F2A93B";

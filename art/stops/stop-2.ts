@@ -1,5 +1,5 @@
 // Stop 2, The Gorge (deep night): tall jungle walls, bamboo aqueduct, rock wall with waterfall, stone pier with valve wheel, heavy vines.
-import { C, arc, darken, glow, hazed, leaf, lighten, mix, poly, post, rect, sheet, type ArtModule, type Piece, type Pt } from "../helpers";
+import { C, arc, darken, glow, hazed, leaf, lighten, mix, poly, post, rect, sheet, type ArtModule, type Piece } from "../helpers";
 import { blade, boulder, cluster, corners, edge, fern, gauss, mass, noise, scallop, scr, tone, tufts } from "./shared-a";
 
 const bambooTint = (h: number) => hazed(mix(C.bamboo, C.ramp3, 0.5), h * 0.3);

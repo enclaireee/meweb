@@ -76,3 +76,12 @@
   white-space: nowrap;
   border: 0;
 }
+:global(html.js) .stop,
+:global(html.js) .stop * {
+  filter: none !important;
+  animation: none !important;
+}
+:global(html.js) .stop::before {
+  display: none;
+}
+

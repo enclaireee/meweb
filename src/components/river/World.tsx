@@ -36,24 +36,24 @@ const hash = (...n: number[]) => {
 
 const ALL = stops.map((st) => st.i);
 
-function Fireflies({ depth, active, phone, ri, cls }: { depth: 0 | 1 | 2; active: number; phone: boolean; ri: number; cls: string }) {
+function Fireflies({ depth, active, phone, ri }: { depth: 0 | 1 | 2; active: number; phone: boolean; ri: number }) {
   const d = FF[depth];
   return (
-    <div className={`${s.layer} ${cls}`} style={{ "--s": d.s, "--ri": ri } as CSSProperties}>
-      {ALL.map((i) => {
-        const n = Math.ceil(dials[i]!.ff[depth] / (phone ? 2 : 1));
+    <div className={`${s.layer} ${i.rise}`} style={{ "--s": d.s, "--ri": ri } as CSSProperties}>
+      {ALL.map((stIdx) => {
+        const n = Math.ceil(dials[stIdx]!.ff[depth] / (phone ? 2 : 1));
         return (
-          <div key={i} className={s.ffSet} data-on={i === active}>
+          <div key={stIdx} className={s.ffSet} data-on={stIdx === active}>
             {Array.from({ length: n }, (_, j) => {
-              const x = 1200 + d.s * i * 1700 + (hash(i, j, depth, 1) * 1900 - 600) * Math.max(1, d.s * 0.8);
-              const y = d.y[0] + hash(i, j, depth, 2) * (d.y[1] - d.y[0]);
-              const size = d.size[0] + hash(i, j, depth, 3) * (d.size[1] - d.size[0]);
+              const x = 1200 + d.s * stIdx * 1700 + (hash(stIdx, j, depth, 1) * 1900 - 600) * Math.max(1, d.s * 0.8);
+              const y = d.y[0] + hash(stIdx, j, depth, 2) * (d.y[1] - d.y[0]);
+              const size = d.size[0] + hash(stIdx, j, depth, 3) * (d.size[1] - d.size[0]);
               const style = {
                 "--x": x,
                 "--y": y,
                 "--size": size,
-                animationDelay: `${-hash(i, j, 4) * 9}s, ${-hash(i, j, 5) * 4}s`,
-                animationDuration: `${7 + hash(i, j, 6) * 5}s, ${2.5 + hash(i, j, 7) * 2}s`,
+                animationDelay: `${-hash(stIdx, j, 4) * 9}s, ${-hash(stIdx, j, 5) * 4}s`,
+                animationDuration: `${7 + hash(stIdx, j, 6) * 5}s, ${2.5 + hash(stIdx, j, 7) * 2}s`,
               } as CSSProperties;
               return <i key={j} className={s.ff} data-depth={depth} style={style} />;
             })}
@@ -81,13 +81,13 @@ type Props = {
 export const World = memo(function World({ L, ffActive, travellerState, fxRef, skyRef, lifeStop, lifeOn, intro }: Props) {
   const phone = L.profile === "phone";
   const out: React.ReactNode[] = [];
-  const cls = intro === "done" ? "" : i.rise!;
+  const worldCls = intro === "wait" ? i.wait : intro === "play" ? i.play : "";
   let ri = 0;
   for (const layer of LAYERS) {
     out.push(
       <div
         key={layer.id}
-        className={`${s.layer} ${cls}`}
+        className={`${s.layer} ${i.rise}`}
         data-layer={layer.id}
         style={{ "--s": layer.s, "--len": layer.length, "--ri": ri++ } as CSSProperties}
         ref={layer.fx ? fxRef(layer.id, layer.fx) : undefined}>
@@ -98,7 +98,7 @@ export const World = memo(function World({ L, ffActive, travellerState, fxRef, s
       </div>,
     );
     FF.forEach((d, depth) => {
-      if (d.after === layer.id) out.push(<Fireflies key={`ff${depth}`} depth={depth as 0 | 1 | 2} active={ffActive} phone={phone} ri={ri++} cls={cls} />);
+      if (d.after === layer.id) out.push(<Fireflies key={`ff${depth}`} depth={depth as 0 | 1 | 2} active={ffActive} phone={phone} ri={ri++} />);
     });
     if (layer.id === "w2") {
       out.push(
@@ -112,7 +112,7 @@ export const World = memo(function World({ L, ffActive, travellerState, fxRef, s
     }
   }
   return (
-    <div className={`${s.world} ${intro === "play" ? i.play : ""}`} data-world aria-hidden="true">
+    <div className={`${s.world} ${worldCls}`} data-world aria-hidden="true">
       <div className={s.sky} ref={skyRef} />
       {out}
     </div>

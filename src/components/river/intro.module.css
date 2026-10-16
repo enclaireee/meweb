@@ -1,6 +1,6 @@
 /* World intro (World.tsx): the layers rise into place, back to front, while the loader's light circle opens over them.
    Only translate animates. */
-.rise {
+.wait .rise {
   translate: 0 8%;
 }
 .play .rise {
@@ -16,14 +16,14 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .rise {
+  .wait .rise {
     translate: none;
   }
   .play .rise {
     animation: none;
   }
 }
-:global(html[data-motion="reduced"]) .rise {
+:global(html[data-motion="reduced"]) .wait .rise {
   translate: none;
 }
 :global(html[data-motion="reduced"]) .play .rise {

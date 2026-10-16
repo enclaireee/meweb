@@ -10,26 +10,29 @@ const mix = (a: RGB, b: RGB, t: number): RGB => [a[0] + (b[0] - a[0]) * t, a[1] 
 
 const MID = ["#1F4A5C", "#1A3D53", "#112841", "#0C1D33", "#09152A", "#0B1A30", "#1B3A5E", "#5C7FA3", "#A9C0D0", "#A9CBE0"].map(hex);
 // Horizon glows per stop: [colour, alpha]. Two slots, zero when absent.
-const GLOW: [string, number][][] = [
-  [["#E8A25A", 0.35]],
-  [["#D9965A", 0.26]],
-  [["#C98A52", 0.18]],
-  [],
-  [],
-  [],
-  [["#7F9CC4", 0.3], ["#E59C98", 0.15]],
-  [["#E59C98", 0.4], ["#F2C77A", 0.3]],
-  [["#F2C77A", 0.55]],
-  [["#FFD9A0", 0.6], ["#F7B98A", 0.3]], // morning: warm low sun on a clear blue
-];
+const DEFAULT_GLOW = hex("#E8A25A");
+const GLOW: [RGB, number][][] = (
+  [
+    [["#E8A25A", 0.35]],
+    [["#D9965A", 0.26]],
+    [["#C98A52", 0.18]],
+    [],
+    [],
+    [],
+    [["#7F9CC4", 0.3], ["#E59C98", 0.15]],
+    [["#E59C98", 0.4], ["#F2C77A", 0.3]],
+    [["#F2C77A", 0.55]],
+    [["#FFD9A0", 0.6], ["#F7B98A", 0.3]], // morning: warm low sun on a clear blue
+  ] as [string, number][][]
+).map((stop) => stop.map(([c, a]) => [hex(c), a]));
 const BLACK: RGB = [0, 0, 0];
 const WHITE: RGB = [255, 255, 255];
 
 export type Sky = { top: string; mid: string; hor: string; glowA: string; glowB: string; horizon: number };
 
-const glowAt = (G: [string, number][][], i: number, slot: number): [RGB, number] => {
+const glowAt = (G: [RGB, number][][], i: number, slot: number): [RGB, number] => {
   const g = G[i]?.[slot];
-  return g ? [hex(g[0]), g[1]] : [hex(G[i]?.[0]?.[0] ?? "#E8A25A"), 0];
+  return g ? [g[0], g[1]] : [G[i]?.[0]?.[0] ?? DEFAULT_GLOW, 0];
 };
 
 /** Sky at local fractional stop `local` on `route` (mapped onto the 10-stop timeline). */

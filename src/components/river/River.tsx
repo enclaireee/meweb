@@ -32,12 +32,31 @@ const TURN_MS = 420;
 const tilesOf = (m: { layers: { tiles: { f: string }[] }[] }, dir: string) =>
   m.layers.flatMap((l) => l.tiles.map((t) => `/art/${dir}/${t.f}`));
 const MAIN_TILES = tilesOf(manifest, "desktop");
-const { sky, far, floor, gate, string: lights, pier, walker, stalls } = market;
-const CHANNEL_TILES = [sky, far, floor, gate, lights, { f: lights.lit }, pier, walker, ...stalls].map((a) => `/art/market/${a.f}`);
+const { sky, far, floor, gate, string: lights, pier, walker, stalls, play } = market;
+const CHANNEL_TILES = [
+  sky,
+  far,
+  floor,
+  gate,
+  lights,
+  { f: lights.lit },
+  pier,
+  walker,
+  ...stalls,
+  play.screen,
+  play.gunungan,
+  ...play.scenes.flat().flatMap((sc) => [{ f: sc.set }, { f: sc.cast }]),
+].map((a) => `/art/market/${a.f}`);
 
 /** Load and decode tiles before their world mounts, so no layer's content changes after it is on screen. Reports the decoded ratio. */
 const preload = (tiles: string[], onProgress: (r: number) => void = () => {}) => {
   let done = 0;
+  let raf = 0;
+  let timer = 0;
+  const report = () => {
+    raf = 0;
+    onProgress(done / tiles.length);
+  };
   return Promise.race([
     Promise.all(
       tiles.map((src) => {
@@ -46,11 +65,24 @@ const preload = (tiles: string[], onProgress: (r: number) => void = () => {}) =>
         return img
           .decode()
           .catch(() => {})
-          .then(() => onProgress(++done / tiles.length));
+          .then(() => {
+            done++;
+            if (done === tiles.length) {
+              cancelAnimationFrame(raf);
+              onProgress(1);
+            } else if (!raf) {
+              raf = requestAnimationFrame(report);
+            }
+          });
       }),
     ),
-    new Promise((r) => setTimeout(r, 8000)), // ponytail: slow network cap; late tiles may still pop in
-  ]);
+    new Promise((r) => {
+      timer = window.setTimeout(r, 8000); // ponytail: slow network cap; late tiles may still pop in
+    }),
+  ]).finally(() => {
+    clearTimeout(timer);
+    cancelAnimationFrame(raf);
+  });
 };
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 /** Two painted frames: the swapped-in view is on screen before the reeds part. */
@@ -96,7 +128,7 @@ export function River() {
 
   const stageRef = useRef<HTMLDivElement>(null);
   const skyRef = useRef<HTMLDivElement>(null);
-  const fxEls = useRef(new Map<string, { el: HTMLDivElement; fx: string }>());
+  const fxEls = useRef(new Map<string, { el: HTMLDivElement; fx: string; op: string; ty: string }>());
   const wheel = useRef(createWheelGate());
   const startle = useRef(0);
   const routeRef = useRef<Route>("main");
@@ -113,6 +145,7 @@ export function River() {
     raf: 0,
     move: null as null | { from: number; to: number; start: number; dur: number },
     ptr: { x: 0, y: 0, tx: 0, ty: 0, last: 0, active: false },
+    rect: { left: 0, top: 0, width: 1, height: 1 },
     reduced: false,
     compact: false,
   });
@@ -125,27 +158,37 @@ export function River() {
   }, []);
 
   /** Write everything that depends on the fractional stop. */
-  const applyPos = useCallback((p: number) => {
+  const applyPos = useCallback((p: number, skipCam = false) => {
     a.current.pos = p;
     const stage = stageRef.current;
     if (!stage) return;
     stage.style.setProperty("--pos", p.toFixed(4));
-    for (const { el, fx } of fxEls.current.values()) {
-      const f = layerFx(fx, p);
-      el.style.opacity = f.opacity.toFixed(3);
-      el.style.setProperty("--ty", f.ty.toFixed(1));
+    for (const item of fxEls.current.values()) {
+      const f = layerFx(item.fx, p);
+      const op = f.opacity.toFixed(3);
+      const ty = f.ty.toFixed(1);
+      if (op !== item.op) {
+        item.op = op;
+        item.el.style.opacity = op;
+      }
+      if (ty !== item.ty) {
+        item.ty = ty;
+        item.el.style.setProperty("--ty", ty);
+      }
     }
     if (skyRef.current) skyRef.current.style.background = skyBackground(skyAt(p));
-    applyCam();
+    if (!skipCam) applyCam();
   }, [applyCam]);
 
   const fxRef = useCallback(
     (id: string, fx: string) => (el: HTMLDivElement | null) => {
       if (el) {
-        fxEls.current.set(id, { el, fx });
         const f = layerFx(fx, a.current.pos);
-        el.style.opacity = f.opacity.toFixed(3);
-        el.style.setProperty("--ty", f.ty.toFixed(1));
+        const op = f.opacity.toFixed(3);
+        const ty = f.ty.toFixed(1);
+        el.style.opacity = op;
+        el.style.setProperty("--ty", ty);
+        fxEls.current.set(id, { el, fx, op, ty });
       } else fxEls.current.delete(id);
     },
     [],
@@ -161,10 +204,12 @@ export function River() {
       const A = a.current;
       A.raf = 0;
       let again = false;
+      let camDirty = false;
       if (A.move) {
         const { from, to, start, dur } = A.move;
         const t = Math.min(1, (now - start) / dur);
-        applyPos(from + (to - from) * nav.easeGlide(t));
+        applyPos(from + (to - from) * nav.easeGlide(t), true);
+        camDirty = true;
         if (t < 1) again = true;
         else {
           A.move = null;
@@ -179,12 +224,13 @@ export function River() {
         p.y += (p.ty - p.y) * k;
         stageRef.current?.style.setProperty("--px", p.x.toFixed(4));
         stageRef.current?.style.setProperty("--py", p.y.toFixed(4));
-        applyCam();
+        camDirty = true;
         if (Math.abs(p.tx - p.x) + Math.abs(p.ty - p.y) < 0.001) {
           p.active = false;
           p.last = 0;
         } else again = true;
       }
+      if (camDirty) applyCam();
       if (again) kick();
     };
   }, [applyPos, applyCam, kick]);
@@ -299,6 +345,7 @@ export function River() {
     const stage = stageRef.current!;
     const ro = new ResizeObserver(() => {
       const r = stage.getBoundingClientRect();
+      a.current.rect = { left: r.left, top: r.top, width: r.width || 1, height: r.height || 1 };
       const lay = computeLayout(innerWidth, innerHeight, { w: r.width, h: r.height });
       stage.style.setProperty("--k", `${lay.k}px`);
       stage.style.setProperty("--anchor", `${lay.anchor}px`);
@@ -421,7 +468,7 @@ export function River() {
     const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
     const onMove = (e: PointerEvent) => {
       if (a.current.reduced || e.pointerType !== "mouse") return;
-      const r = stage.getBoundingClientRect();
+      const r = a.current.rect;
       const p = a.current.ptr;
       p.tx = Math.max(-1, Math.min(1, ((e.clientX - r.left) / r.width) * 2 - 1));
       p.ty = Math.max(-1, Math.min(1, ((e.clientY - r.top) / r.height) * 2 - 1));
@@ -454,7 +501,7 @@ export function River() {
       : `Stop ${st.stop + 1} of ${stops.length}, ${here.place}: ${here.tag.title}`;
   // Adjusting state during render (React's sanctioned pattern): remember stops once settled on them.
   if (resting && !inCascade && !visited.includes(here.id)) setVisited([...visited, here.id]);
-  const notesOn = (i: number) => resting && shown && intro === "done" && !turning && i === st.stop;
+  const notesOn = (i: number) => resting && shown && intro !== "wait" && !turning && i === st.stop;
   const dive = (n = 0) => void enter(n, true);
   const go = (n: number) => dispatch({ t: "jump", n });
   const pool = (n: number) => setTarget(Math.max(0, Math.min(nav.LEVELS - 1, n)));
@@ -463,7 +510,7 @@ export function River() {
   const ripple = (e: React.MouseEvent<HTMLDivElement>) => {
     const stage = stageRef.current;
     if (!stage || a.current.reduced || (e.target as Element).closest("button, a, [data-note]")) return;
-    const r = stage.getBoundingClientRect();
+    const r = a.current.rect;
     const el = document.createElement("i");
     el.className = s.ripple!;
     el.style.left = `${e.clientX - r.left}px`;
@@ -532,7 +579,7 @@ export function River() {
           />
         )}
       </Frame>
-      {intro === "done" && (
+      {intro !== "wait" && (
         <button type="button" className={s.made} data-cascade={inCascade || undefined} onClick={inCascade ? leave : () => (st.stop === 1 ? dive() : go(1))}>
           {inCascade ? (
             <>
