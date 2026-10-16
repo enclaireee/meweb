@@ -65,42 +65,27 @@ function body(stop: Stop, kind: Kind, made: (n: number) => void, flow = false): 
   const { card, tag } = stop;
   switch (kind) {
     case "lanterns":
+      // ponytail: scenery, not a list; a pulled lantern still dives to its project, the sign's button is the real way down
       return (
-        <>
-          {flow ? (
-            <Title stop={stop} />
-          ) : (
-            <svg className={styles.twine} viewBox={`0 0 ${END[0]} ${MID}`} aria-hidden="true" focusable="false">
-              <path d={TWINE} />
-              <circle r="4" />
-            </svg>
-          )}
-          <ol className={styles.lanterns} aria-label={copy.made}>
-            {projects.map((p) => {
-              const [x, y, drop] = LANTERNS[p.i % LANTERNS.length]!;
-              return (
-                <li key={p.id} className={styles.lantern} style={{ "--lx": x, "--ly": y, "--drop": drop, "--li": p.i } as CSSProperties}>
-                  <button type="button" className={styles.lanternBtn} onClick={() => made(p.i)}>
-                    <span className={styles.lamp} aria-hidden="true">
-                      <i className={styles.halo} />
-                      <i className={styles.lit} />
-                      <span className={styles.lNo}>{String(p.i + 1).padStart(2, "0")}</span>
-                    </span>
-                    <span className={styles.lTag}>
-                      <span className={`${paper.sheet} ${paper.eyes}`} aria-hidden="true" />
-                      <span className={styles.lName}>{p.tag.title}</span>
-                      <span className={styles.lMore}>
-                        <span className={paper.sheet} aria-hidden="true" />
-                        <span className={styles.lHook}>{cut(p.tag.hook)}</span>
-                        {p.tag.date && <span className={styles.lDate}>{p.tag.date}</span>}
-                      </span>
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
-          </ol>
-        </>
+        <div aria-hidden="true">
+          <svg className={styles.twine} viewBox={`0 0 ${END[0]} ${MID}`} focusable="false">
+            <path d={TWINE} />
+            <circle r="4" />
+          </svg>
+          {projects.map((p) => {
+            const [x, y, drop] = LANTERNS[p.i % LANTERNS.length]!;
+            return (
+              <span key={p.id} className={styles.lantern} style={{ "--lx": x, "--ly": y, "--drop": drop, "--li": p.i } as CSSProperties}>
+                <span className={styles.lanternBtn} onClick={() => made(p.i)}>
+                  <span className={styles.lamp}>
+                    <i className={styles.halo} />
+                    <i className={styles.lit} />
+                  </span>
+                </span>
+              </span>
+            );
+          })}
+        </div>
       );
     case "sign": {
       const line = card.layout === "timeline";
@@ -110,6 +95,13 @@ function body(stop: Stop, kind: Kind, made: (n: number) => void, flow = false): 
           {!line && tag.date && <p className={styles.meta}>{tag.date}</p>}
           <p className={styles.hook}>{tag.hook}</p>
           {!line && tag.facts && <Facts facts={tag.facts} />}
+          {card.layout === "stalls" && (
+            <p>
+              <button type="button" className={paper.btn} onClick={() => made(0)}>
+                {copy.dive} <span aria-hidden="true">↓</span>
+              </button>
+            </p>
+          )}
           {/* phones: the sign stands in for the role tags */}
           {flow && line && <Bullets items={roles.map((r) => `${r.role} · ${r.org}`)} />}
         </>
@@ -342,7 +334,7 @@ export function Notes({
                 )}
               </div>
             ) : (
-              <Mat v={stop.i + n} sheet={SHEET.has(kind) || (flow && kind === "lanterns")}>
+              <Mat v={stop.i + n} sheet={SHEET.has(kind)}>
                 {body(stop, kind, made, flow)}
               </Mat>
             )}

@@ -2,7 +2,7 @@
 import type { Stop } from "@/content/site";
 
 export type PieceKind =
-  | "lanterns" // stalls: a string of paper lanterns, one per project, each dives to it
+  | "lanterns" // stalls: a string of unlabelled paper lanterns; the sign's button is the way down
   | "sign" // hanging title sign
   | "crates" // pipeline: stencilled steps
   | "gauge" // spec: brass health gauge
@@ -15,7 +15,6 @@ export type PieceKind =
 /** `phone`: one piece per stop, so the strip never covers the scene (the sign carries a short version of the rest). */
 export function pieceKinds({ card }: Stop, phone = false): PieceKind[] {
   if (card.layout === "letter") return ["letter"];
-  if (phone && card.layout === "stalls") return ["lanterns"]; // carries its own title
   if (phone && card.layout !== "cv") return ["sign"];
   switch (card.layout) {
     case "cv":

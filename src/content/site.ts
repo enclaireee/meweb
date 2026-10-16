@@ -83,6 +83,7 @@ export const copy = {
   notFound: "You drifted off the map.",
   notFoundLink: "Back to the river.",
   made: "Things I made",
+  dive: "Dive in",
   backToMain: "Back to the river",
   /** The projects section (Projects.tsx). */
   madeKicker: "Under the river",
@@ -135,13 +136,13 @@ export const stops: Stop[] = [
     kicker: kick(1, "The Market Pier"),
     spots: [[365, 358, 0], [595, 258, 0]],
     tag: {
-      title: "Things I made",
-      hook: "Five lanterns, five things I built. Each one lights a way under the river.",
+      title: "Dive into my projects",
+      hook: "The lanterns only show the surface. The real work is under the river. Hold your breath.",
     },
     card: {
       layout: "stalls",
-      title: "Things I made",
-      summary: "Forecasting, plant monitoring, a game, an event and a solar lamp.",
+      title: "Dive into my projects",
+      summary: "The lanterns only show the surface. The real work sits under the river.",
     },
   },
   {

@@ -566,10 +566,9 @@
   color: var(--ink-soft);
 }
 
-/* The lanterns, one per project, on a twine from the post arm (the spot) to the palms. Everything is in art units
+/* The lanterns, unlabelled, on a twine from the post arm (the spot) to the palms. Everything is in art units
    (--lx/--ly: where the cord meets the twine; --drop: the cord), so the string keeps to the art at any scale. At rest
-   they hang dim and sway, and a warm breath runs along the string; a hovered or focused one lights, its tag swings
-   and unfolds the hook. */
+   they hang dim and sway, and a warm breath runs along the string; a hovered one lights. */
 .piece[data-kind="lanterns"] {
   --w: 0px;
   --tx: 0px;
@@ -689,116 +688,13 @@
   pointer-events: none;
   transition: opacity 260ms ease-out;
 }
-.lNo {
-  position: relative;
-  font-family: var(--ff-display);
-  font-variation-settings: "SOFT" 100, "WONK" 0;
-  font-weight: 640;
-  font-size: calc(15px * var(--nz, 1));
-  line-height: 1;
-  color: rgb(12 6 3 / 0.75);
-  text-shadow: 0 1px 0 rgb(255 220 160 / 0.15);
-  transition: color 220ms linear;
-}
-/* the name tag, tied under the foot */
-.lTag {
-  --eye-x: 50%;
-  --eye-y: 9px;
-  position: relative;
-  isolation: isolate;
-  display: grid;
-  width: max-content;
-  max-width: max(84px, calc(140 * var(--u)));
-  margin-top: calc(12 * var(--u));
-  padding: 18px 8px 7px;
-  rotate: calc((var(--li) - 2) * 1.5deg);
-  transform-origin: 50% 0;
-  text-align: center;
-}
-.lTag::before {
-  content: "";
-  position: absolute;
-  left: calc(50% - 1px);
-  bottom: calc(100% - 9px);
-  width: 2px;
-  height: calc(12 * var(--u) + 9px);
-  background: var(--twine);
-  z-index: -2;
-}
-.lName {
-  font-family: var(--ff-display);
-  font-variation-settings: "SOFT" 100, "WONK" 0;
-  font-weight: 600;
-  font-size: calc(13px * var(--nz, 1));
-  line-height: 1.15;
-  color: var(--accent);
-}
-/* the second strip folds down out of the tag */
-.lMore {
-  position: absolute;
-  top: calc(100% - 2px);
-  left: 50%;
-  isolation: isolate;
-  display: grid;
-  gap: 2px;
-  width: max(150px, calc(176 * var(--u)));
-  padding: 8px 10px;
-  translate: -50% 0;
-  transform: perspective(500px) rotateX(-92deg);
-  transform-origin: 50% 0;
-  opacity: 0;
-  font-size: calc(12px * var(--nz, 1));
-  line-height: 1.3;
-  transition:
-    transform 340ms var(--ease-paper),
-    opacity 120ms linear 60ms;
-}
-.lMore > :first-child {
-  filter: brightness(0.92);
-}
-.lDate {
-  font-size: 11px;
-  color: var(--ink-soft);
-}
-
-/* lit: hover (pointers) and focus (keys) */
+/* lit: hover (pointers) */
 @media (hover: hover) {
   .lanternBtn:hover .lit,
   .lanternBtn:hover .halo {
     opacity: 1;
     animation: none;
   }
-  .lanternBtn:hover .lNo {
-    color: #7a3410;
-  }
-  .lanternBtn:hover .lTag {
-    animation: swing 900ms var(--ease-paper);
-  }
-  .lanternBtn:hover .lMore {
-    transform: perspective(500px) rotateX(0deg);
-    opacity: 1;
-    transition:
-      transform 420ms var(--ease-paper),
-      opacity 80ms linear;
-  }
-}
-.lanternBtn:focus-visible {
-  outline: none;
-}
-.lanternBtn:focus-visible :is(.lit, .halo) {
-  opacity: 1;
-  animation: none;
-}
-.lanternBtn:focus-visible .lNo {
-  color: #7a3410;
-}
-.lanternBtn:focus-visible .lamp {
-  outline: 2px solid var(--c-focus);
-  outline-offset: 5px;
-}
-.lanternBtn:focus-visible .lMore {
-  transform: perspective(500px) rotateX(0deg);
-  opacity: 1;
 }
 /* pulled: the lantern dips on its cord */
 .lanternBtn:active .lamp {
@@ -1417,67 +1313,6 @@
   bottom: 14px;
   width: 2px;
   background: var(--twine);
-}
-.strip .lantern {
-  position: relative;
-  left: auto;
-  top: auto;
-  width: auto;
-}
-.strip .lanternBtn {
-  position: relative;
-  translate: none;
-  grid-template-columns: 44px minmax(0, 1fr);
-  align-items: center;
-  justify-items: start;
-  column-gap: var(--sp-3);
-  width: 100%;
-  min-height: 48px;
-  padding: 0;
-  text-align: left;
-}
-.strip .lanternBtn::before,
-.strip .lTag::before,
-.strip .lTag > :first-child {
-  display: none;
-}
-.strip .lamp {
-  justify-self: center;
-}
-.strip .lTag {
-  justify-self: stretch;
-  width: auto;
-  min-width: 0;
-  max-width: none;
-  margin: 0;
-  padding: 0;
-  rotate: none;
-  text-align: left;
-}
-.strip .lName {
-  font-size: 15px;
-}
-.strip .lMore {
-  position: static;
-  width: auto;
-  padding: 0;
-  translate: none;
-  transform: none;
-  opacity: 1;
-  font-size: 12.5px;
-}
-.strip .lMore > :first-child,
-.strip .lDate {
-  display: none; /* ponytail: no dates on phones, so all five rows fit above the nav */
-}
-.strip .lHook {
-  display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.strip[data-on="true"] .lantern {
-  animation: rise 420ms var(--ease-paper) calc(120ms + var(--li) * 60ms) both;
 }
 /* the mask fades the strip's ends; keep the shadow room on the sides */
 .strip {
