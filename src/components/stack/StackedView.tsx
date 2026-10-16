@@ -23,7 +23,7 @@ export function StackedView() {
     <div className={styles.stack}>
       <h1 className={styles.h1}>{person.name}</h1>
       <p className={styles.lead}>{copy.noJs}</p>
-      {/* river order: landing, the market pier with every project behind it, skills, contact */}
+      {/* river order: landing, the projects pier with every project behind it, skills, contact */}
       {stops.slice(0, 2).map(place)}
       {projects.map(place)}
       {stops.slice(2).map(place)}

@@ -97,8 +97,3 @@
 html[data-motion="reduced"] .next[data-pulse] {
   animation: none;
 }
-
-/* Down the cascade the arrows point up and down. */
-.wrap[data-vertical] svg {
-  rotate: 90deg;
-}

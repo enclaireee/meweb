@@ -8,7 +8,7 @@ const hex = (h: string): RGB => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2),
 const css = ([r, g, b]: RGB, a = 1) => `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${a.toFixed(3)})`;
 const mix = (a: RGB, b: RGB, t: number): RGB => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
 
-const MID = ["#1F4A5C", "#1A3D53", "#112841", "#0C1D33", "#09152A", "#0B1A30", "#1B3A5E", "#5C7FA3", "#A9C0D0", "#A9CBE0"].map(hex);
+const MID = ["#1F4A5C", "#1A3D53", "#112841", "#0C1D33", "#09152A", "#0B1A30", "#1B3A5E", "#5C7FA3", "#A9C0D0", "#BCC8D2"].map(hex);
 // Horizon glows per stop: [colour, alpha]. Two slots, zero when absent.
 const DEFAULT_GLOW = hex("#E8A25A");
 const GLOW: [RGB, number][][] = (
@@ -22,7 +22,7 @@ const GLOW: [RGB, number][][] = (
     [["#7F9CC4", 0.3], ["#E59C98", 0.15]],
     [["#E59C98", 0.4], ["#F2C77A", 0.3]],
     [["#F2C77A", 0.55]],
-    [["#FFD9A0", 0.6], ["#F7B98A", 0.3]], // morning: warm low sun on a clear blue
+    [["#FFC98A", 0.78], ["#F59E7E", 0.42]], // morning: sunrise, peach and gold low on a clear blue
   ] as [string, number][][]
 ).map((stop) => stop.map(([c, a]) => [hex(c), a]));
 const BLACK: RGB = [0, 0, 0];

@@ -1,4 +1,4 @@
-/* The stop's pieces: signs, planks, tickets, tags. Paper cut and hung into the scene, not notes floating on it.
+/* The stop's pieces: signs, planks, lanterns, tags. Paper cut and hung into the scene, not notes floating on it.
    Desktop/tablet: .set rides the action plane (River's tags layer), each piece centred on its spot. Phones: .strip, a
    scrolling column in screen space. All stops stay mounted (no layer churn, see river.module.css .layer), so showing
    and hiding is opacity, translate and visibility only.
@@ -86,13 +86,13 @@
 /* ---- Kinds: width and anchor ---- */
 
 /* Pieces that stand on something: the spot is their bottom edge. */
-.piece:is([data-kind="led"], [data-kind="windows"], [data-kind="contact"], [data-kind="tickets"]) {
+.piece:is([data-kind="led"], [data-kind="windows"]) {
   --ty: -100%;
 }
 
 /* Hanging cluster: the sign hangs from the post arm by two twine cords, the plank hangs below it by two short ones.
    Top-anchored: the spot is the sign's top edge. --rope is in art units so the cords reach the arm at any scale. */
-.piece:is([data-kind="sign"], [data-kind="namecard"]) {
+.piece[data-kind="sign"] {
   --w: 250px;
   --ty: 0%;
   --rope: calc(var(--k) * 80);
@@ -566,177 +566,515 @@
   color: var(--ink-soft);
 }
 
-/* Tickets, one per project: torn stub on the left, punched hole, number; each a button into its stall. */
-.piece[data-kind="tickets"] {
-  --w: 340px;
-  --tx: -22%;
+/* The lanterns, one per project, on a twine from the post arm (the spot) to the palms. Everything is in art units
+   (--lx/--ly: where the cord meets the twine; --drop: the cord), so the string keeps to the art at any scale. At rest
+   they hang dim and sway, and a warm breath runs along the string; a hovered or focused one lights, its tag swings
+   and unfolds the hook. */
+.piece[data-kind="lanterns"] {
+  --w: 0px;
+  --tx: 0px;
+  --ty: 0px;
+  --u: var(--k); /* one art unit */
 }
-.strip > .piece[data-kind="tickets"] {
-  --tx: 0;
-}
-.piece[data-kind="tickets"] .mat {
+.piece[data-kind="lanterns"] .mat {
+  display: block;
   padding: 0;
 }
-.tickets {
-  display: grid;
-  gap: var(--sp-2);
+.twine {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(525 * var(--u));
+  height: calc(136 * var(--u));
+  overflow: visible;
+  pointer-events: none;
 }
-.ticket {
-  min-width: 0;
+.twine path {
+  fill: none;
+  stroke: var(--c-twine-2);
+  stroke-width: 2.6;
+  stroke-linecap: round;
 }
-.ticketBtn {
-  --stub: 52px;
-  position: relative;
-  isolation: isolate;
+.twine circle {
+  fill: var(--c-twine);
+}
+.lantern {
+  position: absolute;
+  left: calc(var(--lx) * var(--u));
+  top: calc(var(--ly) * var(--u));
+  width: 0;
+  transform-origin: 0 0;
+}
+.lantern:is(:hover, :focus-within) {
+  z-index: 2;
+}
+.lanternBtn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  translate: -50% 0;
   display: grid;
-  grid-template-columns: var(--stub) minmax(0, 1fr);
-  align-items: center;
-  width: 100%;
-  min-height: 52px;
-  padding: 0;
+  justify-items: center;
+  padding: calc(var(--drop) * var(--u)) 0 0;
   border: 0;
   background: none;
   color: inherit;
   font: inherit;
-  text-align: left;
   cursor: pointer;
-  transition: transform var(--dur-hover) var(--ease-paper);
+  -webkit-tap-highlight-color: transparent;
 }
-.ticketBtn > .sheet {
-  border-radius: 2px;
-  /* torn stub edge on the left, punched notches over the perforation */
-  clip-path: polygon(0 4%, 2.5px 0, 5px 6%, 7.5px 0, 100% 1px, 99.4% 50%, 100% 99%, 7.5px 100%, 5px 93%, 2.5px 100%, 0 95%, 1.5px 70%, 0 48%, 1.5px 26%);
-  -webkit-mask:
-    radial-gradient(circle at var(--stub) 0, transparent 5px, #000 5.5px),
-    radial-gradient(circle at var(--stub) 100%, transparent 5px, #000 5.5px);
-  -webkit-mask-composite: source-in;
-  mask:
-    radial-gradient(circle at var(--stub) 0, transparent 5px, #000 5.5px),
-    radial-gradient(circle at var(--stub) 100%, transparent 5px, #000 5.5px);
-  mask-composite: intersect;
-}
-/* perforation and punched hole, drawn over the sheet */
-.ticketBtn::before {
+/* the cord, from the twine to the cap */
+.lanternBtn::before {
   content: "";
   position: absolute;
-  inset: 6px auto 6px var(--stub);
-  width: 0;
-  border-left: 2px dotted var(--rule);
-  z-index: -1;
+  left: calc(50% - 1px);
+  top: 0;
+  width: 2px;
+  height: calc(var(--drop) * var(--u) + 2px);
+  background: var(--twine);
 }
-.ticketBtn::after {
-  content: "";
-  position: absolute;
-  left: 9px;
-  top: 7px;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: rgb(3 6 12 / 0.55);
-  box-shadow: inset 1px 1px 1px rgb(0 0 0 / 0.4);
-  z-index: -1;
-}
-.tNo {
-  justify-self: center;
-  font-family: var(--ff-display);
-  font-variation-settings: "SOFT" 100, "WONK" 0;
-  font-weight: 600;
-  font-size: 20px;
-  line-height: 1;
-  color: var(--accent);
-}
-.tMain {
+.lamp {
+  --lw: calc(54 * var(--u));
+  position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: baseline;
-  column-gap: var(--sp-2);
-  row-gap: 1px;
-  min-width: 0;
-  padding: var(--sp-2) var(--sp-3) var(--sp-2) var(--sp-3);
+  place-items: center;
+  width: var(--lw);
+  height: calc(66 * var(--u));
+  isolation: isolate;
+  border-radius: 44% / 38%;
+  /* paper over bamboo ribs, unlit */
+  background:
+    repeating-linear-gradient(180deg, transparent 0 calc(8 * var(--u)), rgb(20 8 2 / 0.3) calc(8 * var(--u)) calc(9.5 * var(--u))),
+    radial-gradient(ellipse at 42% 38%, color-mix(in srgb, var(--c-lantern) 42%, #3a2414), #22140c 82%);
+  box-shadow: inset -3px -4px 6px rgb(3 6 12 / 0.45);
+  transition: translate 160ms var(--ease-paper);
 }
-.tName {
+/* lacquered cap and foot */
+.lamp::before,
+.lamp::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  translate: -50% 0;
+  width: 56%;
+  height: calc(7 * var(--u));
+  border-radius: 2px;
+  background: #1a0f0a;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.12);
+  z-index: 2;
+}
+.lamp::before {
+  top: calc(-3 * var(--u));
+}
+.lamp::after {
+  bottom: calc(-3 * var(--u));
+}
+/* the lit paper: same ribs, burning from the middle */
+.lit {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 calc(8 * var(--u)), rgb(150 50 0 / 0.35) calc(8 * var(--u)) calc(9.5 * var(--u))),
+    radial-gradient(ellipse at 46% 44%, #fff3cf, var(--c-lantern) 52%, #c2541a 92%);
+  opacity: 0;
+  transition: opacity 220ms ease-out;
+}
+.halo {
+  position: absolute;
+  inset: -70%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(255 184 92 / 0.5), rgb(255 160 70 / 0.16) 42%, transparent 68%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 260ms ease-out;
+}
+.lNo {
+  position: relative;
+  font-family: var(--ff-display);
+  font-variation-settings: "SOFT" 100, "WONK" 0;
+  font-weight: 640;
+  font-size: calc(15px * var(--nz, 1));
+  line-height: 1;
+  color: rgb(12 6 3 / 0.75);
+  text-shadow: 0 1px 0 rgb(255 220 160 / 0.15);
+  transition: color 220ms linear;
+}
+/* the name tag, tied under the foot */
+.lTag {
+  --eye-x: 50%;
+  --eye-y: 9px;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  width: max-content;
+  max-width: max(84px, calc(140 * var(--u)));
+  margin-top: calc(12 * var(--u));
+  padding: 18px 8px 7px;
+  rotate: calc((var(--li) - 2) * 1.5deg);
+  transform-origin: 50% 0;
+  text-align: center;
+}
+.lTag::before {
+  content: "";
+  position: absolute;
+  left: calc(50% - 1px);
+  bottom: calc(100% - 9px);
+  width: 2px;
+  height: calc(12 * var(--u) + 9px);
+  background: var(--twine);
+  z-index: -2;
+}
+.lName {
   font-family: var(--ff-display);
   font-variation-settings: "SOFT" 100, "WONK" 0;
   font-weight: 600;
-  font-size: 16px;
+  font-size: calc(13px * var(--nz, 1));
   line-height: 1.15;
   color: var(--accent);
 }
-.tHook {
-  grid-row: 2;
-  grid-column: 1 / -1;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  font-size: 12px;
+/* the second strip folds down out of the tag */
+.lMore {
+  position: absolute;
+  top: calc(100% - 2px);
+  left: 50%;
+  isolation: isolate;
+  display: grid;
+  gap: 2px;
+  width: max(150px, calc(176 * var(--u)));
+  padding: 8px 10px;
+  translate: -50% 0;
+  transform: perspective(500px) rotateX(-92deg);
+  transform-origin: 50% 0;
+  opacity: 0;
+  font-size: calc(12px * var(--nz, 1));
   line-height: 1.3;
+  transition:
+    transform 340ms var(--ease-paper),
+    opacity 120ms linear 60ms;
 }
-.tDate {
-  grid-row: 1;
-  grid-column: 2;
+.lMore > :first-child {
+  filter: brightness(0.92);
+}
+.lDate {
   font-size: 11px;
   color: var(--ink-soft);
 }
+
+/* lit: hover (pointers) and focus (keys) */
 @media (hover: hover) {
-  .ticketBtn:hover {
-    transform: translateX(-4px) rotate(-0.6deg);
+  .lanternBtn:hover .lit,
+  .lanternBtn:hover .halo {
+    opacity: 1;
+    animation: none;
+  }
+  .lanternBtn:hover .lNo {
+    color: #7a3410;
+  }
+  .lanternBtn:hover .lTag {
+    animation: swing 900ms var(--ease-paper);
+  }
+  .lanternBtn:hover .lMore {
+    transform: perspective(500px) rotateX(0deg);
+    opacity: 1;
+    transition:
+      transform 420ms var(--ease-paper),
+      opacity 80ms linear;
   }
 }
-.ticketBtn:active {
-  transform: translateX(-1px);
+.lanternBtn:focus-visible {
+  outline: none;
 }
-.ticketBtn:focus-visible {
+.lanternBtn:focus-visible :is(.lit, .halo) {
+  opacity: 1;
+  animation: none;
+}
+.lanternBtn:focus-visible .lNo {
+  color: #7a3410;
+}
+.lanternBtn:focus-visible .lamp {
   outline: 2px solid var(--c-focus);
-  outline-offset: 3px;
-  border-radius: 4px;
+  outline-offset: 5px;
+}
+.lanternBtn:focus-visible .lMore {
+  transform: perspective(500px) rotateX(0deg);
+  opacity: 1;
+}
+/* pulled: the lantern dips on its cord */
+.lanternBtn:active .lamp {
+  translate: 0 4px;
 }
 
-/* Business card and contact slip at the lighthouse. */
-.piece:is([data-kind="namecard"], [data-kind="contact"]) {
-  --w: 270px;
+/* ---- The lighthouse letter: the contact page. One big sheet on the morning sea, the beam laid across it. ---- */
+.piece[data-kind="letter"] {
+  --w: clamp(380px, calc(var(--k) * 560), 500px);
+  --nz-l: var(--nz, 1);
+  /* fine fibre only (no mottle: at this size it reads as stains), lit warm from the lamp's side */
+  --sheet-tex: var(--paper-grain), linear-gradient(transparent, transparent);
+  --sheet-tex-size: 200px 200px, auto;
+  --light: rgb(255 214 160 / 0.5);
 }
-.piece[data-kind="namecard"] .mat {
-  padding: var(--sp-4);
+.piece[data-kind="letter"] .mat {
+  --pad: calc(28px * var(--nz-l)) calc(30px * var(--nz-l)) calc(20px * var(--nz-l));
+  --eye-y: 16px;
+  gap: 0;
 }
-/* The lamp's light, behind the card. */
-.piece[data-kind="namecard"]::before {
+/* ruled writing paper, faint, under the words */
+.piece[data-kind="letter"] .mat::before {
   content: "";
   position: absolute;
-  inset: -70px;
+  inset: calc(96px * var(--nz-l)) 28px 22px;
   z-index: -1;
   pointer-events: none;
-  background: radial-gradient(circle, color-mix(in srgb, var(--c-lantern) 55%, transparent), transparent 66%);
+  background: repeating-linear-gradient(transparent 0 25px, rgb(26 31 43 / 0.06) 25px 26px);
+  mask-image: linear-gradient(transparent, #000 20%, #000 80%, transparent);
 }
-.piece[data-kind="contact"] .mat {
-  padding: var(--sp-4);
-  gap: var(--sp-2);
+.kicker {
+  font-size: calc(11px * var(--nz-l));
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
 }
-.bizName {
+.letterHead {
+  margin-top: calc(10px * var(--nz-l)) !important;
+  max-width: 13em;
   font-family: var(--ff-display);
+  font-variation-settings: "SOFT" 100, "WONK" 0;
   font-weight: 600;
-  font-size: 19px;
-  line-height: 1.2;
+  font-size: calc(32px * var(--nz-l));
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
 }
-.line {
-  font-size: 14px;
+/* the first lines step around the stamp and postmark (a float, so the rest of the head keeps the full width) */
+.letterHead::before {
+  content: "";
+  float: right;
+  width: calc(100px * var(--nz-l));
+  height: 1.6em;
+}
+/* the lit words, as on the landing: italic lantern paper, a glow behind */
+.letterHead em {
+  font-style: italic;
+  color: var(--c-accent);
+  text-shadow: 0 0 0.5em rgb(255 180 84 / 0.55);
+}
+.lede {
+  margin-top: calc(12px * var(--nz-l)) !important;
+  max-width: 36ch;
+  font-size: calc(15px * var(--nz-l));
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+/* The one thing to press: the address itself, cut from lantern paper and lit from inside. */
+.cta {
+  display: grid;
+  margin-top: calc(20px * var(--nz-l));
+}
+.send {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 22px 0 18px;
+  border-radius: 3px;
+  font-weight: 700;
+  font-size: calc(15px * var(--nz-l));
+  color: #4a1f06;
+  text-decoration: none;
   overflow-wrap: anywhere;
+  background:
+    var(--paper-grain-lt) 0 0 / 200px 200px,
+    linear-gradient(170deg, var(--c-lantern-core), var(--c-lantern) 55%, #f08a2c);
+  background-blend-mode: soft-light, normal;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.55),
+    inset 0 -2px 0 rgb(122 52 16 / 0.35),
+    0 0 0 0 rgb(255 180 84 / 0);
+  filter: drop-shadow(1px 2px 0 rgb(3 6 12 / 0.35)) drop-shadow(0 0 14px rgb(255 180 84 / 0.45));
+  transition:
+    translate var(--dur-hover) var(--ease-paper),
+    filter var(--dur-hover) var(--ease-paper);
 }
-.link {
-  font-weight: 600;
-  color: inherit;
-  min-height: 24px;
+.send svg {
+  flex: none;
 }
-.link:focus-visible {
+.send:focus-visible {
   outline: 2px solid var(--c-focus-ink);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
-.actions {
+@media (hover: hover) {
+  .send:hover {
+    translate: 0 -2px;
+    filter: drop-shadow(1px 3px 0 rgb(3 6 12 / 0.35)) drop-shadow(0 0 22px rgb(255 180 84 / 0.75));
+  }
+}
+.send:focus-visible {
+  filter: drop-shadow(1px 3px 0 rgb(3 6 12 / 0.35)) drop-shadow(0 0 22px rgb(255 180 84 / 0.75));
+}
+.send:active {
+  translate: 0 1px;
+}
+
+.elsewhere {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--sp-2) var(--sp-3);
-  margin-top: var(--sp-1) !important;
+  gap: var(--sp-2);
+  margin-top: calc(16px * var(--nz-l)) !important;
+}
+.elsewhere li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+/* Copy (CopyEmail's button) wears the same quiet outline as the links */
+.elsewhere button,
+.ext {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 3px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+  box-shadow: inset 0 0 0 1.5px var(--rule);
+  transition:
+    background-color var(--dur-hover) linear,
+    translate var(--dur-hover) var(--ease-paper);
+}
+.elsewhere button {
+  border: 0;
+  background: none;
+  filter: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+.elsewhere li > span[aria-hidden] {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+}
+.elsewhere button:focus-visible,
+.ext:focus-visible {
+  outline: 2px solid var(--c-focus-ink);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .elsewhere button:hover,
+  .ext:hover {
+    background-color: var(--chip);
+    translate: 0 -1px;
+  }
+}
+.sign {
+  margin-top: calc(18px * var(--nz-l)) !important;
+  justify-self: end;
+  font-family: var(--ff-display);
+  font-style: italic;
+  font-size: calc(22px * var(--nz-l));
+  color: var(--accent);
+  rotate: -4deg;
+}
+
+/* The stamp: a tiny cut-paper lighthouse at sunrise, perforated, and the postmark struck half over it. */
+.stamp {
+  position: absolute !important;
+  top: 16px;
+  right: 18px;
+  width: calc(48px * var(--nz-l));
+  padding: 4px;
+  rotate: 4deg;
+  background: radial-gradient(circle, transparent 2.2px, #fbf6ea 2.6px) -3px -3px / 7px 7px;
+  filter: drop-shadow(1px 1px 0 rgb(3 6 12 / 0.25));
+}
+.stamp svg {
+  display: block;
+  width: 100%;
+}
+.stampSky {
+  fill: #f6c79a;
+}
+.stampSun {
+  fill: #fff0c8;
+}
+.stampTower {
+  fill: #6e320a;
+}
+.stampSea {
+  fill: #5c7fa3;
+}
+.postmark {
+  position: absolute !important;
+  top: 22px;
+  right: calc(46px * var(--nz-l));
+  display: grid;
+  place-items: center;
+  width: calc(68px * var(--nz-l));
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1.5px solid rgb(110 50 10 / 0.5);
+  box-shadow: inset 0 0 0 4px transparent, inset 0 0 0 5px rgb(110 50 10 / 0.35);
+  rotate: -14deg;
+  pointer-events: none;
+}
+.postmark span {
+  max-width: 5em;
+  font-size: calc(9px * var(--nz-l));
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0.12em;
+  text-align: center;
+  text-transform: uppercase;
+  color: rgb(110 50 10 / 0.7);
+}
+.kicker {
+  padding-right: calc(96px * var(--nz-l));
+}
+
+/* The beam: a soft gold wedge from the lamp (art units from the stop's boat, as the spots), swung onto the letter. */
+.beam {
+  position: absolute;
+  left: calc(var(--bx, 1040) * var(--k));
+  top: calc(var(--by, 108) * var(--k));
+  width: calc(var(--bl, 700) * var(--k));
+  height: calc(var(--bh, 300) * var(--k));
+  translate: -100% -50%;
+  transform-origin: 100% 50%;
+  rotate: var(--ba, -37deg);
+  pointer-events: none;
+  clip-path: polygon(0 0, 100% 49%, 100% 51%, 0 100%);
+  background: linear-gradient(to left, rgb(255 226 168 / 0.6), rgb(242 199 122 / 0.22) 55%, transparent);
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 400ms linear;
+}
+[data-on="true"] > .beam {
+  opacity: 1;
+  animation:
+    sweep 2200ms cubic-bezier(0.3, 0, 0.2, 1) 300ms both,
+    beamBreathe 6s ease-in-out 2600ms infinite;
+}
+@keyframes sweep {
+  0% {
+    rotate: calc(var(--ba, -37deg) + 34deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+}
+@keyframes beamBreathe {
+  50% {
+    opacity: 0.72;
+  }
 }
 
 /* ---- Arrival choreography. Base style is the finished state; keyframes only name where it starts. ---- */
@@ -746,14 +1084,27 @@
     drop 700ms var(--ease-paper) both,
     sway 6s ease-in-out 800ms infinite;
 }
-[data-on="true"] .piece[data-kind="contact"] .mat {
-  animation: rise 560ms var(--ease-paper) calc(var(--n) * 140ms) both;
+[data-on="true"] .piece[data-kind="letter"] .mat {
+  animation: rise 700ms var(--ease-paper) 120ms both;
+}
+[data-on="true"] :is(.stamp, .postmark) {
+  animation: stampOn 380ms cubic-bezier(0.5, 0, 0.6, 1.6) 760ms both;
 }
 [data-on="true"] .plankMat {
   animation: rise 500ms var(--ease-paper) 120ms both;
 }
-[data-on="true"] .piece[data-kind="tickets"] .ticket {
-  animation: rise 460ms var(--ease-paper) calc(160ms + var(--ti) * 70ms) both;
+[data-on="true"] .twine {
+  animation: glow 500ms linear 150ms both;
+}
+[data-on="true"] .lantern {
+  animation:
+    drop 760ms var(--ease-paper) calc(220ms + var(--li) * 90ms) both,
+    sway 5.2s ease-in-out calc(var(--li) * -1.3s) infinite;
+  --sw: 2.2deg;
+}
+/* the breath: a warm glow runs along the string, one lantern after the next */
+[data-on="true"] :is(.lit, .halo) {
+  animation: breathe 7s ease-in-out calc(1400ms + var(--li) * 700ms) infinite;
 }
 [data-on="true"] .title::before {
   animation: glow 700ms ease-out 850ms both;
@@ -787,9 +1138,6 @@
 [data-on="true"] .tagLi {
   animation: rise 420ms var(--ease-paper) calc(120ms + var(--wi) * 60ms) both;
 }
-[data-on="true"] .piece[data-kind="namecard"]::before {
-  animation: lamp 1400ms ease-out 300ms both;
-}
 
 @keyframes drop {
   0% {
@@ -812,10 +1160,31 @@
 @keyframes sway {
   0%,
   100% {
-    rotate: -0.6deg;
+    rotate: calc(-1 * var(--sw, 0.6deg));
   }
   50% {
-    rotate: 0.6deg;
+    rotate: var(--sw, 0.6deg);
+  }
+}
+@keyframes swing {
+  25% {
+    transform: rotate(7deg);
+  }
+  50% {
+    transform: rotate(-4deg);
+  }
+  75% {
+    transform: rotate(1.5deg);
+  }
+}
+@keyframes breathe {
+  0%,
+  22%,
+  100% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.45;
   }
 }
 @keyframes rise {
@@ -908,15 +1277,10 @@
     opacity: 0.4;
   }
 }
-@keyframes lamp {
+@keyframes stampOn {
   from {
-    opacity: 0.1;
-  }
-  45% {
-    opacity: 0.55;
-  }
-  60% {
-    opacity: 0.4;
+    opacity: 0;
+    transform: scale(1.5);
   }
 }
 
@@ -980,8 +1344,46 @@
   padding-top: var(--sp-3);
   background-image: none;
 }
-.strip .piece[data-kind="namecard"]::before {
-  inset: -30px;
+/* the letter is the whole page here: let it take the sky too, so it reads in one go */
+.strip:has(> .piece[data-kind="letter"]) {
+  --strip-max: 66%;
+}
+.strip > .piece[data-kind="letter"] {
+  --w: 440px;
+  --nz-l: 0.82;
+}
+.strip .piece[data-kind="letter"] .mat {
+  --pad: 20px 14px 14px;
+}
+.strip .letterHead {
+  font-size: clamp(22px, 7.2vw, 26px);
+}
+.strip .letterHead::before {
+  width: 58px;
+}
+.strip .kicker {
+  padding-right: 64px;
+}
+.strip .send {
+  padding: 0 10px;
+  gap: 8px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+/* the address must read in one line: drop the envelope before it would break */
+@media (max-width: 359px) {
+  .strip .send svg {
+    display: none;
+  }
+}
+/* the three chips share one row down to 320 */
+.strip .elsewhere {
+  gap: 6px;
+}
+.strip :is(.elsewhere button, .ext) {
+  gap: 6px;
+  padding: 0 9px;
+  font-size: 12px;
 }
 .strip .piece[data-kind="gauge"] .mat {
   margin: 9px;
@@ -991,6 +1393,91 @@
 }
 .strip .tags {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+/* the lanterns hang down a twine on the sheet's left, one row each, hook always out */
+.strip > .piece[data-kind="lanterns"] {
+  --w: 340px;
+  --u: 0.7px;
+}
+.strip .piece[data-kind="lanterns"] .mat {
+  display: grid;
+  gap: var(--sp-2);
+  padding: var(--sp-4);
+}
+.strip .lanterns {
+  position: relative;
+  display: grid;
+  gap: 6px;
+}
+.strip .lanterns::before {
+  content: "";
+  position: absolute;
+  left: 21px;
+  top: -6px;
+  bottom: 14px;
+  width: 2px;
+  background: var(--twine);
+}
+.strip .lantern {
+  position: relative;
+  left: auto;
+  top: auto;
+  width: auto;
+}
+.strip .lanternBtn {
+  position: relative;
+  translate: none;
+  grid-template-columns: 44px minmax(0, 1fr);
+  align-items: center;
+  justify-items: start;
+  column-gap: var(--sp-3);
+  width: 100%;
+  min-height: 48px;
+  padding: 0;
+  text-align: left;
+}
+.strip .lanternBtn::before,
+.strip .lTag::before,
+.strip .lTag > :first-child {
+  display: none;
+}
+.strip .lamp {
+  justify-self: center;
+}
+.strip .lTag {
+  justify-self: stretch;
+  width: auto;
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  rotate: none;
+  text-align: left;
+}
+.strip .lName {
+  font-size: 15px;
+}
+.strip .lMore {
+  position: static;
+  width: auto;
+  padding: 0;
+  translate: none;
+  transform: none;
+  opacity: 1;
+  font-size: 12.5px;
+}
+.strip .lMore > :first-child,
+.strip .lDate {
+  display: none; /* ponytail: no dates on phones, so all five rows fit above the nav */
+}
+.strip .lHook {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.strip[data-on="true"] .lantern {
+  animation: rise 420ms var(--ease-paper) calc(120ms + var(--li) * 60ms) both;
 }
 /* the mask fades the strip's ends; keep the shadow room on the sides */
 .strip {
@@ -1014,6 +1501,15 @@
   .strip[data-on="false"] > .piece {
     translate: none;
   }
+  .piece :is(.lit, .halo) {
+    opacity: 0.85;
+  }
+  .beam {
+    animation: none !important;
+  }
+}
+:global(html[data-motion="reduced"]) .beam {
+  animation: none !important;
 }
 :global(html[data-motion="reduced"]) .piece,
 :global(html[data-motion="reduced"]) .piece::before,
@@ -1029,4 +1525,7 @@
 }
 :global(html[data-motion="reduced"]) .strip[data-on="false"] > .piece {
   translate: none;
+}
+:global(html[data-motion="reduced"]) .piece :is(.lit, .halo) {
+  opacity: 0.85;
 }

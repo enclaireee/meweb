@@ -1,12 +1,13 @@
-// Ambient life for the stop you're at: mist, leaves, shooting stars, birds, the lighthouse beam, water glints.
+// Ambient life for the stop you're at: mist, leaves, shooting stars, birds, water glints.
+// (The lighthouse beam is the letter's, in Notes: it comes to rest on it.)
 // Placed in screen units u (art units right of the traveller anchor at rest, art/stops/shared-b.ts), on the camera plane.
 // CSS only; nothing re-renders per frame. Fades out while gliding, off under reduced motion.
 import { memo, type CSSProperties } from "react";
 import s from "./river.module.css";
 
-type Fx = "mist" | "leaves" | "stars" | "birds" | "beam";
+type Fx = "mist" | "leaves" | "stars" | "birds";
 // ponytail: hand-picked per stop from the art; add a dial if a stop's art changes.
-const LIFE: Fx[][] = [["mist", "birds"], ["mist"], ["birds"], ["beam", "birds"]]; // Spring, Market pier, Village, Lighthouse
+const LIFE: Fx[][] = [["mist", "birds"], ["mist"], ["birds"], ["birds"]]; // Spring, Market pier, Village, Lighthouse
 
 const hash = (...n: number[]) => {
   let h = 2166136261;
@@ -55,8 +56,6 @@ function Life({ fx, stop, phone }: { fx: Fx; stop: number; phone: boolean }) {
           ))}
         </>
       );
-    case "beam":
-      return <i className={s.beam} style={at(640, 108)} />;
   }
 }
 

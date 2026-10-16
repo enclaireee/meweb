@@ -1,6 +1,6 @@
-/* The Spring's landing (Landing.tsx). Positions are art units times --k, like Notes' spots; type and cards are px
-   times --nz. Motion: every animation runs only under data-on="true", starts hidden and ends on the base style, and
-   moves only opacity and translate/rotate, so reduced motion just turns the animations off. */
+/* The Spring's title page (Landing.tsx). Positions are art units times --k, like Notes' spots. Motion: every animation
+   runs only under data-on="true", starts hidden and ends on the base style, and moves only opacity and translate/rotate,
+   so reduced motion just turns the animations off. */
 
 .set {
   position: absolute;
@@ -18,25 +18,44 @@
     visibility 0s 250ms;
 }
 
-/* ---- The name: three cut layers per letter (ink shadow, lantern cut, lit face) ---- */
-.name {
+/* ---- The title block: kicker, statement, lede, two ways in. Over the water, just downstream of the boat. ---- */
+.hero {
   position: absolute;
-  left: calc(470 * var(--k));
-  top: calc(648 * var(--k));
-  translate: -50% 0;
+  left: calc(190 * var(--k));
+  top: calc(340 * var(--k));
   display: grid;
-  justify-items: center;
-  width: max-content;
-  pointer-events: none;
+  justify-items: start;
+  /* the boat is at --anchor = 0.3 of the opening, so the room right of it is anchor * 7/3; narrower screens shrink the line */
+  width: min(calc(860 * var(--k)), calc(var(--anchor) * 7 / 3 - 190 * var(--k) - 72px)); /* ponytail: 72px absorbs the camera drift at rest; derive from --cam if it ever clips */
+  container-type: inline-size;
+  color: var(--c-moon);
+  text-shadow:
+    0 1px 2px rgb(3 6 12 / 0.9),
+    0 0 18px rgb(3 6 12 / 0.75);
 }
-.word {
+.hero p {
   margin: 0;
+}
+.kicker {
+  font-size: calc(12px * var(--nz, 1));
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--c-lantern);
+}
+
+/* Three cut layers per word (ink shadow, lantern cut, lit face) */
+.word {
+  margin: calc(14 * var(--k)) 0 0;
   display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.24em;
   font-family: var(--ff-display);
-  font-size: calc(250 * var(--k));
+  font-size: min(calc(84 * var(--k)), 10.5cqi);
   font-weight: 640;
-  line-height: 0.86;
-  letter-spacing: -0.035em;
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  text-shadow: none;
 }
 .ch {
   display: inline-grid;
@@ -48,33 +67,79 @@
   grid-area: 1 / 1;
   padding: 0.15em 0.08em;
   margin: -0.15em -0.08em;
+  white-space: nowrap;
 }
 .lyr[data-l="0"] {
   color: rgb(5 8 18 / 0.9);
-  translate: 0.05em 0.06em;
+  translate: 0.04em 0.05em;
   text-shadow:
     0 2px 2px rgb(3 6 12 / 0.5),
     0 12px 18px rgb(3 6 12 / 0.45);
 }
 .lyr[data-l="1"] {
   color: color-mix(in srgb, var(--c-lantern) 62%, #7a3410);
-  translate: 0.024em 0.03em;
+  translate: 0.02em 0.025em;
 }
-/* the lit face: moon paper, warmer toward the post's lantern above */
+/* the lit face: moon paper, warmer toward the lanterns above */
 .lyr[data-l="2"] {
   color: transparent;
   background-image: linear-gradient(175deg, color-mix(in srgb, #ffc46b 55%, var(--c-moon)), var(--c-moon) 55%);
   -webkit-background-clip: text;
   background-clip: text;
 }
-.sub {
-  margin: calc(18 * var(--k)) 0 0;
-  max-width: 36ch;
+/* the lit word: italic lantern paper with a glow behind it */
+.ch[data-lit] .lyr {
+  font-style: italic;
+}
+.ch[data-lit] .lyr[data-l="1"] {
+  color: #7a3410;
+}
+.ch[data-lit] .lyr[data-l="2"] {
+  background-image: linear-gradient(170deg, #ffe2a8, var(--c-lantern) 60%, #f08a2c);
+  filter: drop-shadow(0 0 0.18em rgb(255 180 84 / 0.45));
+}
+
+.lede {
+  margin-top: calc(26 * var(--k)) !important;
+  max-width: 46ch;
   font-size: calc(var(--fs-body) * var(--nz, 1));
-  line-height: 1.45;
-  text-align: center;
+  line-height: 1.5;
+}
+.acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: calc(26 * var(--k)) !important;
+  text-shadow: none;
+}
+.ghost {
+  min-height: 44px;
+  padding: 0 var(--sp-4);
+  border: 0;
+  border-radius: 2px;
+  background: rgb(4 7 13 / 0.35);
+  box-shadow: inset 0 0 0 1.5px rgb(244 239 216 / 0.55);
   color: var(--c-moon);
-  text-shadow: 0 1px 2px rgb(3 6 12 / 0.9), 0 0 14px rgb(3 6 12 / 0.7);
+  font: 600 var(--fs-body) / 1 var(--ff-body);
+  cursor: pointer;
+  transition:
+    box-shadow var(--dur-hover) var(--ease-paper),
+    color var(--dur-hover) linear;
+}
+@media (hover: hover) {
+  .ghost:hover {
+    box-shadow: inset 0 0 0 1.5px var(--c-lantern);
+    color: var(--c-lantern);
+  }
+}
+.acts button:focus-visible {
+  outline: 2px solid var(--c-lantern);
+  outline-offset: 3px;
+}
+.hint {
+  margin-top: calc(18 * var(--k)) !important;
+  font-size: calc(12.5px * var(--nz, 1));
+  color: color-mix(in srgb, var(--c-moon) 70%, transparent);
 }
 
 /* ---- The twine and its lanterns (art units: the svg's box is the artboard from x -400) ---- */
@@ -105,267 +170,70 @@
   opacity: 0.22;
   filter: blur(6px);
 }
-
-/* ---- The cards ---- */
-.cards {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.card {
-  position: absolute;
-  left: calc(var(--cx) * var(--k));
-  top: calc(var(--cy) * var(--k));
-}
-.swing,
-.follow {
-  transform-origin: 50% 0;
-}
-/* after the intro, the cards lean with the pointer (River smooths --px), each its own way */
-[data-on="true"] .follow {
-  rotate: calc(var(--px, 0) * var(--sw) * 3.5deg);
-}
-.cord {
-  position: absolute;
-  left: -1px;
-  top: -2px;
-  width: 2px;
-  height: calc(var(--drop) * 1px + 14px);
-  background: var(--twine);
-}
-/* a clothes-peg where the cord meets the twine */
-.cord::before {
-  content: "";
-  position: absolute;
-  left: -3px;
-  top: -4px;
-  width: 8px;
-  height: 11px;
-  border-radius: 2px;
-  background: color-mix(in srgb, var(--c-bamboo) 70%, #3a2a18);
-  box-shadow: 0 1px 1px rgb(3 6 12 / 0.6);
-}
-.mat {
-  --w: 132px;
-  position: absolute;
-  left: 0;
-  top: calc(var(--drop) * 1px + 10px);
-  translate: -50% 0;
-  isolation: isolate;
-  display: grid;
-  gap: 2px;
-  align-content: start;
-  width: calc(var(--w) * var(--nz, 1));
-  padding: calc(12px * var(--nz, 1)) calc(13px * var(--nz, 1));
-  color: var(--ink);
-  font-size: calc(13px * var(--nz, 1));
-  line-height: 1.35;
-  filter: var(--sh-paper);
-  transition: translate var(--dur-hover, 160ms) var(--ease-paper);
-}
-.mat p {
-  margin: 0;
-}
-.k {
-  font-size: calc(11px * var(--nz, 1));
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-.t {
-  font-family: var(--ff-display);
-  font-size: calc(15px * var(--nz, 1));
-  line-height: 1.2;
-}
-.n {
-  font-family: var(--ff-display);
-  font-size: calc(42px * var(--nz, 1));
-  font-weight: 600;
-  line-height: 1;
-  color: var(--c-lantern);
-  text-shadow: 0 0 18px rgb(255 180 84 / 0.35);
-}
-.m {
-  color: var(--ink-soft);
-}
-.mail {
-  color: var(--ink);
-  font-weight: 600;
-  overflow-wrap: anywhere;
-  text-decoration-color: var(--accent);
-  text-underline-offset: 3px;
-}
-.acts {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 12px;
-  margin-top: 8px !important;
-}
-.acts > button {
-  min-height: 36px;
-  padding: 0 12px;
-  font-size: calc(13px * var(--nz, 1));
-}
-/* the two cards that lead somewhere are buttons over the whole card */
-.go {
-  display: grid;
-  gap: 2px;
-  justify-items: start;
-  margin: calc(-12px * var(--nz, 1)) calc(-13px * var(--nz, 1));
-  padding: calc(12px * var(--nz, 1)) calc(13px * var(--nz, 1));
-  min-height: 44px;
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-.go:focus-visible {
-  outline: 2px solid var(--c-lantern);
-  outline-offset: 3px;
-}
-.go::after {
-  content: "→";
-  position: absolute;
-  right: calc(12px * var(--nz, 1));
-  bottom: calc(10px * var(--nz, 1));
-  color: var(--accent);
-  transition: translate var(--dur-hover, 160ms) var(--ease-paper);
-}
-@media (hover: hover) {
-  .mat:has(.go:hover) {
-    translate: -50% -4px;
-  }
-  .go:hover::after {
-    translate: 3px 0;
-  }
-}
-.mat:has(.go:active) {
-  translate: -50% 1px;
+/* once lit, each lantern breathes on its own beat */
+[data-on="true"] .lamp {
+  animation: flicker 4.6s ease-in-out calc(2600ms + var(--li) * 370ms) infinite;
 }
 
-/* the cuts: a torn notebook page, a ticket stub, an eyelet tag, a ribbon, a postcard */
-.page {
-  --w: 142px;
-}
-.page::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 8px;
-  width: 1px;
-  background: rgb(255 120 100 / 0.45);
-}
-.page > p {
-  margin-left: 4px;
-}
-.stub {
-  --w: 104px;
-}
-.stub > span:first-child {
-  mask:
-    radial-gradient(circle at 0 62%, transparent 7px, #000 7.5px) left / 51% 100% no-repeat,
-    radial-gradient(circle at 100% 62%, transparent 7px, #000 7.5px) right / 51% 100% no-repeat;
-}
-.stub::before {
-  content: "";
-  position: absolute;
-  left: 10px;
-  right: 10px;
-  top: 62%;
-  border-top: 1.5px dashed var(--rule);
-}
-.tag {
-  --w: 112px;
-  padding-top: calc(22px * var(--nz, 1)) !important;
-}
-.tag > span:first-child {
-  clip-path: polygon(22% 0, 78% 0, 100% 14%, 100% 100%, 0 100%, 0 14%);
-}
-.tag::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 7px;
-  width: 9px;
-  height: 9px;
-  translate: -50% 0;
-  border-radius: 50%;
-  background: rgb(3 6 12 / 0.7);
-  box-shadow: 0 0 0 2.5px var(--c-twine-2);
-}
-.tag .go {
-  margin-top: calc(-22px * var(--nz, 1));
-  padding-top: calc(22px * var(--nz, 1));
-}
-.ribbon {
-  --w: 132px;
-  padding-bottom: calc(26px * var(--nz, 1)) !important;
-}
-.ribbon > span:first-child {
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 16px), 0 100%);
-}
-.post {
-  --w: 214px;
-}
-.post .mail {
-  font-size: calc(12.5px * var(--nz, 1));
-}
-/* stamp */
-.post::after {
-  content: "";
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  width: 26px;
-  height: 30px;
-  border: 2px dotted var(--rule);
-  background: radial-gradient(circle at 50% 45%, var(--c-lantern) 0 5px, transparent 6px), rgb(255 180 84 / 0.16);
-}
-
-/* ---- Intro: the letters drop and split, the cards swing in, the lanterns light in order ---- */
+/* ---- Intro: the words drop and split, the rest rises, the lanterns light in order ---- */
 [data-on="true"] .ch {
-  animation: fall 760ms var(--ease-paper) calc(180ms + var(--i) * 60ms) both;
+  animation: fall 760ms var(--ease-paper) calc(260ms + var(--i) * 90ms) both;
 }
 [data-on="true"] .lyr:not([data-l="2"]) {
-  animation: split 560ms var(--ease-paper) calc(540ms + var(--i) * 60ms) both;
+  animation: split 560ms var(--ease-paper) calc(620ms + var(--i) * 90ms) both;
 }
-[data-on="true"] .sub {
-  animation: rise 600ms var(--ease-paper) 680ms both;
+[data-on="true"] .kicker {
+  animation: rise 600ms var(--ease-paper) 120ms both;
+}
+[data-on="true"] .lede {
+  animation: rise 600ms var(--ease-paper) 1050ms both;
+}
+[data-on="true"] .acts {
+  animation: rise 600ms var(--ease-paper) 1200ms both;
+}
+[data-on="true"] .hint {
+  animation: fade 800ms linear 1700ms both;
 }
 [data-on="true"] .twine {
   animation: fade 500ms linear 300ms both;
 }
-[data-on="true"] .swing {
-  animation:
-    swing 1500ms cubic-bezier(0.3, 0.6, 0.4, 1) calc(450ms + var(--ci) * 110ms) both,
-    idle 6s ease-in-out calc(2200ms + var(--ci) * 300ms) infinite;
-}
 [data-on="true"] .lit,
 [data-on="true"] .halo {
-  animation: lamp 900ms linear calc(1500ms + var(--li) * 130ms) both;
+  animation: lamp 900ms linear calc(1300ms + var(--li) * 110ms) both;
 }
 [data-on="true"] .halo {
   animation-name: halo;
 }
-.lit {
-  opacity: 1;
+
+/* Coming back (data-again): no intro. The title rises in as one sheet, the lanterns are already lit and keep breathing. */
+[data-again][data-on="true"] :is(.ch, .lyr, .kicker, .lede, .acts, .hint, .twine, .lit, .halo) {
+  animation: none;
+}
+[data-again][data-on="true"] .hero {
+  animation: back 450ms var(--ease-paper) both; /* transform, not translate: phones centre .hero with translate */
+}
+[data-again][data-on="true"] .line {
+  animation: fade 450ms linear both;
+}
+@keyframes back {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
 }
 
 @keyframes fall {
   0% {
     opacity: 0;
-    translate: 0 -0.32em;
-    rotate: -9deg;
+    translate: 0 -0.4em;
+    rotate: -6deg;
   }
   35% {
     opacity: 1;
   }
   70% {
     translate: 0 0.03em;
-    rotate: 1.5deg;
+    rotate: 1deg;
   }
   100% {
     opacity: 1;
@@ -396,40 +264,6 @@
     opacity: 1;
   }
 }
-/* a damped pendulum about the peg */
-@keyframes swing {
-  0% {
-    opacity: 0;
-    rotate: calc(var(--sw) * -38deg);
-  }
-  12% {
-    opacity: 1;
-  }
-  30% {
-    rotate: calc(var(--sw) * 19deg);
-  }
-  48% {
-    rotate: calc(var(--sw) * -9deg);
-  }
-  65% {
-    rotate: calc(var(--sw) * 4.5deg);
-  }
-  82% {
-    rotate: calc(var(--sw) * -1.8deg);
-  }
-  100% {
-    rotate: 0deg;
-  }
-}
-@keyframes idle {
-  0%,
-  100% {
-    rotate: 0deg;
-  }
-  50% {
-    rotate: calc(var(--sw) * 1deg);
-  }
-}
 @keyframes lamp {
   0% {
     opacity: 0;
@@ -454,71 +288,54 @@
     opacity: 0.22;
   }
 }
+@keyframes flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.78;
+  }
+}
 
-/* ---- Phones: the name up top, the cards a two-column stack above the dots ---- */
+/* ---- Phones: the title page up top, nothing else on the water ---- */
 .flow {
   position: absolute;
   inset: 0;
 }
-.flow .name {
+.flow .hero {
   left: 50%;
-  top: max(104px, 12%);
+  translate: -50% 0;
+  justify-items: center;
+  text-align: center;
+  top: max(92px, 11%);
   width: calc(100% - 2 * var(--gutter, 16px));
 }
+.flow .kicker {
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  line-height: 1.6;
+}
+.flow .word,
+.flow .acts {
+  justify-content: center;
+}
 .flow .word {
-  font-size: min(30vw, 150px);
+  margin-top: 12px;
+  font-size: clamp(40px, 12.5vw, 60px);
 }
-.flow .sub {
-  font-size: 14px;
+.flow .lede {
+  margin-top: 16px !important;
+  font-size: 15px;
 }
-.flow .cards {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: calc(52px + env(safe-area-inset-bottom));
-  max-height: 42%;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: start;
-  gap: 12px;
-  padding: 14px var(--gutter, 16px) 12px;
+.flow .acts {
+  margin-top: 18px !important;
 }
-.flow .card {
-  position: relative;
-  left: auto;
-  top: auto;
-}
-.flow .card[data-card="reach"] {
-  grid-column: 1 / -1;
-}
-.flow .cord {
+.flow .hint {
   display: none;
 }
-.flow .n {
-  font-size: 32px;
-}
-.flow .mat {
-  position: relative;
-  top: 0;
-  left: auto;
-  translate: none;
-  width: auto;
-}
-@media (hover: hover) {
-  .flow .mat:has(.go:hover) {
-    translate: 0 -4px;
-  }
-}
-.flow .mat:has(.go:active) {
-  translate: 0 1px;
-}
-.flow .follow {
-  rotate: none;
-}
 
-/* ---- Reduced motion: the finished frame, no swinging ---- */
+/* ---- Reduced motion: the finished frame ---- */
 @media (prefers-reduced-motion: reduce) {
   .set,
   .flow {
@@ -530,9 +347,6 @@
   .flow * {
     animation: none !important;
   }
-  .follow {
-    rotate: none;
-  }
 }
 :global(html[data-motion="reduced"]) .set,
 :global(html[data-motion="reduced"]) .flow {
@@ -543,7 +357,4 @@
 :global(html[data-motion="reduced"]) .set *,
 :global(html[data-motion="reduced"]) .flow * {
   animation: none !important;
-}
-:global(html[data-motion="reduced"]) .follow {
-  rotate: none;
 }

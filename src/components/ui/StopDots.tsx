@@ -3,12 +3,12 @@
 import type { Stop } from "@/content/site";
 import styles from "./StopDots.module.css";
 
-type Props = { items: Stop[]; label: string; current: number; visited: string[]; cascade?: boolean; onJump(i: number): void };
+type Props = { items: Stop[]; label: string; current: number; visited: string[]; onJump(i: number): void };
 
-/** One dot per place on the current river: the 3 main stops, or the 5 pools down the cascade (lantern thread). */
-export function StopDots({ items, label, current, visited, cascade = false, onJump }: Props) {
+/** One dot per stop on the river. */
+export function StopDots({ items, label, current, visited, onJump }: Props) {
   return (
-    <nav className={styles.nav} aria-label={label} data-cascade={cascade || undefined}>
+    <nav className={styles.nav} aria-label={label}>
       <ul className={styles.list}>
         {items.map((s) => (
           <li key={s.id}>

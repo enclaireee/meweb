@@ -750,7 +750,7 @@
   justify-self: start;
 }
 
-/* Stalls: the projects as a short list of paper tickets (the river's own tickets live in Notes). */
+/* Stalls: the projects as a short list of paper tickets (the river hangs them as lanterns, in Notes). */
 .stalls {
   display: grid;
   gap: var(--sp-2);

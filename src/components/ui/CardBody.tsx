@@ -337,6 +337,8 @@ export function CardBody({ stop, headingId, stacked = false }: Props) {
                 <dd>{stacked ? <span>{person.linkedin}</span> : <a href={person.linkedin}>LinkedIn</a>}</dd>
               </>
             )}
+            <dt>GitHub</dt>
+            <dd>{stacked ? <span>{person.github}</span> : <a href={person.github}>GitHub</a>}</dd>
             <dt>Location</dt>
             <dd>{person.location}</dd>
           </dl>

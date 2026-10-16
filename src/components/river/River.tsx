@@ -1,15 +1,14 @@
 "use client";
 // The river: navigation state, the one rAF loop (glide + pointer smoothing), input, paper notes and chrome.
-// Two routes: the main river (3 stops, horizontal glide) and the projects night market (Market.tsx, native vertical scroll).
+// The projects index (Projects.tsx) is a sheet over it, with its own history entry (#made-N).
 // Per frame it only writes CSS variables; React renders on phase changes.
 import { useCallback, useEffect, useReducer, useRef, useState, type CSSProperties } from "react";
-import { copy, dials, projects, stops } from "@/content/site";
+import { copy, dials, stops } from "@/content/site";
 import { camAt, camCss } from "@/lib/camera";
 import { layerFx } from "@/lib/fx";
 import { createWheelGate, keyIntent, swipeStep } from "@/lib/input";
 import { computeLayout, P, PAD, type Layout } from "@/lib/layout";
 import * as nav from "@/lib/nav";
-import type { Route } from "@/lib/route";
 import { skyAt, skyBackground } from "@/lib/sky";
 import { Frame } from "@/components/frame/Frame";
 import { Footer } from "@/components/ui/Footer";
@@ -17,37 +16,19 @@ import { Landing } from "@/components/ui/Landing";
 import { Notes } from "@/components/ui/Notes";
 import { NavButtons } from "@/components/ui/NavButtons";
 import { StopDots } from "@/components/ui/StopDots";
-import market from "../../../public/art/market/manifest.json";
 import manifest from "../../../public/art/desktop/manifest.json";
-import { Market, type MarketHandle } from "@/components/market/Market";
+import { Projects } from "@/components/projects/Projects";
 import { Loader } from "./Loader";
-import { Reeds, type ReedState } from "./Reeds";
 import { INTRO_MS, World } from "./World";
 import s from "./river.module.css";
 
 const CAMS = dials.map((d) => d.cam);
-/** Reed sweep (Reeds.module.css) and the bow turn at the gate before the boat drops into the cascade. */
-const REED_MS = 540;
-const TURN_MS = 420;
+/** The tide (river.module.css .tide): four layers, 80 ms apart, 1400 ms each. The top one covers the screen from ~830 to ~1050 ms. */
+const TIDE_COVER = 880;
+const TIDE_MS = 1640;
 const tilesOf = (m: { layers: { tiles: { f: string }[] }[] }, dir: string) =>
   m.layers.flatMap((l) => l.tiles.map((t) => `/art/${dir}/${t.f}`));
 const MAIN_TILES = tilesOf(manifest, "desktop");
-const { sky, far, floor, gate, string: lights, pier, walker, stalls, play } = market;
-const CHANNEL_TILES = [
-  sky,
-  far,
-  floor,
-  gate,
-  lights,
-  { f: lights.lit },
-  pier,
-  walker,
-  ...stalls,
-  play.screen,
-  play.gunungan,
-  ...play.scenes.flat().flatMap((sc) => [{ f: sc.set }, { f: sc.cast }]),
-].map((a) => `/art/market/${a.f}`);
-
 /** Load and decode tiles before their world mounts, so no layer's content changes after it is on screen. Reports the decoded ratio. */
 const preload = (tiles: string[], onProgress: (r: number) => void = () => {}) => {
   let done = 0;
@@ -84,9 +65,6 @@ const preload = (tiles: string[], onProgress: (r: number) => void = () => {}) =>
     cancelAnimationFrame(raf);
   });
 };
-const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
-/** Two painted frames: the swapped-in view is on screen before the reeds part. */
-const painted = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
 
 type Action = { t: "step"; dir: -1 | 1 } | { t: "jump"; n: number } | { t: "arrived" } | { t: "set"; n: number };
 
@@ -115,13 +93,9 @@ export function River() {
   const [looking, setLooking] = useState(false);
   const [visited, setVisited] = useState<string[]>([]);
   const [fade, setFade] = useState(false);
-  const [reeds, setReeds] = useState<ReedState>("open");
-  const [route, setRoute] = useState<Route>("main");
-  const [level, setLevel] = useState(0); // market stall in view
-  const [page, setPage] = useState(0); // its booklet page
-  const market = useRef<MarketHandle>(null);
-  const [target, setTarget] = useState(0); // cascade pool asked for (dots, buttons, hash)
-  const [turning, setTurning] = useState(false); // bow turn + dive at the gate
+  const [madeAt, setMadeAt] = useState<number | null>(null); // the projects index, open at this row (the URL's truth)
+  const [shownMade, setShownMade] = useState<number | null>(null); // what is mounted: swaps behind the tide
+  const [tide, setTide] = useState<{ dir: "up" | "down"; n: number } | null>(null);
   const [progress, setProgress] = useState(0);
   const [intro, setIntro] = useState<"wait" | "play" | "done">("wait");
   const [loaderGone, setLoaderGone] = useState(false);
@@ -131,14 +105,15 @@ export function River() {
   const fxEls = useRef(new Map<string, { el: HTMLDivElement; fx: string; op: string; ty: string }>());
   const wheel = useRef(createWheelGate());
   const startle = useRef(0);
-  const routeRef = useRef<Route>("main");
-  const busy = useRef(false); // a route swap is running
-  const pushed = useRef(false); // the cascade has its own history entry, so leaving it is history.back()
+  const pushed = useRef(false); // the index has its own history entry, so leaving it is history.back()
   const landing = useRef<number | null>(null); // the stop the mount lands on, until it has
-  const channelLoad = useRef<Promise<unknown> | null>(null);
   const stRef = useRef(st);
+  const madeRef = useRef(madeAt);
+  const shownRef = useRef(shownMade);
   useEffect(() => {
     stRef.current = st;
+    madeRef.current = madeAt;
+    shownRef.current = shownMade;
   });
   const a = useRef({
     pos: 0,
@@ -179,6 +154,12 @@ export function River() {
     if (skyRef.current) skyRef.current.style.background = skyBackground(skyAt(p));
     if (!skipCam) applyCam();
   }, [applyCam]);
+
+  // The sky (in World) mounts after the deep link's first applyPos: write it again once it's there.
+  const worldUp = L !== null && artReady;
+  useEffect(() => {
+    if (worldUp) applyPos(a.current.pos, true);
+  }, [worldUp, applyPos]);
 
   const fxRef = useCallback(
     (id: string, fx: string) => (el: HTMLDivElement | null) => {
@@ -235,101 +216,54 @@ export function River() {
     };
   }, [applyPos, applyCam, kick]);
 
-  // Route swaps. In: the bow turns at the gate, the reeds close, the cascade mounts behind them, they part.
-  // Out: the reeds close, the cascade unmounts, the main river shows `n`. Reduced motion: an instant swap.
-  const enter = useCallback(async (n: number, push: boolean) => {
-    if (routeRef.current !== "main" || busy.current || stRef.current.phase === "moving") return;
-    busy.current = true;
-    routeRef.current = "channel";
-    pushed.current = true;
-    if (push) history.pushState(null, "", nav.hashFor("channel", n));
-    if (!a.current.reduced) {
-      setTurning(true);
-      setReeds("narrow");
-      await wait(TURN_MS);
-      setReeds("closed");
-      await wait(REED_MS);
-    }
-    await (channelLoad.current ??= preload(CHANNEL_TILES));
-    setTarget(n);
-    setLevel(n);
-    setRoute("channel");
-    setTurning(false);
-    await painted();
-    await wait(120); // ponytail: raster headroom for the freshly mounted pools before the reeds part
-    setReeds("open");
-    busy.current = false;
-  }, []);
-
-  const exit = useCallback(
-    async (n: number) => {
-      if (routeRef.current !== "channel" || busy.current) return;
-      busy.current = true;
-      routeRef.current = "main";
-      pushed.current = false;
-      if (!a.current.reduced) {
-        setReeds("closed");
-        await wait(REED_MS);
-      }
-      if (n !== stRef.current.stop) {
-        dispatch({ t: "set", n });
-        applyPos(n);
-      }
-      setRoute("main");
-      history.replaceState(null, "", n ? nav.hashFor("main", n) : location.pathname + location.search);
-      await painted();
-      document.getElementById("river")?.focus({ preventScroll: true });
-      setReeds("open");
-      busy.current = false;
-    },
-    [applyPos],
-  );
-
-  /** Back to the main river where you left it: through history when the cascade pushed an entry, so the browser's back button agrees. */
+  /** Back to the river where you left it: through history when the index pushed an entry, so the browser's back button agrees. */
   const leave = useCallback(() => {
-    if (pushed.current) history.back();
-    else void exit(stRef.current.stop);
-  }, [exit]);
-
-  // Handlers registered once (hashchange, keydown) reach the latest callbacks through refs.
-  const enterRef = useRef(enter);
-  const exitRef = useRef(exit);
+    if (pushed.current) return history.back(); // hashchange closes it
+    const n = stRef.current.stop;
+    history.replaceState(null, "", n ? nav.hashFor("main", n) : location.pathname + location.search);
+    setMadeAt(null);
+  }, []);
   const leaveRef = useRef(leave);
   useEffect(() => {
-    enterRef.current = enter;
-    exitRef.current = exit;
     leaveRef.current = leave;
   });
 
-  const onLevel = useCallback((n: number, pg: number) => {
-    if (routeRef.current !== "channel") return;
-    setLevel(n);
-    setPage(pg);
-    setTarget(n);
-    setVisited((v) => (v.includes(projects[n]!.id) ? v : [...v, projects[n]!.id]));
-    history.replaceState(null, "", nav.hashFor("channel", n));
-  }, []);
+  // The tide: going under or surfacing, paper water covers the screen, the sheet swaps behind it, then the water moves on.
+  // A row change while under, a deep link behind the loader, and reduced motion swap at once. Timeouts keep setState out of the effect body.
+  useEffect(() => {
+    if ((madeAt === null) === (shownRef.current === null) || !loaderGone || a.current.reduced) {
+      const t = setTimeout(() => {
+        setShownMade(madeAt);
+        setTide(null);
+      }, 0);
+      return () => clearTimeout(t);
+    }
+    const t0 = setTimeout(() => setTide((p) => ({ dir: madeAt === null ? "down" : "up", n: (p?.n ?? 0) + 1 })), 0);
+    const t1 = setTimeout(() => setShownMade(madeAt), TIDE_COVER);
+    const t2 = setTimeout(() => setTide(null), TIDE_MS);
+    return () => {
+      clearTimeout(t0);
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [madeAt, loaderGone]);
+
+  // Focus follows the sheet: Projects takes it on open, the river gets it back on close.
+  const wasOpen = useRef(false);
+  useEffect(() => {
+    if (shownMade === null && wasOpen.current) document.getElementById("river")?.focus({ preventScroll: true });
+    wasOpen.current = shownMade !== null;
+  }, [shownMade]);
 
   // Mount: deep link, reduced motion, layout.
   useEffect(() => {
     let alive = true;
     const place = nav.placeFromHash(location.hash);
-    const deep = place?.route === "channel";
-    // The loader waits on the main strip only (plus the cascade on a #made-N deep link); the cascade decodes after the intro.
-    const ready = preload(deep ? [...MAIN_TILES, ...CHANNEL_TILES] : MAIN_TILES, (r) => alive && setProgress(r));
-    if (deep) {
-      channelLoad.current = ready;
-      routeRef.current = "channel"; // now, so the arrival effect below leaves the #made-N hash alone
-    }
+    const ready = preload(MAIN_TILES, (r) => alive && setProgress(r));
     void ready.then(() => {
       if (!alive) return;
-      if (deep) {
-        setRoute("channel");
-        setTarget(place.n);
-        setLevel(place.n);
-      }
+      if (place?.route === "channel") setMadeAt(place.n);
       setArtReady(true);
-      setTimeout(() => (channelLoad.current ??= preload(CHANNEL_TILES)), INTRO_MS + 1000);
     });
     const n = place?.route === "main" ? place.n : 0;
     landing.current = n;
@@ -364,11 +298,12 @@ export function River() {
     document.addEventListener("visibilitychange", onVis);
     const onHash = () => {
       const p = nav.placeFromHash(location.hash) ?? { route: "main", n: 0 };
-      if (p.route === "channel") {
-        if (routeRef.current === "channel") setTarget(p.n);
-        else void enterRef.current(p.n, false);
-      } else if (routeRef.current === "channel") void exitRef.current(p.n);
-      else dispatch({ t: "jump", n: p.n });
+      pushed.current = p.route === "channel"; // a #made-N entry of its own (forward, or typed)
+      if (p.route === "channel") setMadeAt(p.n);
+      else {
+        setMadeAt(null);
+        dispatch({ t: "jump", n: p.n });
+      }
     };
     window.addEventListener("hashchange", onHash);
     return () => {
@@ -424,7 +359,7 @@ export function River() {
     // Until the deep-linked stop has landed, the initial stop 0 must not wipe its #stop-N (a Strict Mode remount re-reads it).
     const early = landing.current !== null && landing.current !== st.stop;
     if (!early) landing.current = null;
-    if (routeRef.current === "main" && !early) history.replaceState(null, "", st.stop ? nav.hashFor("main", st.stop) : location.pathname + location.search);
+    if (nav.placeFromHash(location.hash)?.route !== "channel" && !early) history.replaceState(null, "", st.stop ? nav.hashFor("main", st.stop) : location.pathname + location.search);
     // A 0 ms timeout keeps setState out of the effect body. The first stop's notes also wait for the intro (notesOn).
     const t1 = setTimeout(() => setShown(true), 0);
     return () => clearTimeout(t1);
@@ -434,10 +369,10 @@ export function River() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const t = e.target instanceof Element ? e.target : document.body;
-      if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey || busy.current) return;
-      if (routeRef.current === "channel") {
+      if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (madeRef.current !== null) {
         if (e.key === "Escape") leaveRef.current();
-        return; // the cascade scrolls natively (it holds focus)
+        return; // the index scrolls natively
       }
       if (t.closest("input, textarea, select, [contenteditable], dialog")) return;
       const intent = keyIntent(e, !!t.closest("button, a"));
@@ -489,22 +424,24 @@ export function River() {
     };
   }, [kick]);
 
-  const inCascade = route === "channel";
-  const travellerState = turning ? "turning" : st.phase === "moving" ? traveller : looking ? "looking" : "idle";
+  const away = shownMade !== null;
+  const travellerState = st.phase === "moving" ? traveller : looking ? "looking" : "idle";
   const moving = st.phase === "moving";
   const resting = L !== null && artReady && !moving; // L is set after the mount effect has applied the deep link
-  const here = inCascade ? projects[level]! : stops[st.stop]!;
-  const live = !resting
-    ? ""
-    : inCascade
-      ? `${copy.made}, stall ${level + 1} of ${nav.LEVELS}, ${here.tag.title}: ${copy.pages[page]}`
-      : `Stop ${st.stop + 1} of ${stops.length}, ${here.place}: ${here.tag.title}`;
+  const here = stops[st.stop]!;
+  const live = !resting || away ? "" : `Stop ${st.stop + 1} of ${stops.length}, ${here.place}: ${here.tag.title}`;
   // Adjusting state during render (React's sanctioned pattern): remember stops once settled on them.
-  if (resting && !inCascade && !visited.includes(here.id)) setVisited([...visited, here.id]);
-  const notesOn = (i: number) => resting && shown && intro !== "wait" && !turning && i === st.stop;
-  const dive = (n = 0) => void enter(n, true);
+  if (resting && !visited.includes(here.id)) setVisited([...visited, here.id]);
+  const notesOn = (i: number) => resting && shown && intro !== "wait" && i === st.stop;
   const go = (n: number) => dispatch({ t: "jump", n });
-  const pool = (n: number) => setTarget(Math.max(0, Math.min(nav.LEVELS - 1, n)));
+  /** Open the projects index at row n, on a history entry of its own. */
+  const openMade = (n = 0) => {
+    if (madeRef.current === null) {
+      history.pushState(null, "", nav.hashFor("channel", n));
+      pushed.current = true;
+    }
+    setMadeAt(n);
+  };
 
   // Tap the scene: a ripple ring where you touched, and the fireflies startle. Not on buttons, not under reduced motion.
   const ripple = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -530,8 +467,8 @@ export function River() {
           ref={stageRef}
           data-moving={st.phase === "moving"}
           data-fade={fade}
-          data-away={inCascade || undefined}
-          inert={inCascade}
+          data-away={away || undefined}
+          inert={away}
           onClick={ripple}
         >
           {L && artReady && (
@@ -540,9 +477,9 @@ export function River() {
               <div className={s.tags} id="river" tabIndex={-1}>
                 {L.compact ? (
                   st.stop === 0 ? (
-                    <Landing on={notesOn(0)} go={go} flow />
+                    <Landing on={notesOn(0)} go={go} made={openMade} flow />
                   ) : (
-                    <Notes key={st.stop} stop={stops[st.stop]!} on={notesOn(st.stop)} made={dive} flow />
+                    <Notes key={st.stop} stop={stops[st.stop]!} on={notesOn(st.stop)} made={openMade} flow />
                   )
                 ) : (
                   // Every stop's notes stay mounted: this layer's content never changes during a glide.
@@ -554,7 +491,7 @@ export function River() {
                   >
                     {stops.map((stop) => (
                       <div key={stop.id} style={{ "--x": PAD + stop.i * P } as CSSProperties}>
-                        {stop.i === 0 ? <Landing on={notesOn(0)} go={go} /> : <Notes stop={stop} on={notesOn(stop.i)} made={dive} />}
+                        {stop.i === 0 ? <Landing on={notesOn(0)} go={go} made={openMade} /> : <Notes stop={stop} on={notesOn(stop.i)} made={openMade} />}
                       </div>
                     ))}
                   </div>
@@ -563,10 +500,14 @@ export function River() {
             </>
           )}
         </div>
-        {L && artReady && inCascade && (
-          <Market ref={market} L={L} target={target} onLevel={onLevel} onBack={leave} open={reeds === "open"} />
+        {away && <Projects at={shownMade} onClose={leave} />}
+        {tide && (
+          <div key={tide.n} className={s.tide} data-dir={tide.dir} aria-hidden="true">
+            {[0, 1, 2, 3].map((i) => (
+              <i key={i} style={{ "--i": i } as CSSProperties} />
+            ))}
+          </div>
         )}
-        <Reeds state={reeds} />
         {!loaderGone && (
           <Loader
             progress={progress}
@@ -579,32 +520,16 @@ export function River() {
           />
         )}
       </Frame>
-      {intro !== "wait" && (
-        <button type="button" className={s.made} data-cascade={inCascade || undefined} onClick={inCascade ? leave : () => (st.stop === 1 ? dive() : go(1))}>
-          {inCascade ? (
-            <>
-              <span aria-hidden="true">↑</span> {copy.backToMain}
-            </>
-          ) : (
-            copy.made
-          )}
-        </button>
-      )}
-      <NavButtons
-        onPrev={() => (inCascade ? market.current?.step(-1) : dispatch({ t: "step", dir: -1 }))}
-        onNext={() => (inCascade ? market.current?.step(1) : dispatch({ t: "step", dir: 1 }))}
-        atStart={inCascade ? level === 0 && page === 0 : st.to === 0}
-        atEnd={inCascade ? level === nav.LEVELS - 1 && page === copy.pages.length - 1 : st.to === nav.LAST}
-        vertical={inCascade}
-      />
-      <StopDots
-        items={inCascade ? projects : stops}
-        label={inCascade ? copy.levelsLabel : copy.dotsLabel}
-        current={inCascade ? level : st.to}
-        visited={visited}
-        cascade={inCascade}
-        onJump={inCascade ? pool : go}
-      />
+      {/* the sheet has its own way back; the river's chrome waits under it */}
+      <div hidden={away}>
+        {intro !== "wait" && (
+          <button type="button" className={s.made} onClick={() => openMade()}>
+            {copy.made}
+          </button>
+        )}
+        <NavButtons onPrev={() => dispatch({ t: "step", dir: -1 })} onNext={() => dispatch({ t: "step", dir: 1 })} atStart={st.to === 0} atEnd={st.to === nav.LAST} />
+        <StopDots items={stops} label={copy.dotsLabel} current={st.to} visited={visited} onJump={go} />
+      </div>
       <Footer />
       <p className={s.live} aria-live="polite">
         {live}

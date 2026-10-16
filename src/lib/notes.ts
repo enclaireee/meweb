@@ -2,7 +2,7 @@
 import type { Stop } from "@/content/site";
 
 export type PieceKind =
-  | "tickets" // stalls: one ticket per project, each walks into the market at its stall
+  | "lanterns" // stalls: a string of paper lanterns, one per project, each dives to it
   | "sign" // hanging title sign
   | "crates" // pipeline: stencilled steps
   | "gauge" // spec: brass health gauge
@@ -10,15 +10,18 @@ export type PieceKind =
   | "stub" // ticket: tied stub
   | "led" // datasheet: LED readout
   | "windows" // timeline: six lit windows
-  | "namecard"
-  | "contact";
+  | "letter"; // the lighthouse: one big letter, the contact page
 
-export function pieceKinds({ card }: Stop): PieceKind[] {
+/** `phone`: one piece per stop, so the strip never covers the scene (the sign carries a short version of the rest). */
+export function pieceKinds({ card }: Stop, phone = false): PieceKind[] {
+  if (card.layout === "letter") return ["letter"];
+  if (phone && card.layout === "stalls") return ["lanterns"]; // carries its own title
+  if (phone && card.layout !== "cv") return ["sign"];
   switch (card.layout) {
     case "cv":
       return []; // the landing draws itself (Landing.tsx)
     case "stalls":
-      return ["sign", "tickets"];
+      return ["sign", "lanterns"];
     case "pipeline":
       return ["sign", "crates"];
     case "spec":
@@ -31,7 +34,5 @@ export function pieceKinds({ card }: Stop): PieceKind[] {
       return ["sign", "led"];
     case "timeline":
       return ["sign", "windows"];
-    case "letter":
-      return ["namecard", "contact"];
   }
 }

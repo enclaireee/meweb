@@ -52,8 +52,8 @@ export const person = {
   shortName: "Fatih",
   subtitle: "Electrical engineering · Universitas Indonesia",
   email: "muhfatihzamzami@gmail.com",
-  /** placeholder: true. Hidden until Fatih supplies it. */
-  linkedin: undefined as string | undefined,
+  linkedin: "https://www.linkedin.com/in/fatihzamzami" as string | undefined,
+  github: "https://github.com/enclaireee",
   /** placeholder: true. Download disabled until the file exists. */
   cv: undefined as string | undefined, // "/cv/Muhammad-Fatih-Zamzami-CV.pdf"
   location: "Depok, Jawa Barat, Indonesia",
@@ -83,20 +83,28 @@ export const copy = {
   notFound: "You drifted off the map.",
   notFoundLink: "Back to the river.",
   made: "Things I made",
-  madeCount: "5 projects, 5 stalls",
   backToMain: "Back to the river",
-  levelsLabel: "Stalls along the lane",
-  /** The booklet on each stall's counter (Market.tsx): one page per section, drawn from the project's own fields. */
-  pages: ["Overview", "How it works", "What I built", "Stack & results"],
-  enterStall: "Walk to this stall",
+  /** The projects section (Projects.tsx). */
+  madeKicker: "Under the river",
+  sink: "Scroll to sink",
+  howItWorks: "How it works",
+  /** The landing (Landing.tsx): one statement, no stats. `*decide*` is the lit word. */
+  heroKicker: "Muhammad Fatih Zamzami · Electrical Engineering, Universitas Indonesia",
+  heroLine: "I build things that measure, and *decide.*",
+  heroLede:
+    "Hi, I'm Fatih. I work where hardware meets data: control systems, plant monitoring, forecasting, and the web around them.",
+  sayHello: "Say hello",
   loading: "Lighting the lantern",
   howToExplore: "Use the arrows, swipe, or press → to float downstream.",
+  /** The lighthouse letter (Notes.tsx). `*...*` is lit, as on the landing. */
+  contactHead: "Let's build something that measures, *and decides.*",
+  signoff: "Fatih",
   contactLine:
     "Open to internships, collaborations and good conversations about control, data and web.",
 };
 
 const kick = (i: number, place: string) => `0${i} · ${place}`;
-/** The main river: Spring (landing), Market Pier (into the projects), Village (skills & experience), Lighthouse (contact). */
+/** The main river: Spring (landing), Market Pier (opens the projects index), Village (skills & experience), Lighthouse (contact). */
 export const stops: Stop[] = [
   {
     i: 0,
@@ -109,7 +117,6 @@ export const stops: Stop[] = [
     tag: {
       title: "Hello, I'm Fatih",
       hook: "Engineer in training, builder of things that measure and decide.",
-      facts: [["5", "projects"], ["6", "roles"], ["3", "awards"]],
     },
     card: {
       layout: "cv",
@@ -117,7 +124,7 @@ export const stops: Stop[] = [
       subtitle:
         "Electrical engineering undergraduate · Universitas Indonesia · Depok, Jawa Barat",
       summary:
-        "I work across control systems, full-stack development and industrial OT/SCADA monitoring, and I have led technical and organisational teams along the way. This river is how I'd show you around, with a night market for the things I've built.",
+        "I work across control systems, full-stack development and industrial OT/SCADA monitoring, and I have led technical and organisational teams along the way. This river is how I'd show you around, with an index of the things I've built.",
     },
   },
   {
@@ -126,15 +133,15 @@ export const stops: Stop[] = [
     place: "The Market Pier",
     time: "Night",
     kicker: kick(1, "The Market Pier"),
-    spots: [[365, 358, 0], [640, 533, 0]],
+    spots: [[365, 358, 0], [595, 258, 0]],
     tag: {
       title: "Things I made",
-      hook: "Five projects, five stalls. Pick one and walk the lane.",
+      hook: "Five lanterns, five things I built. Each one lights a way under the river.",
     },
     card: {
       layout: "stalls",
       title: "Things I made",
-      summary: "Forecasting, plant monitoring, a game, an event and a solar lamp, each one a stall in the night market.",
+      summary: "Forecasting, plant monitoring, a game, an event and a solar lamp.",
     },
   },
   {
@@ -162,13 +169,13 @@ export const stops: Stop[] = [
     place: "The Lighthouse",
     time: "Morning",
     kicker: kick(3, "The Lighthouse"),
-    spots: [[365, 344, 0], [845, 626, 0]],
+    spots: [[560, 470, -1.5]],
     tag: { title: "Say hello", hook: "Morning on the sea, and the lamp is still lit." },
     card: { layout: "letter", title: "Say hello", summary: copy.contactLine },
   },
 ];
 
-/** The projects night market: one stall per project, down the lane from the pier at the Spring. */
+/** The projects, under the river (Projects.tsx), opened from the Market Pier. */
 export const projects: Stop[] = [
   {
     i: 0,

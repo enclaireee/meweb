@@ -4,7 +4,6 @@ import { pieceKinds, type PieceKind } from "@/lib/notes";
 
 type Kind = PieceKind | "plank";
 import CopyEmail from "./CopyEmail";
-import CvButton from "./CvButton";
 import styles from "./Notes.module.css";
 import paper from "./paper.module.css";
 
@@ -14,6 +13,18 @@ export const cut = (s: string) => {
   return t.length > 44 ? t.split(/(?<=.{22})\s(?:across|through|into|and|from|that|for)\s/)[0]! : t;
 };
 const short = (s: string) => s.split(", ");
+
+type Pt = [x: number, y: number];
+/** The pier's string of lanterns, in art units from its spot (the post arm's end): it sags across the pier and out of frame. */
+const END: Pt = [525, 72];
+const MID = END[1] / 2 + 2 * 50; // the quadratic's control y: a 50-unit sag
+const TWINE = `M0 0Q${END[0] / 2} ${MID} ${END[0]} ${END[1]}`;
+/** Where each cord meets the twine (x), and how far it drops: two tiers, the low one below the high tags, so a tag never meets its neighbours'.
+ * ponytail: x is fitted to 1024px, the narrowest desktop frame (clear of the sign, inside the frame's right edge). */
+const LANTERNS = ([[41, 18], [95, 196], [185, 14], [275, 206], [329, 20]] as const).map(([x, drop]) => {
+  const t = x / END[0];
+  return [x, 2 * t * (1 - t) * MID + t * t * END[1], drop] as const;
+});
 
 const Facts = ({ facts }: { facts: [string, string][] }) => (
   <dl className={styles.facts}>
@@ -50,33 +61,46 @@ const Title = ({ stop, children }: { stop: Stop; children?: ReactNode }) => (
 );
 
 /** One piece's content. Every word comes from site.ts, trimmed; the CV and the stacked view hold the rest. */
-function body(stop: Stop, kind: Kind, made: (n: number) => void): ReactNode {
+function body(stop: Stop, kind: Kind, made: (n: number) => void, flow = false): ReactNode {
   const { card, tag } = stop;
   switch (kind) {
-    case "tickets":
+    case "lanterns":
       return (
-        <ol className={styles.tickets} aria-label={copy.levelsLabel}>
-          {projects.map((p) => (
-            <li key={p.id} className={styles.ticket} style={{ "--ti": p.i } as CSSProperties}>
-              <button
-                type="button"
-                className={styles.ticketBtn}
-                aria-label={`${p.tag.title}, ${copy.enterStall.charAt(0).toLowerCase()}${copy.enterStall.slice(1)}`}
-                onClick={() => made(p.i)}
-              >
-                <span className={paper.sheet} aria-hidden="true" />
-                <span className={styles.tNo} aria-hidden="true">
-                  {String(p.i + 1).padStart(2, "0")}
-                </span>
-                <span className={styles.tMain}>
-                  <span className={styles.tName}>{p.tag.title}</span>
-                  <span className={styles.tHook}>{cut(p.tag.hook)}</span>
-                  {p.tag.date && <span className={styles.tDate}>{p.tag.date}</span>}
-                </span>
-              </button>
-            </li>
-          ))}
-        </ol>
+        <>
+          {flow ? (
+            <Title stop={stop} />
+          ) : (
+            <svg className={styles.twine} viewBox={`0 0 ${END[0]} ${MID}`} aria-hidden="true" focusable="false">
+              <path d={TWINE} />
+              <circle r="4" />
+            </svg>
+          )}
+          <ol className={styles.lanterns} aria-label={copy.made}>
+            {projects.map((p) => {
+              const [x, y, drop] = LANTERNS[p.i % LANTERNS.length]!;
+              return (
+                <li key={p.id} className={styles.lantern} style={{ "--lx": x, "--ly": y, "--drop": drop, "--li": p.i } as CSSProperties}>
+                  <button type="button" className={styles.lanternBtn} onClick={() => made(p.i)}>
+                    <span className={styles.lamp} aria-hidden="true">
+                      <i className={styles.halo} />
+                      <i className={styles.lit} />
+                      <span className={styles.lNo}>{String(p.i + 1).padStart(2, "0")}</span>
+                    </span>
+                    <span className={styles.lTag}>
+                      <span className={`${paper.sheet} ${paper.eyes}`} aria-hidden="true" />
+                      <span className={styles.lName}>{p.tag.title}</span>
+                      <span className={styles.lMore}>
+                        <span className={paper.sheet} aria-hidden="true" />
+                        <span className={styles.lHook}>{cut(p.tag.hook)}</span>
+                        {p.tag.date && <span className={styles.lDate}>{p.tag.date}</span>}
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+        </>
       );
     case "sign": {
       const line = card.layout === "timeline";
@@ -86,6 +110,8 @@ function body(stop: Stop, kind: Kind, made: (n: number) => void): ReactNode {
           {!line && tag.date && <p className={styles.meta}>{tag.date}</p>}
           <p className={styles.hook}>{tag.hook}</p>
           {!line && tag.facts && <Facts facts={tag.facts} />}
+          {/* phones: the sign stands in for the role tags */}
+          {flow && line && <Bullets items={roles.map((r) => `${r.role} · ${r.org}`)} />}
         </>
       );
     }
@@ -189,45 +215,75 @@ function body(stop: Stop, kind: Kind, made: (n: number) => void): ReactNode {
           ))}
         </ul>
       );
-    case "namecard":
+    case "letter":
       return (
         <>
-          <p className={styles.bizName}>{person.name}</p>
-          <p className={styles.meta}>{person.subtitle}</p>
-          <Title stop={stop} />
-          <p className={styles.hook}>{tag.hook}</p>
-        </>
-      );
-    case "contact":
-      return (
-        <>
-          <p className={styles.line}>
-            <a className={styles.link} href={`mailto:${person.email}`}>
-              {person.email}
-            </a>
+          <span className={styles.stamp} aria-hidden="true">
+            <svg viewBox="0 0 40 48" focusable="false">
+              <path className={styles.stampSky} d="M0 0h40v48H0z" />
+              <path className={styles.stampSun} d="M6 33a9 9 0 0 1 18 0z" />
+              <path className={styles.stampTower} d="M24 40l2.5-24h5L34 40zM25.5 12h9v4h-9zM27 8l3-3 3 3z" />
+              <path className={styles.stampSea} d="M0 38q5-3 10 0t10 0 10 0 10 0v10H0z" />
+            </svg>
+          </span>
+          <p className={styles.postmark}>
+            <span>{person.location.split(", ").slice(0, 2).join(" · ")}</span>
           </p>
-          {person.linkedin && (
-            <p className={styles.line}>
-              <a className={styles.link} href={person.linkedin}>
-                LinkedIn
+          <p className={styles.kicker}>{stop.kicker}</p>
+          <h2 id={`note-${stop.id}-title`} className={styles.letterHead}>
+            {copy.contactHead.split("*").map((t, n) => (n % 2 ? <em key={n}>{t}</em> : t))}
+          </h2>
+          <p className={styles.lede}>{copy.contactLine}</p>
+          <div className={styles.cta}>
+            <a className={styles.send} href={`mailto:${person.email}`}>
+              <Glyph d={ENVELOPE} />
+              <span>{person.email}</span>
+            </a>
+          </div>
+          <ul className={styles.elsewhere}>
+            <li>
+              <CopyEmail />
+            </li>
+            {person.linkedin && (
+              <li>
+                <a className={styles.ext} href={person.linkedin} target="_blank" rel="noopener noreferrer">
+                  <Glyph d={LINKEDIN} fill />
+                  LinkedIn
+                </a>
+              </li>
+            )}
+            <li>
+              <a className={styles.ext} href={person.github} target="_blank" rel="noopener noreferrer">
+                <Glyph d={GITHUB} fill />
+                GitHub
               </a>
-            </p>
-          )}
-          <p className={styles.line}>{person.location}</p>
-          <p className={styles.actions}>
-            <CopyEmail />
-            <CvButton />
+            </li>
+          </ul>
+          <p className={styles.sign}>
+            <span aria-hidden="true">— </span>
+            {copy.signoff}
           </p>
         </>
       );
   }
 }
 
+const ENVELOPE = "M3 6h18v12H3zM3 6l9 7 9-7";
+const LINKEDIN =
+  "M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.75h4V21H3zM9.5 9.75h3.8v1.6c.55-1 1.9-1.95 3.9-1.95 4 0 4.8 2.6 4.8 6V21h-4v-4.9c0-1.2 0-2.75-1.7-2.75s-1.95 1.3-1.95 2.65V21H9.5z";
+const GITHUB =
+  "M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.3 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2z";
+const Glyph = ({ d, fill = false }: { d: string; fill?: boolean }) => (
+  <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+    <path d={d} fill={fill ? "currentColor" : "none"} stroke={fill ? "none" : "currentColor"} strokeWidth="1.8" strokeLinejoin="round" />
+  </svg>
+);
+
 const noop = () => {};
 /** Pieces that hang from a beam or rope by two cords. */
-const HANGS = new Set<string>(["sign", "namecard"]);
-/** Pieces that are one sheet of paper on a wrapper; the rest (tickets, tags, props) draw their own. */
-const SHEET = new Set<string>(["contact"]);
+const HANGS = new Set<string>(["sign"]);
+/** Pieces that are one sheet of paper on a wrapper; the rest (lanterns, tags, props) draw their own. */
+const SHEET = new Set<string>(["letter"]);
 
 function Mat({ cls, v, sheet, eyes, children }: { cls?: string; v: number; sheet: boolean; eyes?: boolean; children: ReactNode }) {
   return (
@@ -251,7 +307,7 @@ export function Notes({
   stop: Stop;
   on: boolean;
   flow?: boolean;
-  /** A ticket was picked: walk to that project's stall. */
+  /** A lantern was picked: dive to that project. */
   made?: (n: number) => void;
 }) {
   return (
@@ -262,7 +318,9 @@ export function Notes({
       inert={!on}
       aria-labelledby={`note-${stop.id}-title`}
     >
-      {pieceKinds(stop).map((kind, n) => {
+      {/* the lighthouse's beam, laid across the letter (desktop: it needs the scene's lamp) */}
+      {!flow && stop.card.layout === "letter" && <i className={styles.beam} aria-hidden="true" />}
+      {pieceKinds(stop, flow).map((kind, n) => {
         const [x, y, r] = stop.spots[n] ?? [0, 0, 0];
         return (
           <div
@@ -275,17 +333,17 @@ export function Notes({
             {HANGS.has(kind) ? (
               <div className={styles.hang}>
                 <Mat cls={styles.signMat} v={stop.i + n} sheet eyes>
-                  {body(stop, kind, made)}
+                  {body(stop, kind, made, flow)}
                 </Mat>
-                {kind === "sign" && stop.card.layout !== "stalls" && (
+                {kind === "sign" && stop.card.layout !== "stalls" && !flow && (
                   <Mat cls={styles.plankMat} v={stop.i + n + 1} sheet eyes>
                     {body(stop, "plank", made)}
                   </Mat>
                 )}
               </div>
             ) : (
-              <Mat v={stop.i + n} sheet={SHEET.has(kind)}>
-                {body(stop, kind, made)}
+              <Mat v={stop.i + n} sheet={SHEET.has(kind) || (flow && kind === "lanterns")}>
+                {body(stop, kind, made, flow)}
               </Mat>
             )}
           </div>
