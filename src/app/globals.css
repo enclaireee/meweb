@@ -80,12 +80,12 @@
 
   /* paper surface: fibre grain + soft mottling, multiplied into a colour.
      Use: background-color + background-image: var(--paper-tex) + background-size: var(--paper-tex-size) + background-blend-mode: multiply */
-  --paper-grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='g' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' seed='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.14  0 0 0 0 0.14  0 0 0 0 0.14  1.1 0 0 0 -0.5'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>");
-  --paper-mottle: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='420'><filter id='m' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='0.012 0.02' numOctaves='3' seed='9' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.32  0 0 0 0 0.26  0 0 0 0 0.18  1.5 0 0 0 -0.68'/></filter><rect width='100%' height='100%' filter='url(%23m)'/></svg>");
+  --paper-grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='g' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='0.62' numOctaves='3' seed='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.15  0 0 0 0 0.13  0.5 0 0 0 -0.2'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>");
+  --paper-mottle: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='420'><filter id='m' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='0.008 0.012' numOctaves='3' seed='9' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.3  0 0 0 0 0.25  0 0 0 0 0.18  0.55 0 0 0 -0.22'/></filter><rect width='100%' height='100%' filter='url(%23m)'/></svg>");
   --paper-tex: var(--paper-grain), var(--paper-mottle);
-  --paper-tex-size: 200px 200px, 420px 420px;
+  --paper-tex-size: 260px 260px, 560px 560px;
   /* light fibre for dark card (use with blend mode screen) */
-  --paper-grain-lt: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='l' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' seed='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.9  0 0 0 0 0.9  0 0 0 0 0.9  1.6 0 0 0 -0.68'/></filter><rect width='100%' height='100%' filter='url(%23l)'/></svg>");
+  --paper-grain-lt: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='l' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='0.62' numOctaves='3' seed='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.9  0 0 0 0 0.9  0 0 0 0 0.9  0.7 0 0 0 -0.3'/></filter><rect width='100%' height='100%' filter='url(%23l)'/></svg>");
 
   /* manila tag, twine, text-safe accent on grained paper */
   --c-manila: #ecdbb0;

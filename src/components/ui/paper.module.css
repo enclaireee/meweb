@@ -20,9 +20,10 @@
 
 .btn {
   background-color: var(--c-ink);
-  background-image: var(--paper-grain-lt);
-  background-size: 200px 200px;
-  background-blend-mode: screen;
+  /* flat ink with a breath of top light: the light fibre read as static noise at 2x */
+  background-image: linear-gradient(to bottom, rgb(255 255 255 / 0.06), transparent 70%);
+  background-size: auto;
+  background-blend-mode: normal;
   color: var(--c-paper);
 }
 

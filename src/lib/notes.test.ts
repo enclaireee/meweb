@@ -13,6 +13,6 @@ describe("pieces", () => {
 
   it("phones get one piece per stop", () => {
     for (const s of stops) expect(pieceKinds(s, true).length, `stop ${s.i}`).toBeLessThanOrEqual(1);
-    expect(pieceKinds(stops[3]!, true)).toEqual(["letter"]);
+    expect(pieceKinds(stops[3]!, true)).toEqual(["pier"]);
   });
 });

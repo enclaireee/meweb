@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from "react";
+import { useEffect, type CSSProperties, type ReactNode } from "react";
 import { awards, copy, person, projects, roles, skills, type Stop } from "@/content/site";
 import { pieceKinds, type PieceKind } from "@/lib/notes";
 
@@ -21,6 +21,9 @@ const MID = END[1] / 2 + 2 * 50; // the quadratic's control y: a 50-unit sag
 const TWINE = `M0 0Q${END[0] / 2} ${MID} ${END[0]} ${END[1]}`;
 /** Where each cord meets the twine (x), and how far it drops: two tiers, the low one below the high tags, so a tag never meets its neighbours'.
  * ponytail: x is fitted to 1024px, the narrowest desktop frame (clear of the sign, inside the frame's right edge). */
+/** The lighthouse pier's posts, art units from the boat: hero, contact, email, LinkedIn, GitHub. Mirrored in art/stops/stop-7.ts (PIER). */
+const PIER = [272, 490, 632, 750, 868];
+const POP = "pier-mail";
 const LANTERNS = ([[41, 18], [95, 196], [185, 14], [275, 206], [329, 20]] as const).map(([x, drop]) => {
   const t = x / END[0];
   return [x, 2 * t * (1 - t) * MID + t * t * END[1], drop] as const;
@@ -207,56 +210,77 @@ function body(stop: Stop, kind: Kind, made: (n: number) => void, flow = false): 
           ))}
         </ul>
       );
-    case "letter":
+    case "pier": {
+      // ponytail: boards sit on the art's posts by the same numbers (PIER); phones stack them instead (CSS)
+      const at = (n: number, w: number) => ({ "--px": PIER[n], "--pw": w, "--pi": n }) as CSSProperties;
+      const sheet = <span className={`${paper.sheet} ${paper.eyes}`} aria-hidden="true" />;
       return (
-        <>
-          <span className={styles.stamp} aria-hidden="true">
-            <svg viewBox="0 0 40 48" focusable="false">
-              <path className={styles.stampSky} d="M0 0h40v48H0z" />
-              <path className={styles.stampSun} d="M6 33a9 9 0 0 1 18 0z" />
-              <path className={styles.stampTower} d="M24 40l2.5-24h5L34 40zM25.5 12h9v4h-9zM27 8l3-3 3 3z" />
-              <path className={styles.stampSea} d="M0 38q5-3 10 0t10 0 10 0 10 0v10H0z" />
-            </svg>
-          </span>
-          <p className={styles.postmark}>
-            <span>{person.location.split(", ").slice(0, 2).join(" · ")}</span>
-          </p>
-          <p className={styles.kicker}>{stop.kicker}</p>
-          <h2 id={`note-${stop.id}-title`} className={styles.letterHead}>
-            {copy.contactHead.split("*").map((t, n) => (n % 2 ? <em key={n}>{t}</em> : t))}
-          </h2>
-          <p className={styles.lede}>{copy.contactLine}</p>
-          <div className={styles.cta}>
-            <a className={styles.send} href={`mailto:${person.email}`}>
+        <div className={styles.pier}>
+          <div className={`${styles.post} ${styles.hero}`} style={at(0, 264)}>
+            <div className={styles.board} data-v={0}>
+              {sheet}
+              <span className={styles.stamp} aria-hidden="true">
+                <svg viewBox="0 0 40 48" focusable="false">
+                  <path className={styles.stampSky} d="M0 0h40v48H0z" />
+                  <path className={styles.stampSun} d="M6 33a9 9 0 0 1 18 0z" />
+                  <path className={styles.stampTower} d="M24 40l2.5-24h5L34 40zM25.5 12h9v4h-9zM27 8l3-3 3 3z" />
+                  <path className={styles.stampSea} d="M0 38q5-3 10 0t10 0 10 0 10 0v10H0z" />
+                </svg>
+              </span>
+              <p className={styles.kicker}>{stop.kicker}</p>
+              <h2 id={`note-${stop.id}-title`} className={styles.head}>
+                {copy.contactHead.split("*").map((t, n) => (n % 2 ? <em key={n}>{t}</em> : t))}
+              </h2>
+              {flow && <p className={styles.lede}>{copy.contactLine}</p>}
+            </div>
+            <p className={styles.nameplate} data-v={2}>
+              <span className={paper.sheet} aria-hidden="true" />
+              <span aria-hidden="true">— </span>
+              {copy.signoff}
+            </p>
+          </div>
+          {!flow && (
+            <div className={styles.post} style={at(1, 150)}>
+              <div className={styles.board} data-v={1}>
+                {sheet}
+                <p className={styles.lede}>{copy.contactLine}</p>
+              </div>
+            </div>
+          )}
+          <div className={styles.post} style={at(2, 96)}>
+            <button type="button" className={`${styles.board} ${styles.link} ${styles.mail}`} data-v={2} popoverTarget={POP}>
+              {sheet}
               <Glyph d={ENVELOPE} />
-              <span>{person.email}</span>
+              Email
+            </button>
+            <div id={POP} popover="auto" role="dialog" aria-label="Email" className={styles.pop}>
+              <span className={paper.sheet} aria-hidden="true" />
+              <a className={styles.send} href={`mailto:${person.email}`}>
+                <Glyph d={ENVELOPE} />
+                <span>{person.email}</span>
+              </a>
+              <CopyEmail />
+            </div>
+          </div>
+          {person.linkedin && (
+            <div className={styles.post} style={at(3, 96)}>
+              <a className={`${styles.board} ${styles.link}`} data-v={0} href={person.linkedin} target="_blank" rel="noopener noreferrer">
+                {sheet}
+                <Glyph d={LINKEDIN} fill />
+                LinkedIn
+              </a>
+            </div>
+          )}
+          <div className={styles.post} style={at(4, 96)}>
+            <a className={`${styles.board} ${styles.link}`} data-v={1} href={person.github} target="_blank" rel="noopener noreferrer">
+              {sheet}
+              <Glyph d={GITHUB} fill />
+              GitHub
             </a>
           </div>
-          <ul className={styles.elsewhere}>
-            <li>
-              <CopyEmail />
-            </li>
-            {person.linkedin && (
-              <li>
-                <a className={styles.ext} href={person.linkedin} target="_blank" rel="noopener noreferrer">
-                  <Glyph d={LINKEDIN} fill />
-                  LinkedIn
-                </a>
-              </li>
-            )}
-            <li>
-              <a className={styles.ext} href={person.github} target="_blank" rel="noopener noreferrer">
-                <Glyph d={GITHUB} fill />
-                GitHub
-              </a>
-            </li>
-          </ul>
-          <p className={styles.sign}>
-            <span aria-hidden="true">— </span>
-            {copy.signoff}
-          </p>
-        </>
+        </div>
       );
+    }
   }
 }
 
@@ -274,8 +298,6 @@ const Glyph = ({ d, fill = false }: { d: string; fill?: boolean }) => (
 const noop = () => {};
 /** Pieces that hang from a beam or rope by two cords. */
 const HANGS = new Set<string>(["sign"]);
-/** Pieces that are one sheet of paper on a wrapper; the rest (lanterns, tags, props) draw their own. */
-const SHEET = new Set<string>(["letter"]);
 
 function Mat({ cls, v, sheet, eyes, children }: { cls?: string; v: number; sheet: boolean; eyes?: boolean; children: ReactNode }) {
   return (
@@ -302,6 +324,11 @@ export function Notes({
   /** A lantern was picked: dive to that project. */
   made?: (n: number) => void;
 }) {
+  // a popover lives in the top layer, past `inert`: close the email card when the boat leaves the pier
+  const pier = stop.card.layout === "letter";
+  useEffect(() => {
+    if (pier && !on) document.getElementById(POP)?.hidePopover();
+  }, [pier, on]);
   return (
     <section
       className={`${flow ? styles.strip : styles.set} ${paper.skin}`}
@@ -310,8 +337,8 @@ export function Notes({
       inert={!on}
       aria-labelledby={`note-${stop.id}-title`}
     >
-      {/* the lighthouse's beam, laid across the letter (desktop: it needs the scene's lamp) */}
-      {!flow && stop.card.layout === "letter" && <i className={styles.beam} aria-hidden="true" />}
+      {/* the lighthouse's beam, come to rest on the hero board (desktop: it needs the scene's lamp) */}
+      {!flow && pier && <i className={styles.beam} aria-hidden="true" />}
       {pieceKinds(stop, flow).map((kind, n) => {
         const [x, y, r] = stop.spots[n] ?? [0, 0, 0];
         return (
@@ -334,7 +361,7 @@ export function Notes({
                 )}
               </div>
             ) : (
-              <Mat v={stop.i + n} sheet={SHEET.has(kind)}>
+              <Mat v={stop.i + n} sheet={false}>
                 {body(stop, kind, made, flow)}
               </Mat>
             )}

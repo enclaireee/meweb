@@ -45,6 +45,13 @@
   right: 0;
   top: var(--top);
   height: calc(1000 * var(--k));
+  pointer-events: none;
+}
+/* The next stop's gradients, cross-faded by opacity: one compositor property per frame instead of a repainted
+   full-screen three-gradient background. */
+.skyNext {
+  opacity: 0;
+  will-change: opacity; /* keep the cross-fade on the compositor: no full-screen gradient repaint per frame */
 }
 
 /* Each layer sits at depth z = 600·(s-1) and is pre-scaled by (2000 - z) / 2000 about the perspective origin, so with a
@@ -100,8 +107,9 @@
 }
 .ff {
   position: absolute;
-  left: calc(var(--x) * var(--k));
-  top: calc(var(--y) * var(--k));
+  /* fireflies ride a viewport-sized plane, so their x is relative to the anchor (see World.tsx) */
+  left: calc(var(--anchor) + var(--x) * var(--k));
+  top: calc(var(--top) + var(--y) * var(--k));
   width: calc(var(--size) * var(--k) * 4);
   aspect-ratio: 1;
   margin: calc(var(--size) * var(--k) * -2);
@@ -483,10 +491,12 @@
   }
 }
 
-/* The main river waits under the projects index: kept mounted, not painted once the sheet has slid over it. */
+/* The main river waits under the projects index. Kept painted (opacity, not visibility): hiding it released the
+   compositor's tiles, and surfacing re-rastered every layer — the flash on the way back. */
 .stage[data-away] {
-  visibility: hidden;
-  transition: visibility 0s 620ms;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0s 620ms;
 }
 
 /* Live region: visually hidden. */
@@ -538,8 +548,10 @@
 .tide i {
   position: absolute;
   inset: -14px 0;
-  filter: drop-shadow(0 -4px 8px rgb(2 5 12 / 0.45)) drop-shadow(0 4px 8px rgb(2 5 12 / 0.45));
+  /* no drop-shadow filter: a filter on a full-screen animated layer re-rastered four 2-3 MPx surfaces every frame.
+     The edge shade is painted into the paper instead (::before), so the sweep is a pure compositor translate. */
   animation: tide-up 1400ms cubic-bezier(0.55, 0, 0.35, 1) calc(var(--i) * 80ms) both;
+  will-change: transform, translate;
 }
 .tide[data-dir="down"] i {
   animation-name: tide-down;
@@ -549,6 +561,8 @@
   position: absolute;
   inset: 0;
   background:
+    linear-gradient(to bottom, rgb(2 5 12 / 0.5), transparent 16px) top / 100% 16px no-repeat,
+    linear-gradient(to top, rgb(2 5 12 / 0.45), transparent 16px) bottom / 100% 16px no-repeat,
     radial-gradient(120% 60% at 50% 0%, rgb(255 255 255 / 0.07), transparent 60%),
     var(--w);
   --dx: calc(var(--i) * 71px);

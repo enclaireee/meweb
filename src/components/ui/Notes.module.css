@@ -280,8 +280,8 @@
   color: var(--ramp-1);
   text-align: center;
   font-weight: 800;
-  font-size: 9.5px;
-  line-height: 1.2;
+  font-size: 11px;
+  line-height: 1.15;
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
@@ -548,21 +548,21 @@
   display: grid;
   align-content: start;
   gap: 2px;
-  min-height: 64px;
-  padding: 20px var(--sp-2) var(--sp-2);
+  min-height: 70px;
+  padding: 22px var(--sp-2) var(--sp-2);
   text-align: center;
 }
 .tag > .sheet {
   clip-path: polygon(13px 0, calc(100% - 15px) 1px, 100% 14px, 99.5% 100%, 55% 99%, 0.5% 100%, 0 15px);
 }
 .wRole {
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 700;
   line-height: 1.25;
   overflow-wrap: anywhere;
 }
 .wDates {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ink-soft);
 }
 
@@ -701,85 +701,171 @@
   translate: 0 4px;
 }
 
-/* ---- The lighthouse letter: the contact page. One big sheet on the morning sea, the beam laid across it. ---- */
-.piece[data-kind="letter"] {
-  --w: clamp(380px, calc(var(--k) * 560), 500px);
-  --nz-l: var(--nz, 1);
-  /* fine fibre only (no mottle: at this size it reads as stains), lit warm from the lamp's side */
-  --sheet-tex: var(--paper-grain), linear-gradient(transparent, transparent);
-  --sheet-tex-size: 200px 200px, auto;
-  --light: rgb(255 214 160 / 0.5);
+/* ---- The lighthouse pier: the contact page as a noticeboard. Boards nailed to the art's posts (--px: art units from
+   the boat, PIER in Notes.tsx = art/stops/stop-7.ts), every top on one line under the rope, two sizes only, read from
+   the boat toward the tower. Everything is in art units (--u), so the boards stay on their posts at any scale. ---- */
+.piece[data-kind="pier"] {
+  --w: 0px;
+  --tx: 0px;
+  --ty: 0px;
+  --u: var(--k);
 }
-.piece[data-kind="letter"] .mat {
-  --pad: calc(28px * var(--nz-l)) calc(30px * var(--nz-l)) calc(20px * var(--nz-l));
-  --eye-y: 16px;
-  gap: 0;
+.piece[data-kind="pier"] .mat {
+  display: block;
+  padding: 0;
 }
-/* ruled writing paper, faint, under the words */
-.piece[data-kind="letter"] .mat::before {
-  content: "";
+.post {
   position: absolute;
-  inset: calc(96px * var(--nz-l)) 28px 22px;
-  z-index: -1;
-  pointer-events: none;
-  background: repeating-linear-gradient(transparent 0 25px, rgb(26 31 43 / 0.06) 25px 26px);
-  mask-image: linear-gradient(transparent, #000 20%, #000 80%, transparent);
+  left: calc(var(--px) * var(--u));
+  top: calc(300 * var(--u));
+  width: calc(var(--pw) * var(--u));
+  translate: -50% 0;
+  display: grid;
+  justify-items: center;
+  gap: calc(18 * var(--u));
+  transform-origin: 50% 0;
+}
+/* a board: one sheet, a nail where the post is */
+.board {
+  --eye-x: 50%;
+  --eye-y: max(7px, calc(10 * var(--u)));
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  align-content: start;
+  gap: calc(6 * var(--u));
+  width: 100%;
+  padding: calc(22 * var(--u)) calc(12 * var(--u)) calc(14 * var(--u));
+}
+.hero > .board {
+  padding: calc(26 * var(--u)) calc(20 * var(--u)) calc(20 * var(--u));
 }
 .kicker {
-  font-size: calc(11px * var(--nz-l));
+  padding-right: calc(46 * var(--u));
+  font-size: max(9px, calc(11 * var(--u)));
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--ink-soft);
 }
-.letterHead {
-  margin-top: calc(10px * var(--nz-l)) !important;
-  max-width: 13em;
+.head {
   font-family: var(--ff-display);
   font-variation-settings: "SOFT" 100, "WONK" 0;
   font-weight: 600;
-  font-size: calc(32px * var(--nz-l));
+  font-size: max(16px, calc(27 * var(--u)));
   line-height: 1.08;
   letter-spacing: -0.02em;
   text-wrap: balance;
 }
-/* the first lines step around the stamp and postmark (a float, so the rest of the head keeps the full width) */
-.letterHead::before {
-  content: "";
-  float: right;
-  width: calc(100px * var(--nz-l));
-  height: 1.6em;
-}
 /* the lit words, as on the landing: italic lantern paper, a glow behind */
-.letterHead em {
+.head em {
   font-style: italic;
   color: var(--c-accent);
   text-shadow: 0 0 0.5em rgb(255 180 84 / 0.55);
 }
 .lede {
-  margin-top: calc(12px * var(--nz-l)) !important;
-  max-width: 36ch;
-  font-size: calc(15px * var(--nz-l));
-  line-height: 1.5;
+  font-size: max(11px, calc(14 * var(--u)));
+  line-height: 1.45;
   color: var(--ink-soft);
+  text-wrap: pretty;
+}
+/* the signature, on its own scrap nailed lower down the hero's post */
+.nameplate {
+  position: relative;
+  isolation: isolate;
+  justify-self: end;
+  padding: calc(4 * var(--u)) calc(14 * var(--u)) calc(5 * var(--u));
+  font-family: var(--ff-display);
+  font-style: italic;
+  font-size: max(13px, calc(20 * var(--u)));
+  color: var(--accent);
+  rotate: -3deg;
 }
 
-/* The one thing to press: the address itself, cut from lantern paper and lit from inside. */
-.cta {
+/* the small signs: a glyph and a word, each one a link (the email one opens its card) */
+.link {
+  justify-items: center;
+  gap: calc(4 * var(--u));
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: max(11px, calc(13 * var(--u)));
+  font-weight: 700;
+  color: var(--ink);
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: translate var(--dur-hover) var(--ease-paper);
+}
+.link svg {
+  width: max(16px, calc(22 * var(--u)));
+  height: auto;
+  color: var(--accent);
+}
+/* the one to press first: cut from lantern paper, lit from inside */
+.mail {
+  --sheet: var(--c-lantern);
+  --light: rgb(255 244 214 / 0.75);
+  --sheet-blend: soft-light, normal;
+  anchor-name: --pier-mail;
+  color: #4a1f06;
+  filter: drop-shadow(0 0 12px rgb(255 180 84 / 0.5));
+}
+.mail svg {
+  color: inherit;
+}
+.link:focus-visible {
+  outline: 2px solid var(--c-focus-ink);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px var(--c-paper); /* a light ring under the dark one, so it reads on the sea */
+}
+@media (hover: hover) {
+  .link:hover {
+    translate: 0 -2px;
+  }
+}
+.link:active {
+  translate: 0 1px;
+}
+
+/* The email card: a native popover (Esc and outside clicks close it), tucked over its sign where anchors work,
+   centred on screen where they don't. */
+.pop {
+  width: max-content;
+  max-width: min(340px, calc(100vw - 32px));
+  padding: 18px 16px 16px;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  overflow: visible;
+  isolation: isolate;
+  filter: var(--sh-paper);
+}
+.pop:popover-open {
   display: grid;
-  margin-top: calc(20px * var(--nz-l));
+  gap: 10px;
+  justify-items: start;
+  animation: rise 260ms var(--ease-paper) both;
+}
+@supports (position-area: top) {
+  .pop {
+    position-anchor: --pier-mail;
+    position-area: top;
+    position-try-fallbacks: flip-block;
+    inset: auto;
+    margin: 0 16px 12px; /* the sides keep a gutter when the card is pushed against the screen edge */
+  }
 }
 .send {
-  position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 10px;
-  min-height: 52px;
-  padding: 0 22px 0 18px;
+  min-height: 48px;
+  padding: 0 18px 0 14px;
   border-radius: 3px;
   font-weight: 700;
-  font-size: calc(15px * var(--nz-l));
+  font-size: 15px;
   color: #4a1f06;
   text-decoration: none;
   overflow-wrap: anywhere;
@@ -789,8 +875,7 @@
   background-blend-mode: soft-light, normal;
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.55),
-    inset 0 -2px 0 rgb(122 52 16 / 0.35),
-    0 0 0 0 rgb(255 180 84 / 0);
+    inset 0 -2px 0 rgb(122 52 16 / 0.35);
   filter: drop-shadow(1px 2px 0 rgb(3 6 12 / 0.35)) drop-shadow(0 0 14px rgb(255 180 84 / 0.45));
   transition:
     translate var(--dur-hover) var(--ease-paper),
@@ -802,6 +887,7 @@
 .send:focus-visible {
   outline: 2px solid var(--c-focus-ink);
   outline-offset: 3px;
+  filter: drop-shadow(1px 3px 0 rgb(3 6 12 / 0.35)) drop-shadow(0 0 22px rgb(255 180 84 / 0.75));
 }
 @media (hover: hover) {
   .send:hover {
@@ -809,84 +895,17 @@
     filter: drop-shadow(1px 3px 0 rgb(3 6 12 / 0.35)) drop-shadow(0 0 22px rgb(255 180 84 / 0.75));
   }
 }
-.send:focus-visible {
-  filter: drop-shadow(1px 3px 0 rgb(3 6 12 / 0.35)) drop-shadow(0 0 22px rgb(255 180 84 / 0.75));
-}
 .send:active {
   translate: 0 1px;
 }
 
-.elsewhere {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--sp-2);
-  margin-top: calc(16px * var(--nz-l)) !important;
-}
-.elsewhere li {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-/* Copy (CopyEmail's button) wears the same quiet outline as the links */
-.elsewhere button,
-.ext {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 40px;
-  padding: 0 14px;
-  border-radius: 3px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ink);
-  text-decoration: none;
-  box-shadow: inset 0 0 0 1.5px var(--rule);
-  transition:
-    background-color var(--dur-hover) linear,
-    translate var(--dur-hover) var(--ease-paper);
-}
-.elsewhere button {
-  border: 0;
-  background: none;
-  filter: none;
-  font-family: inherit;
-  cursor: pointer;
-}
-.elsewhere li > span[aria-hidden] {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--accent);
-}
-.elsewhere button:focus-visible,
-.ext:focus-visible {
-  outline: 2px solid var(--c-focus-ink);
-  outline-offset: 2px;
-}
-@media (hover: hover) {
-  .elsewhere button:hover,
-  .ext:hover {
-    background-color: var(--chip);
-    translate: 0 -1px;
-  }
-}
-.sign {
-  margin-top: calc(18px * var(--nz-l)) !important;
-  justify-self: end;
-  font-family: var(--ff-display);
-  font-style: italic;
-  font-size: calc(22px * var(--nz-l));
-  color: var(--accent);
-  rotate: -4deg;
-}
-
-/* The stamp: a tiny cut-paper lighthouse at sunrise, perforated, and the postmark struck half over it. */
+/* The stamp: a tiny cut-paper lighthouse at sunrise, perforated, in the hero's corner. */
 .stamp {
-  position: absolute !important;
-  top: 16px;
-  right: 18px;
-  width: calc(48px * var(--nz-l));
-  padding: 4px;
+  position: absolute;
+  top: calc(14 * var(--u));
+  right: calc(14 * var(--u));
+  width: max(28px, calc(38 * var(--u)));
+  padding: 3px;
   rotate: 4deg;
   background: radial-gradient(circle, transparent 2.2px, #fbf6ea 2.6px) -3px -3px / 7px 7px;
   filter: drop-shadow(1px 1px 0 rgb(3 6 12 / 0.25));
@@ -907,44 +926,17 @@
 .stampSea {
   fill: #5c7fa3;
 }
-.postmark {
-  position: absolute !important;
-  top: 22px;
-  right: calc(46px * var(--nz-l));
-  display: grid;
-  place-items: center;
-  width: calc(68px * var(--nz-l));
-  aspect-ratio: 1;
-  border-radius: 50%;
-  border: 1.5px solid rgb(110 50 10 / 0.5);
-  box-shadow: inset 0 0 0 4px transparent, inset 0 0 0 5px rgb(110 50 10 / 0.35);
-  rotate: -14deg;
-  pointer-events: none;
-}
-.postmark span {
-  max-width: 5em;
-  font-size: calc(9px * var(--nz-l));
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: 0.12em;
-  text-align: center;
-  text-transform: uppercase;
-  color: rgb(110 50 10 / 0.7);
-}
-.kicker {
-  padding-right: calc(96px * var(--nz-l));
-}
 
-/* The beam: a soft gold wedge from the lamp (art units from the stop's boat, as the spots), swung onto the letter. */
+/* The beam: a soft gold wedge from the lamp (art units from the stop's boat, as the spots), swung onto the hero. */
 .beam {
   position: absolute;
   left: calc(var(--bx, 1040) * var(--k));
   top: calc(var(--by, 108) * var(--k));
-  width: calc(var(--bl, 700) * var(--k));
+  width: calc(var(--bl, 820) * var(--k));
   height: calc(var(--bh, 300) * var(--k));
   translate: -100% -50%;
   transform-origin: 100% 50%;
-  rotate: var(--ba, -37deg);
+  rotate: var(--ba, -21deg);
   pointer-events: none;
   clip-path: polygon(0 0, 100% 49%, 100% 51%, 0 100%);
   background: linear-gradient(to left, rgb(255 226 168 / 0.6), rgb(242 199 122 / 0.22) 55%, transparent);
@@ -960,7 +952,7 @@
 }
 @keyframes sweep {
   0% {
-    rotate: calc(var(--ba, -37deg) + 34deg);
+    rotate: calc(var(--ba, -21deg) + 34deg);
     opacity: 0;
   }
   20% {
@@ -980,11 +972,12 @@
     drop 700ms var(--ease-paper) both,
     sway 6s ease-in-out 800ms infinite;
 }
-[data-on="true"] .piece[data-kind="letter"] .mat {
-  animation: rise 700ms var(--ease-paper) 120ms both;
+/* the boards swing in on their nails one by one, boat to tower; the stamp lands last */
+[data-on="true"] .post {
+  animation: drop 700ms var(--ease-paper) calc(120ms + var(--pi) * 110ms) both;
 }
-[data-on="true"] :is(.stamp, .postmark) {
-  animation: stampOn 380ms cubic-bezier(0.5, 0, 0.6, 1.6) 760ms both;
+[data-on="true"] .stamp {
+  animation: stampOn 380ms cubic-bezier(0.5, 0, 0.6, 1.6) 900ms both;
 }
 [data-on="true"] .plankMat {
   animation: rise 500ms var(--ease-paper) 120ms both;
@@ -1240,46 +1233,35 @@
   padding-top: var(--sp-3);
   background-image: none;
 }
-/* the letter is the whole page here: let it take the sky too, so it reads in one go */
-.strip:has(> .piece[data-kind="letter"]) {
+/* the pier is the whole page here: the hero (with the contact line folded in) on top, the link signs in a row under it */
+.strip:has(> .piece[data-kind="pier"]) {
   --strip-max: 66%;
 }
-.strip > .piece[data-kind="letter"] {
+.strip > .piece[data-kind="pier"] {
   --w: 440px;
-  --nz-l: 0.82;
+  --u: 0.82px;
 }
-.strip .piece[data-kind="letter"] .mat {
-  --pad: 20px 14px 14px;
+.strip .pier {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3) var(--sp-2);
 }
-.strip .letterHead {
-  font-size: clamp(22px, 7.2vw, 26px);
+.strip .post {
+  position: relative;
+  left: auto;
+  top: auto;
+  translate: none;
+  flex: 1 1 0;
+  width: auto;
+  min-width: 0;
+  gap: var(--sp-2);
 }
-.strip .letterHead::before {
-  width: 58px;
+.strip .hero {
+  flex-basis: 100%;
 }
-.strip .kicker {
-  padding-right: 64px;
-}
-.strip .send {
-  padding: 0 10px;
-  gap: 8px;
-  font-size: 13px;
-  white-space: nowrap;
-}
-/* the address must read in one line: drop the envelope before it would break */
-@media (max-width: 359px) {
-  .strip .send svg {
-    display: none;
-  }
-}
-/* the three chips share one row down to 320 */
-.strip .elsewhere {
-  gap: 6px;
-}
-.strip :is(.elsewhere button, .ext) {
-  gap: 6px;
-  padding: 0 9px;
-  font-size: 12px;
+.strip .link {
+  min-height: 64px;
+  align-content: center;
 }
 .strip .piece[data-kind="gauge"] .mat {
   margin: 9px;

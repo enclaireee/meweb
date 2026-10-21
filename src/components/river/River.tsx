@@ -2,7 +2,7 @@
 // The river: navigation state, the one rAF loop (glide + pointer smoothing), input, paper notes and chrome.
 // The projects index (Projects.tsx) is a sheet over it, with its own history entry (#made-N).
 // Per frame it only writes CSS variables; React renders on phase changes.
-import { useCallback, useEffect, useReducer, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useReducer, useRef, useState, type CSSProperties, type RefCallback } from "react";
 import { copy, dials, stops } from "@/content/site";
 import { camAt, camCss } from "@/lib/camera";
 import { layerFx } from "@/lib/fx";
@@ -29,40 +29,29 @@ const TIDE_MS = 1640;
 const tilesOf = (m: { layers: { tiles: { f: string }[] }[] }, dir: string) =>
   m.layers.flatMap((l) => l.tiles.map((t) => `/art/${dir}/${t.f}`));
 const MAIN_TILES = tilesOf(manifest, "desktop");
-/** Load and decode tiles before their world mounts, so no layer's content changes after it is on screen. Reports the decoded ratio. */
+/** Warm the HTTP cache for every tile before the world mounts, without decoding it.
+    `img.decode()` on all 68 tiles held ~400 MB of full-size bitmaps (and took seconds on a phone); the browser now
+    decodes each tile once, at the size it is actually drawn, as its layer paints behind the intro. */
 const preload = (tiles: string[], onProgress: (r: number) => void = () => {}) => {
   let done = 0;
-  let raf = 0;
-  let timer = 0;
-  const report = () => {
-    raf = 0;
-    onProgress(done / tiles.length);
-  };
+  const report = () => onProgress(done / tiles.length);
   return Promise.race([
     Promise.all(
-      tiles.map((src) => {
-        const img = new Image();
-        img.src = src;
-        return img
-          .decode()
+      tiles.map((src) =>
+        fetch(src, { cache: "force-cache" })
+          .then((r) => r.blob())
           .catch(() => {})
           .then(() => {
             done++;
-            if (done === tiles.length) {
-              cancelAnimationFrame(raf);
-              onProgress(1);
-            } else if (!raf) {
-              raf = requestAnimationFrame(report);
-            }
-          });
-      }),
+            report();
+          }),
+      ),
     ),
     new Promise((r) => {
-      timer = window.setTimeout(r, 8000); // ponytail: slow network cap; late tiles may still pop in
+      window.setTimeout(r, 8000); // ponytail: slow network cap; late tiles may still pop in
     }),
   ]).finally(() => {
-    clearTimeout(timer);
-    cancelAnimationFrame(raf);
+    onProgress(1);
   });
 };
 
@@ -101,7 +90,10 @@ export function River() {
   const [loaderGone, setLoaderGone] = useState(false);
 
   const stageRef = useRef<HTMLDivElement>(null);
-  const skyRef = useRef<HTMLDivElement>(null);
+  const skyARef = useRef<HTMLDivElement>(null);
+  const skyBRef = useRef<HTMLDivElement>(null);
+  const skyPainted = useRef(-1); // which stop's gradients are painted (they only change when the integer stop does)
+  const fxCbs = useRef(new Map<string, RefCallback<HTMLDivElement>>());
   const fxEls = useRef(new Map<string, { el: HTMLDivElement; fx: string; op: string; ty: string }>());
   const wheel = useRef(createWheelGate());
   const startle = useRef(0);
@@ -132,6 +124,20 @@ export function River() {
     stageRef.current?.style.setProperty("--cam", camCss(c));
   }, []);
 
+  /** Sky: two static gradients; only the upper one's opacity animates while gliding, so no full-screen repaint per
+      frame. Gradients are repainted only when the integer stop changes (the swap is invisible: A becomes the old B). */
+  const paintSky = useCallback((p: number) => {
+    if (!skyARef.current || !skyBRef.current) return; // the world mounts after the first applyPos
+    const n = Math.max(0, Math.min(nav.LAST, Math.floor(p)));
+    if (n !== skyPainted.current) {
+      skyPainted.current = n;
+      if (skyARef.current) skyARef.current.style.background = skyBackground(skyAt(n));
+      if (skyBRef.current) skyBRef.current.style.background = skyBackground(skyAt(Math.min(nav.LAST, n + 1)));
+    }
+    const f = Math.max(0, Math.min(1, p - n));
+    if (skyBRef.current) skyBRef.current.style.opacity = f.toFixed(3);
+  }, []);
+
   /** Write everything that depends on the fractional stop. */
   const applyPos = useCallback((p: number, skipCam = false) => {
     a.current.pos = p;
@@ -151,9 +157,9 @@ export function River() {
         item.el.style.setProperty("--ty", ty);
       }
     }
-    if (skyRef.current) skyRef.current.style.background = skyBackground(skyAt(p));
+    paintSky(p);
     if (!skipCam) applyCam();
-  }, [applyCam]);
+  }, [applyCam, paintSky]);
 
   // The sky (in World) mounts after the deep link's first applyPos: write it again once it's there.
   const worldUp = L !== null && artReady;
@@ -161,19 +167,25 @@ export function River() {
     if (worldUp) applyPos(a.current.pos, true);
   }, [worldUp, applyPos]);
 
-  const fxRef = useCallback(
-    (id: string, fx: string) => (el: HTMLDivElement | null) => {
-      if (el) {
-        const f = layerFx(fx, a.current.pos);
-        const op = f.opacity.toFixed(3);
-        const ty = f.ty.toFixed(1);
-        el.style.opacity = op;
-        el.style.setProperty("--ty", ty);
-        fxEls.current.set(id, { el, fx, op, ty });
-      } else fxEls.current.delete(id);
-    },
-    [],
-  );
+  // One stable callback per layer id: re-creating them every render made React detach/attach the ref (and remount the
+  // layer's effects) on every state change.
+  const fxRef = useCallback((id: string, fx: string) => {
+    let cb = fxCbs.current.get(id);
+    if (!cb) {
+      cb = (el: HTMLDivElement | null) => {
+        if (el) {
+          const f = layerFx(fx, a.current.pos);
+          const op = f.opacity.toFixed(3);
+          const ty = f.ty.toFixed(1);
+          el.style.opacity = op;
+          el.style.setProperty("--ty", ty);
+          fxEls.current.set(id, { el, fx, op, ty });
+        } else fxEls.current.delete(id);
+      };
+      fxCbs.current.set(id, cb);
+    }
+    return cb;
+  }, []);
 
   // The single rAF loop: runs only while a glide or a pointer follow is in progress.
   const frame = useRef<(now: number) => void>(() => {});
@@ -277,10 +289,20 @@ export function River() {
     };
     mq.addEventListener("change", onMotion);
     const stage = stageRef.current!;
-    const ro = new ResizeObserver(() => {
+    const laid = { k: 0, anchor: 0, top: 0 };
+    let resizeTimer = 0;
+    // Runs on resize, but only commits a new layout when it actually changed (pinch-zoom and 1px URL-bar jitter used
+    // to rebuild every layer's geometry dozens of times a second).
+    const applyLayout = () => {
       const r = stage.getBoundingClientRect();
       a.current.rect = { left: r.left, top: r.top, width: r.width || 1, height: r.height || 1 };
       const lay = computeLayout(innerWidth, innerHeight, { w: r.width, h: r.height });
+      const same =
+        Math.abs(laid.k - lay.k) < 0.002 && Math.abs(laid.anchor - lay.anchor) < 0.5 && Math.abs(laid.top - lay.top) < 0.5;
+      if (same) return;
+      laid.k = lay.k;
+      laid.anchor = lay.anchor;
+      laid.top = lay.top;
       stage.style.setProperty("--k", `${lay.k}px`);
       stage.style.setProperty("--anchor", `${lay.anchor}px`);
       stage.style.setProperty("--top", `${lay.top}px`);
@@ -292,6 +314,14 @@ export function River() {
       a.current.compact = lay.compact;
       applyCam();
       setL(lay);
+    };
+    applyLayout();
+    const ro = new ResizeObserver(() => {
+      // Keep the pointer rect fresh at once; debounce the layout itself.
+      const r = stage.getBoundingClientRect();
+      a.current.rect = { left: r.left, top: r.top, width: r.width || 1, height: r.height || 1 };
+      clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(applyLayout, 120);
     });
     ro.observe(stage);
     const onVis = () => document.documentElement.toggleAttribute("data-paused", document.hidden);
@@ -308,6 +338,7 @@ export function River() {
     window.addEventListener("hashchange", onHash);
     return () => {
       alive = false;
+      clearTimeout(resizeTimer);
       mq.removeEventListener("change", onMotion);
       ro.disconnect();
       document.removeEventListener("visibilitychange", onVis);
@@ -473,7 +504,7 @@ export function River() {
         >
           {L && artReady && (
             <>
-              <World L={L} ffActive={st.to} travellerState={travellerState} fxRef={fxRef} skyRef={skyRef} lifeStop={st.stop} lifeOn={!moving} intro={intro} />
+              <World L={L} ffActive={st.to} travellerState={travellerState} fxRef={fxRef} skyARef={skyARef} skyBRef={skyBRef} lifeStop={st.stop} lifeOn={!moving} intro={intro} />
               <div className={s.tags} id="river" tabIndex={-1}>
                 {L.compact ? (
                   st.stop === 0 ? (

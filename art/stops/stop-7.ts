@@ -1,11 +1,15 @@
 // Stop 7, The Lighthouse (morning): open sea, a rocky point, a banded tower with its lamp still lit.
-import { C, arc, darken, ellipse, glow, lighten, mix, poly, sheet, type ArtModule, type Piece, type Pt } from "../helpers";
+import { C, arc, darken, ellipse, glow, lighten, mix, poly, rect, sheet, type ArtModule, type Piece, type Pt } from "../helpers";
 import { bank, blob, frame, quad, ribbon, tone } from "./shared-b";
 
 const I = 9;
 /** Morning tint baked in: the night ramp warmed toward sunlit paper (no runtime filter). */
 const morn = (id: string, k = 0) => lighten(mix(tone(id, I, k), "#E8C79E", 0.16), 0.05);
-const TOWER_U = 999; // screen u of the tower axis on layer 07: right of the letter, so its beam can reach it
+const TOWER_U = 999; // screen u of the tower axis on layer 07: right of the pier, so its beam can reach the hero board
+/** Pier posts, screen u from the boat: hero, contact, email, LinkedIn, GitHub. Mirrored in src/components/ui/Notes.tsx (PIER). */
+const PIER = [272, 490, 632, 750, 868];
+const PIER_TOP = 262; // post caps
+const PIER_ROPE_Y = 274;
 
 /** Pale cut-paper foam: a curl of a ribbon, slightly translucent. */
 const foam = (x: number, y: number, w: number, r: Parameters<typeof bank>[4]): Piece =>
@@ -21,8 +25,8 @@ const art: ArtModule = {
     out.push(sheet([...bank(X(-100), X(0), 0, 0, r, 0).slice(0, 0), [X(-200), 640], [X(-120), 590], [X(-60), 584], [X(10), 596], [X(40), 640]], fill, r)); // skerry
     // the point: a ridge of rock rising to the tower, stepping down to the sea on both sides
     const px = X(TOWER_U);
-    // the low sun, just clear of the far peaks on the left: the letter takes the middle, the tower the right
-    // (the beam itself is live, in Notes, so it can come to rest on the letter)
+    // the low sun, just clear of the far peaks on the left: the pier takes the middle, the tower the right
+    // (the beam itself is live, in Notes, so it can come to rest on the hero board)
     const sx = X(-260), sy = 226;
     out.push(glow(sx, sy, 300, C.dawnGold, 0.45), glow(sx, sy, 130, C.lanternCore, 0.6));
     out.push(sheet(ellipse(sx, sy, 54, 54, 20), "#FBD49A", r, { rim: false }));
@@ -46,16 +50,30 @@ const art: ArtModule = {
     return out;
   },
 
-  // Action: the dock, the keeper's base, bollards, ropes. Kept bare: the letter is the thing here.
+  // Action: the pier noticeboard (posts the signs are nailed to, one rope rail along their tops), the keeper's base, bollards.
   "09": (c) => {
     const { lx, x1 } = c;
     const r = c.rng;
     const fill = morn("09");
     const out: Piece[] = [];
-    const dxa = lx + 40;
+    const U = (u: number) => lx - 260 + u; // screen u (art units right of the boat) on this s = 1 layer
+    const dxa = U(130);
     const dxb = Math.min(x1 - 10, lx + 960);
     for (let x = dxa + 14; x < dxb; x += r.range(46, 62)) out.push(sheet([[x - 5, 602], [x + 5, 602], [x + 5, 670], [x - 5, 670]], fill, r));
     out.push(sheet([[dxa, 586], [dxb, 586], [dxb, 604], [dxa, 604]], fill, r));
+    // posts: the board tops share one line below the caps; the rope sags post to post and ties off on the keeper's wall
+    const posts = PIER.map(U);
+    const rope = darken(fill, 0.22);
+    [...posts, U(916)].forEach((x, n, all) => {
+      if (n) {
+        const a = all[n - 1]!;
+        out.push(sheet(ribbon(quad([a, PIER_ROPE_Y], [(a + x) / 2, PIER_ROPE_Y + 30], [x, PIER_ROPE_Y], 10), 4, 4), rope, r, { rim: false }));
+      }
+      if (n === all.length - 1) return;
+      out.push(sheet(rect(x - 7, PIER_TOP, 14, 586 - PIER_TOP), darken(fill, 0.06), r));
+      out.push(sheet([[x - 10, PIER_TOP + 2], [x - 6, PIER_TOP - 8], [x + 6, PIER_TOP - 8], [x + 10, PIER_TOP + 2]], darken(fill, 0.16), r));
+      out.push(sheet(rect(x - 9, PIER_ROPE_Y - 3, 18, 7), rope, r, { rim: false })); // lashing
+    });
     // keeper's stone base under the tower, with a door and a lit window (the traveller waves at it)
     const bx = lx + 380 + TOWER_U - 640;
     out.push(sheet([[bx - 84, 588], [bx + 84, 588], [bx + 66, 500], [bx - 66, 500]], lighten(fill, 0.05), r, { holes: [poly([[bx - 10, 588], [bx + 10, 588], [bx + 10, 546], [bx, 538], [bx - 10, 546]])] }));
@@ -63,7 +81,7 @@ const art: ArtModule = {
     out.push(sheet([[bx + 30, 524], [bx + 44, 524], [bx + 44, 542], [bx + 30, 542]], C.window, r, { rim: false }));
     out.push({ x0: bx, x1: bx + 120, top: true, svg: `<circle cx="${bx + 37}" cy="533" r="30" fill="url(#glow-FFB454)" opacity=".5"/>` });
     // bollards and rope coil
-    for (const dx of [560, 620, 880]) out.push(sheet([[lx + dx - 9, 586], [lx + dx + 9, 586], [lx + dx + 6, 558], [lx + dx - 6, 558]], darken(fill, 0.12), r));
+    for (const dx of [300, 880]) out.push(sheet([[lx + dx - 9, 586], [lx + dx + 9, 586], [lx + dx + 6, 558], [lx + dx - 6, 558]], darken(fill, 0.12), r));
     out.push(sheet(arc(lx + 930, 556, 70, 28, 0, Math.PI, 5), darken(fill, 0.1), r, { rim: false }));
     return out;
   },

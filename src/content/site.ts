@@ -170,7 +170,7 @@ export const stops: Stop[] = [
     place: "The Lighthouse",
     time: "Morning",
     kicker: kick(3, "The Lighthouse"),
-    spots: [[560, 470, -1.5]],
+    spots: [[0, 0, 0]], // the pier: boards place themselves on its posts (Notes.tsx PIER)
     tag: { title: "Say hello", hook: "Morning on the sea, and the lamp is still lit." },
     card: { layout: "letter", title: "Say hello", summary: copy.contactLine },
   },

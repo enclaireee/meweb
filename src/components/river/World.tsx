@@ -38,20 +38,24 @@ const ALL = stops.map((st) => st.i);
 
 function Fireflies({ depth, active, phone, ri }: { depth: 0 | 1 | 2; active: number; phone: boolean; ri: number }) {
   const d = FF[depth];
+  // A viewport-sized plane per depth (the old 13 000-unit wrapper made the compositor hold three enormous textures).
+  // A stop's fireflies sit at their landmark's screen offset, so they are placed relative to it, not to the strip.
   return (
-    <div className={`${s.layer} ${i.rise}`} style={{ "--s": d.s, "--ri": ri } as CSSProperties}>
+    <div className={`${s.plane} ${i.rise}`} style={{ "--ri": ri } as CSSProperties}>
       {ALL.map((stIdx) => {
         const n = Math.ceil(dials[stIdx]!.ff[depth] / (phone ? 2 : 1));
         return (
           <div key={stIdx} className={s.ffSet} data-on={stIdx === active}>
             {Array.from({ length: n }, (_, j) => {
-              const x = 1200 + d.s * stIdx * 1700 + (hash(stIdx, j, depth, 1) * 1900 - 600) * Math.max(1, d.s * 0.8);
+              const spread = Math.max(1, d.s * 0.8);
+              const x = (hash(stIdx, j, depth, 1) * 1900 - 600) * spread;
               const y = d.y[0] + hash(stIdx, j, depth, 2) * (d.y[1] - d.y[0]);
               const size = d.size[0] + hash(stIdx, j, depth, 3) * (d.size[1] - d.size[0]);
               const style = {
                 "--x": x,
                 "--y": y,
                 "--size": size,
+                "--s": d.s,
                 animationDelay: `${-hash(stIdx, j, 4) * 9}s, ${-hash(stIdx, j, 5) * 4}s`,
                 animationDuration: `${7 + hash(stIdx, j, 6) * 5}s, ${2.5 + hash(stIdx, j, 7) * 2}s`,
               } as CSSProperties;
@@ -70,15 +74,16 @@ type Props = {
   travellerState: string;
   /** Collects layer elements that need per-frame fx (opacity/offset by pos). */
   fxRef: (id: string, fx: string) => RefCallback<HTMLDivElement>;
-  /** The CSS sky behind layer 00; River paints it per frame. */
-  skyRef: RefObject<HTMLDivElement | null>;
+  /** The sky behind layer 00: two static gradients, cross-faded by River (skyARef under skyBRef). */
+  skyARef: RefObject<HTMLDivElement | null>;
+  skyBRef: RefObject<HTMLDivElement | null>;
   /** Stop whose ambient life plays, and whether it shows (at rest only). */
   lifeStop: number;
   lifeOn: boolean;
   intro: Intro;
 };
 
-export const World = memo(function World({ L, ffActive, travellerState, fxRef, skyRef, lifeStop, lifeOn, intro }: Props) {
+export const World = memo(function World({ L, ffActive, travellerState, fxRef, skyARef, skyBRef, lifeStop, lifeOn, intro }: Props) {
   const phone = L.profile === "phone";
   const out: React.ReactNode[] = [];
   const worldCls = intro === "wait" ? i.wait : intro === "play" ? i.play : "";
@@ -113,7 +118,8 @@ export const World = memo(function World({ L, ffActive, travellerState, fxRef, s
   }
   return (
     <div className={`${s.world} ${worldCls}`} data-world aria-hidden="true">
-      <div className={s.sky} ref={skyRef} />
+      <div className={s.sky} ref={skyARef} />
+      <div className={`${s.sky} ${s.skyNext}`} ref={skyBRef} />
       {out}
     </div>
   );

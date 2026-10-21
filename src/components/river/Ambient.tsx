@@ -1,5 +1,5 @@
 // Ambient life for the stop you're at: mist, leaves, shooting stars, birds, water glints.
-// (The lighthouse beam is the letter's, in Notes: it comes to rest on it.)
+// (The lighthouse beam is the pier's, in Notes: it comes to rest on the hero board.)
 // Placed in screen units u (art units right of the traveller anchor at rest, art/stops/shared-b.ts), on the camera plane.
 // CSS only; nothing re-renders per frame. Fades out while gliding, off under reduced motion.
 import { memo, type CSSProperties } from "react";
@@ -62,8 +62,10 @@ function Life({ fx, stop, phone }: { fx: Fx; stop: number; phone: boolean }) {
 export const Ambient = memo(function Ambient({ stop, on, phone }: { stop: number; on: boolean; phone: boolean }) {
   const glints = phone ? 6 : 14;
   const span = phone ? [-150, 290] : [-560, 1320];
+  // No key on the group: it stays mounted, so arriving does not re-run its fade or rebuild its layer set. Its
+  // children do change with the stop (new hashes), reusing the same nodes.
   return (
-    <div className={s.ambient} data-on={on} key={stop}>
+    <div className={s.ambient} data-on={on}>
       {LIFE[stop]!.map((fx) => (
         <Life key={fx} fx={fx} stop={stop} phone={phone} />
       ))}

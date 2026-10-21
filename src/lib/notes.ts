@@ -10,11 +10,11 @@ export type PieceKind =
   | "stub" // ticket: tied stub
   | "led" // datasheet: LED readout
   | "windows" // timeline: six lit windows
-  | "letter"; // the lighthouse: one big letter, the contact page
+  | "pier"; // the lighthouse: the contact page as signs nailed along the pier
 
 /** `phone`: one piece per stop, so the strip never covers the scene (the sign carries a short version of the rest). */
 export function pieceKinds({ card }: Stop, phone = false): PieceKind[] {
-  if (card.layout === "letter") return ["letter"];
+  if (card.layout === "letter") return ["pier"];
   if (phone && card.layout !== "cv") return ["sign"];
   switch (card.layout) {
     case "cv":

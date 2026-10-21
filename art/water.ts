@@ -51,15 +51,19 @@ function body(S: Strip, length: number, sun: (x: number) => number = () => 0): P
   const out: Piece[] = [];
   const edge = (x: number) => S.top - S.amp * (0.7 + 0.6 * sm(x, 420)) * Math.sin(Math.PI * ((x / S.per) % 1));
   for (let x = 0; x < length; x += chunk) {
+    // Chunks overlap by ~1 unit so their antialiased vertical edges never leave a hairline seam down the water
+    // (two abutting fills each paint ~50% alpha on the shared edge and the line shows as a lighter column).
+    const x0 = Math.max(0, x - 0.8);
+    const x1 = Math.min(length, x + chunk + step * 1.01 + 0.8);
     const pts: Pt[] = [];
-    for (let xx = x; xx <= x + chunk + step * 1.01; xx += step) pts.push([xx, edge(xx)]);
+    for (let xx = x0; xx <= x1; xx += step) pts.push([xx, edge(xx)]);
     const xe = pts[pts.length - 1]![0];
-    const d = (dy: number) => poly([...pts.map((p) => [p[0], p[1] + dy] as Pt), [xe, S.bottom], [x, S.bottom]]);
+    const d = (dy: number) => poly([...pts.map((p) => [p[0], p[1] + dy] as Pt), [xe, S.bottom], [x0, S.bottom]]);
     // lip is a thin band only, so abutting chunks never show a lighter seam
     const band = poly([...pts, ...pts.map((p) => [p[0], p[1] + S.lipT + 8] as Pt).reverse()]);
     const k = sun(x);
     const warm = (c: string) => (k ? mix(c, "#9CC3D6", k) : c);
-    out.push(raw(x, xe, `<path d="${band}" fill="${warm(S.lip)}"/><path d="${d(S.lipT)}" fill="${warm(S.body)}"/>`));
+    out.push(raw(x0, xe, `<path d="${band}" fill="${warm(S.lip)}"/><path d="${d(S.lipT)}" fill="${warm(S.body)}"/>`));
   }
   return out;
 }
