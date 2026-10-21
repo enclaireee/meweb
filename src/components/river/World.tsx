@@ -41,7 +41,7 @@ function Fireflies({ depth, active, phone, ri }: { depth: 0 | 1 | 2; active: num
   // A viewport-sized plane per depth (the old 13 000-unit wrapper made the compositor hold three enormous textures).
   // A stop's fireflies sit at their landmark's screen offset, so they are placed relative to it, not to the strip.
   return (
-    <div className={`${s.plane} ${i.rise}`} style={{ "--ri": ri } as CSSProperties}>
+    <div className={`${s.plane} ${i.rise}`} data-plane style={{ "--ri": ri } as CSSProperties}>
       {ALL.map((stIdx) => {
         const n = Math.ceil(dials[stIdx]!.ff[depth] / (phone ? 2 : 1));
         return (
@@ -70,6 +70,8 @@ function Fireflies({ depth, active, phone, ri }: { depth: 0 | 1 | 2; active: num
 
 type Props = {
   L: Layout;
+  /** The world element: River scopes the per-frame variables to it and to the layers inside. */
+  rootRef: RefObject<HTMLDivElement | null>;
   ffActive: number;
   travellerState: string;
   /** Collects layer elements that need per-frame fx (opacity/offset by pos). */
@@ -83,7 +85,7 @@ type Props = {
   intro: Intro;
 };
 
-export const World = memo(function World({ L, ffActive, travellerState, fxRef, skyARef, skyBRef, lifeStop, lifeOn, intro }: Props) {
+export const World = memo(function World({ L, rootRef, ffActive, travellerState, fxRef, skyARef, skyBRef, lifeStop, lifeOn, intro }: Props) {
   const phone = L.profile === "phone";
   const out: React.ReactNode[] = [];
   const worldCls = intro === "wait" ? i.wait : intro === "play" ? i.play : "";
@@ -107,17 +109,17 @@ export const World = memo(function World({ L, ffActive, travellerState, fxRef, s
     });
     if (layer.id === "w2") {
       out.push(
-        <div key="traveller" className={s.plane}>
-          <div className={s.traveller} data-state={travellerState} dangerouslySetInnerHTML={{ __html: TRAVELLER_SVG }} />
+        <div key="traveller" className={s.plane} data-plane>
+          <div className={s.traveller} data-traveller data-state={travellerState} dangerouslySetInnerHTML={{ __html: TRAVELLER_SVG }} />
         </div>,
-        <div key="life" className={s.plane}>
+        <div key="life" className={s.plane} data-plane>
           <Ambient stop={lifeStop} on={lifeOn} phone={phone} />
         </div>,
       );
     }
   }
   return (
-    <div className={`${s.world} ${worldCls}`} data-world aria-hidden="true">
+    <div className={`${s.world} ${worldCls}`} ref={rootRef} data-world aria-hidden="true">
       <div className={s.sky} ref={skyARef} />
       <div className={`${s.sky} ${s.skyNext}`} ref={skyBRef} />
       {out}

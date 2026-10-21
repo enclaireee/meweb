@@ -90,6 +90,25 @@ export function River() {
   const [loaderGone, setLoaderGone] = useState(false);
 
   const stageRef = useRef<HTMLDivElement>(null);
+  const worldRef = useRef<HTMLDivElement>(null);
+  const notesRef = useRef<HTMLDivElement>(null);
+  /** The ~20 elements that read --pos/--px/--py/--cam (art layers, the notes plane, the camera planes).
+      Those properties are registered with inherits: false, so writing them here does not recalc the whole stage. */
+  const movingCache = useRef<{ layers: HTMLElement[]; planes: HTMLElement[]; traveller: HTMLElement | null } | null>(null);
+  const movingEls = useCallback(() => {
+    if (!movingCache.current) {
+      const w = worldRef.current;
+      if (!w) return null;
+      const layers = Array.from(w.querySelectorAll<HTMLElement>("[data-layer]"));
+      if (notesRef.current) layers.push(notesRef.current);
+      movingCache.current = {
+        layers,
+        planes: Array.from(w.querySelectorAll<HTMLElement>("[data-plane]")),
+        traveller: w.querySelector<HTMLElement>("[data-traveller]"),
+      };
+    }
+    return movingCache.current;
+  }, []);
   const skyARef = useRef<HTMLDivElement>(null);
   const skyBRef = useRef<HTMLDivElement>(null);
   const skyPainted = useRef(-1); // which stop's gradients are painted (they only change when the integer stop does)
@@ -121,8 +140,12 @@ export function River() {
   const applyCam = useCallback(() => {
     const A = a.current;
     const c = camAt(A.pos, CAMS, { compact: A.compact, reduced: A.reduced, px: A.ptr.x, py: A.ptr.y });
-    stageRef.current?.style.setProperty("--cam", camCss(c));
-  }, []);
+    const v = camCss(c);
+    const els = movingEls();
+    if (!els) return;
+    for (const el of els.layers) el.style.setProperty("--cam", v);
+    for (const el of els.planes) el.style.setProperty("--cam", v);
+  }, [movingEls]);
 
   /** Sky: two static gradients; only the upper one's opacity animates while gliding, so no full-screen repaint per
       frame. Gradients are repainted only when the integer stop changes (the swap is invisible: A becomes the old B). */
@@ -141,9 +164,12 @@ export function River() {
   /** Write everything that depends on the fractional stop. */
   const applyPos = useCallback((p: number, skipCam = false) => {
     a.current.pos = p;
-    const stage = stageRef.current;
-    if (!stage) return;
-    stage.style.setProperty("--pos", p.toFixed(4));
+    if (!stageRef.current) return;
+    const els = movingEls();
+    if (els) {
+      const v = p.toFixed(4);
+      for (const el of els.layers) el.style.setProperty("--pos", v);
+    }
     for (const item of fxEls.current.values()) {
       const f = layerFx(item.fx, p);
       const op = f.opacity.toFixed(3);
@@ -159,12 +185,15 @@ export function River() {
     }
     paintSky(p);
     if (!skipCam) applyCam();
-  }, [applyCam, paintSky]);
+  }, [applyCam, movingEls, paintSky]);
 
   // The sky (in World) mounts after the deep link's first applyPos: write it again once it's there.
   const worldUp = L !== null && artReady;
   useEffect(() => {
-    if (worldUp) applyPos(a.current.pos, true);
+    if (worldUp) {
+      movingCache.current = null; // the world may have remounted (dev Strict Mode): drop stale element refs
+      applyPos(a.current.pos, true);
+    }
   }, [worldUp, applyPos]);
 
   // One stable callback per layer id: re-creating them every render made React detach/attach the ref (and remount the
@@ -215,8 +244,19 @@ export function River() {
         p.last = now;
         p.x += (p.tx - p.x) * k;
         p.y += (p.ty - p.y) * k;
-        stageRef.current?.style.setProperty("--px", p.x.toFixed(4));
-        stageRef.current?.style.setProperty("--py", p.y.toFixed(4));
+        const el2 = movingEls();
+        if (el2) {
+          const vx = p.x.toFixed(4);
+          const vy = p.y.toFixed(4);
+          for (const el of el2.layers) {
+            el.style.setProperty("--px", vx);
+            el.style.setProperty("--py", vy);
+          }
+          if (el2.traveller) {
+            el2.traveller.style.setProperty("--px", vx);
+            el2.traveller.style.setProperty("--py", vy);
+          }
+        }
         camDirty = true;
         if (Math.abs(p.tx - p.x) + Math.abs(p.ty - p.y) < 0.001) {
           p.active = false;
@@ -226,7 +266,7 @@ export function River() {
       if (camDirty) applyCam();
       if (again) kick();
     };
-  }, [applyPos, applyCam, kick]);
+  }, [applyPos, applyCam, kick, movingEls]);
 
   /** Back to the river where you left it: through history when the index pushed an entry, so the browser's back button agrees. */
   const leave = useCallback(() => {
@@ -504,7 +544,7 @@ export function River() {
         >
           {L && artReady && (
             <>
-              <World L={L} ffActive={st.to} travellerState={travellerState} fxRef={fxRef} skyARef={skyARef} skyBRef={skyBRef} lifeStop={st.stop} lifeOn={!moving} intro={intro} />
+              <World L={L} rootRef={worldRef} ffActive={st.to} travellerState={travellerState} fxRef={fxRef} skyARef={skyARef} skyBRef={skyBRef} lifeStop={st.stop} lifeOn={!moving} intro={intro} />
               <div className={s.tags} id="river" tabIndex={-1}>
                 {L.compact ? (
                   st.stop === 0 ? (
@@ -516,6 +556,7 @@ export function River() {
                   // Every stop's notes stay mounted: this layer's content never changes during a glide.
                   <div
                     className={s.layer}
+                    ref={notesRef}
                     style={{ "--s": 1 } as CSSProperties}
                     onPointerOver={(e) => setLooking(!!(e.target as Element).closest("[data-note]"))}
                     onPointerLeave={() => setLooking(false)}

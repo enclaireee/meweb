@@ -1,5 +1,26 @@
-/* Stage wiring (tech-architecture.md): the stage sets --pos, --k (px per art unit), --anchor, --top, --px, --py.
-   Each layer reads its --s and computes its own transform, so a frame only writes --pos. */
+/* Stage wiring (tech-architecture.md): --k (px per art unit), --anchor, --top and --nz are set once per layout and
+   inherit. The per-frame properties are registered as non-inheriting, so writing them on the ~20 elements that read
+   them no longer invalidates the whole stage subtree every frame. */
+
+@property --pos {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+@property --px {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+@property --py {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+@property --cam {
+  syntax: "*";
+  inherits: false;
+}
 
 .root {
   position: fixed;
@@ -17,10 +38,6 @@
   overflow: clip; /* hidden still lets focus scroll it sideways */
   contain: strict;
   background: var(--c-ink-night);
-  --pos: 0;
-  --px: 0;
-  --py: 0;
-  --cam: translate(0);
   touch-action: pan-y pinch-zoom;
 }
 
@@ -66,7 +83,7 @@
   height: calc(1000 * var(--k));
   --z: calc(600 * (var(--s) - 1));
   transform-origin: var(--ox) var(--oy);
-  transform: var(--cam) translateZ(calc(var(--z) * var(--k))) scale(calc(1 - var(--z) / 2000))
+  transform: var(--cam, translate(0)) translateZ(calc(var(--z) * var(--k))) scale(calc(1 - var(--z) / 2000))
     translate(
       calc(var(--anchor) + (var(--px) * var(--s) * 14 - 1200 - var(--s) * var(--pos) * 1700) * var(--k)),
       calc(var(--top) + (var(--ty, 0) + var(--py) * var(--s) * 5) * var(--k))
@@ -79,7 +96,7 @@
   position: absolute;
   inset: 0;
   transform-origin: var(--ox) var(--oy);
-  transform: var(--cam);
+  transform: var(--cam, translate(0));
   will-change: transform;
   pointer-events: none;
 }
