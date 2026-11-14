@@ -47,6 +47,19 @@ Adding a project later must be easy. Design rule: **a project is data plus (opti
 - A project without custom art still works (generic paper card/scene from the data); custom art is an upgrade, not a requirement.
 - Deep link per project id.
 
+## Decided scroll language (round 2): a transition vocabulary
+There is no single scroll mechanic. The world has a **vocabulary of transitions**, and each section boundary uses a different one, so no two feel alike:
+- **Zoom-through:** scroll dives into an object (window, door, lantern, eye of a mask) and the next world is nested inside it.
+- **Fold / unfold:** the scene is a paper sheet that folds away or unfolds to reveal the next one.
+- Others may join later (tear, slide, curtain, pop-up rise, time shift) as long as they stay paper and stay in one world.
+
+Rules to keep it coherent:
+1. Every transition is scroll-driven and **fully reversible** (scroll up plays it backward).
+2. One shared paper material language (grain, edge, shadow, light) so different transitions still feel like one object.
+3. Distinct mood per section (palette, light), same world.
+4. Priority is **full WOW**; the experience is not compromised for a recruiter shortcut. Baseline stays: real HTML text, reduced-motion fallback, deep links.
+5. The projects lane is entered by the **same transition vocabulary** (e.g. zoom into the fork object) and is a **parallel lane of the same world**, with a clear exit back to the exact spot on the main lane.
+
 ## Structure: trunk and branches (earlier framing)
 Direction from owner: the experience has a **main path (trunk)** and **projects as branches** off it. Everything is **one continuous scroll**.
 

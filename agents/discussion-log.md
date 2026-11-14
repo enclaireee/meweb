@@ -41,3 +41,8 @@ What creates the WOW there:
 - Two **lanes**: **main lane** = the WOW experience; **projects lane** = where projects live, entered by click. Not "N branches by count"; projects are one lane.
 - Projects lane must be **as modular as possible**: adding a project in the future must be easy.
 - Setting: **undecided**. Owner wants something genuinely WOW for a portfolio, with a **scroll experience people have never felt before**.
+
+## 7. Answers from owner (AskUserQuestion round 2)
+- Scroll mechanic: a **hybrid**. Each section transition is **different and dynamic**. Chosen ingredients: **endless zoom** and **folding/unfolding paper**. (Pop-up book and time-as-scroll were not picked; may still appear as one transition among many.)
+- Projects lane: **same world, parallel lane**. The camera slides/zooms into a lane of the same world; scroll keeps working; clear exit.
+- Priority: **full WOW**. Fast-path for recruiters is not a requirement. (Engineering baseline stays: real HTML text, reduced-motion fallback, deep links.)
