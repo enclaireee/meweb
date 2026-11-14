@@ -1,15 +1,24 @@
-# agents/ — project notes
+# agents/ , project notes
 
-Living notes for the portfolio redesign. Not used by the app. Written in discussion with the owner; update as decisions change.
+Living notes for the portfolio redesign ("The Hollow Mountain"). Not used by the app. Updated as decisions change.
 
+**Status:** discussion complete enough to start. **No code yet.** The repo is a clean Next.js 16 + Tailwind v4 boilerplate; the earlier project (Paper River v4) was removed and lives in git history (commit `ddb6cdc` and earlier).
+
+## Read in this order
 | File | What it holds |
 |---|---|
-| `discussion-log.md` | Chronological record of what was discussed and decided, including reference analysis |
-| `concept-draft.md` | Current concept (v5 draft): "one world, portfolio lives inside it" |
-| `reference-v4-art-direction.md`, `reference-v4-design-tokens.md` | Art direction and tokens recovered from the removed v4 project, kept as reference |
-| `world-hollow-mountain.md` | The chosen world in detail (beat sheet, projects lane, modularity) |
-| `world-options.md` | Three full world proposals for the owner to pick or reject |
-| `tech-spec.md` | Technical spec draft: stack, rendering, scroll engine, lanes, registry, budget, spikes |
+| `decisions.md` | **Single source of truth**: everything decided, plus what was dropped |
+| `concept.md` | The concept: why, the idea, content rule, lanes, look, motion, principles |
+| `world-hollow-mountain.md` | The chosen world in detail: 10-beat main lane, projects lane, modularity |
+| `tech-spec.md` | Technical spec: stack, rendering, scroll engine, lanes, registry, budget, spikes |
 | `open-questions.md` | What is still undecided |
 
-Status: **discussion phase.** No code is written for the new concept yet. The repo is a clean Next.js 16 + Tailwind v4 boilerplate; the previous project (Paper River v4) was removed and lives in git history (commit `ddb6cdc` and earlier).
+## Reference and history
+| File | What it holds |
+|---|---|
+| `reference-v4-art-direction.md`, `reference-v4-design-tokens.md` | Art direction and tokens recovered from the removed v4 project; the starting point for the new art direction |
+| `world-options.md` | Archived: the three world proposals (owner chose C) |
+| `discussion-log.md` | Chronological history of the discussion, including dropped ideas |
+
+## Reference site
+https://aksarakala.vercel.app/ : the target feel (cinematic scenes, huge hero images, big single lines, glow, plain scroll).

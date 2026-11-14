@@ -1,5 +1,7 @@
 # Discussion log
 
+> **History only.** Chronological record of the discussion, including ideas later dropped. For current truth read `decisions.md` and `concept.md`.
+
 ## 1. Reset
 - Deleted all previous code and notes. Fresh Next.js + TypeScript + Tailwind boilerplate.
 - Keep: the **paper** aesthetic (paper-cut, layered, soft shadows).

@@ -1,4 +1,8 @@
-# World options (assistant proposals, round 8)
+# World options (archived)
+
+> **Archived.** Owner chose **Option C, The Hollow Mountain**. Kept for history. Current world: `world-hollow-mountain.md`.
+
+Original title: World options (assistant proposals, round 8)
 
 Common constraints (all decided): layered flat papercut shadowbox style (v4 art direction, see `reference-v4-art-direction.md`); epic and cinematic like aksarakala; "the world opens itself" as a signature move; aimless exploration; neutral fantasy; one continuous scroll; two lanes (main = the experience, projects = reverse side of the sheet, entered by clicking an object); projects are modular registry entries and are **places or objects that belong in the world**, never custom showcases; light through cut paper is the hero effect.
 

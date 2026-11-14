@@ -2,7 +2,7 @@
 
 > "It looked small from outside."
 
-Status: chosen by owner. Details below are the assistant's draft for review, not yet confirmed.
+Status: **world chosen by the owner**. Beat sheet below is the assistant's draft; the decisions listed under "Confirmed" are the owner's.
 
 ## One-line
 A quiet paper mountain at night that unfolds like origami and turns out to contain a vast world, and that world contains bigger ones.
@@ -52,23 +52,22 @@ Cadence: surprise, hold, surprise. Each beat is a full-screen composition; text 
 4. Warm light stays meaningful (sun, lanterns, window), also in the inside.
 5. All text is real HTML; reduced-motion fallback exists.
 
-## Decisions from round 10
+## Confirmed: character, colour, inhabitants
 - **Character:** a small figure (working name: the traveller) who exists to make the scale readable. Rules: always tiny against the world, silent, reacts to light and big things, never the focus of the frame; lives in the main lane and does not appear as a showcase in project chambers unless needed. Design and animation scope to be defined (keep cheap: few poses, mostly walking and looking up).
 - **Colour:** firm flip. Outside cool moonlit; inside warm (gold sun); Second Fold flips again (e.g. dawn rose / cold blue). Colour is a WOW lever.
 - **Inhabitants/environment:** nature and ruins mixed. Roots through staircases, trees through arches, moss on bridges, shrines half-swallowed. Vegetation and ruin share every region.
 - Ruins give the world history without people; projects can live as **restored or still-lit rooms among the ruins**, which fits chambers.
 
-## Decisions from round 12
+## Confirmed: creatures, length, sound, figure behaviour
 - **Creatures:** one signature creature per region. Draft assignment (to review): Outside = night owl/moth drifting past the mountain; Inner Sun hall = a colossal heron/crane wading in light; Understory = giant stag with a canopy of branches; Lantern Vault = a drifting jellyfish/ray of paper lanterns; Second Fold = a dawn creature that ends the scale play. Each needs few poses and relies on scale, light and parallax.
 - **Length:** about 15 to 20 screens for the 10 beats, so roughly 1.5 to 2 screens per beat, with fold/transition beats being short and region beats being longer.
 - **Sound:** ambient optional, off by default. Toggle in the nav.
 - **Small figure:** always on screen and moves with scroll. Constraints: tiny, readable against both cool and warm palettes (needs a lit rim), small asset (walk cycle + look-up pose), never covers text, and must stay coherent with reversibility (scroll up walks it back).
 
-## Open details (to discuss)
-- ~~Character~~ decided: small scale-reference figure. Remaining: design, and whether it follows the scroll or appears at set moments.
-- ~~Colour flip~~ decided: firm flip.
-- Ending: is the window loop (beat 9) the right ending?
-- ~~What lives inside~~ decided: nature and ruins mixed. Remaining: any huge creatures at epic moments?
-- ~~Scroll length~~ decided: 15 to 20 screens. Nested folds: two (First, Second) plus the Seam reveal, unless changed.
-- ~~Sound~~ decided: optional ambient, default off.
-- Hero execution: WebGL for the fold vs layered 2D/CSS with fakery; needs a spike.
+## Open details
+- Design of the small figure (look, rim light, walk cycle).
+- Final creature list per region (draft above is a proposal).
+- Final lines (copy) for each beat, and the project-lane chamber templates.
+- Number of beats and exact scroll length per beat (currently 10 beats over 15 to 20 screens).
+- Hero execution technique per effect: decided by spikes in `tech-spec.md` (good + light).
+- Mobile (portrait) composition of every beat.

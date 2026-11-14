@@ -82,7 +82,7 @@ type Project = {
 - Keyboard: focusable forks, visible focus, skip link. Sound off by default with a clear toggle.
 - No flashing; colour contrast checked on text overlays (add soft scrims where needed).
 
-## 8. Art pipeline (assumption, to confirm)
+## 8. Art pipeline (confirmed)
 - Art is authored **procedurally as SVG by script** (cut jitter, shadows, holes), then rasterised to WebP/AVIF with baked shadows/glows. This is how v4 worked (see git history `ddb6cdc`: `art/*.ts`, using `sharp`, `clipper2-ts`, `simplex-noise`, `svgpath`).
 - Scripts live in `art/` (dev-only, not shipped). Baked output in `public/art/<beat>/`.
 - Style rules: `reference-v4-art-direction.md`, tokens: `reference-v4-design-tokens.md` (to be adapted to the new world's warm inside).
@@ -119,7 +119,7 @@ agents/           these notes
 - Art volume: 10 beats x ~12 layers + creatures + chambers is a lot; keep chambers templated and creatures few-pose.
 - Reduced-motion and no-JS parity add work: build the linear content first so it is never an afterthought.
 
-## 13. Confirmed decisions (round 14)
+## 13. Confirmed decisions
 - **Art:** procedural by code, owner art-directs (section 8 is now confirmed).
 - **Targets:** mid-range phone + 4 to 5 year old laptop smooth; adaptive quality for weaker devices.
 - **Mobile:** full portrait recomposition. Implication: each beat needs a **desktop composition and a portrait composition** (same layers, different arrangement/crops/camera), roughly doubling composition design work. The layer sprites should be authored with a **safe-area and an extended bleed** so both aspect ratios can be framed from the same art where possible. The timeline accepts per-breakpoint keyframes.
