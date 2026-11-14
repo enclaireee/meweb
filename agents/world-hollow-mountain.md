@@ -58,11 +58,17 @@ Cadence: surprise, hold, surprise. Each beat is a full-screen composition; text 
 - **Inhabitants/environment:** nature and ruins mixed. Roots through staircases, trees through arches, moss on bridges, shrines half-swallowed. Vegetation and ruin share every region.
 - Ruins give the world history without people; projects can live as **restored or still-lit rooms among the ruins**, which fits chambers.
 
+## Decisions from round 12
+- **Creatures:** one signature creature per region. Draft assignment (to review): Outside = night owl/moth drifting past the mountain; Inner Sun hall = a colossal heron/crane wading in light; Understory = giant stag with a canopy of branches; Lantern Vault = a drifting jellyfish/ray of paper lanterns; Second Fold = a dawn creature that ends the scale play. Each needs few poses and relies on scale, light and parallax.
+- **Length:** about 15 to 20 screens for the 10 beats, so roughly 1.5 to 2 screens per beat, with fold/transition beats being short and region beats being longer.
+- **Sound:** ambient optional, off by default. Toggle in the nav.
+- **Small figure:** always on screen and moves with scroll. Constraints: tiny, readable against both cool and warm palettes (needs a lit rim), small asset (walk cycle + look-up pose), never covers text, and must stay coherent with reversibility (scroll up walks it back).
+
 ## Open details (to discuss)
 - ~~Character~~ decided: small scale-reference figure. Remaining: design, and whether it follows the scroll or appears at set moments.
 - ~~Colour flip~~ decided: firm flip.
 - Ending: is the window loop (beat 9) the right ending?
 - ~~What lives inside~~ decided: nature and ruins mixed. Remaining: any huge creatures at epic moments?
-- Number of nested folds and total scroll length.
-- Sound.
+- ~~Scroll length~~ decided: 15 to 20 screens. Nested folds: two (First, Second) plus the Seam reveal, unless changed.
+- ~~Sound~~ decided: optional ambient, default off.
 - Hero execution: WebGL for the fold vs layered 2D/CSS with fakery; needs a spike.

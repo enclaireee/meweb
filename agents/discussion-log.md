@@ -90,3 +90,9 @@ What creates the WOW there:
 ## 16. Answers from owner (AskUserQuestion round 11)
 - Next step: **keep discussing details before any prototype** (giant creature, sound, character design, number of folds).
 - Technique guidance: **"good and light."** Visual quality must be high, but performance must stay light. Implication: prefer the lightest technique that still sells the effect (layered 2D/CSS/SVG/canvas with selective WebGL only where it clearly earns it); decide by spike later.
+
+## 17. Answers from owner (AskUserQuestion round 12)
+- **Creatures:** several, **one signature creature per region.** World feels alive. Cost note: each creature is real art/animation work, so keep each to a few poses and let scale and light carry the drama.
+- **Length:** **medium, about 15 to 20 screens** of main-lane scroll.
+- **Sound:** **optional ambient, off by default**, with a toggle. Ambient and paper foley follow scroll when on.
+- **Small figure:** **always on screen, follows the scroll** (it walks as far as you scroll). Needs a loop/walk cycle and a clear way to keep it readable across colour flips.
