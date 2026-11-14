@@ -72,3 +72,8 @@ What creates the WOW there:
 - "Geography = folds" (mountain fold = mountain, valley fold = river): **interesting but not enough.** The world needs something else or bigger. World concept is **still open**.
 - Regions: **one main paper-art technique**, not a different craft per region. Variety comes from colour and light.
 - Visual feel: "use the one from yesterday, that was good." Interpreted as the **v4 art direction: layered flat papercut (shadowbox), baked soft shadows, holes that let light through, cool moonlit world with rare warm lights.** Recovered into `reference-v4-art-direction.md` and `reference-v4-design-tokens.md`. Needs owner confirmation that this reading is right, and whether the v4 *world* (night river, moon, lanterns) is also wanted or only the *style*.
+
+## 13. Answers from owner (AskUserQuestion round 8)
+- From v4 keep **the art style only**. The world itself is free to be new.
+- WOW target: **the epic feel of aksarakala** (cinematic scenes, huge hero images, big single lines, glow) plus **"the world opens itself"** (layers part/lift/unfold to reveal a space far bigger than expected).
+- References: none. Owner asked the assistant to **propose complete world concepts** to pick or reject. See `world-options.md`.
