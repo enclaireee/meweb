@@ -96,3 +96,6 @@ What creates the WOW there:
 - **Length:** **medium, about 15 to 20 screens** of main-lane scroll.
 - **Sound:** **optional ambient, off by default**, with a toggle. Ambient and paper foley follow scroll when on.
 - **Small figure:** **always on screen, follows the scroll** (it walks as far as you scroll). Needs a loop/walk cycle and a clear way to keep it readable across colour flips.
+
+## 18. Round 13
+- Owner chose to **write the technical spec next** (no code yet). See `tech-spec.md`.

@@ -9,6 +9,7 @@ Living notes for the portfolio redesign. Not used by the app. Written in discuss
 | `reference-v4-art-direction.md`, `reference-v4-design-tokens.md` | Art direction and tokens recovered from the removed v4 project, kept as reference |
 | `world-hollow-mountain.md` | The chosen world in detail (beat sheet, projects lane, modularity) |
 | `world-options.md` | Three full world proposals for the owner to pick or reject |
+| `tech-spec.md` | Technical spec draft: stack, rendering, scroll engine, lanes, registry, budget, spikes |
 | `open-questions.md` | What is still undecided |
 
 Status: **discussion phase.** No code is written for the new concept yet. The repo is a clean Next.js 16 + Tailwind v4 boilerplate; the previous project (Paper River v4) was removed and lives in git history (commit `ddb6cdc` and earlier).
