@@ -51,3 +51,8 @@ What creates the WOW there:
 - World: **a giant folded paper map.** Scroll unfolds it; zooming into a point on the map enters that scene. Fold and zoom share one logic.
 - Projects lane = **the other side of the map** (assistant's suggestion attached to this option; matches "parallel lane of the same world"). Confirm when detailing.
 - Identity influence: **neutral / fantasy.** No Indonesian or electrical-engineering theme required. World stands on its own.
+
+## 9. Answers from owner (AskUserQuestion round 4)
+- Map fiction: **rejected all four standard options** (islands, mountains, towns, sky map). Owner: "dig deeper, nothing ordinary."
+- Emotional tone: **epic and grand.**
+- Main lane story: **aimless exploration.** No quest; the wonder of each region is the reason.

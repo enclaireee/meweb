@@ -17,7 +17,7 @@
 9. **Mobile.** Same world re-composed, or simplified.
 
 ## New after round 3
-10. **Map fiction.** What kind of fantasy map: sea/islands, mountains/valleys, a city, the night sky? What are the regions of the front, and what is the tone (cozy, mysterious, epic)?
+10. **Map fiction (round 4: tone = epic, story = aimless exploration, standard options rejected; need a non-ordinary premise).** Old text: What kind of fantasy map: sea/islands, mountains/valleys, a city, the night sky? What are the regions of the front, and what is the tone (cozy, mysterious, epic)?
 11. **What is the story of the main lane?** Why does the visitor unfold the map, and what do they arrive at (an ending/contact)?
 12. **Technical feasibility spikes.** Fold in 3D (CSS 3D vs three.js/WebGL), zoom-through with nested scenes, performance budget. Prototype before locking.
 13. **Content inventory** (still needed): projects, experience, skills, media.
