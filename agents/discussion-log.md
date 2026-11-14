@@ -61,3 +61,9 @@ What creates the WOW there:
 - Premise chosen (combined): **"Crease pattern = world"** + **"the map that draws itself."**
 - Not chosen: Powers of Ten scales, titan-skin map (may still lend ideas, not the premise).
 - Opening: **straight into a grand world**, one screen, already magnificent. It is revealed to be a map afterwards.
+
+## 11. Correction from owner (round 6): paper ART, not plain paper
+- Owner paused the prototype. The world must be **paper art** (papercut, kirigami, quilling, origami sculpture, layered craft), **not "entirely paper"** in the sense of a plain white sheet with ink.
+- Owner asked whether the assistant already has a world concept. **Honest answer: no.** Up to round 5 there was a premise and mechanics (folded map, self-drawing, fold and zoom transitions) but no actual world: no places, no look, no inhabitants. The "ink on white sheet" look drifted toward plain paper and is **retracted** as a visual direction.
+- Ink question deferred; discuss first.
+- Owner wants discussion before any prototype.

@@ -47,6 +47,29 @@ Adding a project later must be easy. Design rule: **a project is data plus (opti
 - A project without custom art still works (generic paper card/scene from the data); custom art is an upgrade, not a requirement.
 - Deep link per project id.
 
+## Correction (round 6): the world is paper ART
+"Paper" here means **crafted paper art**: layered papercut, kirigami, quilling, origami sculpture, torn-paper collage, vellum/tissue that glows. Rich colour, texture, depth, and light through cut paper. It does **not** mean a plain white sheet with ink lines.
+
+Consequences for earlier decisions:
+- "Ink flows and draws the world" (round 5) is **reinterpreted**: the world does not get inked; it is **built from paper as you arrive** (layers slide in, cuts open, folds rise, coils unroll). The "unexplored = blank" idea may survive as bare sheet/cardstock, to be reconsidered.
+- The opening hero is a grand **paper-art** diorama, not a drawing.
+- Crease-pattern/fold logic stays; it just lives inside a crafted paper world.
+
+## World proposal v0 (assistant draft, NOT decided)
+Premise: **the world was folded, and its geography is its folds.** In origami, a *mountain fold* and a *valley fold* are literal terms. So:
+- **Mountain folds = mountain ranges, valley folds = rivers and canyons.** The Great Crease is a canyon you can see from far away.
+- **Each region is a different paper-craft technique**, which gives a distinct mood and a reason for different transitions:
+  - Layered papercut forest (depth, parallax, light between layers)
+  - Kirigami cities that pop up from flat cuts
+  - Quilling sea (coiled paper as waves and coral)
+  - Vellum/tissue lantern desert (glows from within)
+  - Torn-paper and burnt-edge ruins
+  - Origami creatures; colossal paper cranes migrating overhead (the epic scale moment)
+- **Light through paper (translucency)** is the signature visual trick: warm light leaking through cuts and glowing vellum.
+- Aimless exploration: no quest; wonder per region.
+- Projects lane = reverse side of the sheet, as decided.
+To be confirmed or replaced by the owner.
+
 ## Decided premise (round 5): the Folded World that draws itself
 Working title: **"The Unfinished Map"** (placeholder).
 

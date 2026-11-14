@@ -22,5 +22,5 @@
 12. **Technical feasibility spikes.** Fold in 3D (CSS 3D vs three.js/WebGL), zoom-through with nested scenes, performance budget. Prototype before locking.
 13. **Content inventory** (still needed): projects, experience, skills, media.
 14. **Hero content.** What is in the first grand screen (what does the folded world show)?
-15. **Ink and paper look.** Pure black/sepia ink on white, or coloured/light-emitting ink? Does the ink glow?
+15. ~~Ink look~~ Superseded by round 6 (paper ART, not ink). Open: does anything stay blank/unexplored, and how does the world "build itself" from paper? Old text: Pure black/sepia ink on white, or coloured/light-emitting ink? Does the ink glow?
 16. **Do we build a hero prototype first** (WebGL fold + ink reveal) to prove feel and performance before designing everything else?
