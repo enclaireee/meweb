@@ -86,3 +86,7 @@ What creates the WOW there:
 - **Character:** yes, a **small figure as a scale reference** (and heart). Adds animation cost; keep its role simple.
 - **Colour flip:** **yes, a firm flip.** Cool moonlit outside, warm inside, changing again at the Second Fold. Colour is part of the WOW.
 - **What lives inside:** **nature and ruins mixed** (nature swallowing old structures, temples-in-forest feel). No living civilisation required.
+
+## 16. Answers from owner (AskUserQuestion round 11)
+- Next step: **keep discussing details before any prototype** (giant creature, sound, character design, number of folds).
+- Technique guidance: **"good and light."** Visual quality must be high, but performance must stay light. Implication: prefer the lightest technique that still sells the effect (layered 2D/CSS/SVG/canvas with selective WebGL only where it clearly earns it); decide by spike later.

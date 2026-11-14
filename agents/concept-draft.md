@@ -153,3 +153,6 @@ Hard requirements whichever is chosen:
 - Contrast between regions (a sudden day to night, tight to vast).
 - Sound (optional, off by default).
 - Tiny delightful details that reward exploring.
+
+## Technical stance (round 11)
+Owner priority: **good + light**. WebGL is not assumed. Default is layered 2D (CSS/SVG/canvas) with baked shadows (as in v4), and WebGL only for a specific effect that cannot be faked convincingly (for example the first fold). Performance budget and device targets still to define.
