@@ -81,3 +81,8 @@ What creates the WOW there:
 ## 14. Answers from owner (AskUserQuestion round 9)
 - **World chosen: Option C, The Hollow Mountain.** Nothing felt missing from the three options.
 - Detailed in `world-hollow-mountain.md` (draft beat sheet, for review).
+
+## 15. Answers from owner (AskUserQuestion round 10)
+- **Character:** yes, a **small figure as a scale reference** (and heart). Adds animation cost; keep its role simple.
+- **Colour flip:** **yes, a firm flip.** Cool moonlit outside, warm inside, changing again at the Second Fold. Colour is part of the WOW.
+- **What lives inside:** **nature and ruins mixed** (nature swallowing old structures, temples-in-forest feel). No living civilisation required.

@@ -52,11 +52,17 @@ Cadence: surprise, hold, surprise. Each beat is a full-screen composition; text 
 4. Warm light stays meaningful (sun, lanterns, window), also in the inside.
 5. All text is real HTML; reduced-motion fallback exists.
 
+## Decisions from round 10
+- **Character:** a small figure (working name: the traveller) who exists to make the scale readable. Rules: always tiny against the world, silent, reacts to light and big things, never the focus of the frame; lives in the main lane and does not appear as a showcase in project chambers unless needed. Design and animation scope to be defined (keep cheap: few poses, mostly walking and looking up).
+- **Colour:** firm flip. Outside cool moonlit; inside warm (gold sun); Second Fold flips again (e.g. dawn rose / cold blue). Colour is a WOW lever.
+- **Inhabitants/environment:** nature and ruins mixed. Roots through staircases, trees through arches, moss on bridges, shrines half-swallowed. Vegetation and ruin share every region.
+- Ruins give the world history without people; projects can live as **restored or still-lit rooms among the ruins**, which fits chambers.
+
 ## Open details (to discuss)
-- Is there a character (a small paper traveller) or is the visitor alone?
-- Does the colour flip (cool outside, warm inside) stay, or does everything stay moonlit cool?
+- ~~Character~~ decided: small scale-reference figure. Remaining: design, and whether it follows the scroll or appears at set moments.
+- ~~Colour flip~~ decided: firm flip.
 - Ending: is the window loop (beat 9) the right ending?
-- What lives inside? Creatures, ruins, people, machines, nothing?
+- ~~What lives inside~~ decided: nature and ruins mixed. Remaining: any huge creatures at epic moments?
 - Number of nested folds and total scroll length.
 - Sound.
 - Hero execution: WebGL for the fold vs layered 2D/CSS with fakery; needs a spike.
