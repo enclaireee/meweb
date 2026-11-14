@@ -1,5 +1,7 @@
 # Open questions
 
+0. **Branch mechanics.** Inline detour (A), choose-and-return (B), or hybrid (C)? See `concept-draft.md`. How is a fork shown in the world, and how does the visitor choose while still using only scroll (scroll direction? hover/click on the fork? both)?
+
 1. **World setting.** Keep the SE-Asian night river (spring to sea), or a new world? The river is elegant for a journey, but a different setting may allow more varied regions.
 2. **Navigation model.** Native scroll through the world, step-by-step (v4), or free exploration (drag/pan, walk)? Reference uses plain scroll.
 3. **Interaction depth.** Atmosphere only (cursor light, parallax), or playful interaction (light lanterns, pull paper, row the boat)?

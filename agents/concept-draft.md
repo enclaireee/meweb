@@ -35,6 +35,26 @@ These are idea seeds only. The right mapping depends on the world chosen.
 - **Contact** is an arrival: a lit lighthouse, a mailbox, a lamp left on.
 - **Findability for recruiters:** a diegetic **map or index** (a paper map, a scroll) lists everything and jumps to it. Fast path exists without breaking the world.
 
+## Structure: trunk and branches
+Direction from owner: the experience has a **main path (trunk)** and **projects as branches** off it. Everything is **one continuous scroll**.
+
+- **Trunk:** the main journey. Scrolling down always moves forward, scrolling up reverses. Carries the story: arrival, who, experience, contact.
+- **Branch:** a project section that splits off the trunk at a fork. It is its own region of the world with its own mood, but built from the world's own vocabulary (see mapping rule below), not a custom showcase.
+- **Fork:** a visible moment in the world where the path divides. The visitor sees that a branch exists before choosing it.
+- **Return:** a branch ends by rejoining the trunk (or looping back), so the visitor never gets lost and never needs a back button.
+
+Ways a branch could work inside one scroll (to decide, see `open-questions.md`):
+- **A. Inline detour.** The scroll passes through each branch in order, as extra chapters on the way. Simplest, but not really optional.
+- **B. Choose-and-return.** At a fork, the visitor picks a branch; the scroll axis continues into it, and finishing (or scrolling back) returns to the trunk. Optional and feels like exploring.
+- **C. Hybrid.** Trunk is linear and complete; branches are optional detours that open at forks. Skipping a fork costs nothing.
+
+Hard requirements whichever is chosen:
+1. One scroll container and one timeline; no route changes that break the experience.
+2. Deep links to a branch (URL hash or param) so a project can be shared and recruiters can land on it.
+3. Progress nav shows the trunk with branch marks and the current position.
+4. Scroll back always reverses cleanly.
+5. Reduced-motion and no-JS fallback: branches readable as plain sections.
+
 ## Craft principles (carried over, still valid)
 1. Flat paper sheets, real depth through layering, parallax, haze, shadow. No fake 3D.
 2. Light is the story: warm light leads the eye to what matters.

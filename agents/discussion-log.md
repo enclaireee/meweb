@@ -28,3 +28,9 @@ What creates the WOW there:
 - If there is a Project A, it should simply **stick with the world**. Do not build a special scene or presentation for Project A. The world already has a natural place or object for it.
 - The WOW should come from the world itself (craft, scale, atmosphere, discovery), not from presenting work.
 - Discussion is captured in `agents/` in the repo.
+
+## 5. Structure: projects are branches (owner direction)
+- Projects live in **separate sections**, as **branches / forks** off the main path of the experience.
+- Hard constraint: everything stays **one scroll-based experience**. No separate pages, no leaving the world.
+- Still holds: branches must belong to the world (no custom showcase per project).
+- Assistant note: if the river setting is kept, tributaries are a natural fit for branches. Not decided.
