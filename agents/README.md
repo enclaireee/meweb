@@ -7,6 +7,7 @@ Living notes for the portfolio redesign. Not used by the app. Written in discuss
 | `discussion-log.md` | Chronological record of what was discussed and decided, including reference analysis |
 | `concept-draft.md` | Current concept (v5 draft): "one world, portfolio lives inside it" |
 | `reference-v4-art-direction.md`, `reference-v4-design-tokens.md` | Art direction and tokens recovered from the removed v4 project, kept as reference |
+| `world-hollow-mountain.md` | The chosen world in detail (beat sheet, projects lane, modularity) |
 | `world-options.md` | Three full world proposals for the owner to pick or reject |
 | `open-questions.md` | What is still undecided |
 

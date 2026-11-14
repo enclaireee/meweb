@@ -24,3 +24,6 @@
 14. **Hero content.** What is in the first grand screen (what does the folded world show)?
 15. ~~Ink look~~ Superseded by round 6 (paper ART, not ink). Open: does anything stay blank/unexplored, and how does the world "build itself" from paper? Old text: Pure black/sepia ink on white, or coloured/light-emitting ink? Does the ink glow?
 16. **Do we build a hero prototype first** (WebGL fold + ink reveal) to prove feel and performance before designing everything else?
+
+## After round 9
+World chosen: Hollow Mountain. Open details are listed at the end of `world-hollow-mountain.md`.

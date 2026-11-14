@@ -77,3 +77,7 @@ What creates the WOW there:
 - From v4 keep **the art style only**. The world itself is free to be new.
 - WOW target: **the epic feel of aksarakala** (cinematic scenes, huge hero images, big single lines, glow) plus **"the world opens itself"** (layers part/lift/unfold to reveal a space far bigger than expected).
 - References: none. Owner asked the assistant to **propose complete world concepts** to pick or reject. See `world-options.md`.
+
+## 14. Answers from owner (AskUserQuestion round 9)
+- **World chosen: Option C, The Hollow Mountain.** Nothing felt missing from the three options.
+- Detailed in `world-hollow-mountain.md` (draft beat sheet, for review).
