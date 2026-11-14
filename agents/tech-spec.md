@@ -124,3 +124,11 @@ agents/           these notes
 - **Targets:** mid-range phone + 4 to 5 year old laptop smooth; adaptive quality for weaker devices.
 - **Mobile:** full portrait recomposition. Implication: each beat needs a **desktop composition and a portrait composition** (same layers, different arrangement/crops/camera), roughly doubling composition design work. The layer sprites should be authored with a **safe-area and an extended bleed** so both aspect ratios can be framed from the same art where possible. The timeline accepts per-breakpoint keyframes.
 - **Hosting:** Vercel. No analytics (no tracking scripts; keeps JS lean and privacy clean).
+
+## 14. Added by content decisions
+- **i18n (EN + ID):** a content dictionary per language (`src/content/i18n/{en,id}.ts` or per-entry fields) and a nav toggle. Persist choice (`localStorage`, `?lang=`), default from `Accept-Language`. Deep links keep language. All captions, labels and project text come from the dictionary; no text in art.
+- **Layout rule:** big lines and labels must fit both languages (Indonesian is usually longer); test both in visual regression.
+- **Static generation:** `/` and `/p/[id]` generated per language (e.g. `/en`, `/id` or a `lang` param), with `hreflang`.
+- **Project schema** gains localized fields: `title`, `summary`, `role` as `{ en, id }`.
+- **Screenshots:** stored under `public/projects/<id>/`, optimized (WebP/AVIF, sized), lazy-loaded when a chamber opens.
+- **CV download:** a static PDF in `public/`, linked from The Window. No phone number anywhere in site content.

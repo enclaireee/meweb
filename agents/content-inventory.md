@@ -54,10 +54,15 @@ Ideas only; each must pass the content rule ("would this exist in the world anyw
 - **Contact** at **The Window**: email, LinkedIn, GitHub, CV download, location.
 - Facts that are naturally epic and could feed big lines: **43,000-person Jamboree, 750 seats, national gas transmission, 150+ participants**. Use sparingly as scale tokens, not as bragging.
 
+## Answers so far
+- Public contact: email, LinkedIn, GitHub, CV download. Phone not shown.
+- Project order: grouped by kind, newest first within a group.
+- Media: screenshots available.
+- Language: EN + ID with toggle.
+
 ## Gaps (needed from owner)
 1. LinkedIn and GitHub URLs (links were not readable in the PDF).
 2. **Media** for each project: screenshots, video, live URLs, repo links.
 3. Live URLs for the web projects (IME FTUI, KOMAT UNPAR, NEST UI, Teater Musikal AKM).
-4. Which items should be **public** (e.g. phone number) and which hidden.
-5. Whether the order is by **recency**, by **importance** or by **kind**.
-6. Whether some CV items are **not** to be shown (older, minor).
+4. Whether some CV items are **not** to be shown (older, minor). Not answered yet; assume all shown.
+5. The screenshot files for each project, and the CV PDF to serve for download.

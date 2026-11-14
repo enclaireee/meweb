@@ -111,3 +111,9 @@ What creates the WOW there:
 ## 20. CV added
 - Owner uploaded their CV and asked for it to be put in the docs. Added `cv.md` (faithful transcription) and `content-inventory.md` (structured inventory, first mapping, gaps).
 - Facts: 8 projects, 7 roles, 4 awards. The Projects lane therefore starts with 8 chambers.
+
+## 21. Answers from owner (AskUserQuestion round 15)
+- **Contact shown publicly:** email, LinkedIn, GitHub, CV download (PDF). **Phone number is not shown.**
+- **Project order:** grouped by kind (web platforms, data/ML, hardware/automation), newest first within a group.
+- **Media:** **screenshots** are available. No video, live URLs or repos were selected (confirm later, see open questions).
+- **Language:** **English + Indonesian with a toggle.** Adds copy work and a layout rule: text must fit both languages.

@@ -3,9 +3,9 @@
 Only things that are **still undecided**. Decided items live in `decisions.md`.
 
 ## Content (blocks the projects lane and copy)
-1. **Content inventory (partly answered):** the CV is in `cv.md` and structured in `content-inventory.md` (8 projects, 7 roles). Still needed: media per project, live URLs, LinkedIn/GitHub URLs, ordering, what to hide. See the Gaps list there.
-2. **Contact:** CV has email, phone, LinkedIn, GitHub, location. Which go public in The Window? Include a CV download?
-3. **Language:** English only, or EN + ID toggle?
+1. **Content gaps (partly answered):** screenshots exist; still needed: the screenshot files themselves, live URLs and repo links per project, LinkedIn and GitHub URLs, and whether any CV items should be hidden (not answered yet, assume all shown).
+2. **Contact:** decided (see `decisions.md`). Still needed: the LinkedIn and GitHub URLs and the CV PDF to serve.
+3. **Translations:** who writes the Indonesian copy (owner, or assistant draft for review)? Does the toggle also switch the big cinematic lines?
 
 ## World and art details
 4. **Small figure design:** look, silhouette, walk cycle, how it reads on cool and warm palettes.

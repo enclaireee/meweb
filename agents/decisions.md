@@ -22,6 +22,14 @@ Everything here is **decided by the owner** unless marked *proposal*. History an
 | Length | Main lane about **15 to 20 screens** of scroll. |
 | Initial content | From the owner's CV: **8 projects** (initial chambers), 7 roles, 4 awards. See `content-inventory.md`. |
 
+## Content
+| Topic | Decision |
+|---|---|
+| Contact (public) | Email, LinkedIn, GitHub, CV download. **No phone number.** |
+| Project order | Grouped by kind (web platforms, data/ML, hardware/automation); newest first within a group. |
+| Media | **Screenshots** available. Video, live URLs and repos: not confirmed. |
+| Language | **English + Indonesian, with a toggle.** |
+
 ## World and art
 | Topic | Decision |
 |---|---|
