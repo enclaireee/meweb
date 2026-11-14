@@ -34,3 +34,10 @@ What creates the WOW there:
 - Hard constraint: everything stays **one scroll-based experience**. No separate pages, no leaving the world.
 - Still holds: branches must belong to the world (no custom showcase per project).
 - Assistant note: if the river setting is kept, tributaries are a natural fit for branches. Not decided.
+
+## 6. Answers from owner (AskUserQuestion round 1)
+- Branches are **optional** (hybrid, option C). The main experience is complete without them.
+- Entering a branch: **click/tap an object** in the world (the fork).
+- Two **lanes**: **main lane** = the WOW experience; **projects lane** = where projects live, entered by click. Not "N branches by count"; projects are one lane.
+- Projects lane must be **as modular as possible**: adding a project in the future must be easy.
+- Setting: **undecided**. Owner wants something genuinely WOW for a portfolio, with a **scroll experience people have never felt before**.

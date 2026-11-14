@@ -35,7 +35,19 @@ These are idea seeds only. The right mapping depends on the world chosen.
 - **Contact** is an arrival: a lit lighthouse, a mailbox, a lamp left on.
 - **Findability for recruiters:** a diegetic **map or index** (a paper map, a scroll) lists everything and jumps to it. Fast path exists without breaking the world.
 
-## Structure: trunk and branches
+## Decided structure (round 1): two lanes
+- **Main lane:** the WOW experience. One scroll-based journey, complete on its own.
+- **Projects lane:** a separate lane, optional. Entered by **clicking/tapping an object** in the main lane (the fork). Contains the projects.
+- Option C (hybrid) from above is chosen; branches are optional.
+
+### Modularity requirement for the projects lane
+Adding a project later must be easy. Design rule: **a project is data plus (optionally) a small scene component, registered in one place.**
+- Each project is one entry in a registry (title, date, role, links, media, tags, which world object it hangs on, optional custom scene component).
+- The lane renders from the registry; no edits to core engine code to add a project.
+- A project without custom art still works (generic paper card/scene from the data); custom art is an upgrade, not a requirement.
+- Deep link per project id.
+
+## Structure: trunk and branches (earlier framing)
 Direction from owner: the experience has a **main path (trunk)** and **projects as branches** off it. Everything is **one continuous scroll**.
 
 - **Trunk:** the main journey. Scrolling down always moves forward, scrolling up reverses. Carries the story: arrival, who, experience, contact.
