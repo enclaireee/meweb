@@ -99,3 +99,9 @@ What creates the WOW there:
 
 ## 18. Round 13
 - Owner chose to **write the technical spec next** (no code yet). See `tech-spec.md`.
+
+## 19. Answers from owner (AskUserQuestion round 14)
+- **Art authoring:** procedural by code (as in v4); owner art-directs.
+- **Device target:** mid-range phone + ordinary laptop (4 to 5 years old) smooth; quality drops automatically on weak devices.
+- **Mobile:** **full vertical recomposition** for portrait, not just a scaled-down desktop.
+- **Hosting:** Vercel, **no analytics.**

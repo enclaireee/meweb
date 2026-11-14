@@ -118,3 +118,9 @@ agents/           these notes
 - Zoom-through upscaling blur: asset swap trick (S3).
 - Art volume: 10 beats x ~12 layers + creatures + chambers is a lot; keep chambers templated and creatures few-pose.
 - Reduced-motion and no-JS parity add work: build the linear content first so it is never an afterthought.
+
+## 13. Confirmed decisions (round 14)
+- **Art:** procedural by code, owner art-directs (section 8 is now confirmed).
+- **Targets:** mid-range phone + 4 to 5 year old laptop smooth; adaptive quality for weaker devices.
+- **Mobile:** full portrait recomposition. Implication: each beat needs a **desktop composition and a portrait composition** (same layers, different arrangement/crops/camera), roughly doubling composition design work. The layer sprites should be authored with a **safe-area and an extended bleed** so both aspect ratios can be framed from the same art where possible. The timeline accepts per-breakpoint keyframes.
+- **Hosting:** Vercel. No analytics (no tracking scripts; keeps JS lean and privacy clean).

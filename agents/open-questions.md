@@ -29,7 +29,7 @@
 World chosen: Hollow Mountain. Open details are listed at the end of `world-hollow-mountain.md`.
 
 ## After tech spec (round 13)
-17. **Who authors the art?** Assumption: coded procedurally by Claude (as in v4) and art-directed by the owner. Confirm, or hand-made/AI-assisted assets?
-18. **Device and browser targets.** Which minimum phone/laptop and browsers must be smooth?
-19. **Mobile composition.** Same world recomposed vertically? Portrait framing of the beats.
-20. **Hosting and analytics.** Vercel? Any analytics?
+17. ~~Decided: procedural by code.~~ **Who authors the art?** Assumption: coded procedurally by Claude (as in v4) and art-directed by the owner. Confirm, or hand-made/AI-assisted assets?
+18. ~~Decided: mid-range phone + ordinary laptop.~~ **Device and browser targets.** Which minimum phone/laptop and browsers must be smooth?
+19. ~~Decided: full vertical recomposition.~~ **Mobile composition.** Same world recomposed vertically? Portrait framing of the beats.
+20. ~~Decided: Vercel, no analytics.~~ **Hosting and analytics.** Vercel? Any analytics?
