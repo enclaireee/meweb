@@ -47,6 +47,12 @@ Adding a project later must be easy. Design rule: **a project is data plus (opti
 - A project without custom art still works (generic paper card/scene from the data); custom art is an upgrade, not a requirement.
 - Deep link per project id.
 
+## Round 7 update: art style fixed, world still open
+- **Art style = layered papercut (shadowbox)** from v4: flat one-colour sheets, depth from overlap and baked shadows, holes that let light through, light as the story. See `reference-v4-art-direction.md`. (Pending owner confirmation of this reading.)
+- **One main technique** for the whole world. Variety by colour, light, composition and scale, not by switching craft per region. This supersedes the "each region a different craft" part of World proposal v0.
+- **Folds as geography** is kept only as an ingredient, not the foundation. The world needs a bigger idea.
+- The folded map / flip-to-projects / transitions vocabulary still stand.
+
 ## Correction (round 6): the world is paper ART
 "Paper" here means **crafted paper art**: layered papercut, kirigami, quilling, origami sculpture, torn-paper collage, vellum/tissue that glows. Rich colour, texture, depth, and light through cut paper. It does **not** mean a plain white sheet with ink lines.
 

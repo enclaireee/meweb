@@ -67,3 +67,8 @@ What creates the WOW there:
 - Owner asked whether the assistant already has a world concept. **Honest answer: no.** Up to round 5 there was a premise and mechanics (folded map, self-drawing, fold and zoom transitions) but no actual world: no places, no look, no inhabitants. The "ink on white sheet" look drifted toward plain paper and is **retracted** as a visual direction.
 - Ink question deferred; discuss first.
 - Owner wants discussion before any prototype.
+
+## 12. Answers from owner (AskUserQuestion round 7)
+- "Geography = folds" (mountain fold = mountain, valley fold = river): **interesting but not enough.** The world needs something else or bigger. World concept is **still open**.
+- Regions: **one main paper-art technique**, not a different craft per region. Variety comes from colour and light.
+- Visual feel: "use the one from yesterday, that was good." Interpreted as the **v4 art direction: layered flat papercut (shadowbox), baked soft shadows, holes that let light through, cool moonlit world with rare warm lights.** Recovered into `reference-v4-art-direction.md` and `reference-v4-design-tokens.md`. Needs owner confirmation that this reading is right, and whether the v4 *world* (night river, moon, lanterns) is also wanted or only the *style*.
