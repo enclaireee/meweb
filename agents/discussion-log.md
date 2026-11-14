@@ -56,3 +56,8 @@ What creates the WOW there:
 - Map fiction: **rejected all four standard options** (islands, mountains, towns, sky map). Owner: "dig deeper, nothing ordinary."
 - Emotional tone: **epic and grand.**
 - Main lane story: **aimless exploration.** No quest; the wonder of each region is the reason.
+
+## 10. Answers from owner (AskUserQuestion round 5)
+- Premise chosen (combined): **"Crease pattern = world"** + **"the map that draws itself."**
+- Not chosen: Powers of Ten scales, titan-skin map (may still lend ideas, not the premise).
+- Opening: **straight into a grand world**, one screen, already magnificent. It is revealed to be a map afterwards.

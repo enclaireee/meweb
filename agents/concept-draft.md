@@ -47,6 +47,28 @@ Adding a project later must be easy. Design rule: **a project is data plus (opti
 - A project without custom art still works (generic paper card/scene from the data); custom art is an upgrade, not a requirement.
 - Deep link per project id.
 
+## Decided premise (round 5): the Folded World that draws itself
+Working title: **"The Unfinished Map"** (placeholder).
+
+Two ideas combined:
+1. **Crease pattern = world.** The map is an origami crease-pattern: a flat sheet that, folded, stands up as a 3D paper world. Scroll moves between the flat map and the folded world. Folding space is allowed: two far places can be brought together by a fold, and that fold is a shortcut (used as a transition).
+2. **The map draws itself.** Unexplored paper is blank. Ink flows ahead of the visitor as they scroll, forming terrain, structures, and light, as if the world is being discovered. Untouched regions stay white and tempting.
+
+How they reconcile with "open straight into a grand world":
+- The hero is a **grand folded paper world, already inked**, in one screen (a magnificent but bounded region). The edges of that world dissolve into blank paper. Only later does the visitor realise it is a map.
+- The world **exists only where you have looked**: an **ink frontier** moves with the scroll. Behind it the world is inked and alive; ahead is blank sheet.
+- Tone: **epic and grand.** Story: **aimless exploration**, no quest.
+
+Mapping to earlier decisions:
+- Main lane = unfolding / inking forward along the sheet; transitions vary (fold, zoom-through, ink flood, flatten-to-map, etc.).
+- Projects lane = the **reverse side of the sheet**: flip it and the ink is drawn from the other side, showing the crease pattern through the paper. Each project is a place on the back, one registry entry each.
+- Fork objects on the front are marked places (a mountain, a gate, a tab) that invite a click to flip.
+
+Likely technical shape (to validate with spikes, not decided):
+- Real 3D paper folding and a paper material suggest **WebGL (three.js / react-three-fiber)** for the hero and fold transitions; DOM/SVG for text and cards.
+- Ink reveal via shader mask driven by scroll progress.
+- Zoom-through via nested scenes / camera dive; must stay 60fps on mid-range devices.
+
 ## Decided world (round 3): the folded map
 - **The world is one giant folded paper map**, a fantasy one, with no real-world or identity theme.
 - **Unfold** = scroll progress along the main lane: panels of the map open, each revealing a region.

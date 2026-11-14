@@ -17,7 +17,10 @@
 9. **Mobile.** Same world re-composed, or simplified.
 
 ## New after round 3
-10. **Map fiction (round 4: tone = epic, story = aimless exploration, standard options rejected; need a non-ordinary premise).** Old text: What kind of fantasy map: sea/islands, mountains/valleys, a city, the night sky? What are the regions of the front, and what is the tone (cozy, mysterious, epic)?
+10. ~~Map fiction~~ **Decided in round 5: Folded World that draws itself, epic, aimless exploration.** Remaining: the actual regions/places, what the hero world looks like (terrain? architecture?), and the colour language of ink vs blank paper. Old text: **Map fiction (round 4: tone = epic, story = aimless exploration, standard options rejected; need a non-ordinary premise).** Old text: What kind of fantasy map: sea/islands, mountains/valleys, a city, the night sky? What are the regions of the front, and what is the tone (cozy, mysterious, epic)?
 11. **What is the story of the main lane?** Why does the visitor unfold the map, and what do they arrive at (an ending/contact)?
 12. **Technical feasibility spikes.** Fold in 3D (CSS 3D vs three.js/WebGL), zoom-through with nested scenes, performance budget. Prototype before locking.
 13. **Content inventory** (still needed): projects, experience, skills, media.
+14. **Hero content.** What is in the first grand screen (what does the folded world show)?
+15. **Ink and paper look.** Pure black/sepia ink on white, or coloured/light-emitting ink? Does the ink glow?
+16. **Do we build a hero prototype first** (WebGL fold + ink reveal) to prove feel and performance before designing everything else?
