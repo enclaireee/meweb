@@ -3,8 +3,8 @@
 Only things that are **still undecided**. Decided items live in `decisions.md`.
 
 ## Content (blocks the projects lane and copy)
-1. **Content inventory:** list of projects, experience, skills, and what media exists (screenshots, video, none). Decides how many chambers and what objects they need.
-2. **Contact:** which channels (email, LinkedIn, CV download, others) go in The Window.
+1. **Content inventory (partly answered):** the CV is in `cv.md` and structured in `content-inventory.md` (8 projects, 7 roles). Still needed: media per project, live URLs, LinkedIn/GitHub URLs, ordering, what to hide. See the Gaps list there.
+2. **Contact:** CV has email, phone, LinkedIn, GitHub, location. Which go public in The Window? Include a CV download?
 3. **Language:** English only, or EN + ID toggle?
 
 ## World and art details

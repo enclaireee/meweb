@@ -107,3 +107,7 @@ What creates the WOW there:
 - **Device target:** mid-range phone + ordinary laptop (4 to 5 years old) smooth; quality drops automatically on weak devices.
 - **Mobile:** **full vertical recomposition** for portrait, not just a scaled-down desktop.
 - **Hosting:** Vercel, **no analytics.**
+
+## 20. CV added
+- Owner uploaded their CV and asked for it to be put in the docs. Added `cv.md` (faithful transcription) and `content-inventory.md` (structured inventory, first mapping, gaps).
+- Facts: 8 projects, 7 roles, 4 awards. The Projects lane therefore starts with 8 chambers.

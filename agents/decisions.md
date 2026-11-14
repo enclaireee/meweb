@@ -20,6 +20,7 @@ Everything here is **decided by the owner** unless marked *proposal*. History an
 | Entering projects | **Optional.** Click/tap a fork object in the main lane. Exit returns to the exact spot. |
 | Projects | **Modular**: one registry entry per project; adding one needs no engine changes. |
 | Length | Main lane about **15 to 20 screens** of scroll. |
+| Initial content | From the owner's CV: **8 projects** (initial chambers), 7 roles, 4 awards. See `content-inventory.md`. |
 
 ## World and art
 | Topic | Decision |

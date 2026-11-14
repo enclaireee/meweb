@@ -10,6 +10,8 @@ Living notes for the portfolio redesign ("The Hollow Mountain"). Not used by the
 | `decisions.md` | **Single source of truth**: everything decided, plus what was dropped |
 | `concept.md` | The concept: why, the idea, content rule, lanes, look, motion, principles |
 | `world-hollow-mountain.md` | The chosen world in detail: 10-beat main lane, projects lane, modularity |
+| `cv.md` | The owner's CV, transcribed (raw content) |
+| `content-inventory.md` | Structured inventory from the CV, first mapping to the world, and gaps |
 | `tech-spec.md` | Technical spec: stack, rendering, scroll engine, lanes, registry, budget, spikes |
 | `open-questions.md` | What is still undecided |
 
