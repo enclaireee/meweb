@@ -47,6 +47,15 @@ Adding a project later must be easy. Design rule: **a project is data plus (opti
 - A project without custom art still works (generic paper card/scene from the data); custom art is an upgrade, not a requirement.
 - Deep link per project id.
 
+## Decided world (round 3): the folded map
+- **The world is one giant folded paper map**, a fantasy one, with no real-world or identity theme.
+- **Unfold** = scroll progress along the main lane: panels of the map open, each revealing a region.
+- **Zoom** = entering a point on the map (a marked place) turns that point into a full scene; zoom out folds back to the map.
+- Different regions have different mood/palette; the transitions vary (fold, zoom-through, others from the vocabulary).
+- **Projects lane = the reverse side of the map.** Clicking a fork object on the front (a pin, a flap, a corner tab) turns/flips the sheet; projects are places on the back, each a modular entry. Exit flips back to the same spot.
+- Map-native language available for content: pins, routes, legends, compass, folds/creases, torn edges, stamps, margin notes, coffee stains, tabs.
+- Still the rule: nothing is a showcase; every project is a place on the map that would exist anyway.
+
 ## Decided scroll language (round 2): a transition vocabulary
 There is no single scroll mechanic. The world has a **vocabulary of transitions**, and each section boundary uses a different one, so no two feel alike:
 - **Zoom-through:** scroll dives into an object (window, door, lantern, eye of a mask) and the next world is nested inside it.

@@ -46,3 +46,8 @@ What creates the WOW there:
 - Scroll mechanic: a **hybrid**. Each section transition is **different and dynamic**. Chosen ingredients: **endless zoom** and **folding/unfolding paper**. (Pop-up book and time-as-scroll were not picked; may still appear as one transition among many.)
 - Projects lane: **same world, parallel lane**. The camera slides/zooms into a lane of the same world; scroll keeps working; clear exit.
 - Priority: **full WOW**. Fast-path for recruiters is not a requirement. (Engineering baseline stays: real HTML text, reduced-motion fallback, deep links.)
+
+## 8. Answers from owner (AskUserQuestion round 3)
+- World: **a giant folded paper map.** Scroll unfolds it; zooming into a point on the map enters that scene. Fold and zoom share one logic.
+- Projects lane = **the other side of the map** (assistant's suggestion attached to this option; matches "parallel lane of the same world"). Confirm when detailing.
+- Identity influence: **neutral / fantasy.** No Indonesian or electrical-engineering theme required. World stands on its own.
