@@ -184,3 +184,15 @@ html.js .plain {
   content: ''; position: absolute; inset: -14% -22% -14% -30%; z-index: -1; pointer-events: none;
   background: radial-gradient(closest-side, rgb(4 8 22 / 0.72), rgb(4 8 22 / 0.4) 60%, transparent);
 }
+
+/* b6: skill words drift like lanterns, each on its own cycle (--dur, --delay set inline). */
+.float-word {
+  animation: float-bob var(--dur, 6s) ease-in-out var(--delay, 0s) infinite alternate;
+}
+@keyframes float-bob {
+  from { transform: translate(-2px, 4px); }
+  to { transform: translate(3px, -6px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .float-word { animation: none; }
+}
