@@ -3,7 +3,7 @@
 // Cards are HTML and arrive inline on scroll, one per screen, in each district's calm card area. Art is world-only.
 // Adding a project = a registry entry only (the shell has 4 web / 3 data / 3 hardware window slots).
 import type { BeatDef, Comp, CompositionDef, Keyframe, LayerDef, Manifest, OverlayDef, Rect } from '@/engine';
-import { scrollToS } from '@/engine';
+import { exitLane, scrollToS } from '@/engine';
 import { projects, ui, type Project } from '@/content';
 import shellJson from '../../../public/art/shell/manifest.json';
 import webJson from '../../../public/art/p-web/manifest.json';
@@ -97,6 +97,21 @@ function cardTrack(i: number, n: number, screens: number): Keyframe[] {
   ];
 }
 
+/** End of the lane: a real button back to the mountain (exitLane returns to where the visitor left). */
+function Back() {
+  const t = useT();
+  return (
+    <button
+      type="button"
+      onClick={() => exitLane()}
+      className="min-h-11 cursor-pointer rounded-full border border-[#ffd27a]/70 bg-[#1b1406]/75 px-6 py-2.5 text-[0.8rem] tracking-[0.25em] text-[#fff2c4] uppercase shadow-[0_0_24px_rgb(255_200_110/0.35)] backdrop-blur-sm transition-[background-color,box-shadow] duration-200 hover:bg-[#3a2a0c]/85 hover:shadow-[0_0_36px_8px_rgb(255_200_110/0.45)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ffd27a]"
+    >
+      ← {t(ui.projects.back)}
+    </button>
+  );
+}
+const back = <Back />;
+
 /* ---------- districts ---------- */
 type DistrictArt = {
   json: { slug: string; compositions: Manifest['compositions']; bytes: number };
@@ -161,8 +176,11 @@ const district = (g: Group): BeatDef => {
   const list = byGroup(g);
   const screens = screensOf(g);
   const manifest = d.json as Manifest;
-  const cards = (className: string): OverlayDef[] =>
-    list.map((p, i) => ({ node: <Card p={p} n={i + 1} of={list.length} />, className, track: cardTrack(i, list.length, screens) }));
+  const lastT = cardTrack(list.length - 1, list.length, screens).slice(0, 2); // in with the last card, then stays to the end
+  const cards = (className: string, backAt: string): OverlayDef[] => [
+    ...list.map((p, i) => ({ node: <Card p={p} n={i + 1} of={list.length} />, className, track: cardTrack(i, list.length, screens) })),
+    ...(d.last ? [{ node: back, className: backAt, track: lastT }] : []),
+  ];
   const comp = (c: Comp) => world(manifest, c, screens, { focus: d.focus[c], last: d.last, extra: d.extra(screens) });
   return {
     slug: d.json.slug,
@@ -171,9 +189,9 @@ const district = (g: Group): BeatDef => {
     still: LEAD / screens + 0.05, // reduced motion: first card shown
     desktop: {
       ...comp('desktop'),
-      overlays: cards(`${d.side === 'right' ? 'left-[62vw]' : 'left-[5vw]'} top-[13vh] w-[min(33vw,34rem)]`),
+      overlays: cards(`${d.side === 'right' ? 'left-[62vw]' : 'left-[5vw]'} top-[13vh] w-[min(33vw,34rem)]`, `${d.side === 'right' ? 'left-[62vw]' : 'left-[5vw]'} bottom-[9vh]`),
     },
-    portrait: { ...comp('portrait'), overlays: cards('left-[8vw] bottom-[6svh] w-[84vw] max-w-[34rem]') },
+    portrait: { ...comp('portrait'), overlays: cards('left-[8vw] bottom-[6svh] w-[84vw] max-w-[34rem]', 'left-[8vw] top-[9svh]') },
   };
 };
 

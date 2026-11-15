@@ -72,6 +72,7 @@ export const scenes = {
   b5: {
     word: l('projects', 'proyek'),
     hint: l('Three ways in. Take the door.', 'Tiga jalan masuk. Lewati pintunya.'),
+    cta: l('Enter the projects', 'Masuk ke proyek'),
   },
   b6: [
     { label: l('Programming', 'Pemrograman'), items: 'Python · TypeScript · JavaScript · C/C++ · MATLAB' },

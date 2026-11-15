@@ -75,8 +75,10 @@ function prep(cv: HTMLCanvasElement) {
     cv.height = bh;
   }
   const ctx = cv.getContext('2d');
-  ctx?.setTransform(1, 0, 0, 1, 0, 0);
-  ctx?.clearRect(0, 0, bw, bh);
+  if (!ctx) return ctx;
+  ctx.imageSmoothingQuality = 'high'; // a resize resets context state, so set it every draw (cheap)
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, bw, bh);
   return ctx;
 }
 
@@ -394,7 +396,7 @@ export function Stage({ beats, projectBeats, initialLane = 'main', initialFocusI
       E.h = E.unit = stage.clientHeight || 1;
       // Canvas backing scale: full DPR up to 2x, within ~8 MP per canvas. Hidden beats free theirs, so at most
       // two beats (four canvases with splits) hold memory, during a crossfade.
-      E.res = Math.min(devicePixelRatio || 1, getState().quality === 'low' ? 1 : 2, Math.sqrt(8e6 / (E.w * E.h)));
+      E.res = Math.min(devicePixelRatio || 1, getState().quality === 'low' ? 1 : 2, Math.sqrt(9e6 / (E.w * E.h)));
       // Keep the same place in the story when the viewport height really changes (rotation, window resize).
       if (old > 1 && E.unit !== old) {
         window.scrollTo({ top: s * E.unit, behavior: 'instant' });

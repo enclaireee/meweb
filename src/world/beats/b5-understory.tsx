@@ -48,15 +48,15 @@ function Fireflies({ plan }: { plan: Plan }) {
         />
       ))}
       <span className="absolute -translate-x-1/2" style={{ left: `${u(plan.word[0], rect.x)}cqw`, top: `${u(plan.word[1], rect.y)}cqw` }}>
-        <At a={G1 - 0.02} d={0.04} w={S0 - G1 + 0.02} k="one" className="beat-text block pl-[0.6em] text-[1.6cqw] tracking-[0.6em] text-[#fff2c4] uppercase">{t(scenes.b5.word)}</At>
+        <At a={G1 - 0.02} d={0.04} w={S0 - G1 + 0.02} k="one" className="beat-text block pl-[0.6em] text-[2.4cqw] font-semibold tracking-[0.55em] text-[#fff2c4] uppercase [text-shadow:0_0_10px_rgb(255_220_130/0.9),0_0_28px_rgb(255_190_90/0.6),0_2px_8px_rgb(0_0_0/0.75)]">{t(scenes.b5.word)}</At>
       </span>
       {groups.map((g, i) => {
         const [x, y] = plan.swarms[i]!;
         return (
           <span key={g} className="absolute -translate-x-1/2" style={{ left: `${u(x, rect.x)}cqw`, top: `${u(y + 52, rect.y)}cqw` }}>
-            <At a={S1 - 0.03 + 0.025 * i} d={0.05} className="beat-text flex items-baseline gap-[0.8cqw] whitespace-nowrap">
-              <span className="font-display text-[2.2cqw]">{t(ui.projects.groups[g])}</span>
-              <span className="font-display text-[2.6cqw] italic text-[#ffe9a8]">{projects.filter((p) => p.group === g).length}</span>
+            <At a={S1 - 0.03 + 0.025 * i} d={0.05} className="beat-text flex items-baseline gap-[0.9cqw] whitespace-nowrap text-[#fff6dc] [text-shadow:0_0_10px_rgb(255_220_130/0.9),0_0_28px_rgb(255_190_90/0.6),0_2px_8px_rgb(0_0_0/0.75)]">
+              <span className="font-display text-[3cqw] font-semibold">{t(ui.projects.groups[g])}</span>
+              <span className="font-display text-[3.6cqw] italic text-[#ffe9a8]">{projects.filter((p) => p.group === g).length}</span>
             </At>
           </span>
         );
@@ -70,9 +70,18 @@ const swarm = { d: <Fireflies plan={deskPlan} />, p: <Fireflies plan={portPlan} 
 function Hint() {
   const t = useT();
   return (
-    <div aria-hidden className="beat-text flex flex-col gap-3">
-      <Kicker slug="b5-understory" />
-      <p className="font-display text-[clamp(1.2rem,1.8vw,1.9rem)] italic">{t(scenes.b5.hint)}</p>
+    <div className="flex flex-col items-end gap-4 portrait:items-start">
+      <div aria-hidden className="beat-text flex flex-col gap-3 [text-shadow:0_0_10px_rgb(255_220_130/0.9),0_0_28px_rgb(255_190_90/0.6),0_2px_8px_rgb(0_0_0/0.75)]">
+        <Kicker slug="b5-understory" />
+        <p className="font-display text-[clamp(1.3rem,2vw,2.1rem)] italic">{t(scenes.b5.hint)}</p>
+      </div>
+      <button
+        type="button"
+        onClick={() => enterLane('projects')}
+        className="min-h-11 cursor-pointer rounded-full border border-[#ffd27a]/70 bg-[#1b1406]/75 px-6 py-2.5 text-[0.8rem] tracking-[0.25em] text-[#fff2c4] uppercase shadow-[0_0_24px_rgb(255_200_110/0.35)] backdrop-blur-sm transition-[background-color,box-shadow] duration-200 hover:bg-[#3a2a0c]/85 hover:shadow-[0_0_36px_8px_rgb(255_200_110/0.45)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ffd27a]"
+      >
+        {t(scenes.b5.cta)} →
+      </button>
     </div>
   );
 }
@@ -134,7 +143,7 @@ export const b5Understory: BeatDef = {
             { node: deer, rect: { x: 560, y: 350, w: 640, h: 555 }, parallax: 0.3, track: reveal() }, // hooves (880, 905)
       doorOn(desktop, [820, 650], { x: 446, y: 590, w: 96, h: 160 }),
       onLayer(desktop, 'fork-door', deskPlan.rect, swarm.d, { track: textT }),
-      { node: text, className: 'right-[6vw] bottom-[9vh] w-[min(30vw,30rem)] text-right', track: textT },
+      { node: text, className: 'right-[9vw] bottom-[11vh] w-[min(32vw,32rem)] text-right', track: textT },
     ],
   },
   portrait: {

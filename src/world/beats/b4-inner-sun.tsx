@@ -18,14 +18,14 @@ function Years() {
   const t = useT();
   const n = scenes.b4.length;
   return (
-    <div aria-hidden className="beat-text grid w-[min(40vw,42rem)] portrait:w-[88vw]">
+    <div aria-hidden className="beat-text grid w-[min(38vw,40rem)] portrait:w-[82vw]">
       <At a={0.12} d={0.05} w={at[n - 1]! + W - 0.12} k="one" className="col-start-1 row-start-1 flex items-baseline justify-between self-start">
         <Kicker slug="b4-inner-sun" />
       </At>
       {scenes.b4.map((r, i) => (
         <At key={i} a={at[i]!} d={0.05} w={W} k="one" className="col-start-1 row-start-1 flex flex-col pt-[3vh]">
           <span className="self-end text-[0.75rem] tracking-[0.35em] tabular-nums opacity-70">{count(i, n)}</span>
-          <span className="font-display text-[clamp(6rem,13vw,15rem)] leading-[0.82] tabular-nums">{r.years}</span>
+          <span className="font-display text-[clamp(5rem,10.5vw,12rem)] leading-[0.82] tabular-nums">{r.years}</span>
           <span className="mt-[1vh] h-px w-full bg-current opacity-50" />
           <span className="pt-3 font-display text-[clamp(1.4rem,2.2vw,2.5rem)] leading-tight text-balance">{t(r.role)}</span>
           <span className="pt-1 text-[0.75rem] tracking-[0.25em] uppercase opacity-80">{r.org}</span>
@@ -57,14 +57,14 @@ export const b4InnerSun: BeatDef = {
     ...comp('desktop', [1660, 800]),
     overlays: [
       { node: bird, rect: { x: 1296, y: 251, w: 528, h: 679 }, parallax: 0.4, track: reveal() }, // feet (1560, 930)
-      { node: text, className: 'left-[6vw] bottom-[6vh]' },
+      { node: text, className: 'left-[11vw] bottom-[13vh]' },
     ],
   },
   portrait: {
     ...comp('portrait', [760, 960]),
     overlays: [
       { node: bird, rect: { x: 495, y: 431, w: 450, h: 579 }, parallax: 0.4, track: reveal() }, // feet (720, 1010)
-      { node: text, className: 'left-[6vw] bottom-[6svh]' },
+      { node: text, className: 'left-[9vw] bottom-[11svh]' },
     ],
   },
 };
