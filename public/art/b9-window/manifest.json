@@ -1,0 +1,306 @@
+{
+  "slug": "b9-window",
+  "compositions": {
+    "desktop": {
+      "width": 1920,
+      "height": 1080,
+      "layers": [
+        {
+          "id": "night-outside",
+          "src": "/art/b9-window/night-outside.webp",
+          "x": -304,
+          "y": -400,
+          "w": 2608.3,
+          "h": 2004.1,
+          "depth": 0
+        },
+        {
+          "id": "range-outside",
+          "src": "/art/b9-window/range-outside.webp",
+          "x": 913.4,
+          "y": 491,
+          "w": 693.1,
+          "h": 375.9,
+          "depth": 1
+        },
+        {
+          "id": "outside-near",
+          "src": "/art/b9-window/outside-near.webp",
+          "x": 996.9,
+          "y": 523.3,
+          "w": 589.7,
+          "h": 303.4,
+          "depth": 2
+        },
+        {
+          "id": "window-reveal",
+          "src": "/art/b9-window/window-reveal.webp",
+          "x": 992.8,
+          "y": 126,
+          "w": 542.9,
+          "h": 722.3,
+          "depth": 3
+        },
+        {
+          "id": "wall",
+          "src": "/art/b9-window/wall.webp",
+          "x": -247,
+          "y": -108,
+          "w": 2460,
+          "h": 1295,
+          "depth": 4
+        },
+        {
+          "id": "vault-ribs",
+          "src": "/art/b9-window/vault-ribs.webp",
+          "x": -197.6,
+          "y": -142,
+          "w": 2302.1,
+          "h": 415.2,
+          "depth": 5
+        },
+        {
+          "id": "window-frame",
+          "src": "/art/b9-window/window-frame.webp",
+          "x": 1025,
+          "y": 161,
+          "w": 482,
+          "h": 661,
+          "depth": 6
+        },
+        {
+          "id": "sill",
+          "src": "/art/b9-window/sill.webp",
+          "x": 981,
+          "y": 672,
+          "w": 563,
+          "h": 228,
+          "depth": 7
+        },
+        {
+          "id": "window-glow",
+          "src": "/art/b9-window/window-glow.webp",
+          "x": 1001.7,
+          "y": 581.7,
+          "w": 467.2,
+          "h": 356.9,
+          "depth": 8
+        },
+        {
+          "id": "floor",
+          "src": "/art/b9-window/floor.webp",
+          "x": -460.3,
+          "y": 863.2,
+          "w": 2795.4,
+          "h": 379.3,
+          "depth": 9
+        },
+        {
+          "id": "shafts",
+          "src": "/art/b9-window/shafts.webp",
+          "x": 1112.8,
+          "y": 547.8,
+          "w": 640.4,
+          "h": 518.2,
+          "depth": 10
+        },
+        {
+          "id": "mist",
+          "src": "/art/b9-window/mist.webp",
+          "x": 956.9,
+          "y": 495,
+          "w": 947.1,
+          "h": 439.1,
+          "depth": 11
+        },
+        {
+          "id": "motes",
+          "src": "/art/b9-window/motes.webp",
+          "x": 1102,
+          "y": 453,
+          "w": 657.9,
+          "h": 549,
+          "depth": 12
+        },
+        {
+          "id": "plants-near",
+          "src": "/art/b9-window/plants-near.webp",
+          "x": 1405,
+          "y": -105.9,
+          "w": 367.8,
+          "h": 544.1,
+          "depth": 13
+        },
+        {
+          "id": "gate-l",
+          "src": "/art/b9-window/gate-l.webp",
+          "x": -880.7,
+          "y": -114.7,
+          "w": 1325.5,
+          "h": 1318.6,
+          "depth": 14
+        },
+        {
+          "id": "gate-r",
+          "src": "/art/b9-window/gate-r.webp",
+          "x": 1446.3,
+          "y": -113.7,
+          "w": 1354.5,
+          "h": 1318.6,
+          "depth": 15
+        }
+      ]
+    },
+    "portrait": {
+      "width": 1080,
+      "height": 1920,
+      "layers": [
+        {
+          "id": "night-outside",
+          "src": "/art/b9-window/night-outside.webp",
+          "x": -1320.8,
+          "y": -462,
+          "w": 3129.9,
+          "h": 2405,
+          "depth": 0
+        },
+        {
+          "id": "range-outside-p",
+          "src": "/art/b9-window/range-outside-p.webp",
+          "x": 154.6,
+          "y": 661,
+          "w": 771.3,
+          "h": 377,
+          "depth": 1
+        },
+        {
+          "id": "outside-near-p",
+          "src": "/art/b9-window/outside-near-p.webp",
+          "x": 256.9,
+          "y": 683.6,
+          "w": 620.7,
+          "h": 292,
+          "depth": 2
+        },
+        {
+          "id": "window-reveal-p",
+          "src": "/art/b9-window/window-reveal-p.webp",
+          "x": 231.8,
+          "y": 177,
+          "w": 623.2,
+          "h": 841.4,
+          "depth": 3
+        },
+        {
+          "id": "wall-p",
+          "src": "/art/b9-window/wall-p.webp",
+          "x": -247,
+          "y": -106,
+          "w": 1629,
+          "h": 2135,
+          "depth": 4
+        },
+        {
+          "id": "vault-ribs-p",
+          "src": "/art/b9-window/vault-ribs-p.webp",
+          "x": -184.6,
+          "y": -143,
+          "w": 1462.1,
+          "h": 442.8,
+          "depth": 5
+        },
+        {
+          "id": "window-frame-p",
+          "src": "/art/b9-window/window-frame-p.webp",
+          "x": 264,
+          "y": 212,
+          "w": 563,
+          "h": 780,
+          "depth": 6
+        },
+        {
+          "id": "sill-p",
+          "src": "/art/b9-window/sill-p.webp",
+          "x": 210,
+          "y": 828,
+          "w": 664,
+          "h": 242,
+          "depth": 7
+        },
+        {
+          "id": "window-glow",
+          "src": "/art/b9-window/window-glow.webp",
+          "x": 241.7,
+          "y": 751.7,
+          "w": 467.2,
+          "h": 356.9,
+          "depth": 8
+        },
+        {
+          "id": "floor-p",
+          "src": "/art/b9-window/floor-p.webp",
+          "x": -419.4,
+          "y": 1459.5,
+          "w": 1964.4,
+          "h": 623,
+          "depth": 9
+        },
+        {
+          "id": "shafts-p",
+          "src": "/art/b9-window/shafts-p.webp",
+          "x": 362.1,
+          "y": 677.4,
+          "w": 553.7,
+          "h": 317.2,
+          "depth": 10
+        },
+        {
+          "id": "mist-p",
+          "src": "/art/b9-window/mist-p.webp",
+          "x": 224.6,
+          "y": 602.3,
+          "w": 652.9,
+          "h": 386.2,
+          "depth": 11
+        },
+        {
+          "id": "motes-p",
+          "src": "/art/b9-window/motes-p.webp",
+          "x": 327,
+          "y": 617,
+          "w": 550.3,
+          "h": 384.8,
+          "depth": 12
+        },
+        {
+          "id": "plants-near-p",
+          "src": "/art/b9-window/plants-near-p.webp",
+          "x": 784,
+          "y": -108,
+          "w": 243.7,
+          "h": 792.3,
+          "depth": 13
+        },
+        {
+          "id": "gate-l-p",
+          "src": "/art/b9-window/gate-l-p.webp",
+          "x": -633.7,
+          "y": -102.7,
+          "w": 869,
+          "h": 2158.6,
+          "depth": 14
+        },
+        {
+          "id": "gate-r-p",
+          "src": "/art/b9-window/gate-r-p.webp",
+          "x": 847,
+          "y": -106.7,
+          "w": 870.3,
+          "h": 2158.6,
+          "depth": 15
+        }
+      ]
+    }
+  },
+  "bytes": 698404
+}

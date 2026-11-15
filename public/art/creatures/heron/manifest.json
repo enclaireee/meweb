@@ -1,0 +1,16 @@
+{
+  "src": "/art/creatures/heron/sheet.webp",
+  "frame": {
+    "w": 560,
+    "h": 720
+  },
+  "frames": [
+    "stand",
+    "bow"
+  ],
+  "anchor": [
+    280,
+    720
+  ],
+  "bytes": 24002
+}

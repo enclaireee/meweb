@@ -1,0 +1,90 @@
+{
+  "slug": "_smoke",
+  "compositions": {
+    "desktop": {
+      "width": 1920,
+      "height": 1080,
+      "layers": [
+        {
+          "id": "sky",
+          "src": "/art/_smoke/sky.webp",
+          "x": 0,
+          "y": 0,
+          "w": 1920,
+          "h": 1080,
+          "depth": 0
+        },
+        {
+          "id": "far",
+          "src": "/art/_smoke/far.webp",
+          "x": -112,
+          "y": 446,
+          "w": 2156,
+          "h": 712,
+          "depth": 1
+        },
+        {
+          "id": "near",
+          "src": "/art/_smoke/near.webp",
+          "x": -116,
+          "y": 681,
+          "w": 2160,
+          "h": 477,
+          "depth": 2
+        },
+        {
+          "id": "showcase",
+          "src": "/art/_smoke/showcase.webp",
+          "x": 28,
+          "y": -20,
+          "w": 1877,
+          "h": 1138,
+          "depth": 3
+        }
+      ]
+    },
+    "portrait": {
+      "width": 1080,
+      "height": 1920,
+      "layers": [
+        {
+          "id": "sky",
+          "src": "/art/_smoke/sky.webp",
+          "x": 0,
+          "y": 0,
+          "w": 3456,
+          "h": 1944,
+          "depth": 0
+        },
+        {
+          "id": "far",
+          "src": "/art/_smoke/far.webp",
+          "x": -512,
+          "y": 1146,
+          "w": 2156,
+          "h": 712,
+          "depth": 1
+        },
+        {
+          "id": "near",
+          "src": "/art/_smoke/near.webp",
+          "x": -516,
+          "y": 1581,
+          "w": 2160,
+          "h": 477,
+          "depth": 2
+        },
+        {
+          "id": "showcase",
+          "src": "/art/_smoke/showcase.webp",
+          "x": 28,
+          "y": -20,
+          "w": 1877,
+          "h": 1138,
+          "depth": 3
+        }
+      ]
+    }
+  },
+  "bytes": 267370
+}

@@ -1,0 +1,306 @@
+{
+  "slug": "b5-understory",
+  "compositions": {
+    "desktop": {
+      "width": 1920,
+      "height": 1080,
+      "layers": [
+        {
+          "id": "canopy-light",
+          "src": "/art/b5-understory/canopy-light.webp",
+          "x": -926,
+          "y": -1132,
+          "w": 3250.8,
+          "h": 2501.6,
+          "depth": 0
+        },
+        {
+          "id": "trunks-far",
+          "src": "/art/b5-understory/trunks-far.webp",
+          "x": -75.3,
+          "y": -126.3,
+          "w": 2193.5,
+          "h": 1335.2,
+          "depth": 1
+        },
+        {
+          "id": "canopy-far",
+          "src": "/art/b5-understory/canopy-far.webp",
+          "x": -156.3,
+          "y": -139.3,
+          "w": 2273.9,
+          "h": 501.9,
+          "depth": 2
+        },
+        {
+          "id": "mist-far",
+          "src": "/art/b5-understory/mist-far.webp",
+          "x": -34.5,
+          "y": 555,
+          "w": 1128.3,
+          "h": 173.8,
+          "depth": 3
+        },
+        {
+          "id": "ruins-far",
+          "src": "/art/b5-understory/ruins-far.webp",
+          "x": -55.8,
+          "y": 461.9,
+          "w": 998.3,
+          "h": 498.3,
+          "depth": 4
+        },
+        {
+          "id": "trunks-mid",
+          "src": "/art/b5-understory/trunks-mid.webp",
+          "x": -222.2,
+          "y": -98.4,
+          "w": 1996.6,
+          "h": 1137.9,
+          "depth": 5
+        },
+        {
+          "id": "stone-arch",
+          "src": "/art/b5-understory/stone-arch.webp",
+          "x": 134,
+          "y": 35.6,
+          "w": 947.9,
+          "h": 962.3,
+          "depth": 6
+        },
+        {
+          "id": "fork-door",
+          "src": "/art/b5-understory/fork-door.webp",
+          "x": 421,
+          "y": 589,
+          "w": 121,
+          "h": 191,
+          "depth": 7
+        },
+        {
+          "id": "fork-glow",
+          "src": "/art/b5-understory/fork-glow.webp",
+          "x": 344,
+          "y": 520,
+          "w": 299.6,
+          "h": 299.6,
+          "depth": 8
+        },
+        {
+          "id": "curtain-mid-l",
+          "src": "/art/b5-understory/curtain-mid-l.webp",
+          "x": -545.2,
+          "y": -102.9,
+          "w": 1002.2,
+          "h": 1288.8,
+          "depth": 9
+        },
+        {
+          "id": "curtain-mid-r",
+          "src": "/art/b5-understory/curtain-mid-r.webp",
+          "x": 1053.2,
+          "y": -108.1,
+          "w": 1392.2,
+          "h": 1286.6,
+          "depth": 9
+        },
+        {
+          "id": "shafts",
+          "src": "/art/b5-understory/shafts.webp",
+          "x": 353.6,
+          "y": 18.4,
+          "w": 695.2,
+          "h": 791.7,
+          "depth": 11
+        },
+        {
+          "id": "roots-near",
+          "src": "/art/b5-understory/roots-near.webp",
+          "x": -99.6,
+          "y": 835.7,
+          "w": 2160.9,
+          "h": 364,
+          "depth": 12
+        },
+        {
+          "id": "fireflies",
+          "src": "/art/b5-understory/fireflies.webp",
+          "x": 60,
+          "y": 152,
+          "w": 992.8,
+          "h": 747.4,
+          "depth": 13
+        },
+        {
+          "id": "gate-l",
+          "src": "/art/b5-understory/gate-l.webp",
+          "x": -1085.4,
+          "y": -113.7,
+          "w": 1420.7,
+          "h": 1329.7,
+          "depth": 14
+        },
+        {
+          "id": "gate-r",
+          "src": "/art/b5-understory/gate-r.webp",
+          "x": 1603.3,
+          "y": -116.7,
+          "w": 1404.1,
+          "h": 1337.9,
+          "depth": 15
+        }
+      ]
+    },
+    "portrait": {
+      "width": 1080,
+      "height": 1920,
+      "layers": [
+        {
+          "id": "canopy-light-p",
+          "src": "/art/b5-understory/canopy-light-p.webp",
+          "x": -1086,
+          "y": -1132,
+          "w": 3250.8,
+          "h": 3053.3,
+          "depth": 0
+        },
+        {
+          "id": "trunks-far-p",
+          "src": "/art/b5-understory/trunks-far-p.webp",
+          "x": -141.3,
+          "y": -109.3,
+          "w": 1354.4,
+          "h": 2128.4,
+          "depth": 1
+        },
+        {
+          "id": "canopy-far-p",
+          "src": "/art/b5-understory/canopy-far-p.webp",
+          "x": -152.5,
+          "y": -141.5,
+          "w": 1387.9,
+          "h": 599.1,
+          "depth": 2
+        },
+        {
+          "id": "mist-far",
+          "src": "/art/b5-understory/mist-far.webp",
+          "x": 135.9,
+          "y": 688.5,
+          "w": 789.8,
+          "h": 121.7,
+          "depth": 3
+        },
+        {
+          "id": "ruins-far-p",
+          "src": "/art/b5-understory/ruins-far-p.webp",
+          "x": -55.8,
+          "y": 449.2,
+          "w": 989.7,
+          "h": 634.5,
+          "depth": 4
+        },
+        {
+          "id": "trunks-mid-p",
+          "src": "/art/b5-understory/trunks-mid-p.webp",
+          "x": -315.5,
+          "y": -97.3,
+          "w": 1739.5,
+          "h": 1511.5,
+          "depth": 5
+        },
+        {
+          "id": "stone-arch-p",
+          "src": "/art/b5-understory/stone-arch-p.webp",
+          "x": -64,
+          "y": 211.4,
+          "w": 927,
+          "h": 922.2,
+          "depth": 6
+        },
+        {
+          "id": "fork-door",
+          "src": "/art/b5-understory/fork-door.webp",
+          "x": 226.5,
+          "y": 789.1,
+          "w": 113.7,
+          "h": 179.5,
+          "depth": 7
+        },
+        {
+          "id": "fork-glow",
+          "src": "/art/b5-understory/fork-glow.webp",
+          "x": 154.1,
+          "y": 724.2,
+          "w": 281.7,
+          "h": 281.7,
+          "depth": 8
+        },
+        {
+          "id": "curtain-mid-l-p",
+          "src": "/art/b5-understory/curtain-mid-l-p.webp",
+          "x": -544.1,
+          "y": -93.2,
+          "w": 840.5,
+          "h": 2131.5,
+          "depth": 9
+        },
+        {
+          "id": "curtain-mid-r-p",
+          "src": "/art/b5-understory/curtain-mid-r-p.webp",
+          "x": 712.2,
+          "y": -95.9,
+          "w": 913.8,
+          "h": 2131.5,
+          "depth": 9
+        },
+        {
+          "id": "shafts-p",
+          "src": "/art/b5-understory/shafts-p.webp",
+          "x": 152.4,
+          "y": 115.9,
+          "w": 777.9,
+          "h": 871.7,
+          "depth": 11
+        },
+        {
+          "id": "roots-near-p",
+          "src": "/art/b5-understory/roots-near-p.webp",
+          "x": -105.8,
+          "y": 1176.9,
+          "w": 1288.8,
+          "h": 864.2,
+          "depth": 12
+        },
+        {
+          "id": "fireflies-p",
+          "src": "/art/b5-understory/fireflies-p.webp",
+          "x": 42,
+          "y": 205,
+          "w": 989.6,
+          "h": 793.9,
+          "depth": 13
+        },
+        {
+          "id": "gate-l-p",
+          "src": "/art/b5-understory/gate-l-p.webp",
+          "x": -640.4,
+          "y": -106.7,
+          "w": 954.5,
+          "h": 2171,
+          "depth": 14
+        },
+        {
+          "id": "gate-r-p",
+          "src": "/art/b5-understory/gate-r-p.webp",
+          "x": 780.3,
+          "y": -109.4,
+          "w": 940.7,
+          "h": 2171,
+          "depth": 15
+        }
+      ]
+    }
+  },
+  "bytes": 759422
+}

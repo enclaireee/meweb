@@ -1,0 +1,306 @@
+{
+  "slug": "b4-inner-sun",
+  "compositions": {
+    "desktop": {
+      "width": 1920,
+      "height": 1080,
+      "layers": [
+        {
+          "id": "vault-glow",
+          "src": "/art/b4-inner-sun/vault-glow.webp",
+          "x": -201,
+          "y": -1121,
+          "w": 3001.7,
+          "h": 3001.7,
+          "depth": 0
+        },
+        {
+          "id": "sun-halo",
+          "src": "/art/b4-inner-sun/sun-halo.webp",
+          "x": 740,
+          "y": -180,
+          "w": 1120.7,
+          "h": 1120.7,
+          "depth": 1
+        },
+        {
+          "id": "ribs-far",
+          "src": "/art/b4-inner-sun/ribs-far.webp",
+          "x": -76.5,
+          "y": -72.5,
+          "w": 2069,
+          "h": 1229,
+          "depth": 2
+        },
+        {
+          "id": "city-far",
+          "src": "/art/b4-inner-sun/city-far.webp",
+          "x": 949,
+          "y": 612,
+          "w": 1066,
+          "h": 265,
+          "depth": 3
+        },
+        {
+          "id": "mist-far",
+          "src": "/art/b4-inner-sun/mist-far.webp",
+          "x": 863.4,
+          "y": 585,
+          "w": 1132.8,
+          "h": 239.7,
+          "depth": 4
+        },
+        {
+          "id": "sun-rays-outer",
+          "src": "/art/b4-inner-sun/sun-rays-outer.webp",
+          "x": 958,
+          "y": 45,
+          "w": 684,
+          "h": 682,
+          "depth": 5
+        },
+        {
+          "id": "sun-rays-inner",
+          "src": "/art/b4-inner-sun/sun-rays-inner.webp",
+          "x": 1056,
+          "y": 142,
+          "w": 489,
+          "h": 488,
+          "depth": 6
+        },
+        {
+          "id": "sun-core",
+          "src": "/art/b4-inner-sun/sun-core.webp",
+          "x": 942,
+          "y": -301,
+          "w": 716,
+          "h": 1039,
+          "depth": 7
+        },
+        {
+          "id": "cliff-city",
+          "src": "/art/b4-inner-sun/cliff-city.webp",
+          "x": -133,
+          "y": -89,
+          "w": 1188,
+          "h": 1262,
+          "depth": 8
+        },
+        {
+          "id": "terraces",
+          "src": "/art/b4-inner-sun/terraces.webp",
+          "x": 859,
+          "y": 728,
+          "w": 1207,
+          "h": 313,
+          "depth": 9
+        },
+        {
+          "id": "light-pool",
+          "src": "/art/b4-inner-sun/light-pool.webp",
+          "x": 1068,
+          "y": 800,
+          "w": 463.4,
+          "h": 118.6,
+          "depth": 10
+        },
+        {
+          "id": "shafts",
+          "src": "/art/b4-inner-sun/shafts.webp",
+          "x": 787.1,
+          "y": 456.4,
+          "w": 1022.4,
+          "h": 655.2,
+          "depth": 11
+        },
+        {
+          "id": "rock-near",
+          "src": "/art/b4-inner-sun/rock-near.webp",
+          "x": -109.2,
+          "y": 907.7,
+          "w": 2144.8,
+          "h": 309,
+          "depth": 12
+        },
+        {
+          "id": "dust",
+          "src": "/art/b4-inner-sun/dust.webp",
+          "x": 898,
+          "y": 123,
+          "w": 1001.4,
+          "h": 779.3,
+          "depth": 13
+        },
+        {
+          "id": "gate-l",
+          "src": "/art/b4-inner-sun/gate-l.webp",
+          "x": -881,
+          "y": -135.3,
+          "w": 1336.2,
+          "h": 1346.6,
+          "depth": 14
+        },
+        {
+          "id": "gate-r",
+          "src": "/art/b4-inner-sun/gate-r.webp",
+          "x": 1429,
+          "y": -114,
+          "w": 1372.4,
+          "h": 1394.8,
+          "depth": 15
+        }
+      ]
+    },
+    "portrait": {
+      "width": 1080,
+      "height": 1920,
+      "layers": [
+        {
+          "id": "vault-glow-p",
+          "src": "/art/b4-inner-sun/vault-glow-p.webp",
+          "x": -761,
+          "y": -781,
+          "w": 2601.7,
+          "h": 2701.7,
+          "depth": 0
+        },
+        {
+          "id": "sun-halo",
+          "src": "/art/b4-inner-sun/sun-halo.webp",
+          "x": 36,
+          "y": 16,
+          "w": 1008.6,
+          "h": 1008.6,
+          "depth": 1
+        },
+        {
+          "id": "ribs-far-p",
+          "src": "/art/b4-inner-sun/ribs-far-p.webp",
+          "x": -72.5,
+          "y": -68.5,
+          "w": 1235.9,
+          "h": 1245.5,
+          "depth": 2
+        },
+        {
+          "id": "city-far-p",
+          "src": "/art/b4-inner-sun/city-far-p.webp",
+          "x": 187,
+          "y": 800,
+          "w": 727,
+          "h": 258,
+          "depth": 3
+        },
+        {
+          "id": "mist-far-p",
+          "src": "/art/b4-inner-sun/mist-far-p.webp",
+          "x": 43.4,
+          "y": 715,
+          "w": 993.1,
+          "h": 244.8,
+          "depth": 4
+        },
+        {
+          "id": "sun-rays-outer",
+          "src": "/art/b4-inner-sun/sun-rays-outer.webp",
+          "x": 232.2,
+          "y": 218.5,
+          "w": 615.6,
+          "h": 613.8,
+          "depth": 5
+        },
+        {
+          "id": "sun-rays-inner",
+          "src": "/art/b4-inner-sun/sun-rays-inner.webp",
+          "x": 320.4,
+          "y": 305.8,
+          "w": 440.1,
+          "h": 439.2,
+          "depth": 6
+        },
+        {
+          "id": "sun-core",
+          "src": "/art/b4-inner-sun/sun-core.webp",
+          "x": 217.8,
+          "y": -92.9,
+          "w": 644.4,
+          "h": 935.1,
+          "depth": 7
+        },
+        {
+          "id": "cliff-city-p",
+          "src": "/art/b4-inner-sun/cliff-city-p.webp",
+          "x": -133.4,
+          "y": -92.3,
+          "w": 1346.4,
+          "h": 1546.9,
+          "depth": 8
+        },
+        {
+          "id": "terraces-p",
+          "src": "/art/b4-inner-sun/terraces-p.webp",
+          "x": -83.5,
+          "y": 954.4,
+          "w": 1289.1,
+          "h": 1057.8,
+          "depth": 9
+        },
+        {
+          "id": "light-pool-p",
+          "src": "/art/b4-inner-sun/light-pool-p.webp",
+          "x": 340,
+          "y": 982,
+          "w": 400,
+          "h": 35.9,
+          "depth": 10
+        },
+        {
+          "id": "shafts-p",
+          "src": "/art/b4-inner-sun/shafts-p.webp",
+          "x": 174.3,
+          "y": 607.8,
+          "w": 737.9,
+          "h": 446.6,
+          "depth": 11
+        },
+        {
+          "id": "rock-near-p",
+          "src": "/art/b4-inner-sun/rock-near-p.webp",
+          "x": -102.2,
+          "y": 1265.1,
+          "w": 1284.1,
+          "h": 793.1,
+          "depth": 12
+        },
+        {
+          "id": "dust-p",
+          "src": "/art/b4-inner-sun/dust-p.webp",
+          "x": 149,
+          "y": 147,
+          "w": 800,
+          "h": 812.4,
+          "depth": 13
+        },
+        {
+          "id": "gate-t-p",
+          "src": "/art/b4-inner-sun/gate-t-p.webp",
+          "x": -120.8,
+          "y": -941,
+          "w": 1320.7,
+          "h": 1384.5,
+          "depth": 14
+        },
+        {
+          "id": "gate-b-p",
+          "src": "/art/b4-inner-sun/gate-b-p.webp",
+          "x": -119.9,
+          "y": 1510.4,
+          "w": 1319,
+          "h": 1351.7,
+          "depth": 15
+        }
+      ]
+    }
+  },
+  "bytes": 766282
+}

@@ -10,7 +10,7 @@ Raw text is in `cv.md`. This file is the **structured inventory** the world has 
 | Education | 1 | Main lane |
 | Skills | 4 groups | Main lane (as crafts/tools in the world) |
 | Awards | 4 | Main lane |
-| Contact | email, phone, LinkedIn, GitHub, location | The Window (beat 9) |
+| Contact | email, LinkedIn, GitHub, CV download (no phone) | The Window (beat 9) |
 
 ## Projects (initial chamber list)
 | # | Project | Period | Kind | Stack / key facts | Media? |
@@ -44,7 +44,7 @@ Programming; Frameworks and tools; Forecasting and data; Languages (Bahasa Indon
 ## Awards
 ProtoTech 1st runner-up and Best Presentation (IEEE ITB, 2025); Best BPH, R&D Division (IME FTUI, 2026); UI Hackathon 2026 finalist.
 
-## First mapping ideas (proposal, to react to)
+## First mapping ideas (SUPERSEDED, see `decisions.md` Build decisions)
 Ideas only; each must pass the content rule ("would this exist in the world anyway?").
 - **Projects, 8 chambers** in the mountain's outer shell, grouped in three "districts" (web, data/ML, hardware) so the shell has structure and the registry can order and group them. A chamber shows title, period, a one-line pitch, key facts, links and any media.
 - **Experience** as the **journey itself** through the main lane: each region of the interior can host one or two roles as places or objects (e.g. a lit workshop among the ruins for engineering roles, a ring of seats for the teaching roles, a camp of lanterns for the Scout Jamboree). Ordering by region, not strictly by date.

@@ -1,1 +1,203 @@
 @import "tailwindcss";
+
+@theme {
+  --font-display: var(--font-display), "Iowan Old Style", Georgia, serif;
+}
+
+/* Display italics use the real italic cut (loaded separately, see layout.tsx). */
+.font-display .italic,
+.font-display.italic {
+  font-family: var(--font-display-italic), var(--font-display);
+}
+
+html {
+  background: #0b1420; /* shows behind the stage during the lane flip */
+  color: #f3ead8;
+}
+
+/* No JS: the stage is hidden and the plain page is the site. With JS: plain is screen-reader only. */
+html:not(.js) .world {
+  display: none;
+}
+html.js .plain {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Sprite-strip creatures (src/world/Creature.tsx): step through frames, back and forth. */
+.creature {
+  background-repeat: no-repeat;
+  animation: creature-frames 1.6s infinite alternate;
+}
+@keyframes creature-frames {
+  to {
+    background-position-x: var(--to);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .creature {
+    animation: none;
+  }
+}
+
+/* Text sits on art: a soft shadow keeps it readable on any sheet. */
+.beat-text {
+  text-shadow: 0 1px 18px rgb(0 0 0 / 0.55), 0 0 2px rgb(0 0 0 / 0.4);
+}
+
+/* Facts sit on a cut sheet of the same paper as the world, so they read on any scene. */
+.paper-panel {
+  padding: 1rem 1.15rem;
+  color: #2a2118;
+  text-shadow: none;
+  background: #f3ead8 url('/art/_grain.webp');
+  background-blend-mode: multiply;
+  clip-path: polygon(0 1.5%, 31% 0, 64% 1.2%, 100% 0, 99.2% 48%, 100% 98.5%, 58% 100%, 22% 98.8%, 0 100%, 0.8% 55%);
+  transform: rotate(-0.6deg);
+}
+
+/* Paper frame (src/world/Frame.tsx): each sheet is a tinted mask with a hard offset copy as its shadow. */
+.frame-mask {
+  mask: var(--d) center / 100% 100% no-repeat;
+}
+.frame-shade {
+  background: rgb(0 0 0 / 0.35);
+  transform: translate(2px, 3px);
+}
+.frame-sheet {
+  transition: background-color 600ms ease;
+}
+@media (orientation: portrait) {
+  .frame-mask {
+    mask-image: var(--p);
+  }
+}
+.frame-grain {
+  background: url('/art/_grain.webp');
+  mix-blend-mode: overlay;
+  opacity: 0.4;
+}
+@media (prefers-reduced-motion: reduce) {
+  .frame-sheet {
+    transition: none;
+  }
+}
+
+/* Scroll-staggered text. The engine writes each beat's local progress to --t on the beat group;
+   --a = when the piece starts (local t), --d = how long it takes. --p runs 0 -> 1. */
+.at {
+  --p: clamp(0, (var(--t, 1) - var(--a, 0)) / var(--d, 0.05), 1);
+  opacity: var(--p);
+  translate: 0 calc((1 - var(--p)) * 0.5em);
+}
+/* lit: a dim word brightens in place (b1). */
+.at.lit {
+  opacity: calc(0.18 + 0.82 * var(--p));
+  translate: none;
+}
+/* stamp: settles from slightly large (b4 rows, b8 numbers). */
+.at.stamp {
+  translate: none;
+  scale: calc(1.18 - 0.18 * var(--p));
+}
+/* unfurl: a hanging sheet drops open from its top edge (b3 banners). */
+.at.unfurl {
+  opacity: 1;
+  translate: none;
+  clip-path: inset(0 0 calc((1 - var(--p)) * 100%) 0);
+}
+/* focus: bright only inside its window [--a, --a + --w] (b7 awards). */
+.at.focus,
+.at.one {
+  --on: min(var(--p), clamp(0, (var(--a) + var(--w) + var(--d, 0.05) - var(--t, 1)) / var(--d, 0.05), 1));
+}
+.at.focus {
+  opacity: calc(0.3 + 0.7 * var(--on));
+  translate: none;
+}
+.at.focus .when-on {
+  opacity: var(--on);
+}
+/* one: shown only inside its window, then gone (b3/b4: one entry at a time in a shared slot). */
+.at.one {
+  opacity: var(--on);
+  translate: 0 calc((1 - var(--on)) * 0.6em);
+}
+/* etch: appears in place, no rise (b7 plate letters). */
+.at.etch {
+  translate: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .at {
+    translate: none;
+    scale: none;
+  }
+}
+
+/* World paper (b3 banners, b9 letter, project tags): a cut sheet with grain, ink text. */
+.sheet {
+  color: #2a2118;
+  text-shadow: none;
+  /* soft-light keeps the cream: multiply turned the grain into grey cement. */
+  background: url('/art/_grain.webp'), #f1e6cf;
+  background-blend-mode: soft-light;
+}
+.leader {
+  flex: 1;
+  min-width: 2rem;
+  border-bottom: 2px dotted currentColor;
+  opacity: 0.45;
+  translate: 0 -0.35em;
+}
+
+/* b5 fireflies: from (x0,y0) gather to the 8 (x1,y1) by --g, scatter to their swarm (x2,y2) by --s. Units: cqw. */
+.firefly {
+  --k: calc(var(--g) * (1 - var(--s)));
+  --m: calc(var(--g) * var(--s));
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0.62cqw;
+  height: 0.62cqw;
+  margin: -0.31cqw 0 0 -0.31cqw;
+  border-radius: 50%;
+  background: #fff6c8;
+  box-shadow: 0 0 0.6cqw 0.25cqw rgb(255 214 110 / 0.75);
+  translate: calc((var(--x0) * (1 - var(--g)) + var(--x1) * var(--k) + var(--x2) * var(--m)) * 1cqw)
+    calc((var(--y0) * (1 - var(--g)) + var(--y1) * var(--k) + var(--y2) * var(--m)) * 1cqw);
+  animation: twinkle 2.4s ease-in-out infinite alternate;
+}
+@keyframes twinkle {
+  from {
+    opacity: 0.45;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .firefly {
+    animation: none;
+  }
+}
+
+/* b7 brass plate: brushed gradient, bevel, two screws; engraved ink with a light lower lip. */
+.plate {
+  color: #3a2810;
+  text-shadow: 0 1px 0 rgb(255 238 196 / 0.55), 0 -1px 0 rgb(60 36 8 / 0.25);
+  border-radius: 3px;
+  background:
+    radial-gradient(circle at 10px 50%, #5d4318 2.2px, rgb(255 236 190 / 0.6) 3px, transparent 3.6px),
+    radial-gradient(circle at calc(100% - 10px) 50%, #5d4318 2.2px, rgb(255 236 190 / 0.6) 3px, transparent 3.6px),
+    repeating-linear-gradient(90deg, rgb(255 255 255 / 0.05) 0 1px, transparent 1px 3px),
+    linear-gradient(135deg, #e6c67c, #b48a3e 42%, #dcb96c 58%, #9a7431);
+  box-shadow: inset 0 0 0 1px rgb(255 240 200 / 0.55), inset 0 0 0 5px rgb(90 60 20 / 0.22), 0 8px 18px rgb(0 0 0 / 0.45);
+}
+
+/* b2: a soft night fade behind text set in the sky, so it reads over stars and the mountain's slope. */
+.sky-fade { position: relative; isolation: isolate; }
+.sky-fade::before {
+  content: ''; position: absolute; inset: -14% -22% -14% -30%; z-index: -1; pointer-events: none;
+  background: radial-gradient(closest-side, rgb(4 8 22 / 0.72), rgb(4 8 22 / 0.4) 60%, transparent);
+}

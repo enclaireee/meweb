@@ -1,0 +1,297 @@
+{
+  "slug": "p-hardware",
+  "compositions": {
+    "desktop": {
+      "width": 1920,
+      "height": 1080,
+      "layers": [
+        {
+          "id": "bg",
+          "src": "/art/p-hardware/bg.webp",
+          "x": -201,
+          "y": -139,
+          "w": 2185.2,
+          "h": 1477.8,
+          "depth": 0
+        },
+        {
+          "id": "vault-far",
+          "src": "/art/p-hardware/vault-far.webp",
+          "x": -75.3,
+          "y": -18.3,
+          "w": 1289.7,
+          "h": 1016.1,
+          "depth": 1
+        },
+        {
+          "id": "bridges-far",
+          "src": "/art/p-hardware/bridges-far.webp",
+          "x": -44.4,
+          "y": -26,
+          "w": 1166.7,
+          "h": 502.3,
+          "depth": 2
+        },
+        {
+          "id": "mist-far",
+          "src": "/art/p-hardware/mist-far.webp",
+          "x": 3.4,
+          "y": 325,
+          "w": 1091.4,
+          "h": 510.3,
+          "depth": 3
+        },
+        {
+          "id": "stalactites",
+          "src": "/art/p-hardware/stalactites.webp",
+          "x": -103.2,
+          "y": -71.2,
+          "w": 1304.1,
+          "h": 672.1,
+          "depth": 4
+        },
+        {
+          "id": "pillars-mid",
+          "src": "/art/p-hardware/pillars-mid.webp",
+          "x": 24.9,
+          "y": -65.1,
+          "w": 1139.3,
+          "h": 1096.6,
+          "depth": 5
+        },
+        {
+          "id": "bridge-mid",
+          "src": "/art/p-hardware/bridge-mid.webp",
+          "x": -129.2,
+          "y": 402.5,
+          "w": 1284,
+          "h": 343.6,
+          "depth": 6
+        },
+        {
+          "id": "crystals",
+          "src": "/art/p-hardware/crystals.webp",
+          "x": 77.4,
+          "y": 70.3,
+          "w": 1031.3,
+          "h": 784.1,
+          "depth": 7
+        },
+        {
+          "id": "pulse-1",
+          "src": "/art/p-hardware/pulse-1.webp",
+          "x": 2.8,
+          "y": 60,
+          "w": 594.5,
+          "h": 880,
+          "depth": 8
+        },
+        {
+          "id": "pulse-2",
+          "src": "/art/p-hardware/pulse-2.webp",
+          "x": 383.4,
+          "y": 77,
+          "w": 495.2,
+          "h": 500.7,
+          "depth": 9
+        },
+        {
+          "id": "pulse-3",
+          "src": "/art/p-hardware/pulse-3.webp",
+          "x": 620,
+          "y": 441,
+          "w": 560,
+          "h": 560,
+          "depth": 10
+        },
+        {
+          "id": "card-wall",
+          "src": "/art/p-hardware/card-wall.webp",
+          "x": 1062.3,
+          "y": -82.2,
+          "w": 1005.5,
+          "h": 1241.4,
+          "depth": 11
+        },
+        {
+          "id": "ledge-near",
+          "src": "/art/p-hardware/ledge-near.webp",
+          "x": -104.2,
+          "y": 897.2,
+          "w": 1313.1,
+          "h": 300.7,
+          "depth": 12
+        },
+        {
+          "id": "embers",
+          "src": "/art/p-hardware/embers.webp",
+          "x": -1,
+          "y": 102,
+          "w": 1084.1,
+          "h": 848.3,
+          "depth": 13
+        },
+        {
+          "id": "gate-l",
+          "src": "/art/p-hardware/gate-l.webp",
+          "x": -882.8,
+          "y": -120,
+          "w": 1251.7,
+          "h": 1415.5,
+          "depth": 14
+        },
+        {
+          "id": "gate-r",
+          "src": "/art/p-hardware/gate-r.webp",
+          "x": 1376.6,
+          "y": -124.6,
+          "w": 1424.1,
+          "h": 1391.4,
+          "depth": 15
+        }
+      ]
+    },
+    "portrait": {
+      "width": 1080,
+      "height": 1920,
+      "layers": [
+        {
+          "id": "bg-p",
+          "src": "/art/p-hardware/bg-p.webp",
+          "x": -220,
+          "y": -125,
+          "w": 1519.2,
+          "h": 2069,
+          "depth": 0
+        },
+        {
+          "id": "vault-far-p",
+          "src": "/art/p-hardware/vault-far-p.webp",
+          "x": -54.3,
+          "y": -18.3,
+          "w": 1188.5,
+          "h": 936.8,
+          "depth": 1
+        },
+        {
+          "id": "bridges-far-p",
+          "src": "/art/p-hardware/bridges-far-p.webp",
+          "x": -43.3,
+          "y": -26,
+          "w": 1166.7,
+          "h": 416.1,
+          "depth": 2
+        },
+        {
+          "id": "stalactites-p",
+          "src": "/art/p-hardware/stalactites-p.webp",
+          "x": -82.2,
+          "y": -71.2,
+          "w": 1243.9,
+          "h": 591.8,
+          "depth": 4
+        },
+        {
+          "id": "pillars-mid-p",
+          "src": "/art/p-hardware/pillars-mid-p.webp",
+          "x": -27.7,
+          "y": -64.7,
+          "w": 1132.4,
+          "h": 994.5,
+          "depth": 5
+        },
+        {
+          "id": "bridge-mid-p",
+          "src": "/art/p-hardware/bridge-mid-p.webp",
+          "x": -101.2,
+          "y": 328.5,
+          "w": 1282.8,
+          "h": 346.1,
+          "depth": 6
+        },
+        {
+          "id": "crystals-p",
+          "src": "/art/p-hardware/crystals-p.webp",
+          "x": 111.5,
+          "y": 57.3,
+          "w": 865.8,
+          "h": 673.7,
+          "depth": 7
+        },
+        {
+          "id": "pulse-1-p",
+          "src": "/art/p-hardware/pulse-1-p.webp",
+          "x": -18.6,
+          "y": 351.4,
+          "w": 517.2,
+          "h": 517.2,
+          "depth": 8
+        },
+        {
+          "id": "pulse-2-p",
+          "src": "/art/p-hardware/pulse-2-p.webp",
+          "x": 124.4,
+          "y": 47,
+          "w": 751.7,
+          "h": 440,
+          "depth": 9
+        },
+        {
+          "id": "pulse-3-p",
+          "src": "/art/p-hardware/pulse-3-p.webp",
+          "x": 581.4,
+          "y": 291.4,
+          "w": 517.2,
+          "h": 517.2,
+          "depth": 10
+        },
+        {
+          "id": "card-wall-p",
+          "src": "/art/p-hardware/card-wall-p.webp",
+          "x": -101.6,
+          "y": 833.3,
+          "w": 1282.8,
+          "h": 1263.4,
+          "depth": 11
+        },
+        {
+          "id": "ledge-near-p",
+          "src": "/art/p-hardware/ledge-near-p.webp",
+          "x": -98.4,
+          "y": 724.2,
+          "w": 1277.2,
+          "h": 222.1,
+          "depth": 12
+        },
+        {
+          "id": "embers-p",
+          "src": "/art/p-hardware/embers-p.webp",
+          "x": 6,
+          "y": 39,
+          "w": 1070.3,
+          "h": 791.7,
+          "depth": 13
+        },
+        {
+          "id": "gate-l-p",
+          "src": "/art/p-hardware/gate-l-p.webp",
+          "x": -638,
+          "y": -108,
+          "w": 939.7,
+          "h": 2201.7,
+          "depth": 14
+        },
+        {
+          "id": "gate-r-p",
+          "src": "/art/p-hardware/gate-r-p.webp",
+          "x": 807.8,
+          "y": -108,
+          "w": 910.3,
+          "h": 2193.1,
+          "depth": 15
+        }
+      ]
+    }
+  },
+  "bytes": 857154
+}

@@ -1,0 +1,306 @@
+{
+  "slug": "p-web",
+  "compositions": {
+    "desktop": {
+      "width": 1920,
+      "height": 1080,
+      "layers": [
+        {
+          "id": "bg",
+          "src": "/art/p-web/bg.webp",
+          "x": -23,
+          "y": -23,
+          "w": 1942.5,
+          "h": 1126.4,
+          "depth": 0
+        },
+        {
+          "id": "galleries-far",
+          "src": "/art/p-web/galleries-far.webp",
+          "x": -122.5,
+          "y": 53.9,
+          "w": 1285.5,
+          "h": 924.1,
+          "depth": 1
+        },
+        {
+          "id": "bridges-far",
+          "src": "/art/p-web/bridges-far.webp",
+          "x": 258,
+          "y": 201,
+          "w": 618,
+          "h": 452,
+          "depth": 2
+        },
+        {
+          "id": "lanterns-far",
+          "src": "/art/p-web/lanterns-far.webp",
+          "x": 3,
+          "y": 38,
+          "w": 1115.9,
+          "h": 896.6,
+          "depth": 3
+        },
+        {
+          "id": "mist-far",
+          "src": "/art/p-web/mist-far.webp",
+          "x": 4.6,
+          "y": 305,
+          "w": 1092,
+          "h": 469,
+          "depth": 4
+        },
+        {
+          "id": "galleries-mid",
+          "src": "/art/p-web/galleries-mid.webp",
+          "x": -2,
+          "y": -104.1,
+          "w": 1092,
+          "h": 980.5,
+          "depth": 5
+        },
+        {
+          "id": "light-well",
+          "src": "/art/p-web/light-well.webp",
+          "x": 406.8,
+          "y": -109.5,
+          "w": 306.9,
+          "h": 1120.7,
+          "depth": 6
+        },
+        {
+          "id": "well-bloom",
+          "src": "/art/p-web/well-bloom.webp",
+          "x": 142.8,
+          "y": 102.8,
+          "w": 835.9,
+          "h": 1037.2,
+          "depth": 7
+        },
+        {
+          "id": "stairs-mid",
+          "src": "/art/p-web/stairs-mid.webp",
+          "x": 325.4,
+          "y": -2.8,
+          "w": 471.1,
+          "h": 889.1,
+          "depth": 8
+        },
+        {
+          "id": "screens",
+          "src": "/art/p-web/screens.webp",
+          "x": 93.3,
+          "y": -90,
+          "w": 976.8,
+          "h": 894,
+          "depth": 9
+        },
+        {
+          "id": "shafts",
+          "src": "/art/p-web/shafts.webp",
+          "x": 305.7,
+          "y": -11.7,
+          "w": 492,
+          "h": 901.1,
+          "depth": 10
+        },
+        {
+          "id": "card-wall",
+          "src": "/art/p-web/card-wall.webp",
+          "x": 1039.8,
+          "y": -134.2,
+          "w": 1106.2,
+          "h": 1390.3,
+          "depth": 11
+        },
+        {
+          "id": "floor-near",
+          "src": "/art/p-web/floor-near.webp",
+          "x": -142.2,
+          "y": 860.4,
+          "w": 1364.1,
+          "h": 377.9,
+          "depth": 12
+        },
+        {
+          "id": "dust",
+          "src": "/art/p-web/dust.webp",
+          "x": 379,
+          "y": 60,
+          "w": 384.7,
+          "h": 846,
+          "depth": 13
+        },
+        {
+          "id": "gate-l",
+          "src": "/art/p-web/gate-l.webp",
+          "x": -876.3,
+          "y": -147.7,
+          "w": 1301.1,
+          "h": 1358.6,
+          "depth": 14
+        },
+        {
+          "id": "gate-r",
+          "src": "/art/p-web/gate-r.webp",
+          "x": 1487.5,
+          "y": -110.3,
+          "w": 1312.6,
+          "h": 1390.8,
+          "depth": 15
+        }
+      ]
+    },
+    "portrait": {
+      "width": 1080,
+      "height": 1920,
+      "layers": [
+        {
+          "id": "bg-p",
+          "src": "/art/p-web/bg-p.webp",
+          "x": -23,
+          "y": -23,
+          "w": 1126.4,
+          "h": 1942.5,
+          "depth": 0
+        },
+        {
+          "id": "galleries-far-p",
+          "src": "/art/p-web/galleries-far-p.webp",
+          "x": -121.1,
+          "y": 63.9,
+          "w": 1322.8,
+          "h": 783.4,
+          "depth": 1
+        },
+        {
+          "id": "bridges-far-p",
+          "src": "/art/p-web/bridges-far-p.webp",
+          "x": 257,
+          "y": 175,
+          "w": 566,
+          "h": 477,
+          "depth": 2
+        },
+        {
+          "id": "lanterns-far-p",
+          "src": "/art/p-web/lanterns-far-p.webp",
+          "x": 2,
+          "y": 90,
+          "w": 1060.7,
+          "h": 728.3,
+          "depth": 3
+        },
+        {
+          "id": "mist-far",
+          "src": "/art/p-web/mist-far.webp",
+          "x": 2.8,
+          "y": 103,
+          "w": 655.2,
+          "h": 281.4,
+          "depth": 4
+        },
+        {
+          "id": "galleries-mid-p",
+          "src": "/art/p-web/galleries-mid-p.webp",
+          "x": 0,
+          "y": -103.1,
+          "w": 1080.5,
+          "h": 786.2,
+          "depth": 5
+        },
+        {
+          "id": "light-well-p",
+          "src": "/art/p-web/light-well-p.webp",
+          "x": 386.8,
+          "y": -110.5,
+          "w": 306.9,
+          "h": 1001.1,
+          "depth": 6
+        },
+        {
+          "id": "well-bloom-p",
+          "src": "/art/p-web/well-bloom-p.webp",
+          "x": 160,
+          "y": 40,
+          "w": 761.4,
+          "h": 841.4,
+          "depth": 7
+        },
+        {
+          "id": "stairs-mid-p",
+          "src": "/art/p-web/stairs-mid-p.webp",
+          "x": 305.4,
+          "y": -2.8,
+          "w": 471.1,
+          "h": 791.5,
+          "depth": 8
+        },
+        {
+          "id": "screens-p",
+          "src": "/art/p-web/screens-p.webp",
+          "x": 63.3,
+          "y": -90,
+          "w": 963,
+          "h": 823.8,
+          "depth": 9
+        },
+        {
+          "id": "shafts-p",
+          "src": "/art/p-web/shafts-p.webp",
+          "x": 313.1,
+          "y": -12,
+          "w": 457.5,
+          "h": 763.2,
+          "depth": 10
+        },
+        {
+          "id": "card-wall-p",
+          "src": "/art/p-web/card-wall-p.webp",
+          "x": -141.2,
+          "y": 819.8,
+          "w": 1379.3,
+          "h": 1248.3,
+          "depth": 11
+        },
+        {
+          "id": "floor-near-p",
+          "src": "/art/p-web/floor-near-p.webp",
+          "x": -141.2,
+          "y": 734,
+          "w": 1362.8,
+          "h": 249.7,
+          "depth": 12
+        },
+        {
+          "id": "dust-p",
+          "src": "/art/p-web/dust-p.webp",
+          "x": 376,
+          "y": 80,
+          "w": 326.4,
+          "h": 703.4,
+          "depth": 13
+        },
+        {
+          "id": "gate-l-p",
+          "src": "/art/p-web/gate-l-p.webp",
+          "x": -631.3,
+          "y": -127.9,
+          "w": 926.4,
+          "h": 2190.8,
+          "depth": 14
+        },
+        {
+          "id": "gate-r-p",
+          "src": "/art/p-web/gate-r-p.webp",
+          "x": 814.2,
+          "y": -101.6,
+          "w": 896.6,
+          "h": 2218.4,
+          "depth": 15
+        }
+      ]
+    }
+  },
+  "bytes": 784530
+}

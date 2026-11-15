@@ -1,0 +1,306 @@
+{
+  "slug": "b8-seam",
+  "compositions": {
+    "desktop": {
+      "width": 1920,
+      "height": 1080,
+      "layers": [
+        {
+          "id": "paper",
+          "src": "/art/b8-seam/paper.webp",
+          "x": 0,
+          "y": 0,
+          "w": 1920,
+          "h": 1080,
+          "depth": 0
+        },
+        {
+          "id": "mini-mountain",
+          "src": "/art/b8-seam/mini-mountain.webp",
+          "x": 1123,
+          "y": 416,
+          "w": 277,
+          "h": 289,
+          "depth": 1
+        },
+        {
+          "id": "mini-glow",
+          "src": "/art/b8-seam/mini-glow.webp",
+          "x": 1110,
+          "y": 340,
+          "w": 320,
+          "h": 320,
+          "depth": 2
+        },
+        {
+          "id": "fold-1",
+          "src": "/art/b8-seam/fold-1.webp",
+          "x": 1027.2,
+          "y": 247.2,
+          "w": 466.7,
+          "h": 546,
+          "depth": 3
+        },
+        {
+          "id": "fold-2",
+          "src": "/art/b8-seam/fold-2.webp",
+          "x": 981,
+          "y": 191,
+          "w": 557.5,
+          "h": 656.3,
+          "depth": 4
+        },
+        {
+          "id": "fold-3",
+          "src": "/art/b8-seam/fold-3.webp",
+          "x": 936.8,
+          "y": 136.8,
+          "w": 647,
+          "h": 766.1,
+          "depth": 5
+        },
+        {
+          "id": "fold-4",
+          "src": "/art/b8-seam/fold-4.webp",
+          "x": 891.3,
+          "y": 79.9,
+          "w": 739.3,
+          "h": 880,
+          "depth": 6
+        },
+        {
+          "id": "fold-5",
+          "src": "/art/b8-seam/fold-5.webp",
+          "x": 844.9,
+          "y": 24.9,
+          "w": 830.3,
+          "h": 989,
+          "depth": 7
+        },
+        {
+          "id": "fold-6",
+          "src": "/art/b8-seam/fold-6.webp",
+          "x": 787,
+          "y": -43,
+          "w": 946.2,
+          "h": 1125.5,
+          "depth": 8
+        },
+        {
+          "id": "fold-7",
+          "src": "/art/b8-seam/fold-7.webp",
+          "x": -186.6,
+          "y": -121,
+          "w": 2293.8,
+          "h": 1321.4,
+          "depth": 9
+        },
+        {
+          "id": "creases",
+          "src": "/art/b8-seam/creases.webp",
+          "x": 878,
+          "y": 50,
+          "w": 764.1,
+          "h": 940.7,
+          "depth": 10
+        },
+        {
+          "id": "shafts",
+          "src": "/art/b8-seam/shafts.webp",
+          "x": 1247.2,
+          "y": -39.3,
+          "w": 572.4,
+          "h": 948.3,
+          "depth": 11
+        },
+        {
+          "id": "mist",
+          "src": "/art/b8-seam/mist.webp",
+          "x": 947,
+          "y": 160,
+          "w": 626.6,
+          "h": 719.2,
+          "depth": 12
+        },
+        {
+          "id": "paper-dust",
+          "src": "/art/b8-seam/paper-dust.webp",
+          "x": 897,
+          "y": 32,
+          "w": 1002.8,
+          "h": 1016.6,
+          "depth": 13
+        },
+        {
+          "id": "gate-l",
+          "src": "/art/b8-seam/gate-l.webp",
+          "x": -868.8,
+          "y": -119,
+          "w": 1255.2,
+          "h": 1353.4,
+          "depth": 14
+        },
+        {
+          "id": "gate-r",
+          "src": "/art/b8-seam/gate-r.webp",
+          "x": 1499.8,
+          "y": -120.8,
+          "w": 1287.9,
+          "h": 1355.2,
+          "depth": 15
+        }
+      ]
+    },
+    "portrait": {
+      "width": 1080,
+      "height": 1920,
+      "layers": [
+        {
+          "id": "paper-p",
+          "src": "/art/b8-seam/paper-p.webp",
+          "x": 0,
+          "y": 0,
+          "w": 1080,
+          "h": 1920,
+          "depth": 0
+        },
+        {
+          "id": "mini-mountain-p",
+          "src": "/art/b8-seam/mini-mountain-p.webp",
+          "x": 403,
+          "y": 596,
+          "w": 277,
+          "h": 269,
+          "depth": 1
+        },
+        {
+          "id": "mini-glow",
+          "src": "/art/b8-seam/mini-glow.webp",
+          "x": 388,
+          "y": 500,
+          "w": 320,
+          "h": 320,
+          "depth": 2
+        },
+        {
+          "id": "fold-1-p",
+          "src": "/art/b8-seam/fold-1-p.webp",
+          "x": 287.2,
+          "y": 450,
+          "w": 505.7,
+          "h": 458.6,
+          "depth": 3
+        },
+        {
+          "id": "fold-2-p",
+          "src": "/art/b8-seam/fold-2-p.webp",
+          "x": 236,
+          "y": 409,
+          "w": 608,
+          "h": 542.5,
+          "depth": 4
+        },
+        {
+          "id": "fold-3-p",
+          "src": "/art/b8-seam/fold-3-p.webp",
+          "x": 186.8,
+          "y": 366.8,
+          "w": 706,
+          "h": 627,
+          "depth": 5
+        },
+        {
+          "id": "fold-4-p",
+          "src": "/art/b8-seam/fold-4-p.webp",
+          "x": 136.3,
+          "y": 324.3,
+          "w": 808.3,
+          "h": 711.7,
+          "depth": 6
+        },
+        {
+          "id": "fold-5-p",
+          "src": "/art/b8-seam/fold-5-p.webp",
+          "x": 84.9,
+          "y": 279.9,
+          "w": 910.3,
+          "h": 798.6,
+          "depth": 7
+        },
+        {
+          "id": "fold-6-p",
+          "src": "/art/b8-seam/fold-6-p.webp",
+          "x": 27,
+          "y": 227,
+          "w": 1026.2,
+          "h": 906.2,
+          "depth": 8
+        },
+        {
+          "id": "fold-7-p",
+          "src": "/art/b8-seam/fold-7-p.webp",
+          "x": -121,
+          "y": -186.6,
+          "w": 1321.4,
+          "h": 2293.8,
+          "depth": 9
+        },
+        {
+          "id": "creases-p",
+          "src": "/art/b8-seam/creases-p.webp",
+          "x": 117,
+          "y": 318,
+          "w": 845.5,
+          "h": 725.5,
+          "depth": 10
+        },
+        {
+          "id": "shafts-p",
+          "src": "/art/b8-seam/shafts-p.webp",
+          "x": 60.7,
+          "y": 200.7,
+          "w": 958.6,
+          "h": 522.4,
+          "depth": 11
+        },
+        {
+          "id": "mist-p",
+          "src": "/art/b8-seam/mist-p.webp",
+          "x": 195,
+          "y": 390,
+          "w": 689.7,
+          "h": 579.3,
+          "depth": 12
+        },
+        {
+          "id": "paper-dust-p",
+          "src": "/art/b8-seam/paper-dust-p.webp",
+          "x": 104,
+          "y": 112,
+          "w": 878.6,
+          "h": 885.5,
+          "depth": 13
+        },
+        {
+          "id": "gate-l-p",
+          "src": "/art/b8-seam/gate-l-p.webp",
+          "x": -628.8,
+          "y": -119,
+          "w": 877.6,
+          "h": 2172.4,
+          "depth": 14
+        },
+        {
+          "id": "gate-r-p",
+          "src": "/art/b8-seam/gate-r-p.webp",
+          "x": 890,
+          "y": -120.8,
+          "w": 819,
+          "h": 2175.9,
+          "depth": 15
+        }
+      ]
+    }
+  },
+  "bytes": 718082
+}

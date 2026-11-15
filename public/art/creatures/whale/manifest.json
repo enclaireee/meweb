@@ -1,0 +1,17 @@
+{
+  "src": "/art/creatures/whale/sheet.webp",
+  "frame": {
+    "w": 600,
+    "h": 280
+  },
+  "frames": [
+    "up",
+    "down"
+  ],
+  "anchor": [
+    300,
+    140
+  ],
+  "scale": 0.5,
+  "bytes": 13918
+}

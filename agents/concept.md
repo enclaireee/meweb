@@ -4,6 +4,8 @@
 
 A portfolio built as **one paper-art world**, experienced as **one continuous scroll**. The world is the draw; the work is found inside it.
 
+> **Note:** where this file describes project chambers as rooms with their own objects, or roles/skills/awards as objects in the scene, `decisions.md` (Build decisions) overrides it: art is world-only, content goes on paper cards and labels.
+
 ## Why
 - The previous version (Paper River v4) was calm and nice but not a showcase and not WOW: a small fixed frame, one palette, one slow idea, work hidden in small tags.
 - Reference: https://aksarakala.vercel.app/ . What makes it WOW: every section is a different world with its own mood; huge hero images; very little, very large text; living details (particles, glow, nav, sound); plain native scroll. We take the *energy*, not the marketing-page structure.

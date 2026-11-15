@@ -1,0 +1,306 @@
+{
+  "slug": "b3-scale-flip",
+  "compositions": {
+    "desktop": {
+      "width": 1920,
+      "height": 1080,
+      "layers": [
+        {
+          "id": "vault-glow",
+          "src": "/art/b3-scale-flip/vault-glow.webp",
+          "x": -843,
+          "y": -606,
+          "w": 3125,
+          "h": 2252.2,
+          "depth": 0
+        },
+        {
+          "id": "arcade-far",
+          "src": "/art/b3-scale-flip/arcade-far.webp",
+          "x": 362.7,
+          "y": 183.2,
+          "w": 673.9,
+          "h": 527.3,
+          "depth": 1
+        },
+        {
+          "id": "bridge-far",
+          "src": "/art/b3-scale-flip/bridge-far.webp",
+          "x": 187.7,
+          "y": 536.2,
+          "w": 1126.4,
+          "h": 139.4,
+          "depth": 2
+        },
+        {
+          "id": "mist-far",
+          "src": "/art/b3-scale-flip/mist-far.webp",
+          "x": 2.2,
+          "y": 575,
+          "w": 995.7,
+          "h": 265.1,
+          "depth": 3
+        },
+        {
+          "id": "arcade-left",
+          "src": "/art/b3-scale-flip/arcade-left.webp",
+          "x": -173.4,
+          "y": 122.2,
+          "w": 867.4,
+          "h": 1051.7,
+          "depth": 4
+        },
+        {
+          "id": "wall-right",
+          "src": "/art/b3-scale-flip/wall-right.webp",
+          "x": 975.6,
+          "y": -91.4,
+          "w": 1078.2,
+          "h": 1262.6,
+          "depth": 5
+        },
+        {
+          "id": "floor-terraces",
+          "src": "/art/b3-scale-flip/floor-terraces.webp",
+          "x": -86.7,
+          "y": 641.9,
+          "w": 2116.7,
+          "h": 806.4,
+          "depth": 6
+        },
+        {
+          "id": "columns",
+          "src": "/art/b3-scale-flip/columns.webp",
+          "x": -27.4,
+          "y": 69.5,
+          "w": 1359.2,
+          "h": 962.6,
+          "depth": 7
+        },
+        {
+          "id": "shafts",
+          "src": "/art/b3-scale-flip/shafts.webp",
+          "x": 362.2,
+          "y": 166.4,
+          "w": 556,
+          "h": 724.1,
+          "depth": 8
+        },
+        {
+          "id": "ceiling",
+          "src": "/art/b3-scale-flip/ceiling.webp",
+          "x": -254.9,
+          "y": -455.9,
+          "w": 2443.3,
+          "h": 839.1,
+          "depth": 9
+        },
+        {
+          "id": "stairs-near",
+          "src": "/art/b3-scale-flip/stairs-near.webp",
+          "x": 1072.5,
+          "y": 776.4,
+          "w": 963.9,
+          "h": 352.7,
+          "depth": 10
+        },
+        {
+          "id": "rock-near",
+          "src": "/art/b3-scale-flip/rock-near.webp",
+          "x": -95.2,
+          "y": 921,
+          "w": 2143.1,
+          "h": 296.6,
+          "depth": 11
+        },
+        {
+          "id": "dust",
+          "src": "/art/b3-scale-flip/dust.webp",
+          "x": 199,
+          "y": 203,
+          "w": 798.3,
+          "h": 746.6,
+          "depth": 12
+        },
+        {
+          "id": "roots-near",
+          "src": "/art/b3-scale-flip/roots-near.webp",
+          "x": 182.9,
+          "y": -77.9,
+          "w": 1462.1,
+          "h": 326.4,
+          "depth": 13
+        },
+        {
+          "id": "gate-l",
+          "src": "/art/b3-scale-flip/gate-l.webp",
+          "x": -882.8,
+          "y": -379.8,
+          "w": 1254.3,
+          "h": 1913.8,
+          "depth": 14
+        },
+        {
+          "id": "gate-r",
+          "src": "/art/b3-scale-flip/gate-r.webp",
+          "x": 1438.3,
+          "y": -379.8,
+          "w": 1364.2,
+          "h": 1924.6,
+          "depth": 15
+        }
+      ]
+    },
+    "portrait": {
+      "width": 1080,
+      "height": 1920,
+      "layers": [
+        {
+          "id": "vault-glow-p",
+          "src": "/art/b3-scale-flip/vault-glow-p.webp",
+          "x": -711,
+          "y": -261,
+          "w": 2500,
+          "h": 2181,
+          "depth": 0
+        },
+        {
+          "id": "arcade-far-p",
+          "src": "/art/b3-scale-flip/arcade-far-p.webp",
+          "x": 183.7,
+          "y": 229.2,
+          "w": 712.6,
+          "h": 741.4,
+          "depth": 1
+        },
+        {
+          "id": "bridge-far-p",
+          "src": "/art/b3-scale-flip/bridge-far-p.webp",
+          "x": 68.2,
+          "y": 696.2,
+          "w": 944,
+          "h": 140.8,
+          "depth": 2
+        },
+        {
+          "id": "mist-far",
+          "src": "/art/b3-scale-flip/mist-far.webp",
+          "x": -197.8,
+          "y": 775,
+          "w": 995.7,
+          "h": 265.1,
+          "depth": 3
+        },
+        {
+          "id": "arcade-left-p",
+          "src": "/art/b3-scale-flip/arcade-left-p.webp",
+          "x": -173.9,
+          "y": 109.5,
+          "w": 597.7,
+          "h": 1001.4,
+          "depth": 4
+        },
+        {
+          "id": "wall-right-p",
+          "src": "/art/b3-scale-flip/wall-right-p.webp",
+          "x": 672.4,
+          "y": -95.5,
+          "w": 541.7,
+          "h": 1425.3,
+          "depth": 5
+        },
+        {
+          "id": "floor-terraces-p",
+          "src": "/art/b3-scale-flip/floor-terraces-p.webp",
+          "x": -84.2,
+          "y": 0,
+          "w": 1247.6,
+          "h": 2131.7,
+          "depth": 6
+        },
+        {
+          "id": "columns-p",
+          "src": "/art/b3-scale-flip/columns-p.webp",
+          "x": -75.4,
+          "y": 128.1,
+          "w": 1215.5,
+          "h": 1482.8,
+          "depth": 7
+        },
+        {
+          "id": "shafts-p",
+          "src": "/art/b3-scale-flip/shafts-p.webp",
+          "x": 232.3,
+          "y": 248.2,
+          "w": 605.6,
+          "h": 663.8,
+          "depth": 8
+        },
+        {
+          "id": "ceiling-p",
+          "src": "/art/b3-scale-flip/ceiling-p.webp",
+          "x": -261.7,
+          "y": -457.5,
+          "w": 1603.2,
+          "h": 881.3,
+          "depth": 9
+        },
+        {
+          "id": "stairs-near-p",
+          "src": "/art/b3-scale-flip/stairs-near-p.webp",
+          "x": 98.8,
+          "y": 1551.3,
+          "w": 843.1,
+          "h": 425.9,
+          "depth": 10
+        },
+        {
+          "id": "rock-near-p",
+          "src": "/art/b3-scale-flip/rock-near-p.webp",
+          "x": -102.2,
+          "y": 1753,
+          "w": 1284.5,
+          "h": 305.2,
+          "depth": 11
+        },
+        {
+          "id": "dust-p",
+          "src": "/art/b3-scale-flip/dust-p.webp",
+          "x": 148,
+          "y": 259,
+          "w": 805.2,
+          "h": 698.3,
+          "depth": 12
+        },
+        {
+          "id": "roots-near-p",
+          "src": "/art/b3-scale-flip/roots-near-p.webp",
+          "x": -118.1,
+          "y": -80.2,
+          "w": 1312.6,
+          "h": 446,
+          "depth": 13
+        },
+        {
+          "id": "gate-l-p",
+          "src": "/art/b3-scale-flip/gate-l-p.webp",
+          "x": -639.6,
+          "y": -551.8,
+          "w": 894.4,
+          "h": 3023.7,
+          "depth": 14
+        },
+        {
+          "id": "gate-r-p",
+          "src": "/art/b3-scale-flip/gate-r-p.webp",
+          "x": 831.6,
+          "y": -551.8,
+          "w": 890.1,
+          "h": 3062.5,
+          "depth": 15
+        }
+      ]
+    }
+  },
+  "bytes": 739114
+}

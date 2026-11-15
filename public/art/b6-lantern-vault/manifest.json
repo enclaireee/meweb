@@ -1,0 +1,306 @@
+{
+  "slug": "b6-lantern-vault",
+  "compositions": {
+    "desktop": {
+      "width": 1920,
+      "height": 1080,
+      "layers": [
+        {
+          "id": "void",
+          "src": "/art/b6-lantern-vault/void.webp",
+          "x": 0,
+          "y": 0,
+          "w": 1940.2,
+          "h": 1080.5,
+          "depth": 0
+        },
+        {
+          "id": "vault-far",
+          "src": "/art/b6-lantern-vault/vault-far.webp",
+          "x": -235.7,
+          "y": -52.7,
+          "w": 3069,
+          "h": 1179.3,
+          "depth": 1
+        },
+        {
+          "id": "lanterns-far",
+          "src": "/art/b6-lantern-vault/lanterns-far.webp",
+          "x": 866.8,
+          "y": 65.5,
+          "w": 1208.3,
+          "h": 1029,
+          "depth": 2
+        },
+        {
+          "id": "chains-far",
+          "src": "/art/b6-lantern-vault/chains-far.webp",
+          "x": 30,
+          "y": -10,
+          "w": 1878.2,
+          "h": 400,
+          "depth": 3
+        },
+        {
+          "id": "hanging-city",
+          "src": "/art/b6-lantern-vault/hanging-city.webp",
+          "x": 272.2,
+          "y": -118.8,
+          "w": 1246,
+          "h": 510.3,
+          "depth": 4
+        },
+        {
+          "id": "stalactites",
+          "src": "/art/b6-lantern-vault/stalactites.webp",
+          "x": -128.7,
+          "y": -38.7,
+          "w": 2146.2,
+          "h": 331,
+          "depth": 5
+        },
+        {
+          "id": "lanterns-mid",
+          "src": "/art/b6-lantern-vault/lanterns-mid.webp",
+          "x": 865,
+          "y": -10,
+          "w": 1077.1,
+          "h": 669.4,
+          "depth": 6
+        },
+        {
+          "id": "bridge",
+          "src": "/art/b6-lantern-vault/bridge.webp",
+          "x": -149.7,
+          "y": -10,
+          "w": 2204.1,
+          "h": 755.9,
+          "depth": 7
+        },
+        {
+          "id": "pillars-mid",
+          "src": "/art/b6-lantern-vault/pillars-mid.webp",
+          "x": 21.4,
+          "y": -113.6,
+          "w": 1852.7,
+          "h": 1332.3,
+          "depth": 8
+        },
+        {
+          "id": "mist",
+          "src": "/art/b6-lantern-vault/mist.webp",
+          "x": 9.2,
+          "y": 239.6,
+          "w": 1908,
+          "h": 593.1,
+          "depth": 9
+        },
+        {
+          "id": "lanterns-near",
+          "src": "/art/b6-lantern-vault/lanterns-near.webp",
+          "x": 836,
+          "y": -54.1,
+          "w": 1199.2,
+          "h": 1088.1,
+          "depth": 10
+        },
+        {
+          "id": "strings-near",
+          "src": "/art/b6-lantern-vault/strings-near.webp",
+          "x": -19.4,
+          "y": -59.7,
+          "w": 1922.8,
+          "h": 623.4,
+          "depth": 11
+        },
+        {
+          "id": "ledge-near",
+          "src": "/art/b6-lantern-vault/ledge-near.webp",
+          "x": -128.3,
+          "y": 784,
+          "w": 2159.9,
+          "h": 451.4,
+          "depth": 12
+        },
+        {
+          "id": "embers",
+          "src": "/art/b6-lantern-vault/embers.webp",
+          "x": 916,
+          "y": 203,
+          "w": 972.4,
+          "h": 698.9,
+          "depth": 13
+        },
+        {
+          "id": "gate-l",
+          "src": "/art/b6-lantern-vault/gate-l.webp",
+          "x": -904.2,
+          "y": -119.8,
+          "w": 1306.5,
+          "h": 1348.7,
+          "depth": 14
+        },
+        {
+          "id": "gate-r",
+          "src": "/art/b6-lantern-vault/gate-r.webp",
+          "x": 1496.8,
+          "y": -121.8,
+          "w": 1379.3,
+          "h": 1352.5,
+          "depth": 15
+        }
+      ]
+    },
+    "portrait": {
+      "width": 1080,
+      "height": 1920,
+      "layers": [
+        {
+          "id": "void-p",
+          "src": "/art/b6-lantern-vault/void-p.webp",
+          "x": -20,
+          "y": 0,
+          "w": 1121.8,
+          "h": 1919.5,
+          "depth": 0
+        },
+        {
+          "id": "vault-far-p",
+          "src": "/art/b6-lantern-vault/vault-far-p.webp",
+          "x": -438.1,
+          "y": -44.7,
+          "w": 1955.2,
+          "h": 2020.7,
+          "depth": 1
+        },
+        {
+          "id": "lanterns-far-p",
+          "src": "/art/b6-lantern-vault/lanterns-far-p.webp",
+          "x": -94.5,
+          "y": 105.5,
+          "w": 1269,
+          "h": 940.7,
+          "depth": 2
+        },
+        {
+          "id": "chains-far-p",
+          "src": "/art/b6-lantern-vault/chains-far-p.webp",
+          "x": 16,
+          "y": -10,
+          "w": 1039.1,
+          "h": 501.1,
+          "depth": 3
+        },
+        {
+          "id": "hanging-city-p",
+          "src": "/art/b6-lantern-vault/hanging-city-p.webp",
+          "x": 18.2,
+          "y": -120.8,
+          "w": 1043.7,
+          "h": 556.3,
+          "depth": 4
+        },
+        {
+          "id": "stalactites-p",
+          "src": "/art/b6-lantern-vault/stalactites-p.webp",
+          "x": -101.7,
+          "y": -39.7,
+          "w": 1288.3,
+          "h": 372.4,
+          "depth": 5
+        },
+        {
+          "id": "lanterns-mid-p",
+          "src": "/art/b6-lantern-vault/lanterns-mid-p.webp",
+          "x": 24,
+          "y": -10,
+          "w": 1036.5,
+          "h": 1046.7,
+          "depth": 6
+        },
+        {
+          "id": "bridge-p",
+          "src": "/art/b6-lantern-vault/bridge-p.webp",
+          "x": -142.7,
+          "y": -10,
+          "w": 1365.5,
+          "h": 973.8,
+          "depth": 7
+        },
+        {
+          "id": "pillars-mid-p",
+          "src": "/art/b6-lantern-vault/pillars-mid-p.webp",
+          "x": -24.7,
+          "y": -109.6,
+          "w": 1125.4,
+          "h": 2232,
+          "depth": 8
+        },
+        {
+          "id": "mist-p",
+          "src": "/art/b6-lantern-vault/mist-p.webp",
+          "x": 13.8,
+          "y": 420,
+          "w": 1052.9,
+          "h": 1296.6,
+          "depth": 9
+        },
+        {
+          "id": "lanterns-near-p",
+          "src": "/art/b6-lantern-vault/lanterns-near-p.webp",
+          "x": -6.1,
+          "y": -10,
+          "w": 1046,
+          "h": 1065.1,
+          "depth": 10
+        },
+        {
+          "id": "strings-near-p",
+          "src": "/art/b6-lantern-vault/strings-near-p.webp",
+          "x": 14.6,
+          "y": -62.4,
+          "w": 1059.3,
+          "h": 866.2,
+          "depth": 11
+        },
+        {
+          "id": "ledge-near-p",
+          "src": "/art/b6-lantern-vault/ledge-near-p.webp",
+          "x": -122.5,
+          "y": 1439.3,
+          "w": 1326,
+          "h": 721,
+          "depth": 12
+        },
+        {
+          "id": "embers-p",
+          "src": "/art/b6-lantern-vault/embers-p.webp",
+          "x": 46,
+          "y": 150,
+          "w": 983.9,
+          "h": 848.3,
+          "depth": 13
+        },
+        {
+          "id": "gate-t-p",
+          "src": "/art/b6-lantern-vault/gate-t-p.webp",
+          "x": -144.2,
+          "y": -943.8,
+          "w": 1413.8,
+          "h": 1574.7,
+          "depth": 14
+        },
+        {
+          "id": "gate-b-p",
+          "src": "/art/b6-lantern-vault/gate-b-p.webp",
+          "x": -148.2,
+          "y": 1576.1,
+          "w": 1429.1,
+          "h": 1287.4,
+          "depth": 15
+        }
+      ]
+    }
+  },
+  "bytes": 751458
+}

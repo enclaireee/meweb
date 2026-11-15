@@ -1,0 +1,306 @@
+{
+  "slug": "b7-second-fold",
+  "compositions": {
+    "desktop": {
+      "width": 1920,
+      "height": 1080,
+      "layers": [
+        {
+          "id": "dawn-sky",
+          "src": "/art/b7-second-fold/dawn-sky.webp",
+          "x": -38,
+          "y": -30,
+          "w": 1994.8,
+          "h": 1110.3,
+          "depth": 0
+        },
+        {
+          "id": "clouds-far",
+          "src": "/art/b7-second-fold/clouds-far.webp",
+          "x": -65.1,
+          "y": -5.3,
+          "w": 1219.5,
+          "h": 439.1,
+          "depth": 1
+        },
+        {
+          "id": "peaks-far",
+          "src": "/art/b7-second-fold/peaks-far.webp",
+          "x": -77,
+          "y": 355,
+          "w": 1226,
+          "h": 453,
+          "depth": 2
+        },
+        {
+          "id": "cloud-sea",
+          "src": "/art/b7-second-fold/cloud-sea.webp",
+          "x": -240.5,
+          "y": 548.3,
+          "w": 2412.5,
+          "h": 481.5,
+          "depth": 3
+        },
+        {
+          "id": "peaks-mid",
+          "src": "/art/b7-second-fold/peaks-mid.webp",
+          "x": -241,
+          "y": 272,
+          "w": 2370,
+          "h": 758,
+          "depth": 4
+        },
+        {
+          "id": "mist",
+          "src": "/art/b7-second-fold/mist.webp",
+          "x": -25.4,
+          "y": 485,
+          "w": 1092,
+          "h": 349.4,
+          "depth": 5
+        },
+        {
+          "id": "seam-light",
+          "src": "/art/b7-second-fold/seam-light.webp",
+          "x": 599.8,
+          "y": 119,
+          "w": 284.5,
+          "h": 791.4,
+          "depth": 6
+        },
+        {
+          "id": "seam-glow",
+          "src": "/art/b7-second-fold/seam-glow.webp",
+          "x": 302.3,
+          "y": 62.3,
+          "w": 914.9,
+          "h": 914.9,
+          "depth": 7
+        },
+        {
+          "id": "inner-flap-l",
+          "src": "/art/b7-second-fold/inner-flap-l.webp",
+          "x": 300,
+          "y": 107,
+          "w": 460,
+          "h": 805,
+          "depth": 8
+        },
+        {
+          "id": "inner-flap-r",
+          "src": "/art/b7-second-fold/inner-flap-r.webp",
+          "x": 760,
+          "y": 114,
+          "w": 460,
+          "h": 798,
+          "depth": 9
+        },
+        {
+          "id": "inner-base",
+          "src": "/art/b7-second-fold/inner-base.webp",
+          "x": -105.2,
+          "y": 836,
+          "w": 1442.8,
+          "h": 371,
+          "depth": 10
+        },
+        {
+          "id": "ruin-arch",
+          "src": "/art/b7-second-fold/ruin-arch.webp",
+          "x": 34.9,
+          "y": 430.1,
+          "w": 470.1,
+          "h": 602.3,
+          "depth": 11
+        },
+        {
+          "id": "cavern-wall",
+          "src": "/art/b7-second-fold/cavern-wall.webp",
+          "x": 1003.9,
+          "y": -100.2,
+          "w": 1153.1,
+          "h": 1281.4,
+          "depth": 12
+        },
+        {
+          "id": "dust",
+          "src": "/art/b7-second-fold/dust.webp",
+          "x": 321,
+          "y": 156,
+          "w": 718.6,
+          "h": 691,
+          "depth": 13
+        },
+        {
+          "id": "gate-l",
+          "src": "/art/b7-second-fold/gate-l.webp",
+          "x": -881,
+          "y": -119,
+          "w": 1282.8,
+          "h": 1319,
+          "depth": 14
+        },
+        {
+          "id": "gate-r",
+          "src": "/art/b7-second-fold/gate-r.webp",
+          "x": 1461,
+          "y": -125.3,
+          "w": 1341.4,
+          "h": 1408.6,
+          "depth": 15
+        }
+      ]
+    },
+    "portrait": {
+      "width": 1080,
+      "height": 1920,
+      "layers": [
+        {
+          "id": "dawn-sky-p",
+          "src": "/art/b7-second-fold/dawn-sky-p.webp",
+          "x": -220,
+          "y": -30,
+          "w": 1520.7,
+          "h": 1950,
+          "depth": 0
+        },
+        {
+          "id": "clouds-far-p",
+          "src": "/art/b7-second-fold/clouds-far-p.webp",
+          "x": -34.1,
+          "y": 41.7,
+          "w": 1067.8,
+          "h": 563.2,
+          "depth": 1
+        },
+        {
+          "id": "peaks-far-p",
+          "src": "/art/b7-second-fold/peaks-far-p.webp",
+          "x": -73,
+          "y": 388,
+          "w": 1226,
+          "h": 439,
+          "depth": 2
+        },
+        {
+          "id": "cloud-sea-p",
+          "src": "/art/b7-second-fold/cloud-sea-p.webp",
+          "x": -216.7,
+          "y": 614.3,
+          "w": 1542.3,
+          "h": 475.2,
+          "depth": 3
+        },
+        {
+          "id": "peaks-mid-p",
+          "src": "/art/b7-second-fold/peaks-mid-p.webp",
+          "x": -218,
+          "y": 370,
+          "w": 1544,
+          "h": 720,
+          "depth": 4
+        },
+        {
+          "id": "mist",
+          "src": "/art/b7-second-fold/mist.webp",
+          "x": 212.8,
+          "y": 595,
+          "w": 655.2,
+          "h": 209.7,
+          "depth": 5
+        },
+        {
+          "id": "seam-light-p",
+          "src": "/art/b7-second-fold/seam-light-p.webp",
+          "x": 379.8,
+          "y": 159,
+          "w": 284.5,
+          "h": 851.7,
+          "depth": 6
+        },
+        {
+          "id": "seam-glow",
+          "src": "/art/b7-second-fold/seam-glow.webp",
+          "x": 82.3,
+          "y": 102.3,
+          "w": 914.9,
+          "h": 914.9,
+          "depth": 7
+        },
+        {
+          "id": "inner-flap-l-p",
+          "src": "/art/b7-second-fold/inner-flap-l-p.webp",
+          "x": 120,
+          "y": 146,
+          "w": 420,
+          "h": 866,
+          "depth": 8
+        },
+        {
+          "id": "inner-flap-r-p",
+          "src": "/art/b7-second-fold/inner-flap-r-p.webp",
+          "x": 540,
+          "y": 159,
+          "w": 420,
+          "h": 853,
+          "depth": 9
+        },
+        {
+          "id": "inner-base-p",
+          "src": "/art/b7-second-fold/inner-base-p.webp",
+          "x": -102.2,
+          "y": 954.5,
+          "w": 1284.3,
+          "h": 1094.3,
+          "depth": 10
+        },
+        {
+          "id": "ruin-arch-p",
+          "src": "/art/b7-second-fold/ruin-arch-p.webp",
+          "x": -38.1,
+          "y": 654.2,
+          "w": 440.2,
+          "h": 600,
+          "depth": 11
+        },
+        {
+          "id": "cavern-wall-p",
+          "src": "/art/b7-second-fold/cavern-wall-p.webp",
+          "x": -241.9,
+          "y": -85.2,
+          "w": 1584.5,
+          "h": 2143.1,
+          "depth": 12
+        },
+        {
+          "id": "dust-p",
+          "src": "/art/b7-second-fold/dust-p.webp",
+          "x": 144,
+          "y": 198,
+          "w": 783.4,
+          "h": 761.4,
+          "depth": 13
+        },
+        {
+          "id": "gate-l-p",
+          "src": "/art/b7-second-fold/gate-l-p.webp",
+          "x": -638.3,
+          "y": -109.3,
+          "w": 855.2,
+          "h": 2191.1,
+          "depth": 14
+        },
+        {
+          "id": "gate-r-p",
+          "src": "/art/b7-second-fold/gate-r-p.webp",
+          "x": 863.6,
+          "y": -110.3,
+          "w": 855.2,
+          "h": 2161.6,
+          "depth": 15
+        }
+      ]
+    }
+  },
+  "bytes": 608256
+}

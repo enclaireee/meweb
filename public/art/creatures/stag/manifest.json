@@ -1,0 +1,16 @@
+{
+  "src": "/art/creatures/stag/sheet.webp",
+  "frame": {
+    "w": 560,
+    "h": 540
+  },
+  "frames": [
+    "stand",
+    "graze"
+  ],
+  "anchor": [
+    280,
+    540
+  ],
+  "bytes": 34212
+}

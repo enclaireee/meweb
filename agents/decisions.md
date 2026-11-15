@@ -52,6 +52,39 @@ Everything here is **decided by the owner** unless marked *proposal*. History an
 | Mobile | **Full vertical (portrait) recomposition.** |
 | Hosting | **Vercel, no analytics.** |
 
+## Build decisions (owner, 2026-11-14)
+These override any conflicting wording in `concept.md`, `world-hollow-mountain.md`, `content-inventory.md` and `tech-spec.md`.
+
+| Topic | Decision |
+|---|---|
+| Scope | **Everything**: 10 beats, 5 creatures, traveller, projects lane with 8 projects, deep links, EN + ID, sound. |
+| Art vs content | **Art is world-only.** No object, prop or room is drawn for a specific project, role, skill or award. Content is HTML styled to belong to the world (paper cards, small labels). |
+| Projects lane | Reverse side of the mountain: one **generic shell scene** with identical warm lit windows, grouped in 3 districts (web, data/ML, hardware). One window per project; its content (title, role, period, summary, links, screenshots) opens on a **paper card** in HTML. No per-project art; `chamber.scene` in the Project type is dropped. "Chamber" in older docs means window + card. |
+| Roles, education, skills, awards | Carried by the **small label** of each main-lane beat (HTML text). No dedicated objects in the art. |
+| Traveller | **Cloaked wanderer with a staff and one small warm lantern.** Walk cycle of 4 to 6 frames plus a look-up pose. |
+| Creatures | Outside = night owl/moth; Inner Sun = colossal heron; Understory = giant stag with a canopy of antlers; Lantern Vault = lantern jellyfish/ray; Second Fold = **giant paper whale**. |
+| Interaction | **Atmosphere only**: scroll, subtle pointer/gyro parallax, hover glow on forks. No mini-interactions. |
+| Fork object | **One consistent shape**: a paper door/flap in the cavern wall with warm light leaking from its seam and a slow pulse. Real focusable button. |
+| Copy | Agents draft **EN and ID** for every string including the big cinematic lines; the toggle switches everything. Owner edits `src/content/` afterwards. |
+| Sound | Ambient from **open-licence sources (CC0 preferred)**, downloaded without per-file approval; source, author and licence recorded in `public/audio/CREDITS.md`. Off by default. |
+| Routing | `/[lang]` (`en`, `id`) statically generated, `/[lang]/p/[id]` for project deep links, `/` redirects by `Accept-Language`. |
+| Spikes | No throwaway spikes. **Beats 0 to 3 are the pilot** on the real engine (covers S1, S2, S3, S5); S4 (lane flip and exact return) is covered by engine tests. The other beats start only after the pilot passes in a browser. |
+| Dev dependencies | `sharp`, `clipper2-ts`, `simplex-noise`, `svgpath`, `tsx`, `vitest` (dev-only). No GSAP, Lenis, three or zustand. |
+
+## Build decisions b (owner, 2026-11-14, later the same day)
+These override everything above where they conflict.
+
+| Topic | Decision |
+|---|---|
+| Character | **No traveller.** No small figure anywhere. The giant creatures stay, redrawn larger and more detailed. The world must read as grand. |
+| Art density | Still procedural by code, but **dense**: 14 to 16 layers per beat, no empty region over about 20% of the canvas, three depth planes each with small detail, scale cues (tiny architecture against huge forms), stacked-sheet depth. Paper grain is a CSS overlay, not baked. |
+| Paper frame | **Layered paper frame on the screen edges**, always on screen: 3 to 4 nested torn-edge sheets with shadows, tinted per beat. |
+| Transitions | Camera travels **through** the layers (per-layer dolly) and through a per-beat "gate" aperture whose sheets part; no plain cross-fades (except reduced motion). |
+| Copy | **Portfolio first.** Each beat's big text is a plain section heading (name, About, Education, Experience, Projects, Skills, Awards, Leadership, Contact) and the facts are the main text. No cinematic/poetic lines. |
+| Projects lane | Still a separate lane behind the door, but a **multi-scene scroll**: shell exterior intro, then one district beat per group (web, data/ML, hardware); project cards arrive inline on scroll, no dialog. Main lane has a Projects beat listing all projects, and the nav has a Projects button. Art stays world-only. |
+
 ## Superseded (do not use)
+- Traveller / small always-on-screen figure; cinematic story lines as the main copy; projects lane as one static shell scene with dialog cards. Replaced by Build decisions b.
+- Projects as diegetic chambers with their own objects/panels; experience, skills and awards as places or objects in the scene (the "first mapping ideas" in `content-inventory.md`). Replaced by cards and labels, see Build decisions.
 - Paper River v4 world and its fixed shadowbox frame, step-based glides, hung tags and cards (kept only as an art-style reference).
 - "Folded map" framing, "ink draws the world", "geography = folds", "each region a different paper craft". Dropped during discussion.

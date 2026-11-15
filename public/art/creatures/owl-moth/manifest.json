@@ -1,0 +1,17 @@
+{
+  "src": "/art/creatures/owl-moth/sheet.webp",
+  "frame": {
+    "w": 288,
+    "h": 224
+  },
+  "frames": [
+    "up",
+    "level",
+    "down"
+  ],
+  "anchor": [
+    144,
+    112
+  ],
+  "bytes": 11188
+}

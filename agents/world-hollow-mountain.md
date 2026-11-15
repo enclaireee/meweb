@@ -4,6 +4,8 @@
 
 Status: **world chosen by the owner**. Beat sheet below is the assistant's draft; the decisions listed under "Confirmed" are the owner's.
 
+> **Note:** where this file describes project chambers as rooms with their own objects, or roles/skills/awards as objects in the scene, `decisions.md` (Build decisions) overrides it: art is world-only, content goes on paper cards and labels.
+
 ## One-line
 A quiet paper mountain at night that unfolds like origami and turns out to contain a vast world, and that world contains bigger ones.
 
@@ -64,7 +66,8 @@ Cadence: surprise, hold, surprise. Each beat is a full-screen composition; text 
 - **Sound:** ambient optional, off by default. Toggle in the nav.
 - **Small figure:** always on screen and moves with scroll. Constraints: tiny, readable against both cool and warm palettes (needs a lit rim), small asset (walk cycle + look-up pose), never covers text, and must stay coherent with reversibility (scroll up walks it back).
 
-## Open details
+## Open details (resolved)
+All resolved in `decisions.md` (Build decisions); the list below is history.
 - Design of the small figure (look, rim light, walk cycle).
 - Final creature list per region (draft above is a proposal).
 - Final lines (copy) for each beat, and the project-lane chamber templates.

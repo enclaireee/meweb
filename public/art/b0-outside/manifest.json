@@ -1,0 +1,306 @@
+{
+  "slug": "b0-outside",
+  "compositions": {
+    "desktop": {
+      "width": 1920,
+      "height": 1080,
+      "layers": [
+        {
+          "id": "sky",
+          "src": "/art/b0-outside/sky.webp",
+          "x": -20,
+          "y": -20,
+          "w": 2125,
+          "h": 1120,
+          "depth": 0
+        },
+        {
+          "id": "moon",
+          "src": "/art/b0-outside/moon.webp",
+          "x": 1004.6,
+          "y": -295.4,
+          "w": 1029.9,
+          "h": 1029.9,
+          "depth": 1
+        },
+        {
+          "id": "clouds-far",
+          "src": "/art/b0-outside/clouds-far.webp",
+          "x": 154.8,
+          "y": 271,
+          "w": 1826.2,
+          "h": 164.1,
+          "depth": 2
+        },
+        {
+          "id": "range-far",
+          "src": "/art/b0-outside/range-far.webp",
+          "x": -105.2,
+          "y": 565,
+          "w": 2128.3,
+          "h": 620.7,
+          "depth": 3
+        },
+        {
+          "id": "range-mid",
+          "src": "/art/b0-outside/range-mid.webp",
+          "x": -111.2,
+          "y": 619.5,
+          "w": 2133.8,
+          "h": 573.8,
+          "depth": 4
+        },
+        {
+          "id": "mist-far",
+          "src": "/art/b0-outside/mist-far.webp",
+          "x": 43.8,
+          "y": 615,
+          "w": 2000,
+          "h": 226.2,
+          "depth": 5
+        },
+        {
+          "id": "valley",
+          "src": "/art/b0-outside/valley.webp",
+          "x": -117.2,
+          "y": 762.1,
+          "w": 2139.3,
+          "h": 531,
+          "depth": 6
+        },
+        {
+          "id": "mountain-back",
+          "src": "/art/b0-outside/mountain-back.webp",
+          "x": 920.4,
+          "y": 356.1,
+          "w": 560.9,
+          "h": 482.8,
+          "depth": 7
+        },
+        {
+          "id": "mountain",
+          "src": "/art/b0-outside/mountain.webp",
+          "x": 968,
+          "y": 337,
+          "w": 528,
+          "h": 490,
+          "depth": 8
+        },
+        {
+          "id": "window-glow",
+          "src": "/art/b0-outside/window-glow.webp",
+          "x": 1172,
+          "y": 470,
+          "w": 179.3,
+          "h": 179.3,
+          "depth": 9
+        },
+        {
+          "id": "forest-mid",
+          "src": "/art/b0-outside/forest-mid.webp",
+          "x": -119.2,
+          "y": 799.4,
+          "w": 2144.8,
+          "h": 493.8,
+          "depth": 10
+        },
+        {
+          "id": "shafts",
+          "src": "/art/b0-outside/shafts.webp",
+          "x": 1013.8,
+          "y": 244.5,
+          "w": 623.4,
+          "h": 775.2,
+          "depth": 11
+        },
+        {
+          "id": "near-hill",
+          "src": "/art/b0-outside/near-hill.webp",
+          "x": -129.4,
+          "y": 704.5,
+          "w": 2165.5,
+          "h": 600.8,
+          "depth": 12
+        },
+        {
+          "id": "dust",
+          "src": "/art/b0-outside/dust.webp",
+          "x": 953,
+          "y": 256,
+          "w": 889.7,
+          "h": 591.4,
+          "depth": 13
+        },
+        {
+          "id": "gate-l",
+          "src": "/art/b0-outside/gate-l.webp",
+          "x": -831.1,
+          "y": -68,
+          "w": 1420.7,
+          "h": 1251.2,
+          "depth": 14
+        },
+        {
+          "id": "gate-r",
+          "src": "/art/b0-outside/gate-r.webp",
+          "x": 1415.8,
+          "y": -67,
+          "w": 1312.3,
+          "h": 1270.9,
+          "depth": 15
+        }
+      ]
+    },
+    "portrait": {
+      "width": 1080,
+      "height": 1920,
+      "layers": [
+        {
+          "id": "sky-p",
+          "src": "/art/b0-outside/sky-p.webp",
+          "x": -20,
+          "y": -20,
+          "w": 1305,
+          "h": 1960,
+          "depth": 0
+        },
+        {
+          "id": "moon",
+          "src": "/art/b0-outside/moon.webp",
+          "x": 311.6,
+          "y": -148.4,
+          "w": 896,
+          "h": 896,
+          "depth": 1
+        },
+        {
+          "id": "clouds-far-p",
+          "src": "/art/b0-outside/clouds-far-p.webp",
+          "x": 34.8,
+          "y": 395.4,
+          "w": 926.9,
+          "h": 194.5,
+          "depth": 2
+        },
+        {
+          "id": "range-far-p",
+          "src": "/art/b0-outside/range-far-p.webp",
+          "x": -109.2,
+          "y": 855,
+          "w": 1291,
+          "h": 1171,
+          "depth": 3
+        },
+        {
+          "id": "range-mid-p",
+          "src": "/art/b0-outside/range-mid-p.webp",
+          "x": -111.2,
+          "y": 905.1,
+          "w": 1293.8,
+          "h": 1128.3,
+          "depth": 4
+        },
+        {
+          "id": "mist-far",
+          "src": "/art/b0-outside/mist-far.webp",
+          "x": -409.3,
+          "y": 730.5,
+          "w": 1400,
+          "h": 158.3,
+          "depth": 5
+        },
+        {
+          "id": "valley-p",
+          "src": "/art/b0-outside/valley-p.webp",
+          "x": -111.2,
+          "y": 1011.1,
+          "w": 1293.8,
+          "h": 1122.8,
+          "depth": 6
+        },
+        {
+          "id": "mountain-back",
+          "src": "/art/b0-outside/mountain-back.webp",
+          "x": 252.4,
+          "y": 654.5,
+          "w": 504.8,
+          "h": 434.5,
+          "depth": 7
+        },
+        {
+          "id": "mountain",
+          "src": "/art/b0-outside/mountain.webp",
+          "x": 295.2,
+          "y": 637.3,
+          "w": 475.2,
+          "h": 441,
+          "depth": 8
+        },
+        {
+          "id": "window-glow",
+          "src": "/art/b0-outside/window-glow.webp",
+          "x": 478.8,
+          "y": 757,
+          "w": 161.4,
+          "h": 161.4,
+          "depth": 9
+        },
+        {
+          "id": "forest-mid-p",
+          "src": "/art/b0-outside/forest-mid-p.webp",
+          "x": -111.2,
+          "y": 1027.4,
+          "w": 1293.8,
+          "h": 1106.2,
+          "depth": 10
+        },
+        {
+          "id": "shafts-p",
+          "src": "/art/b0-outside/shafts-p.webp",
+          "x": 370.7,
+          "y": 326.9,
+          "w": 444.1,
+          "h": 554.5,
+          "depth": 11
+        },
+        {
+          "id": "near-hill-p",
+          "src": "/art/b0-outside/near-hill-p.webp",
+          "x": -121.4,
+          "y": 1356,
+          "w": 1313.4,
+          "h": 789.3,
+          "depth": 12
+        },
+        {
+          "id": "dust-p",
+          "src": "/art/b0-outside/dust-p.webp",
+          "x": 200,
+          "y": 200,
+          "w": 796.6,
+          "h": 801.7,
+          "depth": 13
+        },
+        {
+          "id": "gate-l-p",
+          "src": "/art/b0-outside/gate-l-p.webp",
+          "x": -592.1,
+          "y": -66,
+          "w": 924.1,
+          "h": 2090.6,
+          "depth": 14
+        },
+        {
+          "id": "gate-r-p",
+          "src": "/art/b0-outside/gate-r-p.webp",
+          "x": 795.8,
+          "y": -67,
+          "w": 853.2,
+          "h": 2203,
+          "depth": 15
+        }
+      ]
+    }
+  },
+  "bytes": 349148
+}

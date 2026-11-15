@@ -1,0 +1,306 @@
+{
+  "slug": "p-data",
+  "compositions": {
+    "desktop": {
+      "width": 1920,
+      "height": 1080,
+      "layers": [
+        {
+          "id": "bg",
+          "src": "/art/p-data/bg.webp",
+          "x": -23,
+          "y": -341,
+          "w": 2463.8,
+          "h": 2203.4,
+          "depth": 0
+        },
+        {
+          "id": "vault-far",
+          "src": "/art/p-data/vault-far.webp",
+          "x": 787,
+          "y": 129,
+          "w": 1227,
+          "h": 603,
+          "depth": 1
+        },
+        {
+          "id": "columns-far",
+          "src": "/art/p-data/columns-far.webp",
+          "x": 784.6,
+          "y": 160.7,
+          "w": 1225.3,
+          "h": 624.1,
+          "depth": 2
+        },
+        {
+          "id": "mist-far",
+          "src": "/art/p-data/mist-far.webp",
+          "x": 770.7,
+          "y": 575,
+          "w": 1146.6,
+          "h": 165.5,
+          "depth": 3
+        },
+        {
+          "id": "oculus",
+          "src": "/art/p-data/oculus.webp",
+          "x": 1042.8,
+          "y": -257.2,
+          "w": 594.5,
+          "h": 594.5,
+          "depth": 4
+        },
+        {
+          "id": "columns-mid",
+          "src": "/art/p-data/columns-mid.webp",
+          "x": 767,
+          "y": 159,
+          "w": 1248,
+          "h": 705,
+          "depth": 5
+        },
+        {
+          "id": "vault-ribs",
+          "src": "/art/p-data/vault-ribs.webp",
+          "x": -330,
+          "y": -142,
+          "w": 2543.7,
+          "h": 402.3,
+          "depth": 6
+        },
+        {
+          "id": "water",
+          "src": "/art/p-data/water.webp",
+          "x": -196.8,
+          "y": 680.2,
+          "w": 2311.5,
+          "h": 531,
+          "depth": 7
+        },
+        {
+          "id": "reflection-a",
+          "src": "/art/p-data/reflection-a.webp",
+          "x": 793.4,
+          "y": 703,
+          "w": 1204.1,
+          "h": 296.6,
+          "depth": 8
+        },
+        {
+          "id": "reflection-b",
+          "src": "/art/p-data/reflection-b.webp",
+          "x": 795,
+          "y": 706,
+          "w": 1204.1,
+          "h": 293.8,
+          "depth": 9
+        },
+        {
+          "id": "shafts",
+          "src": "/art/p-data/shafts.webp",
+          "x": 1119.7,
+          "y": 69,
+          "w": 441.4,
+          "h": 701.7,
+          "depth": 10
+        },
+        {
+          "id": "card-wall",
+          "src": "/art/p-data/card-wall.webp",
+          "x": -200.5,
+          "y": -136.1,
+          "w": 1054,
+          "h": 1344.8,
+          "depth": 11
+        },
+        {
+          "id": "steps-near",
+          "src": "/art/p-data/steps-near.webp",
+          "x": -214.9,
+          "y": 917.3,
+          "w": 2339.1,
+          "h": 318.4,
+          "depth": 12
+        },
+        {
+          "id": "dust",
+          "src": "/art/p-data/dust.webp",
+          "x": 1198,
+          "y": 99,
+          "w": 297.9,
+          "h": 663.4,
+          "depth": 13
+        },
+        {
+          "id": "gate-l",
+          "src": "/art/p-data/gate-l.webp",
+          "x": -880,
+          "y": -112,
+          "w": 1334.5,
+          "h": 1341.4,
+          "depth": 14
+        },
+        {
+          "id": "gate-r",
+          "src": "/art/p-data/gate-r.webp",
+          "x": 1332,
+          "y": -125.3,
+          "w": 1465.5,
+          "h": 1348.3,
+          "depth": 15
+        }
+      ]
+    },
+    "portrait": {
+      "width": 1080,
+      "height": 1920,
+      "layers": [
+        {
+          "id": "bg-p",
+          "src": "/art/p-data/bg-p.webp",
+          "x": -23,
+          "y": -83,
+          "w": 1405.2,
+          "h": 2036.2,
+          "depth": 0
+        },
+        {
+          "id": "vault-far-p",
+          "src": "/art/p-data/vault-far-p.webp",
+          "x": -55,
+          "y": 211,
+          "w": 1199,
+          "h": 420,
+          "depth": 1
+        },
+        {
+          "id": "columns-far-p",
+          "src": "/art/p-data/columns-far-p.webp",
+          "x": -37.3,
+          "y": 249.6,
+          "w": 1180.5,
+          "h": 425.3,
+          "depth": 2
+        },
+        {
+          "id": "mist-far",
+          "src": "/art/p-data/mist-far.webp",
+          "x": 462.4,
+          "y": 245,
+          "w": 687.9,
+          "h": 99.3,
+          "depth": 3
+        },
+        {
+          "id": "oculus-p",
+          "src": "/art/p-data/oculus-p.webp",
+          "x": 402.8,
+          "y": -257.2,
+          "w": 594.5,
+          "h": 594.5,
+          "depth": 4
+        },
+        {
+          "id": "columns-mid-p",
+          "src": "/art/p-data/columns-mid-p.webp",
+          "x": -43,
+          "y": 248,
+          "w": 1171,
+          "h": 581,
+          "depth": 5
+        },
+        {
+          "id": "vault-ribs-p",
+          "src": "/art/p-data/vault-ribs-p.webp",
+          "x": -331,
+          "y": -140,
+          "w": 1646,
+          "h": 486.2,
+          "depth": 6
+        },
+        {
+          "id": "water-p",
+          "src": "/art/p-data/water-p.webp",
+          "x": -196,
+          "y": 580.2,
+          "w": 1466.7,
+          "h": 331,
+          "depth": 7
+        },
+        {
+          "id": "reflection-a-p",
+          "src": "/art/p-data/reflection-a-p.webp",
+          "x": -34.6,
+          "y": 603,
+          "w": 1166.9,
+          "h": 252.4,
+          "depth": 8
+        },
+        {
+          "id": "reflection-b-p",
+          "src": "/art/p-data/reflection-b-p.webp",
+          "x": -35,
+          "y": 606,
+          "w": 1169.7,
+          "h": 249.7,
+          "depth": 9
+        },
+        {
+          "id": "shafts-p",
+          "src": "/art/p-data/shafts-p.webp",
+          "x": 487.9,
+          "y": 68.6,
+          "w": 424.1,
+          "h": 644.8,
+          "depth": 10
+        },
+        {
+          "id": "card-wall-p",
+          "src": "/art/p-data/card-wall-p.webp",
+          "x": -195.7,
+          "y": 816.5,
+          "w": 1508.5,
+          "h": 1195,
+          "depth": 11
+        },
+        {
+          "id": "steps-near-p",
+          "src": "/art/p-data/steps-near-p.webp",
+          "x": -213.2,
+          "y": 1577.3,
+          "w": 1503.4,
+          "h": 480.3,
+          "depth": 12
+        },
+        {
+          "id": "dust-p",
+          "src": "/art/p-data/dust-p.webp",
+          "x": 447,
+          "y": 102,
+          "w": 453.8,
+          "h": 500.7,
+          "depth": 13
+        },
+        {
+          "id": "gate-l-p",
+          "src": "/art/p-data/gate-l-p.webp",
+          "x": -634,
+          "y": -103,
+          "w": 944.8,
+          "h": 2213.8,
+          "depth": 14
+        },
+        {
+          "id": "gate-r-p",
+          "src": "/art/p-data/gate-r-p.webp",
+          "x": 787,
+          "y": -114.3,
+          "w": 924.1,
+          "h": 2191.4,
+          "depth": 15
+        }
+      ]
+    }
+  },
+  "bytes": 951354
+}

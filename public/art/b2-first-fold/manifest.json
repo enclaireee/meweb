@@ -1,0 +1,306 @@
+{
+  "slug": "b2-first-fold",
+  "compositions": {
+    "desktop": {
+      "width": 1920,
+      "height": 1080,
+      "layers": [
+        {
+          "id": "sky",
+          "src": "/art/b2-first-fold/sky.webp",
+          "x": -23,
+          "y": -1,
+          "w": 1965.5,
+          "h": 1113.8,
+          "depth": 0
+        },
+        {
+          "id": "range-far",
+          "src": "/art/b2-first-fold/range-far.webp",
+          "x": -117.5,
+          "y": 718.9,
+          "w": 2153.1,
+          "h": 557.2,
+          "depth": 1
+        },
+        {
+          "id": "interior-far",
+          "src": "/art/b2-first-fold/interior-far.webp",
+          "x": 274.4,
+          "y": 92.8,
+          "w": 1355.9,
+          "h": 942.1,
+          "depth": 2
+        },
+        {
+          "id": "interior-arches",
+          "src": "/art/b2-first-fold/interior-arches.webp",
+          "x": 865,
+          "y": 442.3,
+          "w": 555.9,
+          "h": 549,
+          "depth": 3
+        },
+        {
+          "id": "interior-near",
+          "src": "/art/b2-first-fold/interior-near.webp",
+          "x": 250.7,
+          "y": 77.4,
+          "w": 1387.9,
+          "h": 975.9,
+          "depth": 4
+        },
+        {
+          "id": "seam-light",
+          "src": "/art/b2-first-fold/seam-light.webp",
+          "x": 862.6,
+          "y": 108.4,
+          "w": 506.4,
+          "h": 1012.8,
+          "depth": 5
+        },
+        {
+          "id": "seam-glow",
+          "src": "/art/b2-first-fold/seam-glow.webp",
+          "x": 642.3,
+          "y": 142.3,
+          "w": 834.5,
+          "h": 834.5,
+          "depth": 6
+        },
+        {
+          "id": "flap-l-back",
+          "src": "/art/b2-first-fold/flap-l-back.webp",
+          "x": 291,
+          "y": 312.9,
+          "w": 688.3,
+          "h": 715.9,
+          "depth": 7
+        },
+        {
+          "id": "flap-r-back",
+          "src": "/art/b2-first-fold/flap-r-back.webp",
+          "x": 940.9,
+          "y": 312.9,
+          "w": 689.7,
+          "h": 717.2,
+          "depth": 8
+        },
+        {
+          "id": "flap-l",
+          "src": "/art/b2-first-fold/flap-l.webp",
+          "x": 282,
+          "y": 319,
+          "w": 688,
+          "h": 718,
+          "depth": 9
+        },
+        {
+          "id": "flap-r",
+          "src": "/art/b2-first-fold/flap-r.webp",
+          "x": 941,
+          "y": 319,
+          "w": 685,
+          "h": 718,
+          "depth": 10
+        },
+        {
+          "id": "flap-top",
+          "src": "/art/b2-first-fold/flap-top.webp",
+          "x": 795,
+          "y": 107,
+          "w": 322,
+          "h": 248,
+          "depth": 11
+        },
+        {
+          "id": "ground",
+          "src": "/art/b2-first-fold/ground.webp",
+          "x": -155.2,
+          "y": 848.2,
+          "w": 2208.3,
+          "h": 580.7,
+          "depth": 12
+        },
+        {
+          "id": "mist",
+          "src": "/art/b2-first-fold/mist.webp",
+          "x": -108.5,
+          "y": 298,
+          "w": 2131,
+          "h": 687.4,
+          "depth": 13
+        },
+        {
+          "id": "gate-l",
+          "src": "/art/b2-first-fold/gate-l.webp",
+          "x": -872,
+          "y": -101,
+          "w": 1213.8,
+          "h": 1319,
+          "depth": 14
+        },
+        {
+          "id": "gate-r",
+          "src": "/art/b2-first-fold/gate-r.webp",
+          "x": 1401.4,
+          "y": -101,
+          "w": 1365.5,
+          "h": 1362.1,
+          "depth": 15
+        }
+      ]
+    },
+    "portrait": {
+      "width": 1080,
+      "height": 1920,
+      "layers": [
+        {
+          "id": "sky",
+          "src": "/art/b2-first-fold/sky.webp",
+          "x": -1229.4,
+          "y": -13.8,
+          "w": 3537.9,
+          "h": 2004.8,
+          "depth": 0
+        },
+        {
+          "id": "range-far-p",
+          "src": "/art/b2-first-fold/range-far-p.webp",
+          "x": -119.5,
+          "y": 1160.9,
+          "w": 1310.3,
+          "h": 598.6,
+          "depth": 1
+        },
+        {
+          "id": "interior-far-p",
+          "src": "/art/b2-first-fold/interior-far-p.webp",
+          "x": -107,
+          "y": 244.8,
+          "w": 1278.6,
+          "h": 1339.3,
+          "depth": 2
+        },
+        {
+          "id": "interior-arches-p",
+          "src": "/art/b2-first-fold/interior-arches-p.webp",
+          "x": 203.4,
+          "y": 442.3,
+          "w": 702.1,
+          "h": 572.4,
+          "depth": 3
+        },
+        {
+          "id": "interior-near-p",
+          "src": "/art/b2-first-fold/interior-near-p.webp",
+          "x": -131,
+          "y": 232.9,
+          "w": 1310.3,
+          "h": 1370.7,
+          "depth": 4
+        },
+        {
+          "id": "seam-light-p",
+          "src": "/art/b2-first-fold/seam-light-p.webp",
+          "x": 373.1,
+          "y": 277.7,
+          "w": 486.7,
+          "h": 1298.5,
+          "depth": 5
+        },
+        {
+          "id": "seam-glow",
+          "src": "/art/b2-first-fold/seam-glow.webp",
+          "x": 205,
+          "y": 555,
+          "w": 709.3,
+          "h": 709.3,
+          "depth": 6
+        },
+        {
+          "id": "flap-l-back-p",
+          "src": "/art/b2-first-fold/flap-l-back-p.webp",
+          "x": -90.3,
+          "y": 559.9,
+          "w": 649.7,
+          "h": 1019.3,
+          "depth": 7
+        },
+        {
+          "id": "flap-r-back-p",
+          "src": "/art/b2-first-fold/flap-r-back-p.webp",
+          "x": 520.9,
+          "y": 559.9,
+          "w": 651,
+          "h": 1019.3,
+          "depth": 8
+        },
+        {
+          "id": "flap-l-p",
+          "src": "/art/b2-first-fold/flap-l-p.webp",
+          "x": -99,
+          "y": 567,
+          "w": 649,
+          "h": 1019,
+          "depth": 9
+        },
+        {
+          "id": "flap-r-p",
+          "src": "/art/b2-first-fold/flap-r-p.webp",
+          "x": 521,
+          "y": 567,
+          "w": 645,
+          "h": 1019,
+          "depth": 10
+        },
+        {
+          "id": "flap-top-p",
+          "src": "/art/b2-first-fold/flap-top-p.webp",
+          "x": 384,
+          "y": 258,
+          "w": 307,
+          "h": 345,
+          "depth": 11
+        },
+        {
+          "id": "ground-p",
+          "src": "/art/b2-first-fold/ground-p.webp",
+          "x": -151.2,
+          "y": 1384.8,
+          "w": 1369.7,
+          "h": 577.9,
+          "depth": 12
+        },
+        {
+          "id": "mist-p",
+          "src": "/art/b2-first-fold/mist-p.webp",
+          "x": -93.9,
+          "y": 599,
+          "w": 1269,
+          "h": 712.6,
+          "depth": 13
+        },
+        {
+          "id": "gate-l-p",
+          "src": "/art/b2-first-fold/gate-l-p.webp",
+          "x": -632,
+          "y": -101,
+          "w": 893.1,
+          "h": 2191.4,
+          "depth": 14
+        },
+        {
+          "id": "gate-r-p",
+          "src": "/art/b2-first-fold/gate-r-p.webp",
+          "x": 793.8,
+          "y": -110.6,
+          "w": 893.1,
+          "h": 2191.4,
+          "depth": 15
+        }
+      ]
+    }
+  },
+  "bytes": 639242
+}

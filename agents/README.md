@@ -2,7 +2,7 @@
 
 Living notes for the portfolio redesign ("The Hollow Mountain"). Not used by the app. Updated as decisions change.
 
-**Status:** discussion complete enough to start. **No code yet.** The repo is a clean Next.js 16 + Tailwind v4 boilerplate; the earlier project (Paper River v4) was removed and lives in git history (commit `ddb6cdc` and earlier).
+**Status:** build approved in full on 2026-11-14 (see Build decisions in `decisions.md`). The repo is a clean Next.js 16 + Tailwind v4 boilerplate; the earlier project (Paper River v4) was removed and lives in git history (commit `ddb6cdc` and earlier).
 
 ## Read in this order
 | File | What it holds |

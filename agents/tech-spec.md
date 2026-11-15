@@ -1,6 +1,6 @@
-# Technical spec (draft v0)
+# Technical spec
 
-Principle (owner): **good + light.** Everything below is a proposal to validate with spikes; nothing is coded yet.
+Principle (owner): **good + light.** This is the build spec. Where it conflicts with `decisions.md` (Build decisions), `decisions.md` wins: no standalone spikes (section 11 is replaced by the beats 0 to 3 pilot), no `chamber.scene`, routes are `/[lang]` and `/[lang]/p/[id]`.
 
 ## 1. Stack
 - **Next.js 16 (App Router) + React 19 + TypeScript + Tailwind v4** (already in the repo). React Compiler is on.
@@ -56,7 +56,7 @@ type Project = {
   summary: string; links: { label: string; href: string }[];
   media?: { src: string; alt: string }[];
   tags?: string[];
-  chamber?: { slot?: number; scene?: () => Promise<{ default: ComponentType }> }; // optional custom art
+  group: 'web' | 'data' | 'hardware'; // district in the shell; order = newest first within a group
 };
 ```
 - The shell/lane **renders chambers from the registry**. No engine changes to add a project.
