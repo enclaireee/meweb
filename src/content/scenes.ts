@@ -6,7 +6,8 @@ const l = (en: string, id: string): L => ({ en, id });
 
 export const scenes = {
   b0: {
-    first: 'Muhammad Fatih',
+    first: 'Muhammad',
+    given: 'Fatih',
     last: 'Zamzami',
     label: l('Depok · Electrical Engineering, UI', 'Depok · Teknik Elektro, UI'),
   },
