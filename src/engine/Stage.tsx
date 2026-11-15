@@ -28,7 +28,7 @@ type Mounted = {
 const E = {
   ranges: [] as Range[],
   lane: 'main' as Lane,
-  unit: 1, w: 1, h: 1, tau: 0.07, res: 1,
+  unit: 1, w: 1, h: 1, tau: 0.07, res: 1, touch: false,
   s: 0, cur: -1, dirty: true,
   px: 0, py: 0, tx: 0, ty: 0, // pointer: smoothed / target, -1..1
   live: new Map<number, Mounted>(),
@@ -312,6 +312,9 @@ function Beat({ def, index, ranges, comp, quality, first, t0 }: {
     ref.current.querySelectorAll('img').forEach((i) => void i.decode().catch(() => {}));
     return () => {
       if (E.live.get(index) === m) E.live.delete(index);
+      // iOS Safari keeps a detached canvas's backing store until GC and kills the tab past its canvas
+      // memory cap; scrolling mounts new beats all the time, so free them now.
+      for (const c of [m.cv, m.cv2]) if (c) c.width = c.height = 0;
     };
   }, [def, index, ranges, comp, quality]);
   return (
@@ -382,7 +385,9 @@ export function Stage({ beats, projectBeats, initialLane = 'main', initialFocusI
     E.dirty = true;
 
     const nav = navigator as Navigator & { deviceMemory?: number };
-    if ((nav.hardwareConcurrency ?? 8) <= 2 || (nav.deviceMemory ?? 8) <= 2) setState({ quality: 'low' });
+    // Phones/tablets: far less GPU memory than a desktop (iOS kills the tab, it does not slow down), so start low.
+    E.touch = matchMedia('(hover: none) and (pointer: coarse)').matches;
+    if (E.touch || (nav.hardwareConcurrency ?? 8) <= 2 || (nav.deviceMemory ?? 8) <= 2) setState({ quality: 'low' });
     const mq = matchMedia('(prefers-reduced-motion: reduce)');
     const onMq = () => {
       setState({ reducedMotion: mq.matches });
@@ -397,8 +402,10 @@ export function Stage({ beats, projectBeats, initialLane = 'main', initialFocusI
       E.w = stage.clientWidth || 1;
       E.h = E.unit = stage.clientHeight || 1;
       // Canvas backing scale: full DPR up to 2x, within ~8 MP per canvas. Hidden beats free theirs, so at most
-      // two beats (four canvases with splits) hold memory, during a crossfade.
-      E.res = Math.min(devicePixelRatio || 1, getState().quality === 'low' ? 1 : 2, Math.sqrt(9e6 / (E.w * E.h)));
+      // two beats (four canvases with splits) hold memory, during a crossfade. Touch: 1.5x (layer art is
+      // ~600-1000 px wide, so 2x on a phone costs memory without adding detail).
+      const cap = E.touch ? 1.5 : getState().quality === 'low' ? 1 : 2;
+      E.res = Math.min(devicePixelRatio || 1, cap, Math.sqrt(9e6 / (E.w * E.h)));
       // Keep the same place in the story when the viewport height really changes (rotation, window resize).
       if (old > 1 && E.unit !== old) {
         window.scrollTo({ top: s * E.unit, behavior: 'instant' });

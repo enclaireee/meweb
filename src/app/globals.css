@@ -196,3 +196,16 @@ html.js .plain {
 @media (prefers-reduced-motion: reduce) {
   .float-word { animation: none; }
 }
+
+/* Touch devices (phones): every full-screen layer costs ~14 MB at 3x DPR and iOS kills the tab past its
+   budget. Drop the grain (its overlay blend copies the whole screen beneath it), the frame's shadow copies
+   and the nav blur. */
+@media (hover: none) and (pointer: coarse) {
+  .frame-grain,
+  .frame-shade {
+    display: none;
+  }
+  .world-nav * {
+    backdrop-filter: none;
+  }
+}
