@@ -134,6 +134,42 @@ html.js .plain {
   }
 }
 
+/* Spotlight roles (b3, b4, b8). A soft dark pool behind the text so it reads over bright art; no blur (mobile GPU). */
+.spot {
+  position: relative;
+  isolation: isolate;
+}
+.spot::before {
+  content: '';
+  position: absolute;
+  inset: -3.5rem -4rem;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(closest-side, var(--scrim, rgb(22 12 6 / 0.62)), transparent);
+}
+.stamp-now,
+.stamp-award {
+  display: inline-block;
+  padding: 0.15em 0.55em 0.1em;
+  border: 1px solid #ffd27a;
+  border-radius: 2px;
+  color: #ffe2a0;
+  letter-spacing: 0.2em;
+  rotate: -3deg;
+  box-shadow: 0 0 14px rgb(255 200 110 / 0.3);
+}
+.stamp-award {
+  font-size: 0.66rem;
+  font-weight: 600;
+  rotate: 2deg;
+}
+.chip {
+  padding: 0.3em 0.75em 0.25em;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  box-shadow: 0 3px 8px rgb(0 0 0 / 0.35);
+}
+
 /* World paper (b3 banners, b9 letter, project tags): a cut sheet with grain, ink text. */
 .sheet {
   color: #2a2118;
@@ -205,6 +241,7 @@ html.js .plain {
   .frame-shade {
     display: none;
   }
+  .world-nav,
   .world-nav * {
     backdrop-filter: none;
   }

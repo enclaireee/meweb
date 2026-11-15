@@ -6,36 +6,14 @@ import { scenes } from '@/content';
 import manifest from '../../../public/art/b4-inner-sun/manifest.json';
 import heron from '../../../public/art/creatures/heron/manifest.json';
 import { Creature } from '../Creature';
-import { useT } from '../lang';
-import { At, Kicker, count, slots } from '../SceneText';
+import { Spotlight, slots } from '../SceneText';
 import { reveal, world } from '../transitions';
 
 const SCREENS = 2.5;
 
-// One role at a time on the dark rock: the year huge, the role under it, a small counter keeping place.
-const W = 0.15, at = slots(3, 0.14, W);
-function Years() {
-  const t = useT();
-  const n = scenes.b4.length;
-  return (
-    <div aria-hidden className="beat-text grid w-[min(38vw,40rem)] portrait:w-[82vw]">
-      <At a={0.12} d={0.05} w={at[n - 1]! + W - 0.12} k="one" className="col-start-1 row-start-1 flex items-baseline justify-between self-start">
-        <Kicker slug="b4-inner-sun" />
-      </At>
-      {scenes.b4.map((r, i) => (
-        <At key={i} a={at[i]!} d={0.05} w={W} k="one" className="col-start-1 row-start-1 flex flex-col pt-[3vh]">
-          <span className="self-end text-[0.75rem] tracking-[0.35em] tabular-nums opacity-70">{count(i, n)}</span>
-          <span className="font-display text-[clamp(5rem,10.5vw,12rem)] leading-[0.82] tabular-nums">{r.years}</span>
-          <span className="mt-[1vh] h-px w-full bg-current opacity-50" />
-          <span className="pt-3 font-display text-[clamp(1.4rem,2.2vw,2.5rem)] leading-tight text-balance">{t(r.role)}</span>
-          <span className="pt-1 text-[0.75rem] tracking-[0.25em] uppercase opacity-80">{r.org}</span>
-          <span className="max-w-[34rem] pt-2 text-[clamp(0.9rem,1.05vw,1.1rem)] leading-snug opacity-80">{t(r.note)}</span>
-        </At>
-      ))}
-    </div>
-  );
-}
-const text = <Years />;
+// One role at a time on the dark rock, bottom-anchored: see <Spotlight>.
+const W = 0.24, at = slots(2, 0.14, W, 0.06);
+const text = <Spotlight slug="b4-inner-sun" roles={scenes.b4} at={at} w={W} bottom="always" />;
 const bird = <Creature sheet={heron} ms={5000} />;
 
 // Ray sheets are square and centred on the sun, so the box centre is the pivot.
@@ -57,14 +35,14 @@ export const b4InnerSun: BeatDef = {
     ...comp('desktop', [1660, 800]),
     overlays: [
       { node: bird, rect: { x: 1296, y: 251, w: 528, h: 679 }, parallax: 0.4, track: reveal() }, // feet (1560, 930)
-      { node: text, className: 'left-[11vw] bottom-[13vh]' },
+      { node: text, className: 'left-[9vw] bottom-[11vh] w-[min(42vw,44rem)]' },
     ],
   },
   portrait: {
     ...comp('portrait', [760, 960]),
     overlays: [
       { node: bird, rect: { x: 495, y: 431, w: 450, h: 579 }, parallax: 0.4, track: reveal() }, // feet (720, 1010)
-      { node: text, className: 'left-[9vw] bottom-[11svh]' },
+      { node: text, className: 'left-[10vw] right-[10vw] bottom-[12svh]' },
     ],
   },
 };

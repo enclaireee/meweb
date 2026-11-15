@@ -15,8 +15,8 @@ export const profile: {
   // Empty strings are hidden by the UI.
   contact: {
     email: 'muhfatihzamzami@gmail.com',
-    linkedin: '',
-    github: '',
-    cv: '',
+    linkedin: 'https://www.linkedin.com/in/fatihzamzami/',
+    github: 'https://github.com/enclaireee/',
+    cv: '/cv.pdf',
   },
 };

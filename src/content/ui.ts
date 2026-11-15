@@ -43,6 +43,11 @@ export const ui = {
       hardware: { en: 'Hardware and automation', id: 'Perangkat keras dan otomasi' },
     },
   },
+  roles: {
+    now: { en: 'Now', id: 'Kini' },
+    project: { en: 'See the project', id: 'Lihat proyeknya' },
+    cv: { en: 'CV', id: 'CV' },
+  },
   contact: {
     email: { en: 'Email', id: 'Email' },
     linkedin: { en: 'LinkedIn', id: 'LinkedIn' },

@@ -43,37 +43,29 @@ export const beats: Record<BeatSlug, Beat> = {
   },
   'b3-scale-flip': {
     line: { en: 'Experience', id: 'Pengalaman' },
-    label: { en: '03 / Experience', id: '03 / Pengalaman' },
+    label: { en: '03 / Experience · Engineering', id: '03 / Pengalaman · Rekayasa' },
     facts: [
       {
-        en: '<strong>Head of Research and Development, IME FTUI 2026</strong> (Jan 2026 to present). Leads an 11-member analyst team advising 12 divisions; publishes quarterly e-reports to over 150 staff.',
-        id: '<strong>Kepala Riset dan Pengembangan, IME FTUI 2026</strong> (Jan 2026 sampai sekarang). Memimpin 11 analis yang menasihati 12 divisi; menerbitkan e-report kuartalan untuk 150+ staf.',
+        en: '<strong>SCADA &amp; Automation Engineer Intern, PT PGAS Telekomunikasi Nusantara</strong> (Jun to Aug 2026). Automated telemetry collection and alarm notification across 3 platforms (Wonderware, Reliance, Zabbix) on national gas transmission infrastructure, and traced the telemetry path from metering stations to the control room.',
+        id: '<strong>Magang Insinyur SCADA &amp; Otomasi, PT PGAS Telekomunikasi Nusantara</strong> (Jun sampai Agu 2026). Mengotomatiskan pengumpulan telemetri dan notifikasi alarm di 3 platform (Wonderware, Reliance, Zabbix) pada infrastruktur transmisi gas nasional, dan menelusuri jalur telemetri dari stasiun meter ke ruang kendali.',
       },
       {
-        en: '<strong>Teaching Assistant, Advanced Mathematics 2, FTUI</strong> (Aug 2026 to present). Supports 50 students in transforms and differential equations.',
-        id: '<strong>Asisten Dosen, Matematika Teknik 2, FTUI</strong> (Agu 2026 sampai sekarang). Mendampingi 50 mahasiswa dalam transformasi dan persamaan diferensial.',
-      },
-      {
-        en: '<strong>Teaching Assistant, Computational Thinking, FTUI</strong> (Aug 2025 to Jun 2026). Two terms, Python problem solving for all engineering majors.',
-        id: '<strong>Asisten Dosen, Computational Thinking, FTUI</strong> (Agu 2025 sampai Jun 2026). Dua periode, pemecahan masalah Python untuk semua jurusan teknik.',
+        en: '<strong>Software Engineer, EXERCISE FTUI 2025</strong> (Feb to Dec 2025). Built and shipped full-stack websites (React, Next.js, Node.js, Tailwind CSS) for clients inside and outside FTUI.',
+        id: '<strong>Software Engineer, EXERCISE FTUI 2025</strong> (Feb sampai Des 2025). Membangun dan merilis situs full-stack (React, Next.js, Node.js, Tailwind CSS) untuk klien di dalam dan luar FTUI.',
       },
     ],
   },
   'b4-inner-sun': {
     line: { en: 'Experience', id: 'Pengalaman' },
-    label: { en: '04 / Experience, continued', id: '04 / Pengalaman, lanjutan' },
+    label: { en: '04 / Experience · Teaching', id: '04 / Pengalaman · Mengajar' },
     facts: [
       {
-        en: '<strong>SCADA &amp; Automation Engineer Intern, PT PGAS Telekomunikasi Nusantara</strong> (Jun to Aug 2026). Automated telemetry and alarm notification across 3 platforms (Wonderware, Reliance, Zabbix) on national gas transmission infrastructure.',
-        id: '<strong>Magang Insinyur SCADA &amp; Otomasi, PT PGAS Telekomunikasi Nusantara</strong> (Jun sampai Agu 2026). Mengotomatiskan telemetri dan notifikasi alarm di 3 platform (Wonderware, Reliance, Zabbix) pada infrastruktur transmisi gas nasional.',
+        en: '<strong>Teaching Assistant, Advanced Mathematics 2, FTUI</strong> (Aug 2026 to present). Supports 50 students in Laplace, Fourier and z-transforms and differential equations.',
+        id: '<strong>Asisten Dosen, Matematika Teknik 2, FTUI</strong> (Agu 2026 sampai sekarang). Mendampingi 50 mahasiswa dalam transformasi Laplace, Fourier, dan z serta persamaan diferensial.',
       },
       {
-        en: '<strong>Software Engineer Team, EXERCISE FTUI 2025</strong> (Feb to Dec 2025). Shipped full-stack websites for clients inside and outside FTUI.',
-        id: '<strong>Tim Software Engineer, EXERCISE FTUI 2025</strong> (Feb sampai Des 2025). Merilis situs full-stack untuk klien di dalam dan luar FTUI.',
-      },
-      {
-        en: '<strong>Director of Events, EXERTION UI 2025</strong> (Apr to Sep 2025). Built the first flagship event from the ground up: 3 competitions, over 150 participants, above first-year targets.',
-        id: '<strong>Direktur Acara, EXERTION UI 2025</strong> (Apr sampai Sep 2025). Membangun acara unggulan pertama dari nol: 3 kompetisi, 150+ peserta, melampaui target tahun pertama.',
+        en: '<strong>Teaching Assistant, Computational Thinking, FTUI</strong> (Aug 2025 to Jun 2026). Two consecutive terms, Python problem solving for all engineering majors, co-delivering lectures with 2 lecturers.',
+        id: '<strong>Asisten Dosen, Computational Thinking, FTUI</strong> (Agu 2025 sampai Jun 2026). Dua periode berturut-turut, pemecahan masalah Python untuk semua jurusan teknik, bersama 2 dosen.',
       },
     ],
   },
@@ -136,12 +128,20 @@ export const beats: Record<BeatSlug, Beat> = {
     label: { en: '08 / Leadership', id: '08 / Kepemimpinan' },
     facts: [
       {
-        en: '<strong>Contingent Team Leader, 25th World Scout Jamboree, South Korea</strong> (Aug 2023). Led 30 people among 43,000 participants; kept the team together through a heatwave and the evacuation ahead of Typhoon Khanun.',
-        id: '<strong>Ketua Kontingen, 25th World Scout Jamboree, Korea Selatan</strong> (Agu 2023). Memimpin 30 orang di antara 43.000 peserta; menjaga tim tetap solid di tengah gelombang panas dan evakuasi sebelum Topan Khanun.',
+        en: '<strong>Head of Research and Development, IME FTUI 2026</strong> (Jan 2026 to present). Leads an 11-member analyst team advising 12 divisions; quarterly e-reports to over 150 staff. Best BPH 2026.',
+        id: '<strong>Kepala Riset dan Pengembangan, IME FTUI 2026</strong> (Jan 2026 sampai sekarang). Memimpin 11 analis yang menasihati 12 divisi; e-report kuartalan untuk 150+ staf. BPH Terbaik 2026.',
       },
       {
-        en: '<strong>Development lead, NEST UI 2026</strong> (Jun to Sep 2026). Led the build of a national competition registration platform.',
-        id: '<strong>Ketua pengembangan, NEST UI 2026</strong> (Jun sampai Sep 2026). Memimpin pembuatan platform pendaftaran kompetisi nasional.',
+        en: '<strong>Lead Developer, NEST UI 2026</strong> (Jun to Sep 2026). Led the registration platform for 3 national competitions with 3 stages each and 200 registrants.',
+        id: '<strong>Lead Developer, NEST UI 2026</strong> (Jun sampai Sep 2026). Memimpin platform pendaftaran untuk 3 kompetisi nasional dengan 3 tahap masing-masing dan 200 pendaftar.',
+      },
+      {
+        en: '<strong>Director of Events, EXERTION UI 2025</strong> (Apr to Sep 2025). Built the first flagship event from the ground up: 3 competitions, over 150 participants, above first-year targets.',
+        id: '<strong>Direktur Acara, EXERTION UI 2025</strong> (Apr sampai Sep 2025). Membangun acara unggulan pertama dari nol: 3 kompetisi, 150+ peserta, melampaui target tahun pertama.',
+      },
+      {
+        en: '<strong>Contingent Team Leader, 25th World Scout Jamboree, South Korea</strong> (Aug 2023). Led 30 people among 43,000 participants; kept the team together through a heatwave and the evacuation ahead of Typhoon Khanun.',
+        id: '<strong>Ketua Kontingen, 25th World Scout Jamboree, Korea Selatan</strong> (Agu 2023). Memimpin 30 orang di antara 43.000 peserta; menjaga tim tetap solid di tengah gelombang panas dan evakuasi sebelum Topan Khanun.',
       },
     ],
   },

@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { enterLane, exitLane, subscribeFrame, useLane } from '@/engine';
-import { ui } from '@/content';
+import { profile, ui } from '@/content';
 import { useLang, useT } from './lang';
 
 const btn =
@@ -27,7 +27,9 @@ export function Nav() {
     });
   }, [sound]);
 
+  const cv = profile.contact.cv;
   return (
+    <>
     <nav className="world-nav fixed inset-x-0 top-0 z-50 flex items-center justify-end gap-2 p-4 text-[#f3ead8]">
       <a href="#content" className={`${btn} sr-only focus:not-sr-only`}>
         {t(ui.nav.skip)}
@@ -43,5 +45,13 @@ export function Nav() {
       </button>
       <audio ref={audio} loop preload="none" />
     </nav>
+    {/* On the paper frame's bottom-left corner: always reachable, and the top row stays three buttons wide on phones. */}
+    {cv && (
+      <a href={cv} download="CV_Muhammad_Fatih_Zamzami.pdf" className={`${btn} world-nav fixed bottom-4 left-4 z-50 inline-flex items-center gap-2 text-[#f3ead8]`}>
+        <span aria-hidden>↓</span>
+        {t(ui.contact.cv)}
+      </a>
+    )}
+    </>
   );
 }

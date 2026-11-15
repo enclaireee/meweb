@@ -7,7 +7,7 @@ export const nestUi2026: Project = {
     id: 'NEST UI 2026: Platform Pendaftaran Kompetisi',
   },
   period: { en: 'Jun 2026 to Sep 2026', id: 'Jun 2026 sampai Sep 2026' },
-  role: { en: 'Development lead', id: 'Ketua pengembangan' },
+  role: { en: 'Lead developer', id: 'Lead developer' },
   summary: {
     en: 'The registration platform for a national competition, with multi-step team sign-up and an admin dashboard.',
     id: 'Platform pendaftaran kompetisi nasional, dengan pendaftaran tim bertahap dan dasbor admin.',
