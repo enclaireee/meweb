@@ -5,7 +5,7 @@ import type { CSSProperties, ReactNode } from 'react';
 import { beats, type BeatSlug, type L } from '@/content';
 import { useT } from './lang';
 
-type AtProps = { a: number; d?: number; w?: number; k?: 'lit' | 'stamp' | 'unfurl' | 'focus' | 'one' | 'etch'; className?: string; style?: CSSProperties; children: ReactNode };
+type AtProps = { a: number; d?: number; w?: number; k?: 'lit' | 'stamp' | 'unfurl' | 'focus' | 'one'; className?: string; style?: CSSProperties; children: ReactNode };
 
 /** A piece that arrives at local beat progress `a` over `d`. */
 export function At({ a, d, w, k, className = '', style, children }: AtProps) {

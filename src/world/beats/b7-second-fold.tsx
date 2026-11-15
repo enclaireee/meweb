@@ -6,29 +6,32 @@ import manifest from '../../../public/art/b7-second-fold/manifest.json';
 import whale from '../../../public/art/creatures/whale/manifest.json';
 import { Creature } from '../Creature';
 import { useT } from '../lang';
-import { At, Kicker, seq } from '../SceneText';
+import { At, Kicker } from '../SceneText';
 import { world } from '../transitions';
 
-// Text: a wall of small brass plates, like a trophy case. Each blank plate engraves itself letter by
-// letter as you reach it, then its detail is stamped underneath.
+// Text: the whale's wake. Each award is a glowing mote it leaves on the dark cavern wall, a streak of
+// light trailing back toward it, lit one by one as it swims in. The wake bends as it trails off.
+const glow = '[text-shadow:0_0_12px_rgb(150_215_255/0.85),0_0_30px_rgb(110_180_255/0.5),0_2px_8px_rgb(0_0_25/0.8)]';
+const drift = ['0vw', '3.5vw', '5.5vw', '4.5vw'];
 function Awards() {
   const t = useT();
   return (
-    <div aria-hidden className="flex flex-col gap-[2.4vh]">
-      <div className="beat-text"><Kicker slug="b7-second-fold" /></div>
-      <ol className="grid grid-cols-2 gap-[1.4vw] portrait:gap-3">
-        {scenes.b7.map((a, i) => {
-          const from = 0.24 + 0.11 * i, title = [...t(a.title)], at = seq(title.length, from, from + 0.07);
-          return (
-            <li key={i} className="plate flex min-h-[8.5rem] flex-col justify-center gap-2 px-[1.6vw] py-[2.2vh] portrait:min-h-[6.5rem] portrait:px-4">
-              <span className="text-[0.65rem] tracking-[0.3em] tabular-nums opacity-60">{String(i + 1).padStart(2, '0')}</span>
-              <span className="font-display text-[clamp(1.35rem,2.2vw,2.5rem)] leading-[1.02] portrait:text-[clamp(1.1rem,5vw,1.6rem)]">
-                {title.map((c, j) => <At key={j} a={at[j]!} d={0.012} k="etch">{c}</At>)}
+    <div aria-hidden className={`beat-text flex flex-col gap-[3.4vh] text-[#f2faff] portrait:gap-5 portrait:rounded-3xl portrait:bg-[radial-gradient(ellipse_at_center,rgb(16_20_50/0.8),rgb(16_20_50/0.5)_65%,transparent)] portrait:p-6 ${glow}`}>
+      <Kicker slug="b7-second-fold" />
+      <ol className="flex flex-col gap-[3.6vh] portrait:gap-4">
+        {scenes.b7.map((a, i) => (
+          <li key={i} style={{ marginLeft: drift[i] }}>
+            <At a={0.34 + 0.08 * i} d={0.07} className="block">
+              <span className="flex items-center gap-4">
+                <span className="relative size-2.5 shrink-0 rounded-full bg-[#eef9ff] shadow-[0_0_10px_3px_rgb(160_220_255/0.9),0_0_28px_8px_rgb(110_180_255/0.45)]">
+                  <span className="absolute top-1/2 right-full h-px w-[8vw] origin-right -translate-y-1/2 bg-linear-to-l from-[#c4e8ff] to-transparent [scale:var(--p)_1]" />
+                </span>
+                <span className="font-display text-[clamp(1.5rem,2.4vw,2.7rem)] leading-[1.05]">{t(a.title)}</span>
               </span>
-              <At a={from + 0.075} d={0.03} k="etch" className="text-[clamp(0.7rem,0.85vw,0.85rem)] leading-snug opacity-80">{t(a.detail)}</At>
-            </li>
-          );
-        })}
+              <span className="mt-1.5 block pl-[1.625rem] text-[clamp(0.78rem,0.95vw,0.95rem)] leading-snug text-[#d8eeff]">{t(a.detail)}</span>
+            </At>
+          </li>
+        ))}
       </ol>
     </div>
   );
@@ -71,7 +74,7 @@ export const b7SecondFold: BeatDef = {
     ...comp('desktop', [760, 520]),
     overlays: [
       { node: fish, rect: box(480, 280, 1000), parallax: 0.2, track: glide },
-      { node: text, className: 'left-[55vw] top-[18vh] w-[min(40vw,46rem)]', track: textT },
+      { node: text, className: 'left-[56vw] top-[16vh] w-[min(36vw,40rem)]', track: textT },
     ],
   },
   portrait: {
