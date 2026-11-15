@@ -76,7 +76,9 @@ function prep(cv: HTMLCanvasElement) {
   }
   const ctx = cv.getContext('2d');
   if (!ctx) return ctx;
-  ctx.imageSmoothingQuality = 'high'; // a resize resets context state, so set it every draw (cheap)
+  // 'medium' (mipmapped) keeps downscaled art clean; 'high' doubled frame times (17 -> 35ms avg, measured). A resize
+  // resets context state, so set it every draw (cheap).
+  ctx.imageSmoothingQuality = 'medium';
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(0, 0, bw, bh);
   return ctx;
