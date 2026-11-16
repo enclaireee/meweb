@@ -13,7 +13,7 @@ export const scenes = {
     first: 'Muhammad',
     given: 'Fatih',
     last: 'Zamzami',
-    label: l('Depok · Electrical Engineering, UI', 'Depok · Teknik Elektro, UI'),
+    label: l('Electrical Engineering Student\nUniversitas Indonesia', 'Mahasiswa Teknik Elektro\nUniversitas Indonesia'),
   },
   b1: {
     sentence: l(

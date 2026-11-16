@@ -37,10 +37,10 @@ const nameP = nameNode('text-[4.6cqw] my-[1.2cqw]', 'text-[31cqw]');
 function Label() {
   const t = useT();
   return (
-    <div aria-hidden className="@container beat-text flex h-full items-center gap-[3cqw] text-[#f6e7c8]">
+    <div aria-hidden className="@container beat-text flex h-full items-center text-[#f6e7c8]">
       <span className="h-px w-[7cqw] shrink-0 bg-current opacity-70" />
-      <span className="size-[2.6cqw] shrink-0 rounded-full border border-current" />
-      <span className="text-[max(12px,5.8cqw)] leading-[1.35] tracking-[0.16em] uppercase">{t(s.label)}</span>
+      <span className="ml-[3cqw] size-[2.6cqw] shrink-0 rounded-full border border-current" />
+      <span className="ml-[3cqw] whitespace-pre-line text-[max(11px,3.6cqw)] leading-[1.35] tracking-[0.16em] uppercase">{t(s.label)}</span>
     </div>
   );
 }
@@ -127,7 +127,7 @@ export const b0Outside: BeatDef = {
       stars(portrait, 'sky-p', { x: 80, y: 40, w: 920, h: 700 }),
       starsFar(portrait, 'sky-p', { x: 80, y: 40, w: 920, h: 700 }),
       { ...onLayer(portrait, 'range-far-p', { x: 210, y: 330, w: 680, h: 300 }, nameP, { behind: true, track: nameT }), intro: nameIntro },
-      { ...onLayer(portrait, 'window-glow', { x: 600, y: 800, w: 460, h: 90 }, label, { track: labelT }), intro: labelIntro },
+      { ...onLayer(portrait, 'window-glow', { x: 170, y: 880, w: 720, h: 110 }, label, { track: labelT }), intro: labelIntro },
       { node: moth, rect: { x: 600, y: 250, w: 260, h: 173 }, parallax: 0.2, track: [{ at: 0, x: 0, y: 0 }, { at: 0.9, x: 380, y: 110 }], intro: mothIntro },
     ],
   },

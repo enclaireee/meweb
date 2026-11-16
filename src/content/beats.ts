@@ -10,7 +10,6 @@ export const beats: Record<BeatSlug, Beat> = {
         en: 'Electrical engineering undergraduate at <strong>Universitas Indonesia</strong>: control systems, full-stack development, industrial automation.',
         id: 'Mahasiswa teknik elektro <strong>Universitas Indonesia</strong>: sistem kendali, pengembangan full-stack, otomasi industri.',
       },
-      { en: 'Depok, West Java', id: 'Depok, Jawa Barat' },
     ],
   },
   'b1-approach': {
