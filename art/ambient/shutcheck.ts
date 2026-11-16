@@ -1,14 +1,14 @@
 // Shut-gate frame check: place the gate sprites at their closed shift and report how flat the frame is.
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import sharp from "sharp";
+import sharp, { type OverlayOptions } from "sharp";
 import { ROOT } from "../lib/index.ts";
 
 /** Returns { top: share of the canvas in the single most common colour bucket, clear: share left transparent, bytes png }. */
 export async function shutCheck(slug: string, which: "desktop" | "portrait", shifts: { l: number; r: number }, out?: string, bg = "#00000000") {
   const m = JSON.parse(readFileSync(join(ROOT, "public/art", slug, "manifest.json"), "utf8"));
   const c = m.compositions[which] as { width: number; height: number; layers: { id: string; x: number; y: number; w: number; h: number }[] };
-  const ops: sharp.OverlayOptions[] = [];
+  const ops: OverlayOptions[] = [];
   for (const l of c.layers.filter((q) => /^gate-[lr]/.test(q.id))) {
     const dx = l.id.startsWith("gate-l") ? shifts.l : -shifts.r;
     const x = Math.round(l.x + dx), y = Math.round(l.y), w = Math.round(l.w), h = Math.round(l.h);

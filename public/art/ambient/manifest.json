@@ -1,0 +1,52 @@
+{
+  "star-glint": {
+    "src": "/art/ambient/star-glint.webp",
+    "w": 64,
+    "h": 64
+  },
+  "mist-wisp": {
+    "src": "/art/ambient/mist-wisp.webp",
+    "w": 512,
+    "h": 160
+  },
+  "mote": {
+    "src": "/art/ambient/mote.webp",
+    "w": 16,
+    "h": 16
+  },
+  "leaf-1": {
+    "src": "/art/ambient/leaf-1.webp",
+    "w": 48,
+    "h": 48
+  },
+  "leaf-2": {
+    "src": "/art/ambient/leaf-2.webp",
+    "w": 48,
+    "h": 48
+  },
+  "leaf-3": {
+    "src": "/art/ambient/leaf-3.webp",
+    "w": 48,
+    "h": 48
+  },
+  "snowflake": {
+    "src": "/art/ambient/snowflake.webp",
+    "w": 24,
+    "h": 24
+  },
+  "flame-1": {
+    "src": "/art/ambient/flame-1.webp",
+    "w": 48,
+    "h": 80
+  },
+  "flame-2": {
+    "src": "/art/ambient/flame-2.webp",
+    "w": 48,
+    "h": 80
+  },
+  "ember": {
+    "src": "/art/ambient/ember.webp",
+    "w": 12,
+    "h": 12
+  }
+}

@@ -2,6 +2,8 @@
 // Per-band bake settings (bible s13) -> bakeLayer per layer, manifest written here in the bakeBeat shape.
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { gateFx } from "../ambient/gatefx.ts";
+import { squeeze } from "../ambient/squeeze.ts";
 import {
   ROOT, arch, bakeLayer, bridge, cloud, column, composite, cut, difference, ellipse, fern, glow, hills, layer, lantern, mist, mix,
   offset, pine, rect, ridge, rng, scatter, shaft, sheet, stairs, tower, union, vine, roots,
@@ -405,8 +407,12 @@ function gates(o: { W: number; sfx: string; seed: number; xl: (p: number) => num
     }
     return [paper(inter(union(...strips), inner), cn("near", "shell-shade", 0.35), B.near, { rm: 0.25 }), sheet(inter(union(...ws), inner), P["near-dark"]!, { shadow: false })];
   };
-  const gl = layer("gate-l" + o.sfx, 14, ...pile(detail(polyL, false, R(o.seed + 3), pl, 99), GATE_FILLS, 16, B.gate, { rm: 0.5 }), ...body(polyL, -60, o.xl(0) - 20, R(o.seed + 5)));
-  const gr = layer("gate-r" + o.sfx, 15, ...pile(detail(polyR, true, R(o.seed + 4), pr, 2), GATE_FILLS, 16, B.gate, { rm: 0.25 }), ...body(polyR, xr(1) + 40, o.W + 60, R(o.seed + 6)));
+  const fxo = (xa: number, xb: number, seed: number) => ({ xa, xb, H: o.hi, portrait: o.W < 1500, seed, motif: "arch" as const, light: "#ffb866", core: "#fff1cf", rim: "#ffd9a0", tint: "#9db8dc",
+    tones: [cn("shell-shade", "shell", 0.55), cn("shell", "shell-lit", 0.35), cn("shell-shade", "ledge", 0.5), cn("shell", "ledge", 0.6)] });
+  const fL = gateFx(polyL, fxo(-o.shift - 40, Math.max(...pl.map((q) => q[0])) - 90, o.seed + 7));
+  const fR = gateFx(polyR, fxo(Math.min(...pr.map((q) => q[0])) + 90, o.W + o.shift + 40, o.seed + 8));
+  const gl = layer("gate-l" + o.sfx, 14, ...fL.under, ...pile(detail(polyL, false, R(o.seed + 3), pl, 99), GATE_FILLS, 16, B.gate, { rm: 0.5, holes: [fL.holes] }), ...body(polyL, -60, o.xl(0) - 20, R(o.seed + 5)), ...fL.mid, ...fL.over);
+  const gr = layer("gate-r" + o.sfx, 15, ...fR.under, ...pile(detail(polyR, true, R(o.seed + 4), pr, 2), GATE_FILLS, 16, B.gate, { rm: 0.25, holes: [fR.holes] }), ...body(polyR, xr(1) + 40, o.W + 60, R(o.seed + 6)), ...fR.mid, ...fR.over);
   const ext = (a: Pt[]) => [Math.min(...a.map((p) => p[0])), Math.max(...a.map((p) => p[0]))].map(Math.round);
   return { gl, gr, minOv, restL: ext(pl), restR: ext(pr) };
 }
@@ -467,7 +473,7 @@ const all: Layer[] = [moon, ...ORDER(sD, gD), ...ORDER(sP, gP)];
 // per-band bake table (bible s13): [scale, quality]
 const BAKE: Record<string, [number, number]> = {
   sky: [0.5, 40], moon: [0.45, 40], "range-far": [0.5, 40], clouds: [0.5, 40], "shell-back": [0.4, 40], "shell-face": [0.5, 42], strata: [0.5, 36], balconies: [0.5, 36],
-  "glow-web": [0.4, 40], "glow-data": [0.4, 40], "glow-hw": [0.4, 40], mist: [0.3, 30], "trees-mid": [0.45, 38], "near-ground": [0.4, 36], "gate-l": [0.35, 35], "gate-r": [0.35, 35],
+  "glow-web": [0.4, 40], "glow-data": [0.4, 40], "glow-hw": [0.4, 40], mist: [0.3, 30], "trees-mid": [0.45, 38], "near-ground": [0.4, 36], "gate-l": [0.4, 40], "gate-r": [0.4, 40],
 };
 const bk = (id: string) => BAKE[id.replace(/-p$/, "")] ?? [0.6, 50];
 const baked = new Map<string, NonNullable<Awaited<ReturnType<typeof bakeLayer>>>>();
@@ -488,6 +494,7 @@ const compose = (width: number, height: number, include: string[], place: Record
 const dIds = ["sky", "moon", ...ORDER(sD, gD).slice(1).map((l) => l.id)];
 const pIds = ["sky-p", "moon", ...ORDER(sP, gP).slice(1).map((l) => l.id)];
 const moonPlace = { x: 180 - 260 * 0.8, y: 140 - 180 * 0.8, s: 0.8 };
+await squeeze(SLUG, baked, { "gate-l": [0.85, 40, 70], "gate-r": [0.85, 40, 70] }, null);
 const total = [...baked.values()].reduce((n, b) => n + b.bytes, 0);
 const manifest = { slug: SLUG, compositions: { desktop: compose(W, H, dIds), portrait: compose(PW, PH, pIds, { moon: moonPlace }) }, bytes: total };
 writeFileSync(join(ROOT, "public/art", SLUG, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n");

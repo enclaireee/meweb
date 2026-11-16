@@ -253,6 +253,8 @@ function Intro() {
   );
 }
 
+// Short fade (no long half-faded stretch) just before the dive.
+const introT: Keyframe[] = [{ at: 0, opacity: 1 }, { at: 0.58, opacity: 1 }, { at: 0.64, opacity: 0, ease: 'in' }];
 const glow = (at: number): LayerDef => ({ track: [{ at, opacity: 0 }, { at: at + 0.12, opacity: 1, ease: 'out' }] });
 const shellExtra = both({ 'glow-web': glow(0.05), 'glow-data': glow(0.15), 'glow-hw': glow(0.25) });
 
@@ -268,7 +270,7 @@ const shellComp = (c: Comp, focus: [number, number], className: string): Composi
   });
   return {
     ...world(shellJson as Manifest, c, SHELL, { focus, first: true, extra: shellExtra }),
-    overlays: [{ node: <Intro />, className, track: reveal({ first: true }) }, ...buttons],
+    overlays: [{ node: <Intro />, className, track: introT }, ...buttons],
   };
 };
 
