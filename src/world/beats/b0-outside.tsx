@@ -95,11 +95,11 @@ const labelIntro: Track = [{ at: 0.82, y: 14, opacity: 0 }, { at: 1, y: 0, opaci
 const mothIntro: Track = [{ at: 0.5, opacity: 0 }, { at: 0.85, opacity: 1 }];
 const starsIntro: Track = [{ at: 0.3, opacity: 0 }, { at: 0.55, opacity: 1 }];
 const stars = (c: typeof desktop, sky: string, rect: { x: number; y: number; w: number; h: number }) => ({
-  ...onLayer(c, sky, rect, <Particles sprite="star-glint" n={16} kind="twinkle" seed={5} size={[0.7, 1.5]} lite />, { behind: true }),
+  ...onLayer(c, sky, rect, <Particles sprite="star-glint" n={9} kind="twinkle" seed={5} size={[0.7, 1.5]} lite />, { behind: true }),
   intro: starsIntro,
 });
 const starsFar = (c: typeof desktop, sky: string, rect: { x: number; y: number; w: number; h: number }) => ({
-  ...onLayer(c, sky, rect, <Particles sprite="star-glint" n={14} kind="twinkle" seed={11} size={[0.5, 1]} dur={[3.5, 6]} />, { behind: true }),
+  ...onLayer(c, sky, rect, <Particles sprite="star-glint" n={8} kind="twinkle" seed={11} size={[0.5, 1]} dur={[3.5, 6]} />, { behind: true }),
   highOnly: true,
   intro: starsIntro,
 });

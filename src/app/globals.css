@@ -42,14 +42,14 @@ html.js .plain {
   white-space: nowrap;
 }
 
-/* Sprite-strip creatures (src/world/Creature.tsx): step through frames, back and forth. */
+/* Sprite-strip creatures (src/world/Creature.tsx): step the strip through its frames, back and forth (translate:
+   compositor-only). */
 .creature {
-  background-repeat: no-repeat;
   animation: creature-frames 1.6s infinite alternate;
 }
 @keyframes creature-frames {
   to {
-    background-position-x: var(--to);
+    translate: var(--to) 0;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -477,6 +477,7 @@ html[data-quality='low'] :is([class*='amb-'][class*='-c']):not(.amb-lite) > * {
   animation: none;
 }
 html[data-hidden] :is([class*='amb-'], [class*='amb-'] > *, .cue-bob, .lantern-pip, .creature, .float-word, .firefly),
+html[data-scrolling] :is([class*='amb-'], [class*='amb-'] > *, .float-word),
 [data-off] :is([class*='amb-'], [class*='amb-'] > *, .creature, .float-word, .firefly) {
   animation-play-state: paused;
 }

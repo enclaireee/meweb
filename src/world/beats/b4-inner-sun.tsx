@@ -37,8 +37,8 @@ const comp = (c: Comp, focus: [number, number]) => world(manifest, c, SCREENS, {
 // Dust motes drift up through the light shafts (behind the near rock).
 const motesT: Track = [{ at: 0.1, opacity: 0 }, { at: 0.24, opacity: 1 }, { at: 0.62, opacity: 1 }, { at: 0.72, opacity: 0 }];
 const motes = (rect: { x: number; y: number; w: number; h: number }) => [
-  { node: <Particles sprite="mote" kind="rise" n={14} seed={13} size={[0.5, 1]} lite />, rect, behind: true, track: motesT },
-  { node: <Particles sprite="mote" kind="rise" n={16} seed={29} size={[0.4, 0.8]} />, rect, behind: true, track: motesT, highOnly: true },
+  { node: <Particles sprite="mote" kind="rise" n={8} seed={13} size={[0.5, 1]} lite />, rect, behind: true, track: motesT },
+  { node: <Particles sprite="mote" kind="rise" n={9} seed={29} size={[0.4, 0.8]} />, rect, behind: true, track: motesT, highOnly: true },
 ];
 
 export const b4InnerSun: BeatDef = {

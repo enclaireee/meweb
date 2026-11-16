@@ -77,8 +77,8 @@ const candle = (
 );
 const snow = (big: number) => (
   <div className="size-full overflow-hidden">
-    <Particles sprite="snowflake" kind="fall" n={10} seed={2} lite size={[big, big * 1.8]} dur={[9, 15]} />
-    <Particles sprite="snowflake" kind="fall" n={8} seed={6} size={[big * 0.8, big * 1.4]} dur={[11, 18]} />
+    <Particles sprite="snowflake" kind="fall" n={6} seed={2} lite size={[big, big * 1.8]} dur={[9, 15]} />
+    <Particles sprite="snowflake" kind="fall" n={4} seed={6} size={[big * 0.8, big * 1.4]} dur={[11, 18]} />
   </div>
 );
 

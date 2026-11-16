@@ -33,8 +33,8 @@ const portrait = comp('portrait', [540, 640]);
 const headT: Track = [{ at: 0.1, y: 60, opacity: 0 }, { at: 0.115, y: 55, opacity: 1 }, { at: 0.2, y: 0, ease: 'out' }, { at: 0.6, y: 0 }, { at: 0.68, y: 50, opacity: 1, ease: 'in' }, { at: 0.685, y: 50, opacity: 0 }];
 const motesT: Track = [{ at: 0.1, opacity: 0 }, { at: 0.24, opacity: 1 }, { at: 0.62, opacity: 1 }, { at: 0.72, opacity: 0 }];
 const motes = (c: typeof desktop, id: string, rect: { x: number; y: number; w: number; h: number }) => [
-  onLayer(c, id, rect, <Particles sprite="mote" kind="rise" n={14} seed={3} size={[0.5, 1]} lite />, { behind: true, track: motesT }),
-  { ...onLayer(c, id, rect, <Particles sprite="mote" kind="rise" n={16} seed={9} size={[0.4, 0.8]} />, { behind: true, track: motesT }), highOnly: true },
+  onLayer(c, id, rect, <Particles sprite="mote" kind="rise" n={8} seed={3} size={[0.5, 1]} lite />, { behind: true, track: motesT }),
+  { ...onLayer(c, id, rect, <Particles sprite="mote" kind="rise" n={9} seed={9} size={[0.4, 0.8]} />, { behind: true, track: motesT }), highOnly: true },
 ];
 
 export const b3ScaleFlip: BeatDef = {

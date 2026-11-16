@@ -135,10 +135,10 @@ const air = (big: number) => (
     <Particles sprite="leaf-1" kind="fall" n={3} seed={3} lite size={[big, big * 1.7]} />
     <Particles sprite="leaf-2" kind="fall" n={3} seed={5} lite size={[big, big * 1.7]} />
     <Particles sprite="leaf-3" kind="fall" n={3} seed={9} lite size={[big, big * 1.7]} />
-    <Particles sprite="leaf-1" kind="fall" n={4} seed={13} size={[big, big * 1.7]} />
-    <Particles sprite="leaf-3" kind="fall" n={4} seed={17} size={[big, big * 1.7]} />
-    <Particles sprite="mote" kind="twinkle" n={8} seed={4} lite size={[0.5, 0.9]} area={[10, 15, 95, 85]} />
-    <Particles sprite="mote" kind="twinkle" n={10} seed={8} size={[0.4, 0.8]} area={[10, 15, 95, 85]} />
+    <Particles sprite="leaf-1" kind="fall" n={3} seed={13} size={[big, big * 1.7]} />
+    <Particles sprite="leaf-3" kind="fall" n={3} seed={17} size={[big, big * 1.7]} />
+    <Particles sprite="mote" kind="twinkle" n={4} seed={4} lite size={[0.5, 0.9]} area={[10, 15, 95, 85]} />
+    <Particles sprite="mote" kind="twinkle" n={6} seed={8} size={[0.4, 0.8]} area={[10, 15, 95, 85]} />
   </>
 );
 const fall = { d: air(1.2), p: air(2.4) };

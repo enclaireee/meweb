@@ -77,8 +77,8 @@ const headT: Track = [{ at: 0.1, y: 60, opacity: 0 }, { at: 0.115, y: 55, opacit
 // Dust motes catch the light that floods out of the seam.
 const motesT: Track = [{ at: 0.3, opacity: 0 }, { at: 0.5, opacity: 1 }, { at: 0.64, opacity: 1 }, { at: 0.74, opacity: 0 }];
 const motes = (c: typeof desktop, id: string, rect: { x: number; y: number; w: number; h: number }): OverlayLite[] => [
-  { ...onLayer(c, id, rect, <Particles sprite="mote" kind="rise" n={14} seed={7} size={[0.5, 1]} lite />, { track: motesT }) },
-  { ...onLayer(c, id, rect, <Particles sprite="mote" kind="rise" n={14} seed={17} size={[0.4, 0.8]} />, { track: motesT }), highOnly: true },
+  { ...onLayer(c, id, rect, <Particles sprite="mote" kind="rise" n={8} seed={7} size={[0.5, 1]} lite />, { track: motesT }) },
+  { ...onLayer(c, id, rect, <Particles sprite="mote" kind="rise" n={8} seed={17} size={[0.4, 0.8]} />, { track: motesT }), highOnly: true },
 ];
 type OverlayLite = NonNullable<BeatDef['desktop']['overlays']>[number];
 

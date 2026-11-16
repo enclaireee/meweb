@@ -81,8 +81,8 @@ const portrait = comp('portrait', [540, 910]);
 const headT: Track = [{ at: 0.1, y: 50, opacity: 0 }, { at: 0.115, y: 45, opacity: 1 }, { at: 0.22, y: 0, ease: 'out' }, { at: 0.6, y: 0 }, { at: 0.7, y: 40, opacity: 1, ease: 'in' }, { at: 0.705, y: 40, opacity: 0 }];
 const starsT: Track = [{ at: 0, opacity: 1 }, { at: 0.6, opacity: 1 }, { at: 0.72, opacity: 0 }];
 const stars = (c: typeof desktop, sky: string, rect: { x: number; y: number; w: number; h: number }) => [
-  { ...onLayer(c, sky, rect, <Particles sprite="star-glint" n={14} kind="twinkle" seed={21} size={[0.7, 1.4]} lite />, { behind: true, track: starsT }) },
-  { ...onLayer(c, sky, rect, <Particles sprite="star-glint" n={14} kind="twinkle" seed={34} size={[0.5, 1]} dur={[3.5, 6]} />, { behind: true, track: starsT }), highOnly: true },
+  { ...onLayer(c, sky, rect, <Particles sprite="star-glint" n={8} kind="twinkle" seed={21} size={[0.7, 1.4]} lite />, { behind: true, track: starsT }) },
+  { ...onLayer(c, sky, rect, <Particles sprite="star-glint" n={8} kind="twinkle" seed={34} size={[0.5, 1]} dur={[3.5, 6]} />, { behind: true, track: starsT }), highOnly: true },
 ];
 
 export const b1Approach: BeatDef = {
