@@ -1,4 +1,5 @@
 // p-hardware: ember-lit vaults, crystal clusters, chained bridges. Run: npx tsx art/p-hardware/build.ts
+import { squeeze } from "../ambient/squeeze.ts";
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { gateFx } from "../ambient/gatefx.ts";
@@ -479,6 +480,7 @@ const compose = (width: number, height: number, include: string[], place: Record
   }).sort((a, b) => a.depth - b.depth),
 });
 const dIds = dAll.map((l) => l.id), pIds = pAll.map((l) => l.id);
+await squeeze(SLUG, baked, { "gate-l": [0.85, 40, 70], "gate-r": [0.85, 40, 70] }, null);
 const total = [...baked.values()].reduce((n, b) => n + b.bytes, 0);
 const manifest = { slug: SLUG, compositions: { desktop: compose(W, H, dIds), portrait: compose(PW, PH, pIds, { "mist-far": { x: 210, y: -120, s: 0.6 } }) }, bytes: total };
 writeFileSync(join(ROOT, "public/art", SLUG, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n");

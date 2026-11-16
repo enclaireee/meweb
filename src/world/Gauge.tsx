@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { beatRanges, scrollToS, subscribeFrame, useLane, type Lane } from '@/engine';
 import { ui, type L } from '@/content';
 import { mainBeats, projectBeats } from './beats';
+import { districts } from './lane-projects';
 import { useT } from './lang';
 
 type Mark = { label: L; s: number; beat: number };
@@ -27,10 +28,7 @@ function marks(lane: Lane): { list: Mark[]; total: number } {
           { label: g.experience, ...at(3) }, { label: g.projects, ...at(5) }, { label: g.skills, ...at(6) },
           { label: g.awards, ...at(7) }, { label: g.leadership, ...at(8) }, { label: g.contact, ...at(9) },
         ]
-      : [
-          { label: g.shell, ...at(0) }, { label: ui.projects.groups.web, ...at(1, 0.12) },
-          { label: ui.projects.groups.data, ...at(2, 0.12) }, { label: ui.projects.groups.hardware, ...at(3, 0.12) },
-        ];
+      : districts().map((d, i) => ({ label: d.id === 'shell' ? g.shell : ui.projects.groups[d.id], s: d.s, beat: i }));
   return { list, total };
 }
 
