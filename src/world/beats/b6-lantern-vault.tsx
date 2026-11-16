@@ -1,14 +1,14 @@
 'use client';
 // b6: the lantern vault. Choreography from ../transitions. Hero: the lanterns ignite in a depth wave, far to near.
 import type { CSSProperties } from 'react';
-import type { BeatDef, Comp, LayerDef } from '@/engine';
+import type { BeatDef, Comp, Keyframe, LayerDef } from '@/engine';
 import { scenes } from '@/content';
 import manifest from '../../../public/art/b6-lantern-vault/manifest.json';
 import jellyfish from '../../../public/art/creatures/jellyfish/manifest.json';
 import { Creature } from '../Creature';
-import { useT } from '../lang';
-import { At, Kicker } from '../SceneText';
-import { reveal, world } from '../transitions';
+import { useLang, useT } from '../lang';
+import { At, Kicker, Ln, SectionHeading } from '../SceneText';
+import { onLayer, world } from '../transitions';
 
 // Text: floating words scattered through the vault in viewport space, never pinned to the dollying
 // lantern layers (that grew them off-frame). The box is inset well inside the paper frame and each
@@ -20,11 +20,8 @@ const spots: { label: [number, number]; items: Spot[] }[] = [
   { label: [32, 4], items: [[34, 11, 1], [46, 15, 2], [31, 22, 2], [44, 27, 3], [33, 34, 2], [49, 37, 3], [37, 44, 2], [47, 51, 3]] },
   { label: [3, 68], items: [[1, 75, 2], [24, 83, 2], [47, 75, 1], [41, 92, 3]] },
 ];
-const size = {
-  1: 'text-[clamp(1.35rem,2vw,2.1rem)]',
-  2: 'text-[clamp(1.05rem,1.45vw,1.5rem)] opacity-95',
-  3: 'text-[clamp(0.95rem,1.15vw,1.2rem)] opacity-80',
-};
+const size = { 1: 'text-lead font-semibold', 2: 'text-body font-semibold', 3: 'text-body' };
+const OUT = 0.66; // words leave here (the dive starts at 0.68)
 const glowText = '[text-shadow:0_0_14px_rgb(255_170_80/0.75),0_0_32px_rgb(255_140_50/0.35),0_2px_8px_rgb(0_0_0/0.75)]';
 const dot = <span className="size-2 shrink-0 rounded-full bg-[#ffd27a] shadow-[0_0_12px_4px_rgb(255_190_100/0.8)]" />;
 const at = (x: number, y: number) => (x < 0 ? { right: `${-x}%`, top: `${y}%` } : { left: `${x}%`, top: `${y}%` });
@@ -36,27 +33,33 @@ function useGroups() {
   return scenes.b6.map((g, i) => ({
     label: t(g.label),
     items: (typeof g.items === 'string' ? g.items : t(g.items)).split(' · '),
-    from: 0.14 + 0.08 * i,
+    from: 0.2 + 0.09 * i,
   }));
 }
 function Head() {
   const t = useT();
   return (
-    <div className={`beat-text flex flex-col gap-2 ${glowText}`}>
-      <Kicker slug="b6-lantern-vault" />
-      <p className="font-display text-[clamp(1rem,1.3vw,1.3rem)] italic opacity-90">{t(scenes.b6Languages)}</p>
-    </div>
+    <At a={0.18} d={0.04} w={OUT - 0.18} k="one" className={`block ${glowText}`}>
+      <div className="beat-text flex flex-col gap-1">
+        <Ln i={0}><Kicker slug="b6-lantern-vault" /></Ln>
+        <Ln i={1}><p className="font-display text-body italic">{t(scenes.b6Languages)}</p></Ln>
+      </div>
+    </At>
   );
 }
 const Label = ({ text, a }: { text: string; a: number }) => (
-  <At a={a} d={0.06} className={`flex items-center gap-3 text-[0.72rem] tracking-[0.3em] whitespace-nowrap uppercase ${glowText}`}>
-    {dot}
-    {text}
+  <At a={a} d={0.04} w={OUT - a} k="one" className={`block text-label font-semibold tracking-[0.3em] whitespace-nowrap uppercase ${glowText}`}>
+    <Ln i={0}>
+      <span className="flex items-center gap-3">
+        {dot}
+        {text}
+      </span>
+    </Ln>
   </At>
 );
 const Word = ({ text, a, tier, i, j }: { text: string; a: number; tier: 1 | 2 | 3; i: number; j: number }) => (
-  <At a={a} d={0.05} className={`block font-display leading-tight whitespace-nowrap ${size[tier]} ${glowText}`}>
-    <span className="float-word block" style={bob(i, j)}>{text}</span>
+  <At a={a} d={0.04} w={OUT - a} k="one" className={`block font-display leading-tight whitespace-nowrap ${size[tier]} ${glowText}`}>
+    <Ln i={0}><span className="float-word block" style={bob(i, j)}>{text}</span></Ln>
   </At>
 );
 
@@ -74,7 +77,7 @@ function SkillsDesktop() {
               const [px, py, tier] = s.items[j] ?? s.items[s.items.length - 1]!;
               return (
                 <div key={j} className="absolute" style={at(px, py)}>
-                  <Word text={x} a={g.from + 0.015 * (j + 1)} tier={tier} i={i} j={j} />
+                  <Word text={x} a={g.from + 0.01 * (j + 1)} tier={tier} i={i} j={j} />
                 </div>
               );
             })}
@@ -99,7 +102,7 @@ function SkillsPortrait() {
             <ul className={`flex flex-wrap items-baseline gap-x-4 gap-y-1 ${right ? 'justify-end' : ''}`}>
               {g.items.map((x, j) => (
                 <li key={j} style={{ marginTop: `${(j % 3) * 0.35}rem` }}>
-                  <Word text={x} a={g.from + 0.015 * (j + 1)} tier={j === 0 ? 1 : j % 3 === 2 ? 3 : 2} i={i} j={j} />
+                  <Word text={x} a={g.from + 0.01 * (j + 1)} tier={j === 0 ? 1 : j % 3 === 2 ? 3 : 2} i={i} j={j} />
                 </li>
               ))}
             </ul>
@@ -117,39 +120,60 @@ const box = (ax: number, ay: number, w: number) => {
   const k = w / jellyfish.frame.w;
   return { x: ax - cx * k, y: ay - cy * k, w, h: jellyfish.frame.h * k };
 };
-const SCREENS = 2.5;
-const jelly = <Creature sheet={jellyfish} ms={2400} />;
+const SCREENS = 1.9;
+// The jellyfish bobs on a wrapper (the engine owns the overlay's transform).
+const jelly = (
+  <div className="amb-bob size-full" style={{ '--amb-y': '10px', '--amb-dur': '5.5s' } as CSSProperties}>
+    <Creature sheet={jellyfish} ms={2400} />
+  </div>
+);
 
-const ignite = (at: number): LayerDef['track'] => [{ at, opacity: 0 }, { at: at + 0.14, opacity: 1, ease: 'out' }];
+const ignite = (at: number): LayerDef['track'] => [{ at, opacity: 0 }, { at: at + 0.12, opacity: 1, ease: 'out' }];
+const sway = (dur: string, delay: string, r: string): LayerDef['live'] => ({ className: 'amb-sway', style: { '--amb-dur': dur, '--amb-delay': delay, '--amb-r': r, '--amb-origin': '50% 0%' } as CSSProperties });
 const extra: Record<string, LayerDef> = {};
 for (const s of ['', '-p']) {
-  extra[`lanterns-far${s}`] = { track: ignite(0.1) };
-  extra[`lanterns-mid${s}`] = { track: ignite(0.18) };
-  extra[`lanterns-near${s}`] = { track: ignite(0.26) };
-  extra[`embers${s}`] = { highOnly: true, track: [{ at: 0, y: 0 }, { at: 1, y: -60 }] };
+  extra[`lanterns-far${s}`] = { track: ignite(0.12) };
+  extra[`lanterns-mid${s}`] = { track: ignite(0.17), origin: '50% 0%', live: sway('7.5s', '-2s', '0.7deg') };
+  extra[`lanterns-near${s}`] = { track: ignite(0.22), origin: '50% 0%', live: sway('6s', '-4s', '1deg') };
+  extra[`embers${s}`] = { highOnly: true, track: [{ at: 0, y: 0 }, { at: 1, y: -50 }] };
 }
-const comp = (c: Comp, focus: [number, number]) => world(manifest, c, SCREENS, { focus, extra });
-const desktop = comp('desktop', [1460, 520]);
-const portrait = comp('portrait', [620, 600]);
-const drift: LayerDef['track'] = [{ at: 0.2, y: 40, opacity: 0 }, { at: 0.4, y: 0, opacity: 1 }, { at: 0.9, y: -90, opacity: 1 }, { at: 1, y: -110, opacity: 0 }];
+// Gates close less than the default, so the vault stays visible between them.
+const comp = (c: Comp, focus: [number, number], close: number) => world(manifest, c, SCREENS, { focus, close, extra });
+const desktop = comp('desktop', [1460, 520], 380);
+const portrait = comp('portrait', [620, 600], 260);
+const drift: Keyframe[] = [{ at: 0.16, y: 40, opacity: 0 }, { at: 0.3, y: 0, opacity: 1 }, { at: 0.7, y: -50, opacity: 1 }, { at: 0.8, y: -70, opacity: 0 }];
+// Words and heading: the engine hides them outside this window; the rows inside slide in and out.
+const shown: Keyframe[] = [{ at: 0.165, opacity: 0 }, { at: 0.175, opacity: 1 }, { at: OUT + 0.055, opacity: 1 }, { at: OUT + 0.065, opacity: 0 }];
+
+function Head2({ p = false }: { p?: boolean }) {
+  const { lang } = useLang();
+  const size = p ? (lang === 'id' ? 'text-[15cqw]' : 'text-[19cqw]') : lang === 'id' ? 'text-[19cqw]' : 'text-[24cqw]';
+  return <SectionHeading slug="b6-lantern-vault" size={size} className="text-[#ffe9c4]" />;
+}
+const head = <Head2 />;
+const headP = <Head2 p />;
 
 export const b6LanternVault: BeatDef = {
   slug: 'b6-lantern-vault',
   screens: SCREENS,
   manifest,
-  // focus = the far exit arch
+  // focus = the far exit arch. The heading hangs behind the near strings and chains.
   desktop: {
     ...desktop,
+    split: 'strings-near',
     overlays: [
+      onLayer(desktop, 'strings-near', { x: 430, y: 60, w: 700, h: 230 }, head, { behind: true, track: shown }),
       { node: jelly, rect: box(1180, 250, 340), parallax: 0.5, track: drift },
-      { node: skills, className: 'left-[11vw] right-[11vw] top-[15vh] bottom-[14vh]', track: reveal() },
+      { node: skills, className: 'left-[11vw] right-[11vw] top-[27vh] bottom-[12vh]', track: shown },
     ],
   },
   portrait: {
     ...portrait,
+    split: 'strings-near-p',
     overlays: [
-      { node: jelly, rect: box(330, 320, 300), parallax: 0.5, track: drift },
-      { node: skillsP, className: 'left-[9vw] right-[9vw] bottom-[9svh]', track: reveal() },
+      onLayer(portrait, 'strings-near-p', { x: 110, y: 200, w: 860, h: 260 }, headP, { behind: true, track: shown }),
+      { node: jelly, rect: box(330, 600, 300), parallax: 0.5, track: drift },
+      { node: skillsP, className: 'left-[9vw] right-[9vw] bottom-[9svh]', track: shown },
     ],
   },
 };
