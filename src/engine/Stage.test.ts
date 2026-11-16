@@ -49,4 +49,23 @@ describe('Stage SSR (node, no window)', () => {
     expect(html).toContain('translate3d(2.5%,0%,0)'); // t = 0.5: x = 48 of 1920
     expect(html).not.toContain('visibility:hidden');
   });
+
+  it('ignores intro tracks and live layers in SSR: end-state poses, plain <img> layers, no extra canvas', () => {
+    const b = beat('a');
+    const withNew: BeatDef = {
+      ...b, intro: { ms: 1800 },
+      desktop: {
+        layers: { sky: { track: [{ at: 0, x: 96 }, { at: 1, x: 0 }], intro: [{ at: 0, x: 500, opacity: 0 }, { at: 1, x: 0, opacity: 1 }], live: { className: 'sway' } } },
+        overlays: [{ node: 'Hello', className: 'left-0', intro: [{ at: 0, y: 40, opacity: 0 }, { at: 1, y: 0, opacity: 1 }] }],
+      },
+    };
+    const html = renderToString(createElement(Stage, { beats: [withNew], projectBeats: [beat('p')] }));
+    expect(html).toContain('translate3d(5%,0%,0)'); // scroll pose only
+    expect(html).not.toContain('data-live');
+    expect(html).not.toContain('<canvas');
+    expect(html).not.toContain('sway');
+    expect(html).toContain('/art/a/d-sky.webp');
+    expect(html).toContain('Hello');
+    expect(html).not.toContain('opacity:0');
+  });
 });

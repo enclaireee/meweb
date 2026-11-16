@@ -47,6 +47,9 @@ const PAPER_CUT = '[clip-path:polygon(0_0.6%,30%_0,66%_0.8%,100%_0,99.4%_50%,100
 function Card({ p, n, of }: { p: Project; n: number; of: number }) {
   const t = useT();
   const prints = p.media.slice(0, 2);
+  const full = t(p.title);
+  const cut = full.indexOf(': ');
+  const [head, sub] = cut > 0 ? [full.slice(0, cut), full.slice(cut + 2)] : [full, ''];
   return (
     <div aria-hidden className="w-full drop-shadow-[3px_6px_0_rgb(0_0_0/0.35)]">
       <article className={`sheet flex rotate-[-0.8deg] flex-col gap-2.5 px-5 py-4 ${PAPER_CUT}`}>
@@ -63,7 +66,11 @@ function Card({ p, n, of }: { p: Project; n: number; of: number }) {
             </>
           )}
         </dl>
-        <h2 className="font-display text-title font-semibold text-balance break-words">{t(p.title)}</h2>
+        <h2 className="font-display font-semibold text-balance break-words">
+          {/* "Name: subtitle" titles set the name large and the subtitle a step down, so long titles still fit the card. */}
+          <span className="text-title block">{head}</span>
+          {sub && <span className="text-lead mt-1 block">{sub}</span>}
+        </h2>
         <p className="text-lead break-words">{t(p.summary)}</p>
         {p.facts.length > 0 && (
           // portrait card area is under half a phone screen, so facts stay desktop-only (full list in <Plain>)
@@ -217,7 +224,7 @@ const district = (g: Group): BeatDef => {
       ...comp('desktop'),
       overlays: cards(`${x0} top-[12svh] w-[min(36vw,36rem)]`, `${x0} bottom-[3svh]`, 'x', d.side === 'right' ? 1600 : -1600),
     },
-    portrait: { ...comp('portrait'), overlays: cards('left-[6vw] bottom-[3svh] w-[88vw] max-w-[36rem]', 'left-[6vw] top-[11svh]', 'y', 1400) },
+    portrait: { ...comp('portrait'), overlays: cards('left-[6vw] bottom-[8svh] w-[88vw] max-w-[36rem]', 'left-[6vw] top-[11svh]', 'y', 1400) },
   };
 };
 
