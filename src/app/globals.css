@@ -153,7 +153,7 @@ html.js .plain {
   display: block;
   translate: 0 calc((1 - var(--ei)) * 118% - var(--eq) * 118%);
 }
-/* Projects-lane card mask: wide enough for its offset shadow and slight rotation. */
+/* Card mask (projects-lane cards, paper Spotlight cards): wide enough for the offset shadow and slight rotation. */
 .card-mask {
   clip-path: inset(-1.5rem -2.5rem -1rem -2.5rem);
 }
@@ -176,19 +176,6 @@ html.js .plain {
   }
 }
 
-/* A paper card in a slot rises with its rows (so it is never an empty sheet waiting for its lines). */
-.at.one > .paper-card,
-.at.one > [class*='paper-card'] {
-  --ec: calc(1 - (1 - var(--p)) * (1 - var(--p)));
-  /* Rises in from below; on exit it sinks a little (never up into the nav or the heading) while its rows leave. */
-  translate: 0 calc((1 - var(--ec)) * 3rem + var(--q) * var(--q) * 1.5rem);
-}
-@media (prefers-reduced-motion: reduce) {
-  .at.one > .paper-card,
-  .at.one > [class*='paper-card'] {
-    translate: none;
-  }
-}
 /* focus: bright only inside its window (kept for list items that dim, never shared slots). */
 .at.focus {
   --on: min(var(--p), clamp(0, (var(--a) + var(--w) + var(--d, 0.05) - var(--t, 1)) / var(--d, 0.05), 1));

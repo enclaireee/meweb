@@ -160,6 +160,8 @@ export function Spotlight({ slug, roles, at, w, bottom = 'portrait', paper = fal
         const point = r.points[0];
         return (
           <At key={i} a={at[i]!} d={D} w={w} k="one" className={`col-start-1 row-start-1 ${align} ${on ? '' : 'pointer-events-none'}`}>
+            {/* A paper card rides its own mask with its rows, so it is never an empty sheet on screen. */}
+            <Masked on={!!card}>
             <div inert={!on} className={`flex max-w-[38rem] flex-col ${card}`}>
               <Ln i={0}><span aria-hidden><Kicker slug={slug} className="pb-2" /></span></Ln>
               <Ln i={1}>
@@ -207,9 +209,15 @@ export function Spotlight({ slug, roles, at, w, bottom = 'portrait', paper = fal
                 </Ln>
               )}
             </div>
+            </Masked>
           </At>
         );
       })}
     </div>
   );
+}
+
+/** Wraps a slot entry's card in one masked row (see .card-mask). */
+function Masked({ on, children }: { on: boolean; children: ReactNode }) {
+  return on ? <Ln className="card-mask">{children}</Ln> : children;
 }

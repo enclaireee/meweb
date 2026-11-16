@@ -47,7 +47,7 @@ export const b3ScaleFlip: BeatDef = {
     split: 'rock-near',
     overlays: [
       ...motes(desktop, 'shafts', { x: 362, y: 166, w: 556, h: 724 }),
-      onLayer(desktop, 'rock-near', { x: 900, y: 770, w: 700, h: 200 }, heading, { behind: true, track: headT }),
+      onLayer(desktop, 'rock-near', { x: 720, y: 770, w: 700, h: 200 }, heading, { behind: true, track: headT }),
       { node: text, className: 'right-[6vw] top-[9vh] w-[min(44vw,46rem)]' },
     ],
   },

@@ -90,7 +90,7 @@ export const b2FirstFold: BeatDef = {
     ...desktop,
     split: 'ground',
     overlays: [
-      onLayer(desktop, 'ground', { x: 262, y: 620, w: 700, h: 325 }, heading, { behind: true, track: headT }),
+      onLayer(desktop, 'ground', { x: 380, y: 620, w: 640, h: 325 }, heading, { behind: true, track: headT }),
       ...motes(desktop, 'seam-glow', { x: 800, y: 250, w: 520, h: 600 }),
       { node: text, className: 'left-[6vw] top-[13vh] w-[min(29vw,32rem)]' },
     ],
