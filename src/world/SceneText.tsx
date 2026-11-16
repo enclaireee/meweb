@@ -75,13 +75,32 @@ export function Kicker({ slug, className = '' }: { slug: BeatSlug; className?: s
 
 /** Section heading set IN the scene (Build decisions c, item 3): place it with
  *  `onLayer(comp, <layer>, rect, <SectionHeading/>, { behind: true, track })` and the composition's `split`, so at
- *  least one sheet passes in front of it, like the name in b0. Sized by its rect (container units). */
+ *  least one sheet passes in front of it, like the name in b0. Sized by its rect (container units), and shrunk to fit
+ *  the rect when a word is too long for it (Indonesian): measured on mount, resize and language change, applied as a
+ *  `scale` about its anchor corner, never per frame. Portrait: a pinned paper label (ink on paper), because the
+ *  same rect lands on different art on a phone and a tablet crop; desktop: the bare word with a dark halo. */
 export function SectionHeading({ slug, className = '', size = 'text-display', align = 'start' }: { slug: BeatSlug; className?: string; size?: string; align?: 'start' | 'end' | 'center' }) {
   const t = useT();
+  const box = useRef<HTMLDivElement>(null);
+  const word = useRef<HTMLParagraphElement>(null);
+  const text = t(beats[slug].line);
+  useLayoutEffect(() => {
+    const b = box.current, w = word.current;
+    if (!b || !w) return;
+    const fit = () => {
+      const k = w.offsetWidth ? Math.min(1, (b.clientWidth * 0.98) / w.offsetWidth) : 1;
+      w.style.scale = k < 1 ? String(Math.round(k * 1000) / 1000) : '';
+    };
+    fit();
+    const ro = new ResizeObserver(fit);
+    ro.observe(b);
+    return () => ro.disconnect();
+  }, [text, size]);
   const items = { start: 'items-start', end: 'items-end', center: 'items-center' }[align];
+  const origin = { start: 'origin-bottom-left', end: 'origin-bottom-right', center: 'origin-bottom' }[align];
   return (
-    <div aria-hidden className={`@container flex h-full flex-col justify-end ${items} ${className}`}>
-      <p className={`font-display ${size} font-semibold whitespace-nowrap uppercase [text-shadow:0_2px_24px_rgb(0_0_0/0.35)]`}>{t(beats[slug].line)}</p>
+    <div ref={box} aria-hidden className={`@container flex h-full flex-col justify-end ${items} portrait:items-center ${className}`}>
+      <p ref={word} className={`font-display ${size} ${origin} heading-word w-max font-semibold whitespace-nowrap uppercase`}>{text}</p>
     </div>
   );
 }
@@ -134,7 +153,7 @@ export function Spotlight({ slug, roles, at, w, bottom = 'portrait', paper = fal
   const card = paper === true ? 'paper-card' : paper === 'portrait' ? 'portrait:paper-card' : '';
   const ink = paper === true || tone === 'ink';
   return (
-    <div className={`grid ${ink ? 'text-[#2a2118]' : 'beat-text'}`}>
+    <div className={`grid ${ink ? 'ink text-[#2a2118]' : 'beat-text'}`}>
       {roles.map((r, i) => {
         const on = active === i;
         const s = r.stats[0];

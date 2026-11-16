@@ -103,7 +103,7 @@ export const b1Approach: BeatDef = {
     split: 'face-back-p',
     overlays: [
       ...stars(portrait, 'sky', { x: 100, y: 120, w: 880, h: 600 }),
-      onLayer(portrait, 'face-back-p', { x: 100, y: 200, w: 760, h: 240 }, headingP, { behind: true, track: headT }),
+      onLayer(portrait, 'face-back-p', { x: 130, y: 440, w: 300, h: 150 }, headingP, { behind: true, track: headT }),
       { node: text, className: 'left-[8vw] bottom-[8svh]' },
     ],
   },

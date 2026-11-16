@@ -73,7 +73,7 @@ const comp = (c: Comp, focus: [number, number]) => world(manifest, c, SCREENS, {
 const desktop = comp('desktop', [1060, 560]);
 const portrait = comp('portrait', [560, 910]);
 
-const headT: Track = [{ at: 0.1, y: 60, opacity: 0 }, { at: 0.115, y: 55, opacity: 1 }, { at: 0.22, y: 0, ease: 'out' }, { at: 0.6, y: 0 }, { at: 0.7, y: 50, opacity: 1, ease: 'in' }, { at: 0.705, y: 50, opacity: 0 }];
+const headT: Track = [{ at: 0.1, y: 60, opacity: 0 }, { at: 0.115, y: 55, opacity: 1 }, { at: 0.22, y: 0, ease: 'out' }, { at: 0.6, y: 0 }, { at: 0.7, y: 50, opacity: 1, ease: 'in' }, { at: 0.7005, y: 50, opacity: 0 }];
 // Dust motes catch the light that floods out of the seam.
 const motesT: Track = [{ at: 0.3, opacity: 0 }, { at: 0.5, opacity: 1 }, { at: 0.64, opacity: 1 }, { at: 0.74, opacity: 0 }];
 const motes = (c: typeof desktop, id: string, rect: { x: number; y: number; w: number; h: number }): OverlayLite[] => [
@@ -99,7 +99,7 @@ export const b2FirstFold: BeatDef = {
     ...portrait,
     split: 'ground-p',
     overlays: [
-      onLayer(portrait, 'ground-p', { x: 100, y: 1180, w: 880, h: 260 }, headingP, { behind: true, track: headT }),
+      onLayer(portrait, 'ground-p', { x: 170, y: 1180, w: 740, h: 240 }, headingP, { behind: true, track: headT }),
       ...motes(portrait, 'seam-glow', { x: 250, y: 600, w: 620, h: 600 }),
       { node: text, className: 'left-[8vw] right-[8vw] top-[8svh]' },
     ],

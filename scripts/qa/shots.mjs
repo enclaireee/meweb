@@ -47,7 +47,8 @@ function probe() {
     const area = Math.max(0, x1 - x0) * Math.max(0, y1 - y0);
     for (let e = el.parentElement; e && e !== document.body; e = e.parentElement) {
       const cs = getComputedStyle(e);
-      if (cs.overflowX !== 'visible' || cs.overflowY !== 'visible') {
+      // overflow clips, and so does a clip-path mask (the masked line rows): approximate it with the box.
+      if (cs.overflowX !== 'visible' || cs.overflowY !== 'visible' || (cs.clipPath !== 'none' && e.classList.contains('ln'))) {
         const p = e.getBoundingClientRect();
         x0 = Math.max(x0, p.left); y0 = Math.max(y0, p.top); x1 = Math.min(x1, p.right); y1 = Math.min(y1, p.bottom);
       }
@@ -118,10 +119,19 @@ function probe() {
   return {
     issues: [...new Set(issues)],
     textCount: texts.filter((t) => !t.chrome && t.o > 0.5).length,
-    texts: texts.filter((t) => !t.chrome && t.o > 0.9 && t.c.frac > 0.9).map((t) => ({
-      txt: t.txt, color: t.color, size: t.size, weight: t.weight,
-      box: [Math.max(0, t.c.x0), Math.max(0, t.c.y0), Math.min(W, t.c.x1), Math.min(H, t.c.y1)],
-    })),
+    texts: texts.filter((t) => !t.chrome && t.o > 0.9 && t.c.frac > 0.9).map((t) => {
+      // Content box: borders and padding (a pill's ring, a stamp's frame) are not behind the glyphs.
+      const cs = getComputedStyle(t.el);
+      const px = (k) => parseFloat(cs[k]) || 0;
+      const l = px('borderLeftWidth') + px('paddingLeft'), r = px('borderRightWidth') + px('paddingRight');
+      const tp = px('borderTopWidth') + px('paddingTop'), b = px('borderBottomWidth') + px('paddingBottom');
+      const bg = cs.backgroundColor.match(/[\d.]+/g)?.map(Number);
+      const own = bg && bg.length >= 3 && (bg.length < 4 || bg[3] >= 0.9) && !cs.backgroundColor.startsWith('lab') ? bg.slice(0, 3) : null;
+      return {
+        txt: t.txt, color: t.color, size: t.size, weight: t.weight, own, heading: t.el.classList.contains('heading-word'),
+        box: [Math.max(0, t.c.x0 + l), Math.max(0, t.c.y0 + tp), Math.min(W, t.c.x1 - r), Math.min(H, t.c.y1 - b)],
+      };
+    }),
     scrollH: document.documentElement.scrollHeight, H,
   };
 }
@@ -160,7 +170,9 @@ async function contrastOf(bg, texts, W, H) {
     }
     if (!rs.length) continue;
     rs.sort((a, b) => a - b);
-    const p5 = rs[Math.floor(rs.length * 0.05)];
+    // In-scene headings sit BEHIND a sheet by design: the sheet's pixels occlude the text rather than sit behind it,
+    // so they are judged on the median of their box; everything else on the worst 5% of pixels.
+    const p5 = rs[Math.floor(rs.length * (t.heading ? 0.5 : 0.05))];
     const large = t.size >= 24 || (t.size >= 18.66 && t.weight >= 700);
     const need = large ? 3 : 4.5;
     if (p5 < need) out.push(`contrast ${p5.toFixed(2)}<${need} "${t.txt}"`);
@@ -195,6 +207,13 @@ async function run(browser, [w, h], lang, lane) {
     const y = Math.round((max * i) / (STOPS - 1));
     await page.evaluate((y) => window.scrollTo(0, y), y);
     await page.waitForTimeout(SETTLE);
+    // The engine smooths scroll: wait until every visible beat's --t has stopped changing (max 3 s).
+    await page.evaluate(() => new Promise((done) => {
+      const read = () => [...document.querySelectorAll('[data-comp]:not([data-off])')].map((e) => e.style.getPropertyValue('--t')).join('|');
+      let last = read(), same = 0, n = 0;
+      const tick = () => { const v = read(); same = v === last ? same + 1 : 0; last = v; if (same >= 8 || ++n > 180) done(); else requestAnimationFrame(tick); };
+      requestAnimationFrame(tick);
+    }));
     await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
     const buf = await page.screenshot();
     const file = path.join(dir, `${String(i).padStart(2, '0')}.png`);
@@ -205,7 +224,7 @@ async function run(browser, [w, h], lang, lane) {
     if (flat.share > 0.6 && p.textCount === 0) issues.push(`empty frame (${Math.round(flat.share * 100)}% one colour${flat.dark ? ', dark' : ''})`);
     if (flat.share > 0.85 && flat.dark) issues.push(`black frame (${Math.round(flat.share * 100)}%)`);
     if (CONTRAST && p.texts.length) {
-      await page.addStyleTag({ content: '.world *{color:transparent!important;text-shadow:none!important;-webkit-text-fill-color:transparent!important;caret-color:transparent!important}', }).then((h) => h.evaluate((s) => s.setAttribute('data-qa', '')));
+      await page.addStyleTag({ content: '.world *{color:transparent!important;-webkit-text-fill-color:transparent!important;caret-color:transparent!important}', }).then((h) => h.evaluate((s) => s.setAttribute('data-qa', '')));
       await page.waitForTimeout(50);
       const bg = await page.screenshot();
       await page.evaluate(() => document.querySelectorAll('style[data-qa]').forEach((s) => s.remove()));

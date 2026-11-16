@@ -13,7 +13,7 @@ const SCREENS = 2.3;
 
 // Four slots between the gates parting (0.13) and the dive (0.74): the last is out by 0.79.
 const W = 0.11, at = slots(4, 0.13, W, 0.055);
-const text = <Spotlight slug="b8-seam" roles={scenes.b8} at={at} w={W} />;
+const text = <Spotlight slug="b8-seam" roles={scenes.b8} at={at} w={W} paper />;
 // The Spotlight shows only its active role, so this window just keeps the whole block out of the gate frames.
 const shown: Keyframe[] = [{ at: 0.12, opacity: 0 }, { at: 0.13, opacity: 1 }, { at: 0.81, opacity: 1 }, { at: 0.82, opacity: 0 }];
 
@@ -50,7 +50,7 @@ export const b8Seam: BeatDef = {
     ...portrait,
     split: 'creases-p',
     overlays: [
-      onLayer(portrait, 'creases-p', { x: 120, y: 150, w: 840, h: 130 }, headP, { behind: true, track: headT }),
+      onLayer(portrait, 'creases-p', { x: 170, y: 430, w: 740, h: 150 }, headP, { behind: true, track: headT }),
       { node: text, className: 'left-[10vw] right-[10vw] bottom-[12svh] text-[#fff4de]', track: shown },
     ],
   },

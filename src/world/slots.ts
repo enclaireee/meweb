@@ -3,7 +3,7 @@
 /** Default reveal duration of a slot entry (local t). Masked rows slide in over D and out over D. */
 export const D = 0.05;
 /** Extra local t a row waits per row index on enter (a small cascade). Exit is not staggered. */
-export const ROW_STAGGER = 0.008;
+export const ROW_STAGGER = 0.005;
 
 /** Evenly spaced start times: n pieces between `from` and `to`. */
 export const seq = (n: number, from: number, to: number) => Array.from({ length: n }, (_, i) => from + (n > 1 ? ((to - from) * i) / (n - 1) : 0));

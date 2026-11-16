@@ -2,6 +2,7 @@
 // Projects lane (Build decisions b): shell exterior intro, then one district beat per group (web, data, hardware).
 // Cards are HTML and arrive inline on scroll, one per screen, in each district's calm card area. Art is world-only.
 // Adding a project = a registry entry only (the shell has 4 web / 3 data / 3 hardware window slots).
+import type { CSSProperties, ReactNode } from 'react';
 import Image from 'next/image';
 import type { BeatDef, Comp, CompositionDef, Keyframe, LayerDef, Manifest, OverlayDef, Rect } from '@/engine';
 import { exitLane, scrollToS } from '@/engine';
@@ -21,8 +22,11 @@ const byGroup = (g: Group) => projects.filter((p) => p.group === g);
 /* ---------- scroll layout (screens) ---------- */
 const SHELL = 1.2;
 const LEAD = 0.3; // gates part before the first card
-const CARD = 0.72; // one card slot: slide in, hold, slide out
-const TAIL = 0.3; // last card is gone before the dive into the next district
+const CARD = 0.67; // one card slot: slide in, hold, slide out
+const TAIL = 0.45; // last card is gone before the dive into the next district
+/** The last card of a district leaves this much early, so it is gone before the next district's gates slide in. */
+const EARLY = 0.12;
+const cardEnd = (i: number, n: number) => LEAD + (i + 1) * CARD - (i === n - 1 ? EARLY : 0);
 const SLIDE = 0.14; // slide in / slide out duration (screens)
 const screensOf = (g: Group) => LEAD + byGroup(g).length * CARD + TAIL;
 const startOf = (g: Group) => SHELL + GROUPS.slice(0, GROUPS.indexOf(g)).reduce((n, x) => n + screensOf(x), 0);
@@ -110,21 +114,33 @@ function Card({ p, n, of }: { p: Project; n: number; of: number }) {
 /** Card i of n: one slot of CARD screens. It slides in from the edge (SLIDE), holds, slides back out; slots never overlap.
  *  Opacity only ever steps 0 <-> 1 while the card is off-screen, so no card is ever half-faded; the first keyframe pair
  *  parks the transform at 0 so the frozen transform under reduced motion shows every card in place (they swap at the slot edge). */
-function cardTrack(i: number, screens: number, axis: 'x' | 'y', off: number): Keyframe[] {
+function cardTrack(i: number, n: number, screens: number): Keyframe[] {
   const a = (s: number) => s / screens;
   const e = 0.0003;
   const s0 = LEAD + i * CARD;
-  const s1 = s0 + CARD;
+  const s1 = cardEnd(i, n);
+  // Shown only inside its own window (hidden = not focusable); the slide itself is the masked reveal in <Masked>.
   return [
-    { at: 0, [axis]: 0, opacity: 0 },
-    { at: a(s0) - 2 * e, [axis]: 0, opacity: 0 },
-    { at: a(s0) - e, [axis]: off, opacity: 0 },
-    { at: a(s0), [axis]: off, opacity: 1 },
-    { at: a(s0 + SLIDE), [axis]: 0, opacity: 1, ease: 'out' },
-    { at: a(s1 - SLIDE), [axis]: 0, opacity: 1 },
-    { at: a(s1) - e, [axis]: off, opacity: 1, ease: 'in' },
-    { at: a(s1), [axis]: off, opacity: 0 },
+    { at: a(s0) - e, opacity: 0 },
+    { at: a(s0), opacity: 1 },
+    { at: a(s1) - e, opacity: 1 },
+    { at: a(s1), opacity: 0 },
   ];
+}
+
+/** Masked reveal of card i (same CSS as the main lane's slot rows, .at.one/.ln): the card rises from behind its
+ *  own lower edge, holds, and leaves upward the same way. It never travels outside its resting box, so it never
+ *  passes under the nav, the gauge or the frame. Driven by the beat's --t: scroll-driven and reversible. */
+function Masked({ i, n, screens, children }: { i: number; n: number; screens: number; children: ReactNode }) {
+  const s0 = LEAD + i * CARD;
+  const v = { '--a': s0 / screens, '--d': SLIDE / screens, '--w': (cardEnd(i, n) - s0 - SLIDE) / screens } as CSSProperties;
+  return (
+    <span className="at one block" style={v}>
+      <span className="ln card-mask">
+        <span className="ln-in">{children}</span>
+      </span>
+    </span>
+  );
 }
 
 /** End of the lane: a real button back to the mountain (exitLane returns to where the visitor left). */
@@ -134,7 +150,7 @@ function Back() {
     <button
       type="button"
       onClick={() => exitLane()}
-      className="min-h-11 cursor-pointer rounded-full border border-[#ffd27a]/70 bg-[#1b1406]/75 px-6 py-2.5 text-[0.8rem] tracking-[0.25em] text-[#fff2c4] uppercase shadow-[0_0_24px_rgb(255_200_110/0.35)] backdrop-blur-sm transition-[background-color,box-shadow] duration-200 hover:bg-[#3a2a0c]/85 hover:shadow-[0_0_36px_8px_rgb(255_200_110/0.45)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ffd27a]"
+      className="min-h-11 cursor-pointer rounded-full border border-[#ffd27a]/70 bg-[#1b1406]/95 px-6 py-2.5 text-label font-semibold tracking-[0.25em] text-[#fff2c4] uppercase shadow-[0_0_24px_rgb(255_200_110/0.35)] transition-[background-color,box-shadow] duration-200 hover:bg-[#3a2a0c]/85 hover:shadow-[0_0_36px_8px_rgb(255_200_110/0.45)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ffd27a]"
     >
       ← {t(ui.projects.back)}
     </button>
@@ -208,13 +224,13 @@ const district = (g: Group): BeatDef => {
   const manifest = d.json as Manifest;
   const lastS = (LEAD + (list.length - 1) * CARD) / screens;
   const backT: Keyframe[] = [{ at: 0, opacity: 0 }, { at: lastS - 0.0003, opacity: 0 }, { at: lastS, opacity: 1 }]; // with the last card, then stays
-  const cards = (className: string, backAt: string, axis: 'x' | 'y', off: number): OverlayDef[] => [
-    ...list.map((p, i) => ({ node: <Card p={p} n={i + 1} of={list.length} />, className, track: cardTrack(i, screens, axis, off) })),
+  const cards = (className: string, backAt: string): OverlayDef[] => [
+    ...list.map((p, i) => ({ node: <Masked i={i} n={list.length} screens={screens}><Card p={p} n={i + 1} of={list.length} /></Masked>, className, track: cardTrack(i, list.length, screens) })),
     ...(d.last ? [{ node: back, className: backAt, track: backT }] : []),
   ];
   // Gates stop short of fully shut so a gap of art always shows between them (no flat dark frame at the join).
   const comp = (c: Comp) => world(manifest, c, screens, { focus: d.focus[c], last: d.last, close: c === 'desktop' ? 380 : 190, extra: d.extra(screens) });
-  const x0 = d.side === 'right' ? 'left-[60vw]' : 'left-[4vw]';
+  const x0 = d.side === 'right' ? 'left-[57vw]' : 'left-[4vw]'; // right side clears the section gauge
   return {
     slug: d.json.slug,
     screens,
@@ -222,9 +238,9 @@ const district = (g: Group): BeatDef => {
     still: (LEAD + CARD / 2) / screens, // reduced motion: first card shown
     desktop: {
       ...comp('desktop'),
-      overlays: cards(`${x0} top-[12svh] w-[min(36vw,36rem)]`, `${x0} bottom-[3svh]`, 'x', d.side === 'right' ? 1600 : -1600),
+      overlays: cards(`${x0} top-[12svh] w-[min(35vw,36rem)]`, `${x0} bottom-[3svh]`),
     },
-    portrait: { ...comp('portrait'), overlays: cards('left-[6vw] bottom-[8svh] w-[88vw] max-w-[36rem]', 'left-[6vw] top-[11svh]', 'y', 1400) },
+    portrait: { ...comp('portrait'), overlays: cards('left-[6vw] bottom-[8svh] w-[88vw] max-w-[36rem]', 'left-[6vw] top-[11svh]') },
   };
 };
 

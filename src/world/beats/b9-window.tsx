@@ -120,9 +120,9 @@ export const b9Window: BeatDef = {
     split: 'window-frame-p',
     overlays: [
       { node: snow(2.6), rect: { x: 290, y: 230, w: 500, h: 700 }, behind: true, parallax: 0.3 },
-      onLayer(portrait, 'wall-p', { x: 110, y: 175, w: 560, h: 100 }, headP, { behind: true, track: headT }),
+      onLayer(portrait, 'wall-p', { x: 170, y: 430, w: 740, h: 140 }, headP, { behind: true, track: headT }),
       { node: candle, rect: { x: 388, y: 880, w: 40, h: 66 }, parallax: 0.3 },
-      { node: text, className: 'left-[8vw] bottom-[6svh]', track },
+      { node: text, className: 'left-[8vw] bottom-[10svh]', track },
     ],
   },
 };

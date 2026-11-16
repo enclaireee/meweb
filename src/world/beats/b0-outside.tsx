@@ -40,7 +40,7 @@ function Label() {
     <div aria-hidden className="@container beat-text flex h-full items-center gap-[3cqw] text-[#f6e7c8]">
       <span className="h-px w-[7cqw] shrink-0 bg-current opacity-70" />
       <span className="size-[2.6cqw] shrink-0 rounded-full border border-current" />
-      <span className="text-[5.8cqw] leading-[1.35] tracking-[0.16em] uppercase">{t(s.label)}</span>
+      <span className="text-[max(12px,5.8cqw)] leading-[1.35] tracking-[0.16em] uppercase">{t(s.label)}</span>
     </div>
   );
 }
@@ -89,7 +89,7 @@ const desktop = comp('desktop', [1262, 560]);
 const portrait = comp('portrait', [556, 830]);
 // Name is there on arrival and sinks away before the dive; the label is lit from the start and leaves with it.
 const nameT: Track = [{ at: 0, opacity: 1 }, { at: 0.3, opacity: 1, y: 0 }, { at: 0.44, opacity: 1, y: 60, ease: 'in' }, { at: 0.445, opacity: 0, y: 60 }];
-const labelT: Track = [{ at: 0, opacity: 1, y: 0 }, { at: 0.32, opacity: 1, y: 0 }, { at: 0.42, opacity: 1, y: -30, ease: 'in' }, { at: 0.425, opacity: 0, y: -30 }];
+const labelT: Track = [{ at: 0, opacity: 1, y: 0 }, { at: 0.32, opacity: 1, y: 0 }, { at: 0.42, opacity: 1, y: -30, ease: 'in' }, { at: 0.4202, opacity: 0, y: -30 }];
 const nameIntro: Track = [{ at: 0.64, y: 90, opacity: 0 }, { at: 0.88, y: 0, opacity: 1, ease: 'out' }];
 const labelIntro: Track = [{ at: 0.82, y: 14, opacity: 0 }, { at: 1, y: 0, opacity: 1, ease: 'out' }];
 const mothIntro: Track = [{ at: 0.5, opacity: 0 }, { at: 0.85, opacity: 1 }];

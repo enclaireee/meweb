@@ -25,7 +25,7 @@ export function gateFx(poly: Poly | Shape, o: GateFxOpts): { holes: Shape; under
         for (let i = 0; i < 3; i++) for (let j = 0; j < 4; j++) hl.push(cut(rect(cx - 40 + i * 28, by - ah + j * 34, 20, 24), r, 0.6, 10));
         hl.push(rect(cx + gx / 2 - 3, by - ah, 6, ah * 0.9));
       } else {
-        const d = (c: number, m: number, s: number): Poly => [[cx, by - c - s], [cx + s * 0.62, by - c], [cx, by - c + s], [cx - s * 0.62, by - c]].map(([a, b]) => [a, b + m] as [number, number]);
+        const d = (c: number, m: number, s: number): Poly => ([[cx, by - c - s], [cx + s * 0.62, by - c], [cx, by - c + s], [cx - s * 0.62, by - c]] as [number, number][]).map(([a, b]) => [a, b + m] as [number, number]);
         hl.push(d(ah * 0.8, 0, 52), d(ah * 0.8, 0, 52).map(([a, b]) => [a + gx / 2, b + 90] as [number, number]), d(ah * 0.1, 0, 20));
       }
     }

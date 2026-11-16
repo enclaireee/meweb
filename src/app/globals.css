@@ -126,7 +126,7 @@ html.js .plain {
 }
 /* Shared slots, masked line reveals (Build decisions c, item 2). k="one" = one entry of a slot, shown only inside
    [--a, --a + --w]. --p = enter progress, --q = exit progress. Each <Ln> row is a clip mask; its inner span slides up
-   from below on enter (row i waits i * 0.008) and leaves upward on exit. No opacity in between, so nothing is ever
+   from below on enter (row i waits i * 0.005) and leaves upward on exit. No opacity in between, so nothing is ever
    half-faded and two entries never share the slot (slots() keeps the gap >= --d). */
 .at.one,
 .at.rise {
@@ -147,11 +147,47 @@ html.js .plain {
   clip-path: inset(-0.12em -0.4em -0.2em -0.4em);
 }
 .ln-in {
-  --pi: clamp(0, (var(--t, 0) - var(--a, 0) - var(--i, 0) * 0.008) / var(--d, 0.05), 1);
+  --pi: clamp(0, (var(--t, 0) - var(--a, 0) - var(--i, 0) * 0.005) / var(--d, 0.05), 1);
   --ei: calc(1 - (1 - var(--pi)) * (1 - var(--pi)) * (1 - var(--pi))); /* ease-out cubic */
   --eq: calc(var(--q) * var(--q) * var(--q)); /* ease-in cubic */
   display: block;
   translate: 0 calc((1 - var(--ei)) * 118% - var(--eq) * 118%);
+}
+/* Projects-lane card mask: wide enough for its offset shadow and slight rotation. */
+.card-mask {
+  clip-path: inset(-1.5rem -2.5rem -1rem -2.5rem);
+}
+
+/* In-scene section heading (SectionHeading). */
+.heading-word {
+  text-shadow: 0 0 8px rgb(0 0 0 / 0.6), 0 0 24px rgb(0 0 0 / 0.55), 0 2px 4px rgb(0 0 0 / 0.6);
+}
+@media (orientation: portrait) {
+  .heading-word {
+    padding: 0.1em 0.3em 0.02em;
+    color: #2a2118;
+    text-shadow: none;
+    background: url('/art/_grain.webp'), #f1e6cf;
+    background-blend-mode: soft-light;
+    clip-path: polygon(0 4%, 34% 0, 70% 3%, 100% 0, 99% 52%, 100% 97%, 62% 100%, 28% 96%, 0 100%, 1% 46%);
+    filter: drop-shadow(3px 4px 0 rgb(0 0 0 / 0.35));
+    transform-origin: 50% 100%;
+    rotate: -1.2deg;
+  }
+}
+
+/* A paper card in a slot rises with its rows (so it is never an empty sheet waiting for its lines). */
+.at.one > .paper-card,
+.at.one > [class*='paper-card'] {
+  --ec: calc(1 - (1 - var(--p)) * (1 - var(--p)));
+  /* Rises in from below; on exit it sinks a little (never up into the nav or the heading) while its rows leave. */
+  translate: 0 calc((1 - var(--ec)) * 3rem + var(--q) * var(--q) * 1.5rem);
+}
+@media (prefers-reduced-motion: reduce) {
+  .at.one > .paper-card,
+  .at.one > [class*='paper-card'] {
+    translate: none;
+  }
 }
 /* focus: bright only inside its window (kept for list items that dim, never shared slots). */
 .at.focus {
@@ -177,7 +213,15 @@ html.js .plain {
   }
 }
 
-/* A paper card behind text where the art is too busy for bare text (contact-letter style). */
+/* A paper card behind text where the art is too busy for bare text (contact-letter style). Ink, no glows. */
+.paper-card * {
+  text-shadow: none !important;
+}
+@media (orientation: portrait) {
+  .portrait\:paper-card * {
+    text-shadow: none !important;
+  }
+}
 @utility paper-card {
   position: relative;
   padding: 1.1rem 1.3rem 1.2rem;
@@ -201,8 +245,14 @@ html.js .plain {
   rotate: -3deg;
   box-shadow: 0 0 14px rgb(255 200 110 / 0.3);
 }
+.ink :is(.stamp-now, .stamp-award),
+.paper-card :is(.stamp-now, .stamp-award) {
+  border-color: #8a4a12;
+  color: #6e3408;
+  box-shadow: none;
+}
 .stamp-award {
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   font-weight: 600;
   rotate: 2deg;
 }

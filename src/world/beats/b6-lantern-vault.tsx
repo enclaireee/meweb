@@ -22,7 +22,7 @@ const spots: { label: [number, number]; items: Spot[] }[] = [
 ];
 const size = { 1: 'text-lead font-semibold', 2: 'text-body font-semibold', 3: 'text-body' };
 const OUT = 0.66; // words leave here (the dive starts at 0.68)
-const glowText = '[text-shadow:0_0_14px_rgb(255_170_80/0.75),0_0_32px_rgb(255_140_50/0.35),0_2px_8px_rgb(0_0_0/0.75)]';
+const glowText = '[text-shadow:0_0_5px_rgb(20_10_0/0.85),0_0_14px_rgb(255_170_80/0.6),0_0_32px_rgb(255_140_50/0.3),0_2px_8px_rgb(0_0_0/0.75)]';
 const dot = <span className="size-2 shrink-0 rounded-full bg-[#ffd27a] shadow-[0_0_12px_4px_rgb(255_190_100/0.8)]" />;
 const at = (x: number, y: number) => (x < 0 ? { right: `${-x}%`, top: `${y}%` } : { left: `${x}%`, top: `${y}%` });
 // Each word bobs on its own slow cycle so the cloud never moves in step.
@@ -92,7 +92,7 @@ function SkillsDesktop() {
 function SkillsPortrait() {
   const groups = useGroups();
   return (
-    <div aria-hidden className="flex flex-col gap-6 text-[#ffe9c4]">
+    <div aria-hidden className="paper-card flex flex-col gap-5 text-[#2a2118]">
       <Head />
       {groups.map((g, i) => {
         const right = i % 2 === 1;
@@ -171,7 +171,7 @@ export const b6LanternVault: BeatDef = {
     ...portrait,
     split: 'strings-near-p',
     overlays: [
-      onLayer(portrait, 'strings-near-p', { x: 110, y: 200, w: 860, h: 260 }, headP, { behind: true, track: shown }),
+      onLayer(portrait, 'strings-near-p', { x: 170, y: 430, w: 740, h: 170 }, headP, { behind: true, track: shown }),
       { node: jelly, rect: box(330, 600, 300), parallax: 0.5, track: drift },
       { node: skillsP, className: 'left-[9vw] right-[9vw] bottom-[9svh]', track: shown },
     ],

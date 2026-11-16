@@ -18,7 +18,7 @@ const OUT = 0.68; // awards leave here (the dive starts at 0.727)
 function Awards() {
   const t = useT();
   return (
-    <div aria-hidden className={`beat-text flex flex-col gap-[3vh] text-[#f2faff] portrait:gap-4 ${glow}`}>
+    <div aria-hidden className={`beat-text flex flex-col gap-[3vh] text-[#f2faff] portrait:paper-card portrait:gap-4 portrait:text-[#2a2118] ${glow}`}>
       <At a={0.3} d={0.04} w={OUT - 0.3} k="one" className="block"><Ln i={0}><Kicker slug="b7-second-fold" /></Ln></At>
       <ol className="flex flex-col gap-[3.2vh] portrait:gap-4">
         {scenes.b7.map((a, i) => {
@@ -34,7 +34,7 @@ function Awards() {
                     <span className="font-display text-lead font-semibold leading-[1.05]">{t(a.title)}</span>
                   </span>
                 </Ln>
-                <Ln i={1}><span className="mt-1 block pl-[1.625rem] text-body leading-snug text-[#d8eeff]">{t(a.detail)}</span></Ln>
+                <Ln i={1}><span className="mt-1 block pl-[1.625rem] text-body leading-snug text-[#d8eeff] portrait:text-[#4a3f5c]">{t(a.detail)}</span></Ln>
               </At>
             </li>
           );
@@ -101,7 +101,7 @@ export const b7SecondFold: BeatDef = {
     split: 'dust',
     overlays: [
       { node: fish, rect: box(480, 280, 1000), parallax: 0.2, track: glide },
-      onLayer(desktop, 'dust', { x: 1040, y: 740, w: 700, h: 200 }, head, { behind: true, track: shown(0.28) }),
+      onLayer(desktop, 'dust', { x: 1090, y: 740, w: 560, h: 200 }, head, { behind: true, track: shown(0.28) }),
       { node: text, className: 'left-[56vw] top-[14vh] w-[min(36vw,40rem)]', track: textT },
     ],
   },
@@ -110,7 +110,7 @@ export const b7SecondFold: BeatDef = {
     split: 'dust-p',
     overlays: [
       { node: fish, rect: box(540, 330, 760), parallax: 0.2, track: glide },
-      onLayer(portrait, 'dust-p', { x: 150, y: 740, w: 780, h: 200 }, headP, { behind: true, track: shown(0.28) }),
+      onLayer(portrait, 'dust-p', { x: 170, y: 560, w: 740, h: 180 }, headP, { behind: true, track: shown(0.28) }),
       { node: text, className: 'left-[8vw] right-[8vw] bottom-[7svh]', track: textT },
     ],
   },

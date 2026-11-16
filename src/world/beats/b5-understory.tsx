@@ -49,7 +49,7 @@ function Fireflies({ plan }: { plan: Plan }) {
         />
       ))}
       <span className="absolute -translate-x-1/2" style={{ left: `${u(plan.word[0], rect.x)}cqw`, top: `${u(plan.word[1], rect.y)}cqw` }}>
-        <At a={G1 - 0.02} d={0.04} w={S0 - G1 + 0.02} k="one" className="beat-text block pl-[0.6em] text-[2.4cqw] font-semibold tracking-[0.55em] text-[#fff2c4] uppercase [text-shadow:0_0_10px_rgb(255_220_130/0.9),0_0_28px_rgb(255_190_90/0.6),0_2px_8px_rgb(0_0_0/0.75)]"><Ln i={0}>{t(scenes.b5.word)}</Ln></At>
+        <At a={G1 - 0.02} d={0.04} w={S0 - G1 + 0.02} k="one" className="beat-text block pl-[0.6em] text-[max(12px,2.4cqw)] font-semibold tracking-[0.55em] text-[#fff2c4] uppercase [text-shadow:0_0_10px_rgb(255_220_130/0.9),0_0_28px_rgb(255_190_90/0.6),0_2px_8px_rgb(0_0_0/0.75)]"><Ln i={0}>{t(scenes.b5.word)}</Ln></At>
       </span>
       {groups.map((g, i) => {
         const [x, y] = plan.swarms[i]!;
@@ -86,7 +86,7 @@ function Hint() {
           <button
             type="button"
             onClick={() => enterLane('projects')}
-            className="min-h-11 cursor-pointer rounded-full border border-[#ffd27a]/70 bg-[#1b1406]/75 px-6 py-2.5 text-label font-semibold tracking-[0.25em] text-[#fff2c4] uppercase shadow-[0_0_24px_rgb(255_200_110/0.35)] backdrop-blur-sm transition-[background-color,box-shadow] duration-200 hover:bg-[#3a2a0c]/85 hover:shadow-[0_0_36px_8px_rgb(255_200_110/0.45)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ffd27a]"
+            className="min-h-11 cursor-pointer rounded-full border border-[#ffd27a]/70 bg-[#1b1406]/95 px-6 py-2.5 text-label font-semibold tracking-[0.25em] text-[#fff2c4] uppercase shadow-[0_0_24px_rgb(255_200_110/0.35)] transition-[background-color,box-shadow] duration-200 hover:bg-[#3a2a0c]/85 hover:shadow-[0_0_36px_8px_rgb(255_200_110/0.45)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ffd27a]"
           >
             {t(scenes.b5.cta)} →
           </button>
@@ -180,7 +180,7 @@ export const b5Understory: BeatDef = {
     overlays: [
       { node: deer, rect: { x: 560, y: 350, w: 640, h: 555 }, parallax: 0.3, track: arrive }, // hooves (880, 905)
       doorOn(desktop, [820, 650], { x: 446, y: 590, w: 96, h: 160 }),
-      onLayer(desktop, 'roots-near', { x: 1100, y: 770, w: 720, h: 200 }, head, { behind: true, track: headT }),
+      onLayer(desktop, 'roots-near', { x: 1050, y: 770, w: 680, h: 200 }, head, { behind: true, track: headT }),
       onLayer(desktop, 'fork-door', deskPlan.rect, swarm.d, { track: textT }),
       { node: fall.d, rect: { x: 0, y: 0, w: 1920, h: 1080 }, parallax: 0.3, track: ambient },
       { node: text, className: 'right-[9vw] top-[14vh] w-[min(32vw,32rem)] text-right', track: textT },
@@ -192,7 +192,7 @@ export const b5Understory: BeatDef = {
     overlays: [
       { node: deer, rect: { x: 440, y: 590, w: 520, h: 450 }, parallax: 0.3, track: arrive }, // hooves (700, 1040)
       doorOn(portrait, [580, 800], { x: 250, y: 790, w: 90, h: 150 }),
-      onLayer(portrait, 'roots-near-p', { x: 110, y: 1060, w: 860, h: 240 }, headP, { behind: true, track: headT }),
+      onLayer(portrait, 'roots-near-p', { x: 170, y: 1080, w: 740, h: 220 }, headP, { behind: true, track: headT }),
       onLayer(portrait, 'fork-door', portPlan.rect, swarm.p, { track: textT }),
       { node: fall.p, rect: { x: 0, y: 0, w: 1080, h: 1920 }, parallax: 0.3, track: ambient },
       { node: text, className: 'left-[8vw] right-[8vw] top-[12svh]', track: textT },
