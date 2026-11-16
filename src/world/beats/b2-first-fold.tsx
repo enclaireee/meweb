@@ -54,7 +54,7 @@ function Heading({ en, id }: { en: string; id: string }) {
   return <SectionHeading slug="b2-first-fold" size={lang === 'id' ? id : en} className="text-[#ece4d2]" />;
 }
 const heading = <Heading en="text-[13.5cqw]" id="text-[12.5cqw]" />;
-const headingP = <Heading en="text-[15cqw]" id="text-[14cqw]" />;
+const headingP = <Heading en="text-[12.5cqw]" id="text-[11.5cqw]" />;
 
 // Flaps hinge on their outer edge (pop-up book); the top flap lifts away.
 const open = (deg: number): LayerDef['track'] => [{ at: 0.18, rotateY: 0 }, { at: 0.56, rotateY: deg, ease: 'inOut' }];
@@ -73,7 +73,7 @@ const comp = (c: Comp, focus: [number, number]) => world(manifest, c, SCREENS, {
 const desktop = comp('desktop', [1060, 560]);
 const portrait = comp('portrait', [560, 910]);
 
-const headT: Track = [{ at: 0.1, y: 50, opacity: 0 }, { at: 0.22, y: 0, opacity: 1, ease: 'out' }, { at: 0.6, y: 0, opacity: 1 }, { at: 0.72, y: 40, opacity: 0, ease: 'in' }];
+const headT: Track = [{ at: 0.1, y: 60, opacity: 0 }, { at: 0.115, y: 55, opacity: 1 }, { at: 0.22, y: 0, ease: 'out' }, { at: 0.6, y: 0 }, { at: 0.7, y: 50, opacity: 1, ease: 'in' }, { at: 0.705, y: 50, opacity: 0 }];
 // Dust motes catch the light that floods out of the seam.
 const motesT: Track = [{ at: 0.3, opacity: 0 }, { at: 0.5, opacity: 1 }, { at: 0.64, opacity: 1 }, { at: 0.74, opacity: 0 }];
 const motes = (c: typeof desktop, id: string, rect: { x: number; y: number; w: number; h: number }): OverlayLite[] => [

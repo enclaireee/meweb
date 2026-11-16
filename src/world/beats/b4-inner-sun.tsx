@@ -18,7 +18,7 @@ const SCREENS = 1.8;
 // One role at a time on the dark rock, bottom-anchored: see <Spotlight>. Roles arrive after the gates part (t 0.17)
 // and the last has left before the dive (t 0.67).
 const W = 0.2, at = slots(2, 0.17, W, 0.06);
-const text = <Spotlight slug="b4-inner-sun" roles={scenes.b4} at={at} w={W} bottom="always" />;
+const text = <Spotlight slug="b4-inner-sun" roles={scenes.b4} at={at} w={W} bottom="always" paper />;
 const bird = <Creature sheet={heron} ms={5000} />;
 
 // Ray sheets are square and centred on the sun, so the box centre is the pivot. Idle: outer ring turns one way in
@@ -32,7 +32,7 @@ const extra: Record<string, LayerDef> = {
   dust: { highOnly: true },
   'dust-p': { highOnly: true },
 };
-const comp = (c: Comp, focus: [number, number]) => world(manifest, c, SCREENS, { focus, close: c === 'desktop' ? 440 : 400, extra });
+const comp = (c: Comp, focus: [number, number]) => world(manifest, c, SCREENS, { focus, close: c === 'desktop' ? 300 : 300, extra });
 
 // Dust motes drift up through the light shafts (behind the near rock).
 const motesT: Track = [{ at: 0.1, opacity: 0 }, { at: 0.24, opacity: 1 }, { at: 0.62, opacity: 1 }, { at: 0.72, opacity: 0 }];

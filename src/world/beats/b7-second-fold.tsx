@@ -110,7 +110,7 @@ export const b7SecondFold: BeatDef = {
     split: 'dust-p',
     overlays: [
       { node: fish, rect: box(540, 330, 760), parallax: 0.2, track: glide },
-      onLayer(portrait, 'dust-p', { x: 150, y: 1000, w: 780, h: 220 }, headP, { behind: true, track: shown(0.28) }),
+      onLayer(portrait, 'dust-p', { x: 150, y: 740, w: 780, h: 200 }, headP, { behind: true, track: shown(0.28) }),
       { node: text, className: 'left-[8vw] right-[8vw] bottom-[7svh]', track: textT },
     ],
   },

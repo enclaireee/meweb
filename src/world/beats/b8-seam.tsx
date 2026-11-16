@@ -19,7 +19,7 @@ const shown: Keyframe[] = [{ at: 0.12, opacity: 0 }, { at: 0.13, opacity: 1 }, {
 
 function Head({ p = false }: { p?: boolean }) {
   const { lang } = useLang();
-  const size = p ? (lang === 'id' ? 'text-[12.5cqw]' : 'text-[15cqw]') : lang === 'id' ? 'text-[11.5cqw]' : 'text-[16cqw]';
+  const size = p ? (lang === 'id' ? 'text-[10.5cqw]' : 'text-[12.5cqw]') : lang === 'id' ? 'text-[11.5cqw]' : 'text-[16cqw]';
   return <SectionHeading slug="b8-seam" size={size} className="text-[#fff4de]" />;
 }
 const head = <Head />;
@@ -50,7 +50,7 @@ export const b8Seam: BeatDef = {
     ...portrait,
     split: 'creases-p',
     overlays: [
-      onLayer(portrait, 'creases-p', { x: 120, y: 60, w: 840, h: 200 }, headP, { behind: true, track: headT }),
+      onLayer(portrait, 'creases-p', { x: 120, y: 150, w: 840, h: 130 }, headP, { behind: true, track: headT }),
       { node: text, className: 'left-[10vw] right-[10vw] bottom-[12svh] text-[#fff4de]', track: shown },
     ],
   },

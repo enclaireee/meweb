@@ -78,7 +78,7 @@ const desktop = comp('desktop', [960, 560]);
 const portrait = comp('portrait', [540, 910]);
 
 // The heading rises in once the gates part and sinks away before the dive.
-const headT: Track = [{ at: 0.1, y: 40, opacity: 0 }, { at: 0.22, y: 0, opacity: 1, ease: 'out' }, { at: 0.6, y: 0, opacity: 1 }, { at: 0.72, y: 30, opacity: 0, ease: 'in' }];
+const headT: Track = [{ at: 0.1, y: 50, opacity: 0 }, { at: 0.115, y: 45, opacity: 1 }, { at: 0.22, y: 0, ease: 'out' }, { at: 0.6, y: 0 }, { at: 0.7, y: 40, opacity: 1, ease: 'in' }, { at: 0.705, y: 40, opacity: 0 }];
 const starsT: Track = [{ at: 0, opacity: 1 }, { at: 0.6, opacity: 1 }, { at: 0.72, opacity: 0 }];
 const stars = (c: typeof desktop, sky: string, rect: { x: number; y: number; w: number; h: number }) => [
   { ...onLayer(c, sky, rect, <Particles sprite="star-glint" n={14} kind="twinkle" seed={21} size={[0.7, 1.4]} lite />, { behind: true, track: starsT }) },
@@ -103,7 +103,7 @@ export const b1Approach: BeatDef = {
     split: 'face-back-p',
     overlays: [
       ...stars(portrait, 'sky', { x: 100, y: 120, w: 880, h: 600 }),
-      onLayer(portrait, 'face-back-p', { x: 100, y: 150, w: 760, h: 240 }, headingP, { behind: true, track: headT }),
+      onLayer(portrait, 'face-back-p', { x: 100, y: 200, w: 760, h: 240 }, headingP, { behind: true, track: headT }),
       { node: text, className: 'left-[8vw] bottom-[8svh]' },
     ],
   },

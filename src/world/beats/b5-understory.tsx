@@ -70,15 +70,15 @@ function Fireflies({ plan }: { plan: Plan }) {
     </div>
   );
 }
-const deskPlan: Plan = { rect: { x: 400, y: 120, w: 1400, h: 840 }, eight: [[880, 470], 92, 122], swarms: [[1260, 400], [1560, 540], [1300, 680]], word: [880, 820] };
-const portPlan: Plan = { rect: { x: 60, y: 260, w: 960, h: 1400 }, eight: [[690, 610], 100, 132], swarms: [[300, 1150], [760, 1250], [400, 1400]], word: [690, 990] };
+const deskPlan: Plan = { rect: { x: 400, y: 120, w: 1400, h: 840 }, eight: [[880, 470], 92, 122], swarms: [[1260, 390], [1560, 520], [1300, 640]], word: [880, 820] };
+const portPlan: Plan = { rect: { x: 60, y: 260, w: 960, h: 1400 }, eight: [[690, 610], 100, 132], swarms: [[330, 1340], [760, 1420], [420, 1500]], word: [690, 990] };
 const swarm = { d: <Fireflies plan={deskPlan} />, p: <Fireflies plan={portPlan} /> };
 function Hint() {
   const t = useT();
   return (
     <At a={0.2} d={0.05} w={OUT - 0.2} k="one" className="block">
-      <div className="flex flex-col items-end gap-3 portrait:items-start">
-        <div aria-hidden className="beat-text flex flex-col gap-2 [text-shadow:0_0_10px_rgb(255_220_130/0.9),0_0_28px_rgb(255_190_90/0.6),0_2px_8px_rgb(0_0_0/0.75)]">
+      <div className="flex flex-col items-end gap-3 portrait:paper-card portrait:items-start">
+        <div aria-hidden className="beat-text flex flex-col gap-2 [text-shadow:0_0_10px_rgb(255_220_130/0.9),0_0_28px_rgb(255_190_90/0.6),0_2px_8px_rgb(0_0_0/0.75)] portrait:[text-shadow:none]">
           <Ln i={0}><Kicker slug="b5-understory" /></Ln>
           <Ln i={1}><p className="font-display text-lead italic">{t(scenes.b5.hint)}</p></Ln>
         </div>
@@ -102,11 +102,13 @@ const shown = (a: number, b: number): Keyframe[] => [{ at: a - 0.012, opacity: 0
 const textT = shown(0.2, OUT);
 const headT = shown(0.18, OUT);
 // Heading: Projects, set on the forest floor in front of the curtains, behind the near roots and the fireflies.
-function Head({ className = '' }: { className?: string }) {
+function Head({ p = false }: { p?: boolean }) {
   const { lang } = useLang();
-  return <SectionHeading slug="b5-understory" size={lang === 'id' ? 'text-[21cqw]' : 'text-[17cqw]'} className={`text-[#f4f1cf] ${className}`} />;
+  const size = lang === 'id' ? (p ? 'text-[20cqw]' : 'text-[21cqw]') : p ? 'text-[16cqw]' : 'text-[17cqw]';
+  return <SectionHeading slug="b5-understory" size={size} className="text-[#f4f1cf]" />;
 }
 const head = <Head />;
+const headP = <Head p />;
 
 // The fork door (decisions: one consistent shape, a real focusable button) over the baked `fork-door` sheet.
 function Door() {
@@ -178,7 +180,7 @@ export const b5Understory: BeatDef = {
     overlays: [
       { node: deer, rect: { x: 560, y: 350, w: 640, h: 555 }, parallax: 0.3, track: arrive }, // hooves (880, 905)
       doorOn(desktop, [820, 650], { x: 446, y: 590, w: 96, h: 160 }),
-      onLayer(desktop, 'roots-near', { x: 1100, y: 740, w: 720, h: 200 }, head, { behind: true, track: headT }),
+      onLayer(desktop, 'roots-near', { x: 1100, y: 770, w: 720, h: 200 }, head, { behind: true, track: headT }),
       onLayer(desktop, 'fork-door', deskPlan.rect, swarm.d, { track: textT }),
       { node: fall.d, rect: { x: 0, y: 0, w: 1920, h: 1080 }, parallax: 0.3, track: ambient },
       { node: text, className: 'right-[9vw] top-[14vh] w-[min(32vw,32rem)] text-right', track: textT },
@@ -190,10 +192,10 @@ export const b5Understory: BeatDef = {
     overlays: [
       { node: deer, rect: { x: 440, y: 590, w: 520, h: 450 }, parallax: 0.3, track: arrive }, // hooves (700, 1040)
       doorOn(portrait, [580, 800], { x: 250, y: 790, w: 90, h: 150 }),
-      onLayer(portrait, 'roots-near-p', { x: 100, y: 1500, w: 880, h: 240 }, head, { behind: true, track: headT }),
+      onLayer(portrait, 'roots-near-p', { x: 110, y: 1060, w: 860, h: 240 }, headP, { behind: true, track: headT }),
       onLayer(portrait, 'fork-door', portPlan.rect, swarm.p, { track: textT }),
       { node: fall.p, rect: { x: 0, y: 0, w: 1080, h: 1920 }, parallax: 0.3, track: ambient },
-      { node: text, className: 'left-[8vw] right-[8vw] top-[8svh]', track: textT },
+      { node: text, className: 'left-[8vw] right-[8vw] top-[12svh]', track: textT },
     ],
   },
 };

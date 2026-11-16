@@ -40,7 +40,7 @@ function Head() {
   const t = useT();
   return (
     <At a={0.18} d={0.04} w={OUT - 0.18} k="one" className={`block ${glowText}`}>
-      <div className="beat-text flex flex-col gap-1">
+      <div className="beat-text flex max-w-[17rem] flex-col gap-1 portrait:max-w-none">
         <Ln i={0}><Kicker slug="b6-lantern-vault" /></Ln>
         <Ln i={1}><p className="font-display text-body italic">{t(scenes.b6Languages)}</p></Ln>
       </div>

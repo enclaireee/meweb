@@ -60,7 +60,7 @@ const track: Keyframe[] = [{ at: 0.2, opacity: 0, y: 24 }, { at: 0.29, opacity: 
 
 function Head({ p = false }: { p?: boolean }) {
   const { lang } = useLang();
-  const size = p ? 'text-[11.5cqw]' : lang === 'id' ? 'text-[19cqw]' : 'text-[21cqw]';
+  const size = p ? 'text-[13cqw]' : lang === 'id' ? 'text-[19cqw]' : 'text-[21cqw]';
   return <SectionHeading slug="b9-window" size={size} className="text-[#f1e3c6]" />;
 }
 const head = <Head />;
@@ -120,7 +120,7 @@ export const b9Window: BeatDef = {
     split: 'window-frame-p',
     overlays: [
       { node: snow(2.6), rect: { x: 290, y: 230, w: 500, h: 700 }, behind: true, parallax: 0.3 },
-      onLayer(portrait, 'wall-p', { x: 150, y: 110, w: 780, h: 150 }, headP, { behind: true, track: headT }),
+      onLayer(portrait, 'wall-p', { x: 110, y: 175, w: 560, h: 100 }, headP, { behind: true, track: headT }),
       { node: candle, rect: { x: 388, y: 880, w: 40, h: 66 }, parallax: 0.3 },
       { node: text, className: 'left-[8vw] bottom-[6svh]', track },
     ],
