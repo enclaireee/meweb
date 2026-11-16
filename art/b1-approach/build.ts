@@ -1,6 +1,7 @@
 // b1-approach: the mountain fills the frame, a terraced ruin-carved cliff. Run: npx tsx art/b1-approach/build.ts
 // Per-band bake settings need per-layer scale/quality, so layers are baked with bakeLayer and the manifest is
 // written here in the exact bakeBeat format (same approach as b4-inner-sun).
+import { squeeze, type Squeeze } from "../ambient/squeeze.ts";
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 import {
@@ -583,6 +584,13 @@ for (const l of all) {
   if (!b) throw new Error(`layer ${l.id} empty`);
   baked.set(l.id, b);
 }
+// byte squeeze (beat 0 + 1 under 400 KB): [pixel factor, quality, alphaQuality]
+const SQ: Record<string, Squeeze> = {
+  sky: [0.8, 45, 70], "moon-edge": [0.85, 38, 60], "range-far": [0.85, 38, 65], clouds: [0.8, 38, 55], "shoulder-l": [0.85, 38, 65], "shoulder-r": [0.85, 38, 65],
+  "face-back": [0.8, 40, 65], "face-l": [0.8, 40, 65], "face-r": [0.8, 40, 65], "face-top": [0.8, 40, 65], creases: [0.8, 38, 60], "window-glow": [0.8, 55, 70],
+  "stairs-near": [0.8, 38, 65], mist: [0.8, 45, 60], "gate-l": [0.85, 40, 70], "gate-r": [0.85, 40, 70],
+};
+await squeeze(SLUG, baked, SQ);
 const r1 = (n: number) => Math.round(n * 10) / 10;
 const compose = (width: number, height: number, include: string[], place: Record<string, { x?: number; y?: number; s?: number }> = {}) => ({
   width, height,

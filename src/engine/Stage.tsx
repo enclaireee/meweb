@@ -1,27 +1,34 @@
 'use client';
 import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
+import {
+  boxStyle, cutPlan, groupMatrix, groupTf, layerMatrix, mul, parseOrigin, PERSPECTIVE, rectStyle, rotYProject, r3, S, tf,
+  withParallax,
+} from './geometry';
 import { InitialLaneCtx } from './hooks';
-import { emitFrame, getState, initLane, laneIO, SERVER_STATE, setState, subscribe } from './store';
+import { introBlend, introMs, introPlays, introProgress, type IntroEnv } from './intro';
+import { emitFrame, getState, initLane, introIO, laneIO, SERVER_STATE, setState, subscribe } from './store';
 import { beatRanges, clampS, coverScale, dissolve, evaluate, locate, mountWindow, pickComposition, type Range } from './timeline';
-import type { BeatDef, Comp, Lane, ManifestLayer, Pose, Quality, Track } from './types';
+import type { BeatDef, Comp, IntroPhase, Lane, ManifestLayer, Pose, Quality, Track } from './types';
 
-const PARALLAX_MAX = 24; // design px (CSS px for viewport overlays) at parallax 1
 const TURN_MS = 380;
 const COMPS: Comp[] = ['desktop', 'portrait'];
+const DEV = process.env.NODE_ENV !== 'production';
 
 /** hide: how a node disappears at opacity 0. 'vis' = visibility:hidden (overlays: no clicks/focus);
  *  'off' = data-off attribute (beat groups: overlays hidden by CSS). */
 type Node = { el: HTMLElement; tf?: string; op?: number; vis?: boolean; hide?: 'vis' | 'off' };
 /** w/h = size the x/y keyframes are relative to (design px); 0 = viewport overlay, CSS px. */
-type Driven = Node & { track?: Track; parallax: number; w: number; h: number };
-/** An art layer, drawn into the beat's <canvas>. ox/oy = transform origin as a fraction of the layer box. */
-type Art = { img: HTMLImageElement; l: ManifestLayer; track?: Track; parallax: number; ox: number; oy: number };
+type Driven = Node & { track?: Track; intro?: Track; parallax: number; w: number; h: number };
+/** An art layer. ox/oy = transform origin as a fraction of the layer box. */
+type Art = { img: HTMLImageElement; l: ManifestLayer; track?: Track; intro?: Track; parallax: number; ox: number; oy: number };
+/** One <canvas> and the art drawn into it (far to near). */
+type Seg = { cv: HTMLCanvasElement; art: Art[] };
 type Mounted = {
   index: number; def: BeatDef; comp: Comp; ranges: Range[];
   W: number; H: number; origin: [number, number]; group: Node; canvas: Node[]; items: Driven[];
-  /** cv2 + split: art from index `split` on is drawn on a second canvas, above `behind` overlays. */
-  cv: HTMLCanvasElement; cv2: HTMLCanvasElement | null; split: number; art: Art[]; t?: string;
+  /** Canvases in paint order (cut at live layers and, with behind overlays, at `split`), and the DOM live layers. */
+  segs: Seg[]; lives: (Node & { a: Art })[]; t?: string;
 };
 
 // Engine singleton (one Stage per page). Mutated only from effects, events and rAF, never in render.
@@ -31,21 +38,13 @@ const E = {
   unit: 1, w: 1, h: 1, tau: 0.07, res: 1, touch: false,
   s: 0, cur: -1, dirty: true,
   px: 0, py: 0, tx: 0, ty: 0, // pointer: smoothed / target, -1..1
+  /** Intro progress 0..1 while the opening sequence plays (beat 0 of the main lane), else null. */
+  introU: null as number | null,
   live: new Map<number, Mounted>(),
   setWin: (() => {}) as (w: [number, number]) => void,
 };
 
-const r3 = (v: number) => Math.round(v * 1000) / 1000;
 const clamp1 = (v: number) => Math.max(-1, Math.min(1, v));
-const unit = (v: number, size: number) => (size ? `${r3((v / size) * 100)}%` : `${r3(v)}px`);
-
-function tf(p: Pose, w: number, h: number) {
-  return `translate3d(${unit(p.x, w)},${unit(p.y, h)},0)` +
-    (p.rotate ? ` rotate(${r3(p.rotate)}deg)` : '') +
-    (p.rotateY ? ` rotateY(${r3(p.rotateY)}deg)` : '') +
-    (p.scale !== 1 ? ` scale(${r3(p.scale)})` : '');
-}
-const groupTf = (g: Pose, W: number, H: number) => `translate(-50%,-50%) ${tf(g, W, H)}`;
 
 function put(n: Node, transform: string | null, opacity: number) {
   if (transform !== null && transform !== n.tf) n.el.style.transform = n.tf = transform;
@@ -58,14 +57,13 @@ function put(n: Node, transform: string | null, opacity: number) {
   else n.el.style.visibility = vis ? '' : 'hidden';
 }
 
-const PERSPECTIVE = 2000; // CSS px, as the old DOM canvas had
 const STRIPS = 32; // vertical slices for a rotateY layer (true perspective taper)
 
 /**
- * Art is drawn into one <canvas> per beat instead of one composited <img> layer each.
+ * Art is drawn into a few <canvas> per beat instead of one composited <img> layer each.
  * Why: 16 layers x 3 mounted beats, each rastered at full retina size, blew past Chromium's GPU tile
  * budget on large screens; tiles got dropped and layers flashed blank mid-transition. A canvas is one
- * texture at a capped resolution (E.res), so there is nothing to drop. Geometry matches the old CSS:
+ * texture at a capped resolution (E.res), so there is nothing to drop. Geometry (geometry.ts) matches the CSS:
  * cover-fit canvas box, group transform about groupOrigin, layer transform about its own origin.
  */
 function prep(cv: HTMLCanvasElement) {
@@ -84,63 +82,52 @@ function prep(cv: HTMLCanvasElement) {
   return ctx;
 }
 
-function draw(m: Mounted, g: Pose, ft: number, t: number, rm: boolean, par: boolean) {
-  const { W, H } = m;
-  let ctx = prep(m.cv);
-  if (!ctx) return;
-  const k = Math.max(E.w / W, E.h / H); // CSS px per design px (cover)
-  const [ox, oy] = m.origin;
-  const base = new DOMMatrix()
-    .scaleSelf(E.res).translateSelf(E.w / 2, E.h / 2).scaleSelf(k)
-    .translateSelf(ox - W / 2 + g.x, oy - H / 2 + g.y).rotateSelf(g.rotate).scaleSelf(g.scale).translateSelf(-ox, -oy);
-  const P = PERSPECTIVE / k;
-  for (const [i, a] of m.art.entries()) {
-    if (i === m.split && m.cv2) {
-      ctx.globalAlpha = 1;
-      ctx = prep(m.cv2);
-      if (!ctx) return;
-    }
-    const { img, l } = a;
-    if (!img.complete || !img.naturalWidth) continue;
-    const p = evaluate(a.track, ft);
-    if (rm && a.track) p.opacity = evaluate(a.track, t).opacity;
-    if (p.opacity <= 0) continue;
-    if (par && a.parallax) {
-      p.x += E.px * a.parallax * PARALLAX_MAX;
-      p.y += E.py * a.parallax * PARALLAX_MAX;
-    }
-    ctx.globalAlpha = Math.min(1, p.opacity);
-    const Ox = a.ox * l.w, Oy = a.oy * l.h;
-    const ax = l.x + Ox + p.x, ay = l.y + Oy + p.y; // origin in design px after translate
-    if (!p.rotateY) {
-      const M = base.translate(ax, ay).rotateSelf(p.rotate).scaleSelf(p.scale).translateSelf(-Ox, -Oy);
-      ctx.setTransform(M);
-      ctx.drawImage(img, 0, 0, l.w, l.h);
-      continue;
-    }
-    // rotateY: project each strip's edges through the perspective (origin = canvas box centre).
-    ctx.setTransform(base);
-    const th = (p.rotateY * Math.PI) / 180, cos = Math.cos(th), sin = Math.sin(th);
-    const proj = (u: number) => {
-      const r = (u - Ox) * p.scale;
-      const f = P / (P + r * sin); // z = -r sin(th)
-      const x = W / 2 + (ax + r * cos - W / 2) * f;
-      const top = H / 2 + (ay - Oy * p.scale - H / 2) * f;
-      const bot = H / 2 + (ay + (l.h - Oy) * p.scale - H / 2) * f;
-      return { x, top, bot };
-    };
-    const sx = img.naturalWidth / l.w;
-    for (let i = 0; i < STRIPS; i++) {
-      const u0 = (l.w * i) / STRIPS, u1 = (l.w * (i + 1)) / STRIPS, du = u1 - u0;
-      const L = proj(u0), R = proj(u1);
-      ctx.save();
-      ctx.transform((R.x - L.x) / du, (R.top - L.top) / du, 0, (L.bot - L.top) / l.h, L.x - ((R.x - L.x) / du) * u0, L.top - ((R.top - L.top) / du) * u0);
-      ctx.drawImage(img, u0 * sx, 0, du * sx, img.naturalHeight, u0, 0, du + 0.5, l.h); // +0.5: no seam
-      ctx.restore();
-    }
-  }
-  ctx.globalAlpha = 1;
+/** Scroll pose (+ parallax) blended with the intro pose. iu = intro progress or null. */
+function artPose(a: { track?: Track; intro?: Track; parallax: number }, ft: number, t: number, rm: boolean, par: boolean, iu: number | null): Pose {
+  let p = evaluate(a.track, ft);
+  if (rm && a.track) p.opacity = evaluate(a.track, t).opacity;
+  if (par) p = withParallax(p, a.parallax, E.px, E.py);
+  return introBlend(p, a.intro, iu);
 }
+
+function draw(m: Mounted, g: Pose, ft: number, t: number, rm: boolean, par: boolean, iu: number | null) {
+  const { W, H } = m;
+  const k = Math.max(E.w / W, E.h / H); // CSS px per design px (cover)
+  const base = mul(S(E.res), groupMatrix(E.w, E.h, W, H, m.origin, g));
+  const P = PERSPECTIVE / k;
+  for (const { cv, art } of m.segs) {
+    const ctx = prep(cv);
+    if (!ctx) continue;
+    for (const a of art) {
+      const { img, l } = a;
+      if (!img.complete || !img.naturalWidth) continue;
+      const p = artPose(a, ft, t, rm, par, iu);
+      if (p.opacity <= 0) continue;
+      ctx.globalAlpha = Math.min(1, p.opacity);
+      if (!p.rotateY) {
+        ctx.setTransform(...mul(base, layerMatrix(l, a.ox, a.oy, p)));
+        ctx.drawImage(img, 0, 0, l.w, l.h);
+        continue;
+      }
+      // rotateY: project each strip's edges through the perspective (origin = canvas box centre).
+      ctx.setTransform(...base);
+      const sx = img.naturalWidth / l.w;
+      for (let i = 0; i < STRIPS; i++) {
+        const u0 = (l.w * i) / STRIPS, u1 = (l.w * (i + 1)) / STRIPS, du = u1 - u0;
+        const L = rotYProject(l, a.ox, a.oy, p, W, H, P, u0), Rt = rotYProject(l, a.ox, a.oy, p, W, H, P, u1);
+        ctx.save();
+        ctx.transform((Rt.x - L.x) / du, (Rt.top - L.top) / du, 0, (L.bot - L.top) / l.h, L.x - ((Rt.x - L.x) / du) * u0, L.top - ((Rt.top - L.top) / du) * u0);
+        ctx.drawImage(img, u0 * sx, 0, du * sx, img.naturalHeight, u0, 0, du + 0.5, l.h); // +0.5: no seam
+        ctx.restore();
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+}
+
+const freeCanvases = (m: Mounted) => {
+  for (const { cv } of m.segs) if (cv.width) cv.width = cv.height = 0;
+};
 
 function applyBeat(m: Mounted, s: number) {
   const { def, index, ranges } = m;
@@ -156,7 +143,7 @@ function applyBeat(m: Mounted, s: number) {
   put(m.group, null, op);
   if (op <= 0) {
     // Hidden beat: drop its canvas backing stores (prep() reallocates on the next visible frame, before paint).
-    for (const c of [m.cv, m.cv2]) if (c?.width) c.width = c.height = 0;
+    freeCanvases(m);
     return;
   }
   for (const c of m.canvas) put(c, groupTf(g, m.W, m.H), 1);
@@ -164,14 +151,14 @@ function applyBeat(m: Mounted, s: number) {
   const tv = (Math.round(t * 1e4) / 1e4).toString();
   if (tv !== m.t) m.group.el.style.setProperty('--t', (m.t = tv));
   const par = !rm && st.quality === 'high';
-  draw(m, g, ft, t, rm, par);
+  const iu = E.lane === 'main' && index === 0 ? E.introU : null;
+  draw(m, g, ft, t, rm, par, iu);
+  for (const n of m.lives) {
+    const p = artPose(n.a, ft, t, rm, par, iu);
+    put(n, tf(p, n.a.l.w, n.a.l.h), p.opacity);
+  }
   for (const d of m.items) {
-    const p = evaluate(d.track, ft);
-    if (rm && d.track) p.opacity = evaluate(d.track, t).opacity;
-    if (par && d.parallax) {
-      p.x += E.px * d.parallax * PARALLAX_MAX;
-      p.y += E.py * d.parallax * PARALLAX_MAX;
-    }
+    const p = artPose(d, ft, t, rm, par, iu);
     put(d, tf(p, d.w, d.h), p.opacity);
   }
   def.onProgress?.(t, m.group.el, {
@@ -197,39 +184,40 @@ function render(velocity: number) {
 function mount(index: number, def: BeatDef, comp: Comp, ranges: Range[], el: HTMLElement): Mounted {
   const c = def.manifest.compositions[comp];
   const cd = def[comp];
+  const byId = new Map(c.layers.map((l) => [l.id, l]));
+  const art = (id: string, img: HTMLImageElement | null): Art[] => {
+    const l = byId.get(id);
+    if (!l || !img) return [];
+    const a = cd.layers?.[id];
+    const [ox, oy] = parseOrigin(a?.origin);
+    return [{ img, l, track: a?.track, intro: a?.intro, parallax: a?.parallax ?? 0, ox, oy }];
+  };
+  const imgs = new Map<string, HTMLImageElement>();
+  el.querySelectorAll<HTMLImageElement>('img[data-layer]').forEach((img) => imgs.set(img.dataset.layer!, img));
   const items: Driven[] = [];
-  const art: Art[] = [];
-  el.querySelectorAll<HTMLImageElement>('img[data-layer]').forEach((img) => {
-    const l = c.layers.find((x) => x.id === img.dataset.layer);
-    if (!l) return;
-    const a = cd.layers?.[l.id];
-    const [ox = 0.5, oy = 0.5] = (a?.origin ?? '').split(/\s+/).filter(Boolean).map((v) => parseFloat(v) / 100);
-    art.push({ img, l, track: a?.track, parallax: a?.parallax ?? 0, ox, oy });
-  });
   el.querySelectorAll<HTMLElement>('[data-ov]').forEach((n) => {
     const o = cd.overlays?.[Number(n.dataset.ov)];
-    if (o) items.push({ el: n, hide: 'vis', track: o.track, parallax: o.parallax ?? 0, w: o.rect?.w ?? 0, h: o.rect?.h ?? 0 });
+    if (o) items.push({ el: n, hide: 'vis', track: o.track, intro: o.intro, parallax: o.parallax ?? 0, w: o.rect?.w ?? 0, h: o.rect?.h ?? 0 });
   });
   return {
-    index, def, comp, ranges, W: c.width, H: c.height, items, art,
+    index, def, comp, ranges, W: c.width, H: c.height, items,
     origin: cd.groupOrigin ?? [c.width / 2, c.height / 2],
-    cv: el.querySelector<HTMLCanvasElement>('canvas[data-art]')!,
-    cv2: el.querySelector<HTMLCanvasElement>('canvas[data-art2]'),
-    split: cd.split ? art.findIndex((a) => a.l.id === cd.split) : -1,
+    segs: [...el.querySelectorAll<HTMLCanvasElement>('canvas[data-art]')].map((cv) => ({
+      cv, art: (cv.dataset.art ?? '').split(' ').filter(Boolean).flatMap((id) => art(id, imgs.get(id) ?? null)),
+    })),
+    lives: [...el.querySelectorAll<HTMLElement>('[data-live]')].flatMap((n) =>
+      art(n.dataset.live!, n.querySelector('img')).map((a) => ({ el: n, hide: 'vis' as const, a }))),
     group: { el: el.querySelector<HTMLElement>('[data-comp]')!, hide: 'off' },
     canvas: [...el.querySelectorAll<HTMLElement>('[data-canvas]')].map((e) => ({ el: e })),
   };
 }
 
-const pct = (v: number, of: number) => `${(v / of) * 100}%`;
-
-function Composition({ def, comp, quality, visible, t0, gate }: {
-  def: BeatDef; comp: Comp; quality: Quality; visible: boolean; t0: number; gate?: string;
+function Composition({ def, comp, quality, rm, visible, t0, gate }: {
+  def: BeatDef; comp: Comp; quality: Quality; rm: boolean; visible: boolean; t0: number; gate?: string;
 }) {
   const { width: W, height: H, layers } = def.manifest.compositions[comp];
   const cd = def[comp];
   const g = evaluate(cd.group, t0);
-  const [ox, oy] = cd.groupOrigin ?? [W / 2, H / 2];
   const low = quality === 'low';
   const ssr = gate !== undefined; // before hydration: plain <img> layers (first paint, no JS); after: drawn into <canvas data-art>
   const ovs = (cd.overlays ?? []).map((o, i) => ({ o, i })).filter(({ o }) => !(low && o.highOnly));
@@ -237,22 +225,42 @@ function Composition({ def, comp, quality, visible, t0, gate }: {
     const p = evaluate(o.track, t0);
     return { ...o.style, transform: tf(p, w, h), opacity: p.opacity };
   };
-  const box = {
-    width: `max(100%, ${(W / H) * 100}lvh)`, aspectRatio: `${W} / ${H}`,
-    transformOrigin: `${pct(ox, W)} ${pct(oy, H)}`, transform: groupTf(g, W, H), willChange: 'transform',
-  };
+  const box = boxStyle(W, H, cd.groupOrigin ?? [W / 2, H / 2], g);
   const behind = cd.split ? ovs.filter(({ o }) => o.rect && o.behind) : [];
+  const order = [...layers].sort((a, b) => a.depth - b.depth).filter((l) => !(low && cd.layers?.[l.id]?.highOnly));
+  // Live layers: after hydration, quality 'high', full motion only. Otherwise drawn into the canvas like the rest.
+  const wantLive = !ssr && !low && !rm ? order.filter((l) => cd.layers?.[l.id]?.live).map((l) => l.id) : [];
+  const plan = ssr ? null : cutPlan(order.map((l) => l.id), { live: wantLive, split: cd.split, behind: behind.length > 0 });
+  const demoted = plan?.demoted.join(' ') ?? '';
+  useEffect(() => {
+    if (DEV && demoted) console.warn(`[engine] ${def.slug}/${comp}: at most 2 live layers; drawn into the canvas: ${demoted}`);
+  }, [def.slug, comp, demoted]);
+  const lives = new Set(plan?.steps.flatMap((st) => (st.kind === 'live' ? [st.id] : [])));
   const rectOv = ({ o, i }: (typeof ovs)[number]) => (
     <div
       key={`ov${i}`} data-ov={i} className={`pointer-events-auto [[data-off]_&]:invisible ${o.className ?? ''}`}
-      style={{
-        position: 'absolute', left: pct(o.rect!.x, W), top: pct(o.rect!.y, H),
-        width: pct(o.rect!.w, W), height: pct(o.rect!.h, H), ...ovStyle(o, o.rect!.w, o.rect!.h),
-      }}
+      style={{ ...rectStyle(o.rect!, W, H), ...ovStyle(o, o.rect!.w, o.rect!.h) }}
     >
       {o.node}
     </div>
   );
+  const liveLayer = (id: string) => {
+    const l = order.find((x) => x.id === id)!;
+    const a = cd.layers![id]!;
+    const p = evaluate(a.track, t0);
+    return (
+      <div
+        data-live={id} className={a.live!.className}
+        style={{
+          ...a.live!.style, ...rectStyle(l, W, H),
+          transformOrigin: a.origin, transform: tf(p, l.w, l.h), opacity: p.opacity, willChange: 'transform, opacity',
+        }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={l.src} alt="" draggable={false} decoding="async" style={{ display: 'block', width: '100%', height: '100%', maxWidth: 'none' }} />
+      </div>
+    );
+  };
   return (
     <div
       data-comp={comp}
@@ -260,13 +268,18 @@ function Composition({ def, comp, quality, visible, t0, gate }: {
       className={`absolute inset-0 ${gate ?? ''}`}
       style={{ opacity: visible ? g.opacity : 0, willChange: 'opacity' }}
     >
-      {!ssr && <canvas data-art className="absolute inset-0 h-full w-full" />}
-      {!ssr && behind.length > 0 && <div data-canvas className="absolute left-1/2 top-1/2" style={box}>{behind.map(rectOv)}</div>}
-      {!ssr && cd.split && <canvas data-art2 className="absolute inset-0 h-full w-full" />}
-      <div data-canvas className="absolute left-1/2 top-1/2" style={{ ...box, perspective: '2000px' }}>
-        {[...layers].sort((a, b) => a.depth - b.depth).map((l) => {
+      {plan?.steps.map((st, j) =>
+        st.kind === 'canvas' ? <canvas key={`c${j}`} data-art={st.ids.join(' ')} className="absolute inset-0 h-full w-full" />
+          : st.kind === 'behind' ? <div key={`b${j}`} data-canvas className="absolute left-1/2 top-1/2" style={box}>{behind.map(rectOv)}</div>
+            : (
+              <div key={`l${j}`} data-canvas className="absolute left-1/2 top-1/2" style={{ ...box, perspective: `${PERSPECTIVE}px` }}>
+                {liveLayer(st.id)}
+              </div>
+            ))}
+      <div data-canvas className="absolute left-1/2 top-1/2" style={{ ...box, perspective: `${PERSPECTIVE}px` }}>
+        {order.map((l) => {
+          if (lives.has(l.id)) return null;
           const a = cd.layers?.[l.id];
-          if (low && a?.highOnly) return null;
           const p = evaluate(a?.track, t0);
           return [
             ssr && l.id === cd.split && behind.map(rectOv),
@@ -277,8 +290,7 @@ function Composition({ def, comp, quality, visible, t0, gate }: {
               onLoad={() => void (E.dirty = true)}
               // After hydration the <img> is only the canvas's source: display:none, never composited.
               style={ssr ? {
-                position: 'absolute', maxWidth: 'none',
-                left: pct(l.x, W), top: pct(l.y, H), width: pct(l.w, W), height: pct(l.h, H),
+                ...rectStyle(l, W, H), maxWidth: 'none',
                 transformOrigin: a?.origin, transform: a?.track ? tf(p, l.w, l.h) : undefined,
                 opacity: a?.track ? p.opacity : undefined,
                 // Fixed raster scale: the dolly/dive scale changes every frame, which would otherwise re-raster.
@@ -299,8 +311,8 @@ function Composition({ def, comp, quality, visible, t0, gate }: {
 }
 
 /** first/t0: the beat shown before hydration (the one holding initialS) and its local t, for SSR poses. */
-function Beat({ def, index, ranges, comp, quality, first, t0 }: {
-  def: BeatDef; index: number; ranges: Range[]; comp: Comp | null; quality: Quality; first: boolean; t0: number;
+function Beat({ def, index, ranges, comp, quality, rm, first, t0 }: {
+  def: BeatDef; index: number; ranges: Range[]; comp: Comp | null; quality: Quality; rm: boolean; first: boolean; t0: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
@@ -314,14 +326,14 @@ function Beat({ def, index, ranges, comp, quality, first, t0 }: {
       if (E.live.get(index) === m) E.live.delete(index);
       // iOS Safari keeps a detached canvas's backing store until GC and kills the tab past its canvas
       // memory cap; scrolling mounts new beats all the time, so free them now.
-      for (const c of [m.cv, m.cv2]) if (c) c.width = c.height = 0;
+      freeCanvases(m);
     };
-  }, [def, index, ranges, comp, quality]);
+  }, [def, index, ranges, comp, quality, rm]);
   return (
     <div ref={ref} className="pointer-events-none absolute inset-0">
       {/* Before hydration the viewport is unknown: render both, CSS picks by orientation. Keyed so the kept one is not remounted. */}
       {(comp ? [comp] : COMPS).map((c) => (
-        <Composition key={c} def={def} comp={c} quality={quality} visible={first} t0={t0}
+        <Composition key={c} def={def} comp={c} quality={quality} rm={rm} visible={first} t0={t0}
           gate={comp ? undefined : c === 'desktop' ? 'portrait:hidden' : 'landscape:hidden'} />
       ))}
     </div>
@@ -355,7 +367,8 @@ export function Stage({ beats, projectBeats, initialLane = 'main', initialFocusI
     const s = clampS(initialS ?? 0, total);
     const i = locate(ranges, s);
     const r = ranges[i];
-    return { s, i, t: r ? (s - r.start) / (r.end - r.start) : 0 };
+    const intro = { initialLane, initialS, initialFocusId, ms: introMs(beats[0]?.intro) };
+    return { s, i, t: r ? (s - r.start) / (r.end - r.start) : 0, intro };
   });
   const [[lo, hi], setWin] = useState<[number, number]>([init.i, init.i]);
   const [comp, setComp] = useState<Comp | null>(null);
@@ -395,6 +408,20 @@ export function Stage({ beats, projectBeats, initialLane = 'main', initialFocusI
     };
     onMq();
     mq.addEventListener('change', onMq);
+
+    // Document flags for CSS (ambient loops): data-quality, data-motion, data-intro, data-hidden.
+    const html = document.documentElement;
+    const flags = () => {
+      const g = getState();
+      html.dataset.quality = g.quality;
+      html.dataset.motion = g.reducedMotion ? 'reduce' : 'full';
+      if (g.intro === 'pending') delete html.dataset.intro;
+      else html.dataset.intro = g.intro;
+    };
+    const unflags = subscribe(flags);
+    const onVis = () => html.toggleAttribute('data-hidden', document.hidden);
+    onVis();
+    document.addEventListener('visibilitychange', onVis);
 
     const measure = () => {
       const old = E.unit;
@@ -436,6 +463,34 @@ export function Stage({ beats, projectBeats, initialLane = 'main', initialFocusI
     addEventListener('pointermove', onPointer, { passive: true });
     addEventListener('deviceorientation', onTilt);
 
+    // Opening sequence (beat 0 of the main lane). Checked now and again on the next frames (scroll restoration);
+    // starts once beat 0 is mounted, never blocks scrolling: any input or scroll jumps to the end (= intro ignored).
+    const SKIP = ['wheel', 'touchstart', 'pointerdown', 'keydown', 'scroll'] as const;
+    let phase: IntroPhase = 'pending';
+    let frames = 0;
+    let t0 = 0;
+    let y0 = scrollY;
+    const env = (): IntroEnv => ({
+      ...init.intro, lane: E.lane, scrollY, hash: location.hash, reducedMotion: mq.matches,
+      introWait: html.classList.contains('intro-wait'),
+    });
+    const endIntro = () => {
+      if (phase === 'done') return;
+      phase = 'done';
+      E.introU = null;
+      E.dirty = true;
+      for (const type of SKIP) removeEventListener(type, onSkip, true);
+      html.classList.remove('intro-wait');
+      setState({ intro: 'done' });
+    };
+    const onSkip = (e: Event) => void (e.type !== 'scroll' || scrollY !== y0 ? endIntro() : 0);
+    if (introPlays(env())) {
+      for (const type of SKIP) addEventListener(type, onSkip, { capture: true, passive: true });
+      setState({ intro: 'pending' });
+    } else endIntro();
+    introIO.skip = endIntro;
+    flags();
+
     const io = { ...laneIO };
     laneIO.getUnit = () => E.unit;
     laneIO.getLength = () => E.ranges.at(-1)?.end ?? 0;
@@ -469,6 +524,25 @@ export function Stage({ beats, projectBeats, initialLane = 'main', initialFocusI
       raf = requestAnimationFrame(tick);
       const dt = last ? Math.min((now - last) / 1000, 0.1) : 1 / 60;
       last = now;
+      let started = false;
+      if (phase === 'pending') {
+        // Frame 1 re-checks after one rAF; play starts from frame 2 once beat 0 is mounted (give up after ~1 s).
+        if (!introPlays(env())) endIntro();
+        else if (++frames >= 2 && E.lane === 'main' && E.live.has(0)) {
+          phase = 'play';
+          t0 = now;
+          y0 = scrollY;
+          E.introU = 0;
+          E.dirty = started = true;
+        } else if (frames > 60) endIntro();
+      } else if (phase === 'play') {
+        const u = introProgress(now - t0, init.intro.ms);
+        if (u >= 1 || scrollY !== y0) endIntro();
+        else {
+          E.introU = u;
+          E.dirty = true;
+        }
+      }
       const s = getState();
       const target = scrollY / E.unit;
       const prev = E.s;
@@ -493,6 +567,11 @@ export function Stage({ beats, projectBeats, initialLane = 'main', initialFocusI
         if (++samples === 60 && sum / 60 > 0.024) setState({ quality: 'low' });
       }
       render((E.s - prev) / dt);
+      if (started) {
+        // u = 0 poses are written and the canvases drawn in this frame: reveal the stage now.
+        html.classList.remove('intro-wait');
+        setState({ intro: 'play' });
+      }
     };
     raf = requestAnimationFrame(tick);
 
@@ -502,6 +581,11 @@ export function Stage({ beats, projectBeats, initialLane = 'main', initialFocusI
       mq.removeEventListener('change', onMq);
       removeEventListener('pointermove', onPointer);
       removeEventListener('deviceorientation', onTilt);
+      for (const type of SKIP) removeEventListener(type, onSkip, true);
+      introIO.skip = () => {};
+      E.introU = null;
+      unflags();
+      document.removeEventListener('visibilitychange', onVis);
       Object.assign(laneIO, io);
       E.setWin = () => {};
     };
@@ -512,7 +596,7 @@ export function Stage({ beats, projectBeats, initialLane = 'main', initialFocusI
       <div ref={stageRef} className="fixed left-0 top-0 h-lvh w-full overflow-clip" style={{ perspective: '1600px' }}>
         <div ref={turnRef} className="absolute inset-0">
           {list.slice(lo, hi + 1).map((def, j) => (
-            <Beat key={`${lane}:${lo + j}`} def={def} index={lo + j} ranges={ranges} comp={comp} quality={st.quality}
+            <Beat key={`${lane}:${lo + j}`} def={def} index={lo + j} ranges={ranges} comp={comp} quality={st.quality} rm={st.reducedMotion}
               first={lo + j === init.i} t0={lo + j === init.i ? init.t : 0} />
           ))}
           {overlay}

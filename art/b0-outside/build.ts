@@ -2,6 +2,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import sharp from "sharp";
+import { squeeze, type Squeeze } from "../ambient/squeeze.ts";
 import {
   ROOT, arch, bakeLayer, bridge, cloud, composite, cut, difference, ellipse, fern, glow, hills, layer, mist, mix, noise, offset,
   pine, rect, ridge, rng, ruinWall, shaft, sheet, stairs, strata, tower, union,
@@ -279,7 +280,20 @@ function mountain(): Layer {
   return layer("mountain", 8, fr);
 }
 
-const windowGlow = () => layer("window-glow", 9, glow(1262, 560, 90, p("window"), { opacity: 0.6, core: p("window-core") }));
+/** Hero hook: bright warm core (~44 design px = ~29 px at 1280) inside a soft halo (~5x core radius), light through a cut arch hole. */
+function windowGlow(): Layer {
+  const cx = 1262, cy = 558, R = 116;
+  const halo = glow(cx, cy, R, p("window"), { opacity: 0.85, core: p("window-light") });
+  const mid = glow(cx, cy, 62, p("window-light"), { opacity: 1, core: p("window-core") });
+  const d = `M${cx - 17} ${cy + 20}L${cx - 17} ${cy - 8}Q${cx - 17} ${cy - 22} ${cx} ${cy - 22}Q${cx + 17} ${cy - 22} ${cx + 17} ${cy - 8}L${cx + 17} ${cy + 20}Z`;
+  const core: Frag = {
+    svg: `<filter id="wgb" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.2"/></filter>` +
+      `<path d="${d}" fill="${p("window")}" opacity=".9" filter="url(#wgb)"/>` +
+      `<path d="${d}" fill="${p("window-core")}" transform="translate(${cx} ${cy}) scale(.72) translate(${-cx} ${-cy})"/>`,
+    x0: cx - R, y0: cy - R, x1: cx + R, y1: cy + R,
+  };
+  return layer("window-glow", 9, halo, mid, core);
+}
 
 /* ---------- forest ---------- */
 function forestMid(id: string, c: Cfg, o: { y: number; n: number; lo: number; hi: number; seed: number; rows?: number; gap?: number; bands?: number; ruin?: { x: number; y: number; w: number; h: number }; stairs?: [number, number, number, number] }): Layer {
@@ -483,7 +497,7 @@ console.log(`gate overlap min (closed): desktop ${vd.min.toFixed(1)} px, portrai
 /* ---------- bake (per-band scale/quality, bible 13) ---------- */
 const SET: Record<string, [number, number]> = {
   sky: [0.75, 50], moon: [0.3, 40], "clouds-far": [0.5, 50], "range-far": [0.5, 50], "range-mid": [0.5, 50], "mist-far": [0.25, 40],
-  valley: [0.5, 50], "mountain-back": [0.6, 55], mountain: [0.85, 60], "window-glow": [0.4, 45], "forest-mid": [0.5, 50], shafts: [0.25, 40],
+  valley: [0.5, 50], "mountain-back": [0.6, 55], mountain: [0.85, 60], "window-glow": [0.6, 60], "forest-mid": [0.5, 50], shafts: [0.25, 40],
   "near-hill": [0.45, 50], dust: [0.4, 45], "gate-l": [0.35, 45], "gate-r": [0.35, 45],
 };
 const outDir = join(ROOT, "public/art", SLUG);
@@ -495,6 +509,13 @@ for (const l of layers) {
   if (!b) throw new Error(`empty layer ${l.id}`);
   baked.set(l.id, b);
 }
+// byte squeeze (beat 0 + 1 under 400 KB): [pixel factor, quality, alphaQuality]
+const SQ: Record<string, Squeeze> = {
+  sky: [0.8, 45, 70], moon: [0.8, 38, 60], "clouds-far": [0.8, 38, 60], "range-far": [0.85, 38, 65], "range-mid": [0.85, 38, 65], "mist-far": [0.8, 45, 60],
+  valley: [0.85, 38, 65], "mountain-back": [0.9, 40, 70], mountain: [1, 42, 75], "window-glow": [1, 50, 70], "forest-mid": [0.85, 38, 65], shafts: [0.8, 36, 50],
+  "near-hill": [0.85, 38, 65], dust: [1, 38, 60], "gate-l": [0.85, 40, 70], "gate-r": [0.85, 40, 70],
+};
+await squeeze(SLUG, baked, SQ);
 const dIds = ["sky", "moon", "clouds-far", "range-far", "range-mid", "mist-far", "valley", "mountain-back", "mountain", "window-glow", "forest-mid", "shafts", "near-hill", "dust", "gate-l", "gate-r"];
 const pIds = ["sky-p", "moon", "clouds-far-p", "range-far-p", "range-mid-p", "mist-far", "valley-p", "mountain-back", "mountain", "window-glow", "forest-mid-p", "shafts-p", "near-hill-p", "dust-p", "gate-l-p", "gate-r-p"];
 const r1 = (n: number) => Math.round(n * 10) / 10;

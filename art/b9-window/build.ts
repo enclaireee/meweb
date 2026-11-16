@@ -2,6 +2,7 @@
 // Per-band bake settings need per-layer scale/quality, so layers are baked with bakeLayer and the manifest is written
 // here in the exact bakeBeat format (same approach as b4-inner-sun).
 import { writeFileSync } from "node:fs";
+import { squeeze } from "../ambient/squeeze.ts";
 import { join } from "node:path";
 import {
   ROOT, arch, bakeLayer, column, composite, cut, difference, ellipse, fern, glow, lantern, layer, mist, mix, offset,
@@ -484,8 +485,27 @@ function gates(c: GC, src: Pt) {
     const dir = right ? -1 : 1, out: Frag[] = [];
     const fringe: Poly[] = [];
     for (let i = 1; i < e.length; i += 2) { const [x, y] = e[i]!; fringe.push([[x - dir * 6, y - 5], [x - dir * 6, y + 5], [x + dir * rg.range(14, 26), y + rg.range(2, 12)]]); }
-    out.push(...pile(union(poly, ...fringe), fills, 16, B.gate, src, { rm }));
-    const innerS = offset(poly, -34), outer = right ? c.outerR : c.outerL, edgeMean = e.reduce((s, p) => s + p[0], 0) / e.length;
+    // cut lattice: arched tracery windows (with a cross mullion) and small round and diamond holes, warm light behind
+    const edgeX0 = e.reduce((m, q) => Math.min(m, q[0]), 1e9), edgeX1 = e.reduce((m, q) => Math.max(m, q[0]), -1e9);
+    const xa = right ? edgeX1 + 90 : -c.shift - 40, xb = right ? c.W + c.shift + 40 : edgeX0 - 90;
+    const gx = c.H > c.W ? 150 : 175, gy = c.H > c.W ? 300 : 270, aw = c.H > c.W ? 56 : 66, ah = c.H > c.W ? 120 : 140;
+    const hl: (Poly | Shape)[] = [];
+    for (let row = 0, y = 150; y < c.H - 160; y += gy, row++)
+      for (let x = xa + (row % 2) * gx * 0.5; x < xb; x += gx) {
+        const jx = rg.range(-6, 6), jy = rg.range(-6, 6), cx = x + jx, by = y + ah + jy;
+        hl.push(difference(arch(rg, cx, by, aw, ah, 0.8), rect(cx - 3, by - ah, 6, ah), rect(cx - aw / 2, by - ah * 0.42 - 3, aw, 6)));
+        hl.push(ellipse(cx + gx / 2, by - ah * 0.5, 9, 9, 10), diamond(cx + gx / 2, by + 30, 14));
+        hl.push(ellipse(cx, by + 48, 6, 6, 8));
+      }
+    const holeShape = inter(union(...hl), offset(poly, -60));
+    const lit = mix(P["window-light"]!, P["lamp-core"]!, 0.5);
+    // outline light: night blue from b8 outside, warm paper edge inside
+    out.push(sheet(offset(union(poly, ...fringe), 11), N["rim-cool"]!, { shadow: false, opacity: 0.3 }));
+    out.push(sheet(offset(union(poly, ...fringe), 4), P["rim-warm"]!, { shadow: false, opacity: 0.7 }));
+    out.push(sheet(offset(holeShape, 6), P.lamp!, { shadow: false }));
+    out.push(sheet(offset(holeShape, -3), lit, { shadow: false, opacity: 0.95 }));
+    out.push(...pile(union(poly, ...fringe), fills, 16, B.gate, src, { rm, holes: [holeShape] }));
+    const innerS = difference(offset(poly, -34), holeShape), outer = right ? c.outerR : c.outerL, edgeMean = e.reduce((s, p) => s + p[0], 0) / e.length;
     const lo = Math.min(outer, edgeMean) - 40, hi = Math.max(outer, edgeMean) + 40;
     const pb: Band = { off: 8, blur: 10, op: 0.4, rw: 2, rm };
     let xc = lo, i = 0;
@@ -506,10 +526,11 @@ function gates(c: GC, src: Pt) {
     const vs = Array.from({ length: 5 }, () => vine(rg, edgeMean + dir * rg.range(-420, -30), -70, rg.range(140, 330), 12));
     const rts = Array.from({ length: 3 }, () => roots(rg, edgeMean + dir * rg.range(-380, -40), -70, 24, rg.range(120, 220), 3, 1));
     out.push(paper(inter(offset(poly, -4), union(...vs, ...rts)), fills[0]!, pb, src, { rm, noInner: true }));
+    out.push(sheet(offset(holeShape, -2), lit, { shadow: false, opacity: 0.8 }));
     return layer(id, depth, ...out);
   };
-  const L = body(polyL, eL, false, R(c.seed + 10), [P.gate!, P["wall-dark"]!, P.wall!], [P["wall-dark"]!, cn("wall-dark", "wall", 0.5), P.wall!, cn("wall-dark", "gate", 0.5)], 0.25, c.idL, 14);
-  const Rl = body(polyR, eR, true, R(c.seed + 11), [P.gate!, P["wall-dark"]!, P["wall-mid"]!], [P["wall-dark"]!, cn("wall-dark", "wall-mid", 0.5), P.wall!, cn("wall", "wall-mid", 0.5)], 0.5, c.idR, 15);
+  const L = body(polyL, eL, false, R(c.seed + 10), [P.gate!, P["wall-dark"]!, P.wall!], [cn("wall", "wall-mid", 0.6), cn("wall-mid", "rim-warm", 0.14), cn("wall-mid", "paper", 0.2), cn("wall-mid", "rim-warm", 0.26)], 0.5, c.idL, 14);
+  const Rl = body(polyR, eR, true, R(c.seed + 11), [P.gate!, P["wall-dark"]!, P["wall-mid"]!], [cn("wall", "wall-mid", 0.6), cn("wall-mid", "rim-warm", 0.2), cn("wall-mid", "paper", 0.14), cn("wall-mid", "rim-warm", 0.3)], 0.55, c.idR, 15);
   // gate-r: tie-back with tassel, and a fold showing the lighter reverse
   const xe = (y: number) => xAt(eR, y), ty = c.H * 0.52;
   const sash = band(quad([xe(ty) - 100, ty - 14], [xe(ty) - 50, ty + 30], [xe(ty) + 6, ty - 6], 30), 30, 24);
@@ -553,6 +574,7 @@ for (const l of all) {
   if (!b) throw new Error(`layer ${l.id} empty`);
   baked.set(l.id, b);
 }
+await squeeze(SLUG, baked, { "gate-l": [0.85, 42, 70], "gate-r": [0.85, 42, 70] }, null);
 const r1 = (n: number) => Math.round(n * 10) / 10;
 const compose = (width: number, height: number, include: string[], place: Record<string, { x?: number; y?: number; s?: number }> = {}) => ({
   width, height,

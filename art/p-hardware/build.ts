@@ -1,6 +1,8 @@
 // p-hardware: ember-lit vaults, crystal clusters, chained bridges. Run: npx tsx art/p-hardware/build.ts
+import { squeeze } from "../ambient/squeeze.ts";
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { gateFx } from "../ambient/gatefx.ts";
 import {
   ROOT, arch, bakeLayer, bridge, column, composite, crystal, cut, difference, ellipse, fern, glow, layer, lantern, mist, mix, noise, offset,
   rect, rng, roots, ruinWall, scatter, sheet, stairs, tower, union,
@@ -112,10 +114,10 @@ function bgLayer(c: Cfg, radii: number[], seed: number): Layer {
   const out: Frag[] = [dark(rect(0, 0, c.w, c.h), P["far-2"]!), ...radii.map((rad, i) => dark(cut(ellipse(c.L[0], c.L[1], rad, rad * 0.9, 96), r, 3, 40), fills[i]!))];
   // calm card side: near-dark with tone-on-tone vault ribs
   const calm = c.sfx === "" ? cut([[c.card.x0, -20], [c.w + 20, -20], [c.w + 20, c.h + 20], [c.card.x0, c.h + 20]], r, 3, 40) : cut([[-20, c.card.y0], [c.w + 20, c.card.y0], [c.w + 20, c.h + 20], [-20, c.h + 20]], r, 3, 40);
-  out.push(dark(calm, P["near-dark"]!));
+  out.push(dark(calm, cn("near-dark", "mid-2", 0.55)));
   const ribs: Poly[] = [];
   for (let i = 0; i < 14; i++) ribs.push(c.sfx === "" ? rect(c.card.x0 + 20 + i * 62, 0, 7, c.h) : rect(0, c.card.y0 + 20 + i * 70, c.w, 7));
-  out.push(dark(union(...ribs), P.near!));
+  out.push(dark(union(...ribs), cn("near", "mid", 0.5)));
   return layer(`bg${c.sfx}`, 0, ...out);
 }
 
@@ -393,8 +395,12 @@ function gates(c: { w: number; u0: number; u1: number; lo: number; span: number;
   };
   const polyOf = (right: boolean) => (right ? polyR : polyL);
   const fills = [P.near!, P["near-dark"]!, P.gate!];
-  const gl = layer(c.w > 1500 ? "gate-l" : "gate-l-p", 14, ...pile(detail(false, pl, R(c.seed + 3)), fills, 16, B.gate, c.L, { rm: c.rmL }));
-  const gr = layer(c.w > 1500 ? "gate-r" : "gate-r-p", 15, ...pile(detail(true, pr, R(c.seed + 4)), fills, 16, B.gate, c.L, { rm: c.rmR }));
+  const fxo = (xa: number, xb: number, sd: number) => ({ xa, xb, H: c.u1, portrait: c.w < 1500, seed: sd, motif: "diamond" as const, light: "#f2a48c", core: "#ffe6d4", rim: "#ffc8a8", tint: "#c86c5c",
+    tones: [cn("near", "mid-2", 0.7), cn("mid-2", "mid", 0.5), cn("near", "mid", 0.5), cn("mid", "far-2", 0.3)] });
+  const fL = gateFx(polyL, fxo(-c.shift - 40, Math.max(...pl.map((q) => q[0])) - 90, c.seed + 7));
+  const fR = gateFx(polyR, fxo(Math.min(...pr.map((q) => q[0])) + 90, c.w + c.shift + 40, c.seed + 8));
+  const gl = layer(c.w > 1500 ? "gate-l" : "gate-l-p", 14, ...fL.under, ...pile(detail(false, pl, R(c.seed + 3)), fills, 16, B.gate, c.L, { rm: c.rmL, holes: [fL.holes] }), ...fL.mid, ...fL.over);
+  const gr = layer(c.w > 1500 ? "gate-r" : "gate-r-p", 15, ...fR.under, ...pile(detail(true, pr, R(c.seed + 4)), fills, 16, B.gate, c.L, { rm: c.rmR, holes: [fR.holes] }), ...fR.mid, ...fR.over);
   // closed state numeric check: scanline overlap between gate-l edge + shift and gate-r edge - shift (min over every 0.5 px)
   const maxX = (poly: Poly, y: number) => { let m = -1e9; for (let i = 0; i < poly.length; i++) { const a = poly[i]!, b = poly[(i + 1) % poly.length]!; if ((a[1] <= y && b[1] > y) || (b[1] <= y && a[1] > y)) m = Math.max(m, a[0] + ((b[0] - a[0]) * (y - a[1])) / (b[1] - a[1])); } return m; };
   const minX = (poly: Poly, y: number) => { let m = 1e9; for (let i = 0; i < poly.length; i++) { const a = poly[i]!, b = poly[(i + 1) % poly.length]!; if ((a[1] <= y && b[1] > y) || (b[1] <= y && a[1] > y)) m = Math.min(m, a[0] + ((b[0] - a[0]) * (y - a[1])) / (b[1] - a[1])); } return m; };
@@ -474,6 +480,7 @@ const compose = (width: number, height: number, include: string[], place: Record
   }).sort((a, b) => a.depth - b.depth),
 });
 const dIds = dAll.map((l) => l.id), pIds = pAll.map((l) => l.id);
+await squeeze(SLUG, baked, { "gate-l": [0.85, 40, 70], "gate-r": [0.85, 40, 70] }, null);
 const total = [...baked.values()].reduce((n, b) => n + b.bytes, 0);
 const manifest = { slug: SLUG, compositions: { desktop: compose(W, H, dIds), portrait: compose(PW, PH, pIds, { "mist-far": { x: 210, y: -120, s: 0.6 } }) }, bytes: total };
 writeFileSync(join(ROOT, "public/art", SLUG, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n");

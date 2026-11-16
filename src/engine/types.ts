@@ -29,7 +29,20 @@ export type Manifest = {
   bytes: number;
 };
 
-export type LayerDef = { track?: Track; parallax?: number; origin?: string; highOnly?: boolean };
+/** A layer lifted out of the canvas as a DOM element so CSS can animate it while idle (quality 'high' only). */
+export type LiveDef = { className: string; style?: CSSProperties };
+
+export type LayerDef = {
+  track?: Track;
+  parallax?: number;
+  /** CSS transform-origin as percentages or keywords (e.g. '0% 50%', 'left bottom'); default '50% 50%'. */
+  origin?: string;
+  highOnly?: boolean;
+  /** Opening sequence (beat 0 of the main lane only). Keyframe `at` = intro progress 0..1. Blended with the scroll pose. */
+  intro?: Track;
+  /** Rendered as `<div data-live=id class=className><img/></div>` instead of drawn into the canvas (high quality, full motion). */
+  live?: LiveDef;
+};
 
 export type OverlayDef = {
   node: ReactNode;
@@ -41,6 +54,8 @@ export type OverlayDef = {
   highOnly?: boolean;
   /** With rect and the composition's `split`: drawn under the art from `split` on (text behind a ridge). */
   behind?: boolean;
+  /** Opening sequence (beat 0 of the main lane only), see LayerDef.intro. */
+  intro?: Track;
 };
 
 export type CompositionDef = {
@@ -52,6 +67,8 @@ export type CompositionDef = {
   split?: string;
 };
 
+export type IntroPhase = 'pending' | 'play' | 'done';
+
 export type FrameCtx = { comp: Comp; reducedMotion: boolean; quality: Quality; s: number; k: number };
 
 export type BeatDef = {
@@ -61,6 +78,8 @@ export type BeatDef = {
   desktop: CompositionDef;
   portrait: CompositionDef;
   still?: number;
+  /** Opening sequence length (beat 0 of the main lane only; clamped to 2500 ms). Needs `intro` tracks to show anything. */
+  intro?: { ms: number };
   onProgress?: (t: number, el: HTMLElement, ctx: FrameCtx) => void;
 };
 

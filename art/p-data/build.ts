@@ -1,7 +1,9 @@
 // p-data: a flooded cistern, district teal. Run: npx tsx art/p-data/build.ts
 // Per-layer bake settings need bakeLayer; manifest is written here in the bakeBeat format.
+import { squeeze } from "../ambient/squeeze.ts";
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { gateFx } from "../ambient/gatefx.ts";
 import {
   ROOT, arch, bakeLayer, bridge, column, composite, cut, difference, ellipse, fern, glow, layer, mist, mix, noise, offset,
   rect, rng, roots, ruinWall, scatter, shaft, sheet, stairs, stalactites, tower, union, vine,
@@ -129,13 +131,13 @@ function bgL(c: Cfg, id: string): Layer {
   ([[1100, "far-2"], [760, "far"], [470, "glow"]] as [number, string][]).forEach(([rad, t]) => f.push(sheet(cut(disc(lx, ly, rad * c.sc, 96), r, 3, 40), P[t]!, { shadow: false })));
   // calm zone: near-dark with tone-on-tone bands
   if (c.k === 1) {
-    f.push(sheet(cut(rect(-20, -20, 788, 1120), r, 3, 40), P["near-dark"]!, { shadow: false }));
-    f.push(sheet(cut(rect(-20, 130, 700, 820), r, 3, 40), mx("near-dark", "near", 0.45), { shadow: false }));
-    f.push(sheet(cut(rect(-20, 260, 600, 600), r, 3, 40), P.near!, { shadow: false }));
+    f.push(sheet(cut(rect(-20, -20, 788, 1120), r, 3, 40), mx("near-dark", "mid-2", 0.5), { shadow: false }));
+    f.push(sheet(cut(rect(-20, 130, 700, 820), r, 3, 40), mx("near", "mid-2", 0.5), { shadow: false }));
+    f.push(sheet(cut(rect(-20, 260, 600, 600), r, 3, 40), mx("near", "mid-2", 0.8), { shadow: false }));
   } else {
-    f.push(sheet(cut(rect(-20, 850, 1120, 1100), r, 3, 40), P["near-dark"]!, { shadow: false }));
-    f.push(sheet(cut(rect(-20, 960, 1000, 900), r, 3, 40), mx("near-dark", "near", 0.45), { shadow: false }));
-    f.push(sheet(cut(rect(-20, 1100, 900, 800), r, 3, 40), P.near!, { shadow: false }));
+    f.push(sheet(cut(rect(-20, 850, 1120, 1100), r, 3, 40), mx("near-dark", "mid-2", 0.5), { shadow: false }));
+    f.push(sheet(cut(rect(-20, 960, 1000, 900), r, 3, 40), mx("near", "mid-2", 0.5), { shadow: false }));
+    f.push(sheet(cut(rect(-20, 1100, 900, 800), r, 3, 40), mx("near", "mid-2", 0.8), { shadow: false }));
   }
   return layer(id, 0, ...f);
 }
@@ -496,8 +498,12 @@ function gates(c: Cfg, ids: [string, string], xl: (p: number) => number, gap: nu
   const lowL = Math.max(...pl.filter((p) => p[1] > c.H * 0.7).map((p) => p[0])) + 6;
   const lowR = Math.min(...pr.filter((p) => p[1] > c.H * 0.7).map((p) => p[0])) - 6;
   const shL = detail(polyL, false, R(seed + 3), pl, lowL), shR = detail(polyR, true, R(seed + 4), pr, lowR);
-  const gl = layer(ids[0], 14, ...pile(shL, GF, 16, B.gate, c.oc, { rm: 0.25 }));
-  const gr = layer(ids[1], 15, ...pile(shR, GF, 16, B.gate, c.oc, { rm: c.k === 1 ? 0.5 : 0.25 }));
+  const fxo = (xa: number, xb: number, sd: number) => ({ xa, xb, H: c.H + 60, portrait: c.W < 1500, seed: sd, motif: "grid" as const, light: P.accent!, core: "#e6fbf4", rim: P.rim!, tint: P["accent-2"]!,
+    tones: [mx("near", "mid-2", 0.7), mx("mid-2", "accent", 0.35), mx("near", "mid", 0.5), mx("mid-2", "mid", 0.5)] });
+  const fL = gateFx(polyL, fxo(-shift - 40, Math.max(...pl.map((q) => q[0])) - 90, seed + 7));
+  const fR = gateFx(polyR, fxo(Math.min(...pr.map((q) => q[0])) + 90, c.W + shift + 40, seed + 8));
+  const gl = layer(ids[0], 14, ...fL.under, ...pile(shL, GF, 16, B.gate, c.oc, { rm: 0.25, holes: [fL.holes] }), ...fL.mid, ...fL.over);
+  const gr = layer(ids[1], 15, ...fR.under, ...pile(shR, GF, 16, B.gate, c.oc, { rm: c.k === 1 ? 0.5 : 0.25, holes: [fR.holes] }), ...fR.mid, ...fR.over);
   return { gl, gr, minOv, restL: [Math.min(...pl.map((p) => p[0])), Math.max(...pl.map((p) => p[0]))], restR: [Math.min(...pr.map((p) => p[0])), Math.max(...pr.map((p) => p[0]))] };
 }
 
@@ -545,6 +551,7 @@ const compose = (width: number, height: number, include: string[], place: Record
 });
 const dIds = dLayers.map((l) => l.id);
 const pIds = [...pLayers.slice(0, 3).map((l) => l.id), "mist-far", ...pLayers.slice(3).map((l) => l.id)];
+await squeeze(SLUG, baked, { "gate-l": [0.85, 40, 70], "gate-r": [0.85, 40, 70] }, null);
 const total = [...baked.values()].reduce((n, b) => n + b.bytes, 0);
 const manifest = { slug: SLUG, compositions: { desktop: compose(D.W, D.H, dIds), portrait: compose(Pp.W, Pp.H, pIds, { "mist-far": { y: -100, s: 0.6 } }) }, bytes: total };
 writeFileSync(join(ROOT, "public/art", SLUG, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n");

@@ -1,5 +1,5 @@
 import { clampS, restoreY } from './timeline';
-import type { Frame, Lane, Quality } from './types';
+import type { Frame, IntroPhase, Lane, Quality } from './types';
 
 // Tiny external store. No window access at module scope (SSR-safe).
 
@@ -9,9 +9,11 @@ export type EngineState = {
   turning: boolean;
   reducedMotion: boolean;
   quality: Quality;
+  /** Opening sequence: 'pending' until the first client frames decide, then 'play' or straight to 'done' (skipped / not played). */
+  intro: IntroPhase;
 };
 
-export const SERVER_STATE: EngineState = { lane: null, turning: false, reducedMotion: false, quality: 'high' };
+export const SERVER_STATE: EngineState = { lane: null, turning: false, reducedMotion: false, quality: 'high', intro: 'pending' };
 let state = SERVER_STATE;
 const subs = new Set<() => void>();
 
@@ -49,6 +51,12 @@ export const laneIO = {
   turn: async (swap: () => void) => swap(),
   commit: (fn: () => void) => fn(),
 };
+
+/** @internal <Stage> replaces `skip` while mounted. */
+export const introIO = { skip: () => {} };
+
+/** Jump the opening sequence to its end state (no-op when it is not playing). */
+export const skipIntro = () => introIO.skip();
 
 let saved = { y: 0, unit: 1 };
 
