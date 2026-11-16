@@ -301,7 +301,12 @@ function DownloadIcon() {
 
 // Note: Do NOT add `relative` to `btnBase` (Tailwind emits `.relative` after `.fixed` and overrides `fixed` on CV).
 const btnBase =
-  'group inline-flex min-h-12 cursor-pointer items-center justify-center text-[0.68rem] tracking-[0.16em] uppercase transition-transform duration-150 active:translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ffd27a] motion-reduce:transition-none sm:text-[0.74rem] sm:tracking-[0.2em]';
+  'group inline-flex min-h-12 cursor-pointer items-center justify-center text-label tracking-[0.18em] uppercase transition-transform duration-150 active:translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ffd27a] motion-reduce:transition-none';
+const tabBtn =
+  'pointer-events-auto relative z-10 inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center gap-1.5 rounded-sm px-2 text-label font-semibold tracking-[0.16em] uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ffd27a]';
+
+/** First main-lane beat where the CV tag shows (Experience). Before it the visitor is still arriving. */
+const CV_FROM = 3;
 
 export function Nav() {
   const t = useT();
@@ -309,6 +314,7 @@ export function Nav() {
   const lane = useLane();
   const [sound, setSound] = useState(false); // off by default; starts only on a click
   const audio = useRef<HTMLAudioElement>(null);
+  const cvRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
     const a = audio.current;
@@ -323,11 +329,24 @@ export function Nav() {
     });
   }, [sound]);
 
+  // CV tag: hidden through b2, shown from Experience on (and always in the projects lane). Attribute only
+  // flips when the beat changes; CSS fades it (opacity/transform).
+  useEffect(() => {
+    let shown: boolean | undefined;
+    return subscribeFrame((f) => {
+      const on = f.lane === 'projects' || f.beat >= CV_FROM;
+      if (on === shown || !cvRef.current) return;
+      shown = on;
+      cvRef.current.toggleAttribute('data-shown', on);
+      cvRef.current.inert = !on;
+    });
+  }, []);
+
   const cv = profile.contact.cv;
   const inMain = lane === 'main';
   return (
     <>
-      <nav className="world-nav pointer-events-none fixed inset-x-0 top-0 z-50 flex items-center justify-end gap-2.5 p-3 sm:gap-3 sm:p-4">
+      <nav data-chrome className="world-nav pointer-events-none fixed inset-x-0 top-0 z-50 flex items-center justify-end gap-2 p-2.5 sm:gap-3 sm:p-4">
         <a
           href="#content"
           className={`${btnBase} pointer-events-auto sr-only relative px-5 font-semibold text-[#1e1105] focus:not-sr-only`}
@@ -335,6 +354,28 @@ export function Nav() {
           <PaperSheets theme="cream" w={200} seed={11} tilt="0deg" />
           <span className="relative z-10">{t(ui.nav.skip)}</span>
         </a>
+
+        {cv && (
+          <a
+            ref={cvRef}
+            href={cv}
+            download="CV_Muhammad_Fatih_Zamzami.pdf"
+            className={`${btnBase} chrome-cv pointer-events-auto relative mr-auto gap-2 pl-3 pr-4 font-semibold text-[#1e1105] sm:pl-3.5 sm:pr-5`}
+          >
+            <PaperSheets theme="cream" w={190} h={52} seed={71} tilt="-1.2deg" />
+            <span className="relative z-10 flex items-center gap-2">
+              {/* Cut-paper amber wax seal holding the download arrow */}
+              <span className="relative flex size-6 shrink-0 items-center justify-center text-[#1e1105]">
+                <svg aria-hidden viewBox="0 0 28 28" className="absolute inset-0 size-full overflow-visible">
+                  <polygon points="14,1 22,4 27,12 24,21 15,27 6,24 1,15 4,6" fill="#a65b12" transform="translate(1, 1.5)" />
+                  <polygon points="14,1 22,4 27,12 24,21 15,27 6,24 1,15 4,6" fill="#ffb44c" stroke="#fff1cc" strokeWidth="1" />
+                </svg>
+                <span className="relative z-10"><DownloadIcon /></span>
+              </span>
+              <span>{t(ui.contact.cvShort)}</span>
+            </span>
+          </a>
+        )}
 
         <button
           type="button"
@@ -356,77 +397,36 @@ export function Nav() {
               <span className="relative z-10 flex items-center gap-1.5 pl-2.5 sm:gap-2">
                 <span aria-hidden>←</span>
                 <MountainIcon />
-                <span>{t(ui.nav.exitProjects)}</span>
+                <span className="hidden sm:inline">{t(ui.nav.exitProjects)}</span>
+                <span className="sm:hidden">{t(ui.nav.back)}</span>
               </span>
             </>
           )}
         </button>
 
-        <button
-          type="button"
-          className={`${btnBase} pointer-events-auto relative min-w-12 gap-2 px-3.5 font-medium sm:px-4 ${sound ? 'text-[#ffe8b6]' : 'text-[#f3ead8]'}`}
-          aria-pressed={sound}
-          aria-label={t(sound ? ui.nav.soundOn : ui.nav.soundOff)}
-          title={t(sound ? ui.nav.soundOn : ui.nav.soundOff)}
-          onClick={() => setSound(!sound)}
-        >
-          <PaperSheets theme={sound ? 'nightLit' : 'night'} w={130} seed={41} tilt="0.8deg" />
-          <span className="relative z-10 flex items-center gap-2">
+        {/* Settings tab: one small paper sheet holding the language and sound toggles. */}
+        <div role="group" aria-label={t(ui.nav.settings)} className="pointer-events-auto relative flex min-h-12 items-center gap-0.5 px-1.5 text-[#f3ead8]">
+          <PaperSheets theme={sound ? 'nightLit' : 'night'} w={120} seed={41} tilt="0.8deg" />
+          <button type="button" className={tabBtn} onClick={toggle} aria-label={t(ui.nav.language)} title={t(ui.nav.language)}>
+            <span aria-hidden className={lang === 'en' ? 'text-[#ffe8b6]' : 'opacity-55'}>EN</span>
+            <span aria-hidden className="opacity-40">/</span>
+            <span aria-hidden className={lang === 'id' ? 'text-[#ffe8b6]' : 'opacity-55'}>ID</span>
+          </button>
+          <span aria-hidden className="relative z-10 h-5 w-px bg-current opacity-30" />
+          <button
+            type="button"
+            className={`${tabBtn} ${sound ? 'text-[#ffe8b6]' : ''}`}
+            aria-pressed={sound}
+            aria-label={t(ui.nav.sound)}
+            title={t(sound ? ui.nav.soundOn : ui.nav.soundOff)}
+            onClick={() => setSound(!sound)}
+          >
             <SoundIcon on={sound} />
-            <span className="hidden sm:inline">{t(sound ? ui.nav.soundOn : ui.nav.soundOff)}</span>
-            {sound && <span aria-hidden className="size-1.5 rounded-full bg-[#ffb866] shadow-[0_0_8px_#ffb866]" />}
-          </span>
-        </button>
-
-        <button
-          type="button"
-          className={`${btnBase} pointer-events-auto relative min-w-12 px-3.5 font-semibold text-[#f3ead8]`}
-          onClick={toggle}
-          aria-label={t(ui.nav.language)}
-          title={t(ui.nav.language)}
-        >
-          <PaperSheets theme="night" w={84} seed={53} tilt="-1.2deg" />
-          <span className="relative z-10">{lang === 'en' ? 'ID' : 'EN'}</span>
-        </button>
+          </button>
+        </div>
 
         <audio ref={audio} loop preload="none" />
       </nav>
-
-      {/* Bottom-left fixed field-tag for CV download (explicitly `fixed`, never `relative`). */}
-      {cv && (
-        <a
-          href={cv}
-          download="CV_Muhammad_Fatih_Zamzami.pdf"
-          className={`${btnBase} world-nav fixed bottom-3 left-3 z-50 gap-2.5 pl-3.5 pr-5 font-semibold text-[#1e1105] sm:bottom-5 sm:left-5 sm:pl-4 sm:pr-6`}
-        >
-          <PaperSheets theme="cream" w={240} h={58} seed={71} tilt="-1.5deg" />
-          <span className="relative z-10 flex items-center gap-2.5">
-            {/* Cut-paper amber wax seal holding the download arrow */}
-            <span className="relative flex size-7 shrink-0 items-center justify-center text-[#1e1105]">
-              <svg aria-hidden viewBox="0 0 28 28" className="absolute inset-0 size-full overflow-visible">
-                <polygon
-                  points="14,1 22,4 27,12 24,21 15,27 6,24 1,15 4,6"
-                  fill="#a65b12"
-                  transform="translate(1, 1.5)"
-                />
-                <polygon
-                  points="14,1 22,4 27,12 24,21 15,27 6,24 1,15 4,6"
-                  fill="#ffb44c"
-                  stroke="#fff1cc"
-                  strokeWidth="1"
-                />
-              </svg>
-              <span className="relative z-10">
-                <DownloadIcon />
-              </span>
-            </span>
-            <span>{t(ui.contact.cv)}</span>
-            <span aria-hidden className="border-l border-[#2a2118]/25 pl-2 text-[0.6rem] tracking-[0.16em] opacity-70">
-              PDF
-            </span>
-          </span>
-        </a>
-      )}
     </>
   );
 }

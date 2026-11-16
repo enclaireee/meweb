@@ -83,6 +83,19 @@ These override everything above where they conflict.
 | Copy | **Portfolio first.** Each beat's big text is a plain section heading (name, About, Education, Experience, Projects, Skills, Awards, Leadership, Contact) and the facts are the main text. No cinematic/poetic lines. |
 | Projects lane | Still a separate lane behind the door, but a **multi-scene scroll**: shell exterior intro, then one district beat per group (web, data/ML, hardware); project cards arrive inline on scroll, no dialog. Main lane has a Projects beat listing all projects, and the nav has a Projects button. Art stays world-only. |
 
+## Build decisions c (owner, 2026-11-16)
+Design pass "award level". These override everything above where they conflict.
+
+| Topic | Decision |
+|---|---|
+| Length | Main lane **at most 20 screens** (hard cap), projects lane **at most 10**. Replaces "15 to 20" as a soft range. |
+| Idle motion | **Idle motion is atmosphere.** Ambient loops that run without scrolling (stars, lanterns, leaves, creatures, window flicker) are allowed. Still no mini-games or click interactions in the scene. Off under `prefers-reduced-motion`. Desktop (`high` quality): full set, including art layers lifted out of the canvas as DOM "live" layers. Touch / `low` quality: a CSS-overlay-only subset (twinkle, snow, fireflies, flicker; no live layers, at most about 30 particles per beat). |
+| Frame | Stays on screen but thinner: visible thickness **at most 24 px** per side at 1280 px, **at most 14 px** on phone; torn layered look kept. |
+| On-screen copy | The main lane shows a **trimmed role**: kicker, period, title, organisation, **one** headline stat (the role's first stat), **one** line (its first point), and the project link if there is one. Full facts stay in `src/content/` and are still rendered in full by `<Plain>` (screen readers, no-JS), on the project cards and in the CV. |
+| Opening | A short **opening sequence** (at most 2.5 s, never blocks scrolling, skipped under reduced motion, when loaded off the top, and on deep links) and an in-world **scroll cue** ("Scroll" / "Gulir") at the bottom of beat 0. |
+| Wayfinding | A **section gauge** (dotted line into the mountain, one tick per section, lantern at the current position) that is real navigation; districts in the projects lane. |
+| Typography | Body font **Source Sans 3**; display **Cormorant Garamond 600** over art. Five type tokens in `globals.css` `@theme`; minimum 16 px body and 12 px labels over art. |
+
 ## Superseded (do not use)
 - Traveller / small always-on-screen figure; cinematic story lines as the main copy; projects lane as one static shell scene with dialog cards. Replaced by Build decisions b.
 - Projects as diegetic chambers with their own objects/panels; experience, skills and awards as places or objects in the scene (the "first mapping ideas" in `content-inventory.md`). Replaced by cards and labels, see Build decisions.

@@ -17,6 +17,25 @@ export const ui = {
     enterProjects: { en: 'Work', id: 'Karya' },
     exitProjects: { en: 'Back to the mountain', id: 'Kembali ke gunung' },
     projects: { en: 'Projects', id: 'Proyek' },
+    back: { en: 'Back', id: 'Kembali' },
+    settings: { en: 'Language and sound', id: 'Bahasa dan suara' },
+    sound: { en: 'Ambient sound', id: 'Suara latar' },
+  },
+  // Section gauge (wayfinding): one tick per section, the projects lane shows its districts.
+  gauge: {
+    label: { en: 'Sections', id: 'Bagian' },
+    lane: { en: 'Districts', id: 'Distrik' },
+    top: { en: 'Start', id: 'Awal' },
+    about: { en: 'About', id: 'Tentang' },
+    education: { en: 'Education', id: 'Pendidikan' },
+    experience: { en: 'Experience', id: 'Pengalaman' },
+    projects: { en: 'Projects', id: 'Proyek' },
+    skills: { en: 'Skills', id: 'Keahlian' },
+    awards: { en: 'Awards', id: 'Penghargaan' },
+    leadership: { en: 'Leadership', id: 'Kepemimpinan' },
+    contact: { en: 'Contact', id: 'Kontak' },
+    shell: { en: 'The far side', id: 'Sisi seberang' },
+    jump: { en: 'Go to', id: 'Ke' },
   },
   scroll: { en: 'Scroll', id: 'Gulir' },
   projects: {
@@ -53,6 +72,7 @@ export const ui = {
     linkedin: { en: 'LinkedIn', id: 'LinkedIn' },
     github: { en: 'GitHub', id: 'GitHub' },
     cv: { en: 'Download CV', id: 'Unduh CV' },
+    cvShort: { en: 'CV', id: 'CV' },
   },
   // Headings for the reduced-motion and no-JS plain page.
   plain: {

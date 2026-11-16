@@ -2,6 +2,20 @@
 
 @theme {
   --font-display: var(--font-display), "Iowan Old Style", Georgia, serif;
+  --font-sans: var(--font-body), "Segoe UI", system-ui, sans-serif;
+
+  /* The only five type steps (Build decisions c). Minimums over art: body 16 px, labels 12 px. */
+  --text-label: 0.75rem; /* 12 px: kickers, periods, chips, controls */
+  --text-label--line-height: 1.4;
+  --text-body: clamp(1rem, 0.95rem + 0.2vw, 1.0625rem); /* 16-17 px */
+  --text-body--line-height: 1.5;
+  --text-lead: clamp(1.25rem, 1.05rem + 0.6vw, 1.5rem); /* 20-24 px: org lines, summaries, stats units */
+  --text-lead--line-height: 1.3;
+  --text-title: clamp(2rem, 1.2rem + 3.4vw, 4.25rem); /* 32-68 px: role and project titles, stats */
+  --text-title--line-height: 1;
+  /* In-scene words pinned to art (name, section headings): container-relative, sized by the onLayer rect. */
+  --text-display: 28cqw;
+  --text-display--line-height: 0.82;
 }
 
 /* Display italics use the real italic cut (loaded separately, see layout.tsx). */
@@ -110,43 +124,72 @@ html.js .plain {
   translate: none;
   clip-path: inset(0 0 calc((1 - var(--p)) * 100%) 0);
 }
-/* focus: bright only inside its window [--a, --a + --w] (b7 awards). */
-.at.focus,
-.at.one {
-  --on: min(var(--p), clamp(0, (var(--a) + var(--w) + var(--d, 0.05) - var(--t, 1)) / var(--d, 0.05), 1));
+/* Shared slots, masked line reveals (Build decisions c, item 2). k="one" = one entry of a slot, shown only inside
+   [--a, --a + --w]. --p = enter progress, --q = exit progress. Each <Ln> row is a clip mask; its inner span slides up
+   from below on enter (row i waits i * 0.008) and leaves upward on exit. No opacity in between, so nothing is ever
+   half-faded and two entries never share the slot (slots() keeps the gap >= --d). */
+.at.one,
+.at.rise {
+  --q: clamp(0, (var(--t, 0) - var(--a, 0) - var(--w, 9)) / var(--d, 0.05), 1);
+  opacity: calc(min(1, var(--p) * 1000) * min(1, (1 - var(--q)) * 1000));
+  translate: none;
 }
+.at.rise {
+  --w: 9;
+}
+.ln {
+  display: block;
+  /* Mask: the row's own box, widened so glows and descenders are not cut; slides are vertical only. */
+  clip-path: inset(-0.12em -3em -0.2em -3em);
+}
+.ln-w {
+  display: inline-block;
+  clip-path: inset(-0.12em -0.4em -0.2em -0.4em);
+}
+.ln-in {
+  --pi: clamp(0, (var(--t, 0) - var(--a, 0) - var(--i, 0) * 0.008) / var(--d, 0.05), 1);
+  --ei: calc(1 - (1 - var(--pi)) * (1 - var(--pi)) * (1 - var(--pi))); /* ease-out cubic */
+  --eq: calc(var(--q) * var(--q) * var(--q)); /* ease-in cubic */
+  display: block;
+  translate: 0 calc((1 - var(--ei)) * 118% - var(--eq) * 118%);
+}
+/* focus: bright only inside its window (kept for list items that dim, never shared slots). */
 .at.focus {
+  --on: min(var(--p), clamp(0, (var(--a) + var(--w) + var(--d, 0.05) - var(--t, 1)) / var(--d, 0.05), 1));
   opacity: calc(0.3 + 0.7 * var(--on));
   translate: none;
 }
 .at.focus .when-on {
   opacity: var(--on);
 }
-/* one: shown only inside its window, then gone (b3/b4: one entry at a time in a shared slot). */
-.at.one {
-  opacity: var(--on);
-  translate: 0 calc((1 - var(--on)) * 0.6em);
-}
 @media (prefers-reduced-motion: reduce) {
   .at {
     translate: none;
     scale: none;
   }
+  /* Instant swap at the midpoint of each enter/exit: visible while more than half in. */
+  .at.one,
+  .at.rise {
+    opacity: calc(clamp(0, (var(--p) - 0.5) * 1000, 1) * clamp(0, (0.5 - var(--q)) * 1000, 1));
+  }
+  .ln-in {
+    translate: none;
+  }
 }
 
-/* Spotlight roles (b3, b4, b8). A soft dark pool behind the text so it reads over bright art; no blur (mobile GPU). */
-.spot {
+/* A paper card behind text where the art is too busy for bare text (contact-letter style). */
+@utility paper-card {
   position: relative;
-  isolation: isolate;
+  padding: 1.1rem 1.3rem 1.2rem;
+  color: #2a2118;
+  text-shadow: none;
+  background: url('/art/_grain.webp'), #f1e6cf;
+  background-blend-mode: soft-light;
+  clip-path: polygon(0 1.2%, 31% 0, 64% 0.9%, 100% 0, 99.4% 48%, 100% 99%, 58% 100%, 22% 99.2%, 0 100%, 0.6% 55%);
+  filter: drop-shadow(3px 5px 0 rgb(0 0 0 / 0.35));
+  rotate: -0.5deg;
 }
-.spot::before {
-  content: '';
-  position: absolute;
-  inset: -3.5rem -4rem;
-  z-index: -1;
-  pointer-events: none;
-  background: radial-gradient(closest-side, var(--scrim, rgb(22 12 6 / 0.62)), transparent);
-}
+
 .stamp-now,
 .stamp-award {
   display: inline-block;
@@ -255,7 +298,7 @@ html.js .plain {
   }
 }
 
-/* b2: a soft night fade behind text set in the sky, so it reads over stars and the mountain's slope. */
+/* b2: a soft night fade behind text set in the sky (legacy; prefer .paper-card where contrast needs help). */
 .sky-fade { position: relative; isolation: isolate; }
 .sky-fade::before {
   content: ''; position: absolute; inset: -14% -22% -14% -30%; z-index: -1; pointer-events: none;
@@ -285,5 +328,152 @@ html.js .plain {
   .world-nav,
   .world-nav * {
     backdrop-filter: none;
+  }
+}
+
+/* ---------- Opening (Build decisions c, item 1) ----------
+   The inline script in layout.tsx adds .intro-wait before paint on /en or /id at the top, without reduced motion.
+   The stage stays dark until the engine's first intro frame (it removes the class), with a 3 s failsafe. */
+html.intro-wait .world [data-comp] {
+  visibility: hidden;
+  animation: intro-failsafe 0s linear 3s forwards;
+}
+@keyframes intro-failsafe {
+  to {
+    visibility: visible;
+  }
+}
+/* Chrome (nav, gauge, cue) waits for the intro, then fades in. */
+/* Opacity only: chrome elements use Tailwind's translate for their own placement. */
+[data-chrome] {
+  transition: opacity 500ms ease;
+}
+html.intro-wait [data-chrome],
+html[data-intro='play'] [data-chrome] {
+  opacity: 0;
+  pointer-events: none;
+}
+html.intro-wait [data-chrome] {
+  animation: chrome-failsafe 0s linear 3s forwards;
+}
+@keyframes chrome-failsafe {
+  to {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+/* CV tag: hidden through b2 (Nav toggles data-shown). */
+.chrome-cv {
+  transition: opacity 400ms ease, translate 400ms ease;
+}
+.chrome-cv:not([data-shown]) {
+  opacity: 0;
+  translate: 0 -8px;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-chrome],
+  .chrome-cv {
+    transition: none;
+  }
+  .chrome-cv:not([data-shown]) {
+    translate: none;
+  }
+}
+
+/* ---------- Ambient idle loops (Build decisions c, item 8) ----------
+   transform/opacity only, compositor-run. Off under reduced motion; on low quality only the light overlay subset
+   (.amb-lite) runs; everything pauses while the tab is hidden. Live art layers: the engine moves the wrapper, these
+   classes animate the inner <img>. Tunables: --amb-dur, --amb-delay, --amb-x, --amb-y, --amb-r, --amb-lo. */
+.amb-twinkle,
+.amb-twinkle-c > * { animation: amb-twinkle var(--amb-dur, 3.2s) ease-in-out var(--amb-delay, 0s) infinite alternate; }
+.amb-flicker,
+.amb-flicker-c > * { animation: amb-flicker var(--amb-dur, 2.3s) steps(1, end) var(--amb-delay, 0s) infinite; }
+.amb-glow-c > * { animation: amb-glow var(--amb-dur, 4s) ease-in-out var(--amb-delay, 0s) infinite alternate; }
+.amb-drift,
+.amb-drift-c > * { animation: amb-drift var(--amb-dur, 18s) ease-in-out var(--amb-delay, 0s) infinite alternate; }
+.amb-sway,
+.amb-sway-c > * { transform-origin: var(--amb-origin, 50% 0%); animation: amb-sway var(--amb-dur, 5s) ease-in-out var(--amb-delay, 0s) infinite alternate; }
+.amb-bob,
+.amb-bob-c > * { animation: amb-bob var(--amb-dur, 4.5s) ease-in-out var(--amb-delay, 0s) infinite alternate; }
+.amb-glide,
+.amb-glide-c > * { animation: amb-glide var(--amb-dur, 14s) ease-in-out var(--amb-delay, 0s) infinite alternate; }
+.amb-rotate,
+.amb-rotate-c > * { animation: amb-rotate var(--amb-dur, 120s) linear var(--amb-delay, 0s) infinite; }
+.amb-fall { animation: amb-fall var(--amb-dur, 12s) linear var(--amb-delay, 0s) infinite; }
+.amb-rise { animation: amb-rise var(--amb-dur, 9s) linear var(--amb-delay, 0s) infinite; }
+@keyframes amb-twinkle { from { opacity: var(--amb-lo, 0.25); scale: 0.8; } to { opacity: 1; scale: 1; } }
+@keyframes amb-flicker {
+  0%, 100% { opacity: 1; }
+  8% { opacity: 0.86; }
+  10% { opacity: 1; }
+  37% { opacity: 0.92; }
+  41% { opacity: 1; }
+  63% { opacity: 0.8; }
+  66% { opacity: 0.97; }
+}
+@keyframes amb-glow { from { opacity: var(--amb-lo, 0.75); scale: 0.97; } to { opacity: 1; scale: 1.03; } }
+@keyframes amb-drift { from { translate: calc(var(--amb-x, 40px) * -1) 0; } to { translate: var(--amb-x, 40px) var(--amb-y, 0px); } }
+@keyframes amb-sway { from { rotate: calc(var(--amb-r, 2deg) * -1); } to { rotate: var(--amb-r, 2deg); } }
+@keyframes amb-bob { from { translate: 0 calc(var(--amb-y, 8px) * -1); } to { translate: 0 var(--amb-y, 8px); } }
+@keyframes amb-glide {
+  from { translate: calc(var(--amb-x, 30px) * -1) calc(var(--amb-y, 10px) * -1); rotate: calc(var(--amb-r, 0.6deg) * -1); }
+  to { translate: var(--amb-x, 30px) var(--amb-y, 10px); rotate: var(--amb-r, 0.6deg); }
+}
+@keyframes amb-rotate { to { rotate: 360deg; } }
+.amb-flip { animation: amb-flip var(--amb-flip, 0.42s) steps(1, end) infinite; }
+@keyframes amb-flip { 50% { opacity: 0; } }
+@keyframes amb-fall {
+  from { translate: 0 -10cqh; rotate: 0deg; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  to { translate: var(--amb-x, 6cqw) 110cqh; rotate: var(--amb-r, 220deg); opacity: 0; }
+}
+@keyframes amb-rise {
+  from { translate: 0 0; opacity: 0; }
+  20% { opacity: 1; }
+  to { translate: var(--amb-x, 2cqw) -40cqh; opacity: 0; }
+}
+/* Low quality (touch, weak devices): only the light overlay subset keeps moving. */
+html[data-quality='low'] :is([class*='amb-']):not(.amb-lite, .amb-lite *),
+html[data-quality='low'] :is([class*='amb-'][class*='-c']):not(.amb-lite) > * {
+  animation: none;
+}
+html[data-hidden] :is([class*='amb-'], [class*='amb-'] > *),
+[data-off] :is([class*='amb-'], [class*='amb-'] > *) {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  :is([class*='amb-'], [class*='amb-'] > *) {
+    animation: none !important;
+  }
+}
+
+/* ---------- Scroll cue (item 1) ---------- */
+.cue-bob {
+  animation: amb-bob 2.4s ease-in-out infinite alternate;
+  --amb-y: 4px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cue-bob {
+    animation: none;
+  }
+}
+
+/* ---------- Section gauge (item 7) ---------- */
+.gauge-label {
+  opacity: 0;
+  translate: 6px 0;
+  transition: opacity 160ms ease, translate 160ms ease;
+}
+.gauge-tick:hover .gauge-label,
+.gauge-tick:focus-visible .gauge-label,
+.gauge:focus-within .gauge-tick[aria-current] .gauge-label {
+  opacity: 1;
+  translate: 0 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .gauge-label {
+    transition: none;
   }
 }

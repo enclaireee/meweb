@@ -2,6 +2,7 @@
 // Per-layer bake scale/quality (bible s13) is applied here with bakeLayer; the manifest is written in the exact bakeBeat format.
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { squeeze } from "../ambient/squeeze.ts";
 import {
   ROOT, arch, bakeLayer, bridge, canopy, composite, cut, difference, ellipse, fern, glow, layer, mist, mix, noise, offset,
   pine, rect, rng, roots, ruinWall, scatter, shaft, sheet, stairs, tower, union, vine,
@@ -404,17 +405,38 @@ function gate(c: GateCfg): { l: Layer; poly: Poly } {
     else fr.push(rotS(fern(r, bx, by, r.range(70, 140), r.range(-0.5, 0.5)), [bx, by], ang + r.range(-0.7, 0.7)));
   }
   const body = union(cut(poly, r, 5, 44), ...fr);
-  const frags = pile(body, c.fills, 16, B.gate, c.src, { rm: c.rm });
+  const bb = bnd(poly), inner = offset(poly, -34), safe = offset(poly, -52);
+  // cut-out leaf and fern silhouettes: real holes through every tier, with warm canopy light behind them
+  const area = (bb.x1 - bb.x0) * (bb.y1 - bb.y0);
+  const ferns: Shape[] = [];
+  for (let i = 0, nf = Math.round(area / 70000); i < nf; i++) {
+    const fx = r.range(bb.x0 + 60, bb.x1 - 60), fy = r.range(bb.y0 + 120, bb.y1 - 40), a = r.range(0, Math.PI * 2);
+    ferns.push(rotS(fern(r, fx, fy, r.range(90, 170), r.range(-0.4, 0.4)), [fx, fy], a));
+  }
+  const holeShape = inter(union(leaves(r, bb, Math.round(area / 17000), 46, 100, 34), ...ferns), safe);
+  const frags: Frag[] = [
+    // light leaking along the outer outline (shows as a lit rim around the cut edge and the fronds)
+    sheet(offset(body, 9), P.dapple!, { shadow: false, opacity: 0.32 }),
+    sheet(offset(body, 4), P["rim-green"]!, { shadow: false, opacity: 0.55 }),
+    sheet(offset(holeShape, 5), P.dapple!, { shadow: false }),
+    sheet(offset(holeShape, -4), mix(P.dapple!, "#ffffff", 0.45), { shadow: false, opacity: 0.9 }),
+  ];
+  frags.push(...pile(body, c.fills, 16, B.gate, c.src, { rm: c.rm, holes: [holeShape] }));
   // tone-on-tone full-body detail: trunk columns, bark slits, leaf masses (must hold when the gate slides across the screen)
-  const bb = bnd(poly), inner = offset(poly, -34);
   const cols: Poly[] = [], bark: Poly[] = [];
   if (c.vertical) for (let x = bb.x0 + 30; x < bb.x1; x += r.range(95, 150)) { const w = r.range(44, 80); cols.push(trunkPoly(r, x, bb.y0 - 20, bb.y1 + 20, w, 0)); for (const s of slits(r, x, bb.y0, bb.y1, w, 9)) bark.push(s); }
   else for (let y = bb.y0 + 30; y < bb.y1; y += r.range(95, 150)) { const w = r.range(44, 80); const t = trunkPoly(r, y, bb.x0 - 20, bb.x1 + 20, w, 0); cols.push(t.map(([a, b]) => [b, a] as Pt)); for (const s of slits(r, y, bb.x0, bb.x1, w, 9)) bark.push(s.map(([a, b]) => [b, a] as Pt)); }
-  frags.push(sheet(inter(union(...cols), inner), P["trunk-dark"]!, { shadow: false }));
-  frags.push(sheet(inter(union(...bark), inner), P.gate!, { shadow: false }));
-  const n = Math.round(((bb.x1 - bb.x0) * (bb.y1 - bb.y0)) / 7500);
-  frags.push(sheet(inter(leaves(r, bb, n, 40, 100, 30), inner), P["leaf-near"]!, { shadow: false }));
-  frags.push(sheet(inter(leaves(r, bb, Math.round(n * 0.8), 22, 56, 20), inner), P.trunk!, { shadow: false }));
+  const keep = difference(inner, holeShape);
+  frags.push(sheet(inter(union(...cols), keep), P["trunk-dark"]!, { shadow: false }));
+  frags.push(sheet(inter(union(...bark), keep), P.gate!, { shadow: false }));
+  const n = Math.round(area / 7500);
+  frags.push(sheet(inter(leaves(r, bb, n, 40, 100, 30), keep), P["leaf-near"]!, { shadow: false }));
+  frags.push(sheet(inter(leaves(r, bb, Math.round(n * 0.8), 22, 56, 20), keep), P.trunk!, { shadow: false }));
+  // lit leaf layers over the dark body, each with a baked shadow and a light edge
+  const lit = (cnt: number, l0: number, l1: number, fill: string, rmx: number, op = 1) =>
+    sheet(inter(leaves(r, bb, cnt, l0, l1, 28), keep), fill, { opacity: op, shadow: { dx: -3, dy: 5, blur: 3, opacity: 0.45, color: P.shadow }, edge: { light: [c.src[0] < 960 ? 1 : -1, -1], width: 2, color: mix(fill, P["rim-green"]!, rmx) } });
+  frags.push(lit(Math.round(n * 0.55), 44, 96, P.moss!, 0.35), lit(Math.round(n * 0.32), 36, 80, P["leaf-mid-2"]!, 0.45), lit(Math.round(n * 0.12), 28, 60, P["leaf-mid"]!, 0.55, 0.9));
+  frags.push(sheet(offset(holeShape, -3), mix(P.dapple!, "#ffffff", 0.35), { shadow: false, opacity: 0.8 }));
   return { l: layer(c.id, c.side === 1 ? 14 : 15, ...frags), poly };
 }
 /** minimum overlap of two gate polys when shifted by (sl, sr) along the sweep axis. */
@@ -490,7 +512,7 @@ const BAKE: Record<string, [number, number]> = {
   "stone-arch": [0.43, 34], "stone-arch-p": [0.43, 34], "fork-door": [1, 55], "fork-glow": [0.29, 32],
   "curtain-mid-l": [0.32, 30], "curtain-mid-r": [0.32, 30], "curtain-mid-l-p": [0.32, 30], "curtain-mid-r-p": [0.32, 30],
   shafts: [0.25, 28], "shafts-p": [0.25, 28], "roots-near": [0.36, 32], "roots-near-p": [0.32, 30], fireflies: [0.43, 37], "fireflies-p": [0.43, 37],
-  "gate-l": [0.25, 28], "gate-r": [0.25, 28], "gate-l-p": [0.25, 28], "gate-r-p": [0.25, 28],
+  "gate-l": [0.3, 36], "gate-r": [0.3, 36], "gate-l-p": [0.3, 36], "gate-r-p": [0.3, 36],
 };
 const baked = new Map<string, NonNullable<Awaited<ReturnType<typeof bakeLayer>>>>();
 for (const l of all) {
@@ -499,6 +521,7 @@ for (const l of all) {
   if (!b) throw new Error(`layer ${l.id} empty`);
   baked.set(l.id, b);
 }
+await squeeze(SLUG, baked, { "gate-l": [0.85, 36, 70], "gate-r": [0.85, 36, 70] }, null);
 const r1 = (n: number) => Math.round(n * 10) / 10;
 const compose = (width: number, height: number, include: string[], place: Record<string, { x?: number; y?: number; s?: number }> = {}) => ({
   width, height,

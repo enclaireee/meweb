@@ -9,8 +9,11 @@ import { ROOT } from "../lib/bake.ts";
 const OUT = join(ROOT, "public/art/frame");
 const SCALE = 1; // 0.5 looked soft when stretched to the viewport
 // bolder band (lead override): [min, max] inner-edge distance, design px
-const DIST: [number, number][] = [[70, 86], [52, 64], [36, 46], [18, 28]];
-const TORN: [number, number][] = [[5, 18], [4, 14], [3.5, 12], [3, 10]];
+// thin frame (build decisions c): deepest visible point <= 34 design px desktop, <= 40 portrait
+const DIST_D: [number, number][] = [[24, 28], [19, 22], [14, 17], [9, 12]];
+const DIST_P: [number, number][] = [[29, 33], [23, 26], [17, 20], [11, 14]];
+const TORN: [number, number][] = [[2.5, 6], [2, 5], [1.8, 4.5], [1.5, 4]];
+let DIST = DIST_D;
 const TINTS: Record<string, string[]> = {
   "b0-outside": ["#22384f", "#16263a", "#0b1420", "#05090f"],
   "b1-approach": ["#22384f", "#16263a", "#0b1420", "#05090f"],
@@ -35,7 +38,7 @@ function roundedRect(x: number, y: number, w: number, h: number, r: ReturnType<t
   const pts: Pt[] = [];
   const corners: [number, number, number][] = [[x + w, y, -90], [x + w, y + h, 0], [x, y + h, 90], [x, y, 180]];
   corners.forEach(([cx, cy, a0], i) => {
-    const R = r.range(30, 60);
+    const R = r.range(10, 20);
     const sx = i === 0 || i === 1 ? -1 : 1, sy = i === 1 || i === 2 ? -1 : 1;
     for (let k = 0; k <= 8; k++) {
       const a = ((a0 + (k / 8) * 90) * Math.PI) / 180;
@@ -71,8 +74,8 @@ function sheetShape(W: number, H: number, i: number, portrait: boolean, taken: M
     while (u < e.len - 110) {
       let c = u;
       for (let t = 0; t < 20 && used.some((q) => Math.abs(q - c) < 60 + 40); t++) c += 25;
-      const w = br.range(20, 60), dp = br.range(8, 14);
-      const q = cut(rect(0, 0, w, dp + 6), br, 1.5, 8).map(([a, b]) => e.map(c - w / 2 + a, d - dp + b));
+      const w = br.range(20, 60), dp = br.range(3, 6);
+      const q = cut(rect(0, 0, w, dp + 6), br, 1, 8).map(([a, b]) => e.map(c - w / 2 + a, d - dp + b));
       bites.push(q);
       used.push(c);
       u = c + br.range(180, 320);
@@ -84,8 +87,8 @@ function sheetShape(W: number, H: number, i: number, portrait: boolean, taken: M
   const shape = difference(full, ...holeU);
   // folded corner: sheet 2 bottom right, sheet 3 top left (40 px triangle, drawn at alpha .85)
   let fold: Poly | undefined;
-  if (i === 1) fold = [[W - d, H - d], [W - d - 40, H - d], [W - d, H - d - 40]];
-  if (i === 2) fold = [[d, d], [d + 40, d], [d, d + 40]];
+  if (i === 1) fold = [[W - d, H - d], [W - d - 16, H - d], [W - d, H - d - 16]];
+  if (i === 2) fold = [[d, d], [d + 16, d], [d, d + 16]];
   return { shape, fold };
 }
 
@@ -93,6 +96,7 @@ const manifest: { desktop: string[]; portrait: string[]; tints: typeof TINTS } =
 mkdirSync(OUT, { recursive: true });
 let total = 0;
 for (const [kind, W, H, portrait] of [["d", 1920, 1080, false], ["p", 1080, 1920, true]] as const) {
+  DIST = portrait ? DIST_P : DIST_D;
   const taken = new Map<string, number[]>();
   const rasters: Buffer[] = [];
   for (let i = 0; i < 4; i++) {
@@ -104,6 +108,21 @@ for (const [kind, W, H, portrait] of [["d", 1920, 1080, false], ["p", 1080, 1920
     (portrait ? manifest.portrait : manifest.desktop).push(name);
     total += buf.length;
     rasters.push(buf);
+    {
+      const { data } = await sharp(buf).ensureAlpha().extractChannel(3).raw().toBuffer({ resolveWithObject: true });
+      const side = [0, 0, 0, 0]; // top right bottom left: max depth of alpha>128 along the side's middle 80%
+      for (let x = Math.round(W * 0.1); x < W * 0.9; x++) {
+        let t = 0; while (t < H / 2 && data[t * W + x]! > 128 || (t < H / 2 && false)) t++;
+        let b = 0; while (b < H / 2 && data[(H - 1 - b) * W + x]! > 128) b++;
+        side[0] = Math.max(side[0]!, t); side[2] = Math.max(side[2]!, b);
+      }
+      for (let y = Math.round(H * 0.1); y < H * 0.9; y++) {
+        let l = 0; while (l < W / 2 && data[y * W + l]! > 128) l++;
+        let rr = 0; while (rr < W / 2 && data[y * W + W - 1 - rr]! > 128) rr++;
+        side[3] = Math.max(side[3]!, l); side[1] = Math.max(side[1]!, rr);
+      }
+      console.log("  depth(T,R,B,L)", side.join(","));
+    }
     console.log(name, buf.length, "bytes");
   }
   // preview: b0-outside tints, paint order, drop shadow, grey bg

@@ -2,6 +2,7 @@
 // Projects lane (Build decisions b): shell exterior intro, then one district beat per group (web, data, hardware).
 // Cards are HTML and arrive inline on scroll, one per screen, in each district's calm card area. Art is world-only.
 // Adding a project = a registry entry only (the shell has 4 web / 3 data / 3 hardware window slots).
+import Image from 'next/image';
 import type { BeatDef, Comp, CompositionDef, Keyframe, LayerDef, Manifest, OverlayDef, Rect } from '@/engine';
 import { exitLane, scrollToS } from '@/engine';
 import { projects, ui, type Project } from '@/content';
@@ -18,10 +19,11 @@ const GROUPS: Group[] = ['web', 'data', 'hardware'];
 const byGroup = (g: Group) => projects.filter((p) => p.group === g);
 
 /* ---------- scroll layout (screens) ---------- */
-const SHELL = 2;
-const LEAD = 0.5; // gates part before the first card
-const CARD = 1; // one card per screen
-const TAIL = 0.6; // last card leaves before the dive
+const SHELL = 1.2;
+const LEAD = 0.3; // gates part before the first card
+const CARD = 0.72; // one card slot: slide in, hold, slide out
+const TAIL = 0.3; // last card is gone before the dive into the next district
+const SLIDE = 0.14; // slide in / slide out duration (screens)
 const screensOf = (g: Group) => LEAD + byGroup(g).length * CARD + TAIL;
 const startOf = (g: Group) => SHELL + GROUPS.slice(0, GROUPS.indexOf(g)).reduce((n, x) => n + screensOf(x), 0);
 
@@ -29,49 +31,63 @@ const startOf = (g: Group) => SHELL + GROUPS.slice(0, GROUPS.indexOf(g)).reduce(
 export function projectS(id: string): number | undefined {
   const p = projects.find((x) => x.id === id);
   if (!p) return undefined;
-  return startOf(p.group) + LEAD + byGroup(p.group).indexOf(p) * CARD + 0.35;
+  return startOf(p.group) + LEAD + byGroup(p.group).indexOf(p) * CARD + CARD / 2;
+}
+
+/** Lane-local start screen of the shell and of each district (gates open enough to read), for the section gauge. */
+export function districts(): { id: 'shell' | 'web' | 'data' | 'hardware'; s: number }[] {
+  return [{ id: 'shell', s: 0 }, ...GROUPS.map((g) => ({ id: g, s: startOf(g) + LEAD + SLIDE }))];
 }
 
 /* ---------- card ---------- */
+const PAPER_CUT = '[clip-path:polygon(0_0.6%,30%_0,66%_0.8%,100%_0,99.4%_50%,100%_99.4%,60%_100%,24%_99.2%,0_100%,0.5%_48%)]';
+
 // aria-hidden like <BeatText>: screen readers and no-JS visitors get the same content from <Plain>.
+// The whole card is one cut paper sheet (ink on cream, 4.5:1+) so it reads on every district palette.
 function Card({ p, n, of }: { p: Project; n: number; of: number }) {
   const t = useT();
+  const prints = p.media.slice(0, 2);
   return (
-    <div aria-hidden className="flex w-full flex-col items-start gap-4">
-      {/* Museum tag: the metadata on a small cut of paper; the title and story sit bare on the art. */}
-      <div className="drop-shadow-[2px_5px_0_rgb(0_0_0/0.35)]">
-        <dl className="sheet grid rotate-[-1.4deg] grid-cols-[auto_1fr] gap-x-4 gap-y-0.5 px-4 py-3 text-[0.72rem] leading-snug [clip-path:polygon(0_0,100%_2%,99%_100%,1%_97%)]">
-          <dt className="col-span-2 mb-1 tracking-[0.3em] uppercase">{t(ui.card.groups[p.group])} · {n} / {of}</dt>
-          <dt className="opacity-60">{t(ui.card.period)}</dt>
+    <div aria-hidden className="w-full drop-shadow-[3px_6px_0_rgb(0_0_0/0.35)]">
+      <article className={`sheet flex rotate-[-0.8deg] flex-col gap-2.5 px-5 py-4 ${PAPER_CUT}`}>
+        <p className="text-label tracking-[0.22em] text-[#5a4a38] uppercase">{t(ui.card.groups[p.group])} · {n} / {of}</p>
+        <dl className="text-label grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 text-[#2a2118]">
+          <dt className="text-[#5a4a38]">{t(ui.card.period)}</dt>
           <dd>{t(p.period)}</dd>
-          <dt className="opacity-60">{t(ui.card.role)}</dt>
+          <dt className="text-[#5a4a38]">{t(ui.card.role)}</dt>
           <dd>{t(p.role)}</dd>
           {p.tags.length > 0 && (
             <>
-              <dt className="opacity-60">{t(ui.card.tags)}</dt>
-              <dd className="max-w-[22rem]">{p.tags.join(' · ')}</dd>
+              <dt className="text-[#5a4a38]">{t(ui.card.tags)}</dt>
+              <dd>{p.tags.join(' · ')}</dd>
             </>
           )}
         </dl>
-      </div>
-      <article className="beat-text flex flex-col gap-3">
-        <h2 className="font-display text-[clamp(2rem,4vw,4rem)] leading-[1] text-balance break-words">{t(p.title)}</h2>
-        <p className="font-display text-[clamp(1rem,1.4vw,1.35rem)] leading-snug break-words italic">{t(p.summary)}</p>
+        <h2 className="font-display text-title font-semibold text-balance break-words">{t(p.title)}</h2>
+        <p className="text-lead break-words">{t(p.summary)}</p>
         {p.facts.length > 0 && (
-          // ponytail: portrait card area is ~half a phone screen, so facts stay desktop-only (full list in <Plain>)
-          <ul className="flex flex-col gap-1.5 text-[clamp(0.8rem,1vw,0.95rem)] leading-snug break-words portrait:hidden">
+          // portrait card area is under half a phone screen, so facts stay desktop-only (full list in <Plain>)
+          <ul className="text-body flex flex-col gap-1.5 break-words portrait:hidden">
             {p.facts.map((f, i) => (
               // Static, author-written strings from src/content (may contain <strong>).
-              <li key={i} className="border-l border-current/40 pl-3" dangerouslySetInnerHTML={{ __html: t(f) }} />
+              <li key={i} className="border-l-2 border-[#2a2118]/40 pl-3" dangerouslySetInnerHTML={{ __html: t(f) }} />
             ))}
           </ul>
         )}
-        {p.media[0] && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={p.media[0].src} alt="" loading="lazy" className="h-auto max-h-[22vh] max-w-full rotate-[0.8deg] border-[6px] border-[#efe4cc] object-cover shadow-[0_10px_20px_rgb(0_0_0/0.4)]" />
+        {prints.length > 0 && (
+          <div className="flex gap-3 pt-2">
+            {prints.map((m, i) => (
+              <figure key={m.src} className={`relative min-w-0 flex-1 bg-[#fbf5e6] p-1.5 shadow-[0_4px_10px_rgb(0_0_0/0.3)] ${i % 2 ? 'rotate-[1.6deg]' : 'rotate-[-1.8deg]'}`}>
+                <span className="absolute -top-2 left-1/2 z-10 h-4 w-10 -translate-x-1/2 rotate-3 bg-[#d9c58a]/80" />
+                <div className="relative aspect-[16/10]">
+                  <Image src={m.src} alt={t(m.alt)} fill sizes="(min-width: 1024px) 18vw, 40vw" loading="lazy" className="object-cover" />
+                </div>
+              </figure>
+            ))}
+          </div>
         )}
         {p.links.length > 0 && (
-          <ul className="flex flex-wrap gap-x-5 gap-y-1 text-sm tracking-wide">
+          <ul className="text-body flex flex-wrap gap-x-5 gap-y-1">
             {p.links.map((l) => (
               <li key={l.href}>
                 <a href={l.href} target="_blank" rel="noreferrer" tabIndex={-1} className="underline underline-offset-4">{t(l.label)} ↗</a>
@@ -84,16 +100,23 @@ function Card({ p, n, of }: { p: Project; n: number; of: number }) {
   );
 }
 
-/** Card i of n in a district of `screens`: rises in, holds for its screen, leaves (the last one holds until the dive). */
-function cardTrack(i: number, n: number, screens: number): Keyframe[] {
+/** Card i of n: one slot of CARD screens. It slides in from the edge (SLIDE), holds, slides back out; slots never overlap.
+ *  Opacity only ever steps 0 <-> 1 while the card is off-screen, so no card is ever half-faded; the first keyframe pair
+ *  parks the transform at 0 so the frozen transform under reduced motion shows every card in place (they swap at the slot edge). */
+function cardTrack(i: number, screens: number, axis: 'x' | 'y', off: number): Keyframe[] {
   const a = (s: number) => s / screens;
+  const e = 0.0003;
   const s0 = LEAD + i * CARD;
-  const out = i === n - 1 ? screens - TAIL : s0 + CARD;
+  const s1 = s0 + CARD;
   return [
-    { at: a(s0 - 0.15), opacity: 0, y: 60 },
-    { at: a(s0 + 0.12), opacity: 1, y: 0, ease: 'out' },
-    { at: a(out - 0.22), opacity: 1, y: 0 },
-    { at: a(out), opacity: 0, y: -60, ease: 'in' },
+    { at: 0, [axis]: 0, opacity: 0 },
+    { at: a(s0) - 2 * e, [axis]: 0, opacity: 0 },
+    { at: a(s0) - e, [axis]: off, opacity: 0 },
+    { at: a(s0), [axis]: off, opacity: 1 },
+    { at: a(s0 + SLIDE), [axis]: 0, opacity: 1, ease: 'out' },
+    { at: a(s1 - SLIDE), [axis]: 0, opacity: 1 },
+    { at: a(s1) - e, [axis]: off, opacity: 1, ease: 'in' },
+    { at: a(s1), [axis]: off, opacity: 0 },
   ];
 }
 
@@ -176,22 +199,25 @@ const district = (g: Group): BeatDef => {
   const list = byGroup(g);
   const screens = screensOf(g);
   const manifest = d.json as Manifest;
-  const lastT = cardTrack(list.length - 1, list.length, screens).slice(0, 2); // in with the last card, then stays to the end
-  const cards = (className: string, backAt: string): OverlayDef[] => [
-    ...list.map((p, i) => ({ node: <Card p={p} n={i + 1} of={list.length} />, className, track: cardTrack(i, list.length, screens) })),
-    ...(d.last ? [{ node: back, className: backAt, track: lastT }] : []),
+  const lastS = (LEAD + (list.length - 1) * CARD) / screens;
+  const backT: Keyframe[] = [{ at: 0, opacity: 0 }, { at: lastS - 0.0003, opacity: 0 }, { at: lastS, opacity: 1 }]; // with the last card, then stays
+  const cards = (className: string, backAt: string, axis: 'x' | 'y', off: number): OverlayDef[] => [
+    ...list.map((p, i) => ({ node: <Card p={p} n={i + 1} of={list.length} />, className, track: cardTrack(i, screens, axis, off) })),
+    ...(d.last ? [{ node: back, className: backAt, track: backT }] : []),
   ];
-  const comp = (c: Comp) => world(manifest, c, screens, { focus: d.focus[c], last: d.last, extra: d.extra(screens) });
+  // Gates stop short of fully shut so a gap of art always shows between them (no flat dark frame at the join).
+  const comp = (c: Comp) => world(manifest, c, screens, { focus: d.focus[c], last: d.last, close: c === 'desktop' ? 380 : 190, extra: d.extra(screens) });
+  const x0 = d.side === 'right' ? 'left-[60vw]' : 'left-[4vw]';
   return {
     slug: d.json.slug,
     screens,
     manifest,
-    still: LEAD / screens + 0.05, // reduced motion: first card shown
+    still: (LEAD + CARD / 2) / screens, // reduced motion: first card shown
     desktop: {
       ...comp('desktop'),
-      overlays: cards(`${d.side === 'right' ? 'left-[62vw]' : 'left-[5vw]'} top-[13vh] w-[min(33vw,34rem)]`, `${d.side === 'right' ? 'left-[62vw]' : 'left-[5vw]'} bottom-[9vh]`),
+      overlays: cards(`${x0} top-[12svh] w-[min(36vw,36rem)]`, `${x0} bottom-[3svh]`, 'x', d.side === 'right' ? 1600 : -1600),
     },
-    portrait: { ...comp('portrait'), overlays: cards('left-[8vw] bottom-[6svh] w-[84vw] max-w-[34rem]', 'left-[8vw] top-[9svh]') },
+    portrait: { ...comp('portrait'), overlays: cards('left-[6vw] bottom-[3svh] w-[88vw] max-w-[36rem]', 'left-[6vw] top-[11svh]', 'y', 1400) },
   };
 };
 
