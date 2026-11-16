@@ -346,7 +346,7 @@ export function Nav() {
   const inMain = lane === 'main';
   return (
     <>
-      <nav data-chrome className="world-nav pointer-events-none fixed inset-x-0 top-0 z-50 flex items-center justify-end gap-2 p-2.5 sm:gap-3 sm:p-4">
+      <nav data-chrome aria-label={t(ui.nav.label)} className="world-nav pointer-events-none fixed inset-x-0 top-0 z-50 flex items-center justify-end gap-2 p-2.5 sm:gap-3 sm:p-4">
         <a
           href="#content"
           className={`${btnBase} pointer-events-auto sr-only relative px-5 font-semibold text-[#1e1105] focus:not-sr-only`}

@@ -26,7 +26,7 @@ function marks(lane: Lane): { list: Mark[]; total: number } {
       ? [
           { label: g.top, ...at(0) }, { label: g.about, ...at(1) }, { label: g.education, ...at(2) },
           { label: g.experience, ...at(3) }, { label: g.projects, ...at(5) }, { label: g.skills, ...at(6) },
-          { label: g.awards, ...at(7) }, { label: g.leadership, ...at(8) }, { label: g.contact, ...at(9) },
+          { label: g.awards, ...at(7) }, { label: g.leadership, ...at(8) }, { label: g.contact, ...at(9, 0.45) }, // contact: after the letter has risen
         ]
       : districts().map((d, i) => ({ label: d.id === 'shell' ? g.shell : ui.projects.groups[d.id], s: d.s, beat: i }));
   return { list, total };

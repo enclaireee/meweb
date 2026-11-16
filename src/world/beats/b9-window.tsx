@@ -56,7 +56,8 @@ function Letter() {
 }
 const text = <Letter />;
 // The sheet itself settles in just before its rows; it stays to the end so the links stay clickable.
-const track: Keyframe[] = [{ at: 0.2, opacity: 0, y: 24 }, { at: 0.29, opacity: 1, y: 0, ease: 'out' }];
+// The block appears exactly when its rows start to rise (masked), so its links are never focusable while unseen.
+const track: Keyframe[] = [{ at: A - 0.002, opacity: 0 }, { at: A, opacity: 1 }];
 
 function Head({ p = false }: { p?: boolean }) {
   const { lang } = useLang();

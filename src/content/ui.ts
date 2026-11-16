@@ -18,6 +18,7 @@ export const ui = {
     exitProjects: { en: 'Back to the mountain', id: 'Kembali ke gunung' },
     projects: { en: 'Projects', id: 'Proyek' },
     back: { en: 'Back', id: 'Kembali' },
+    label: { en: 'Site', id: 'Situs' },
     settings: { en: 'Language and sound', id: 'Bahasa dan suara' },
     sound: { en: 'Ambient sound', id: 'Suara latar' },
   },
