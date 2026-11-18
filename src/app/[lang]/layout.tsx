@@ -23,9 +23,12 @@ const isLang = (l: string): l is Lang => l === 'en' || l === 'id';
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLang(lang)) return {};
+  const title = ui.site.title[lang], description = ui.site.description[lang];
   return {
-    title: ui.site.title[lang],
-    description: ui.site.description[lang],
+    title,
+    description,
+    openGraph: { type: 'website', title, description, locale: lang === 'id' ? 'id_ID' : 'en_US' },
+    twitter: { card: 'summary_large_image', title, description },
     alternates: { canonical: `/${lang}`, languages: { en: '/en', id: '/id' } },
   };
 }

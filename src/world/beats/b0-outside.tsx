@@ -37,7 +37,7 @@ const nameP = nameNode('text-[4.6cqw] my-[1.2cqw]', 'text-[31cqw]');
 function Label() {
   const t = useT();
   return (
-    <div aria-hidden className="@container beat-text flex h-full items-center text-[#f6e7c8]">
+    <div aria-hidden className="hero-label @container beat-text flex h-full items-center text-[#f6e7c8]">
       <span className="h-px w-[7cqw] shrink-0 bg-current opacity-70" />
       <span className="ml-[3cqw] size-[2.6cqw] shrink-0 rounded-full border border-current" />
       <span className="ml-[3cqw] whitespace-pre-line text-[max(11px,3.6cqw)] leading-[1.35] tracking-[0.16em] uppercase">{t(s.label)}</span>

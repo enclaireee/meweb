@@ -305,16 +305,12 @@ const btnBase =
 const tabBtn =
   'pointer-events-auto relative z-10 inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center gap-1.5 rounded-sm px-2 text-label font-semibold tracking-[0.16em] uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ffd27a]';
 
-/** First main-lane beat where the CV tag shows (Experience). Before it the visitor is still arriving. */
-const CV_FROM = 3;
-
 export function Nav() {
   const t = useT();
   const { lang, toggle } = useLang();
   const lane = useLane();
   const [sound, setSound] = useState(false); // off by default; starts only on a click
   const audio = useRef<HTMLAudioElement>(null);
-  const cvRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
     const a = audio.current;
@@ -328,19 +324,6 @@ export function Nav() {
       a.play().catch(() => {});
     });
   }, [sound]);
-
-  // CV tag: hidden through b2, shown from Experience on (and always in the projects lane). Attribute only
-  // flips when the beat changes; CSS fades it (opacity/transform).
-  useEffect(() => {
-    let shown: boolean | undefined;
-    return subscribeFrame((f) => {
-      const on = f.lane === 'projects' || f.beat >= CV_FROM;
-      if (on === shown || !cvRef.current) return;
-      shown = on;
-      cvRef.current.toggleAttribute('data-shown', on);
-      cvRef.current.inert = !on;
-    });
-  }, []);
 
   const cv = profile.contact.cv;
   const inMain = lane === 'main';
@@ -357,7 +340,6 @@ export function Nav() {
 
         {cv && (
           <a
-            ref={cvRef}
             href={cv}
             download="CV_Muhammad_Fatih_Zamzami.pdf"
             className={`${btnBase} chrome-cv pointer-events-auto relative mr-auto gap-2 pl-3 pr-4 font-semibold text-[#1e1105] sm:pl-3.5 sm:pr-5`}

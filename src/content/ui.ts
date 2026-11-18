@@ -74,6 +74,8 @@ export const ui = {
     github: { en: 'GitHub', id: 'GitHub' },
     cv: { en: 'Download CV', id: 'Unduh CV' },
     cvShort: { en: 'CV', id: 'CV' },
+    copy: { en: 'Copy', id: 'Salin' },
+    copied: { en: 'Copied', id: 'Disalin' },
   },
   // Headings for the reduced-motion and no-JS plain page.
   plain: {

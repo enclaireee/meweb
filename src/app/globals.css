@@ -399,22 +399,9 @@ html.intro-wait [data-chrome] {
     pointer-events: auto;
   }
 }
-/* CV tag: hidden through b2 (Nav toggles data-shown). */
-.chrome-cv {
-  transition: opacity 400ms ease, translate 400ms ease;
-}
-.chrome-cv:not([data-shown]) {
-  opacity: 0;
-  translate: 0 -8px;
-  pointer-events: none;
-}
 @media (prefers-reduced-motion: reduce) {
-  [data-chrome],
-  .chrome-cv {
+  [data-chrome] {
     transition: none;
-  }
-  .chrome-cv:not([data-shown]) {
-    translate: none;
   }
 }
 
@@ -513,5 +500,21 @@ html[data-scrolling] :is([class*='amb-'], [class*='amb-'] > *, .float-word),
 @media (prefers-reduced-motion: reduce) {
   .gauge-label {
     transition: none;
+  }
+}
+
+/* b0 label: a narrow landscape crop pushes it under the gauge, so set it left of the window instead. */
+@media (orientation: landscape) and (max-aspect-ratio: 3/2) {
+  .hero-label {
+    flex-direction: row-reverse;
+    translate: -120% 0;
+    text-align: right;
+  }
+  .hero-label > * {
+    margin-left: 0;
+    margin-right: 3cqw;
+  }
+  .hero-label > :first-child {
+    margin-right: 0;
   }
 }

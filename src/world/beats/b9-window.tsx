@@ -1,6 +1,7 @@
 'use client';
 // b9: inside the lit window from b0 (last beat). Choreography from ../transitions. Hero: the window
 // glow and its light shafts breathe together while the night view slides behind the fixed tracery.
+import { useState } from 'react';
 import type { BeatDef, Comp, Keyframe, LayerDef } from '@/engine';
 import manifest from '../../../public/art/b9-window/manifest.json';
 import { profile, scenes, ui } from '@/content';
@@ -18,6 +19,11 @@ const A = 0.3; // the letter's rows start here (the gates are open at 0.19)
 function Letter() {
   const t = useT();
   const c = profile.contact;
+  const [copied, setCopied] = useState(false);
+  const copy = () => navigator.clipboard?.writeText(c.email).then(() => {
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }, () => {});
   const links = (['linkedin', 'github', 'cv'] as const).filter((k) => c[k]);
   const link = 'underline decoration-1 underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current';
   return (
@@ -33,9 +39,14 @@ function Letter() {
           <Ln i={1}><p aria-hidden className="pt-2 font-display text-title leading-none font-semibold italic">{t(s.greeting)}</p></Ln>
           <Ln i={2}><p aria-hidden className="pt-2 font-display text-lead leading-snug">{t(s.body)}</p></Ln>
           <Ln i={3}>
-            <a href={`mailto:${c.email}`} className={`inline-block pt-2 font-display text-lead break-all font-semibold italic ${link}`}>
-              {c.email}
-            </a>
+            <p className="flex flex-wrap items-baseline gap-x-4 gap-y-1 pt-2">
+              <a href={`mailto:${c.email}`} className={`font-display text-lead break-all font-semibold italic ${link}`}>
+                {c.email}
+              </a>
+              <button type="button" onClick={copy} className={`min-h-11 cursor-pointer text-label font-semibold tracking-[0.18em] uppercase ${link}`}>
+                <span aria-live="polite">{t(copied ? ui.contact.copied : ui.contact.copy)}</span>
+              </button>
+            </p>
           </Ln>
           {links.length > 0 && (
             <Ln i={4}>

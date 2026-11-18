@@ -223,7 +223,7 @@ function Composition({ def, comp, quality, rm, visible, t0, gate }: {
   const ovs = (cd.overlays ?? []).map((o, i) => ({ o, i })).filter(({ o }) => !(low && o.highOnly));
   const ovStyle = (o: (typeof ovs)[number]['o'], w: number, h: number) => {
     const p = evaluate(o.track, t0);
-    return { ...o.style, transform: tf(p, w, h), opacity: p.opacity };
+    return { ...o.style, transform: tf(p, w, h), opacity: r3(p.opacity) };
   };
   const box = boxStyle(W, H, cd.groupOrigin ?? [W / 2, H / 2], g);
   const behind = cd.split ? ovs.filter(({ o }) => o.rect && o.behind) : [];
@@ -253,7 +253,7 @@ function Composition({ def, comp, quality, rm, visible, t0, gate }: {
         data-live={id} className={a.live!.className}
         style={{
           ...a.live!.style, ...rectStyle(l, W, H),
-          transformOrigin: a.origin, transform: tf(p, l.w, l.h), opacity: p.opacity, willChange: 'transform, opacity',
+          transformOrigin: a.origin, transform: tf(p, l.w, l.h), opacity: r3(p.opacity), willChange: 'transform, opacity',
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -266,7 +266,7 @@ function Composition({ def, comp, quality, rm, visible, t0, gate }: {
       data-comp={comp}
       data-off={visible && g.opacity > 0 ? undefined : ''}
       className={`absolute inset-0 ${gate ?? ''}`}
-      style={{ opacity: visible ? g.opacity : 0, willChange: 'opacity' }}
+      style={{ opacity: visible ? r3(g.opacity) : 0, willChange: 'opacity' }}
     >
       {plan?.steps.map((st, j) =>
         st.kind === 'canvas' ? <canvas key={`c${j}`} data-art={st.ids.join(' ')} className="absolute inset-0 h-full w-full" />
@@ -292,7 +292,8 @@ function Composition({ def, comp, quality, rm, visible, t0, gate }: {
               style={ssr ? {
                 ...rectStyle(l, W, H), maxWidth: 'none',
                 transformOrigin: a?.origin, transform: a?.track ? tf(p, l.w, l.h) : undefined,
-                opacity: a?.track ? p.opacity : undefined,
+                // r3: eased values can differ in the last float digit between Node and the browser (hydration mismatch).
+                opacity: a?.track ? r3(p.opacity) : undefined,
                 // Fixed raster scale: the dolly/dive scale changes every frame, which would otherwise re-raster.
                 willChange: a?.track || a?.parallax ? 'transform, opacity' : undefined,
               } : { display: 'none' }}

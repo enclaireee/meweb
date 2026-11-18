@@ -60,7 +60,7 @@ function Card({ p, n, of }: { p: Project; n: number; of: number }) {
         {/* Text is aria-hidden (<Plain> carries it); the links stay reachable by keyboard on the shown card
             (hidden cards are visibility:hidden via their overlay track, so never focusable). */}
         <div aria-hidden className="contents">
-        <p className="text-label tracking-[0.22em] text-[#5a4a38] uppercase">{t(ui.card.groups[p.group])} · {n} / {of}</p>
+        <p className="flex flex-wrap gap-x-3 text-label tracking-[0.22em] text-[#5a4a38] uppercase"><span>{t(ui.card.groups[p.group])}</span><span className="ml-auto whitespace-nowrap">{n} / {of}</span></p>
         <dl className="text-label grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 text-[#2a2118]">
           <dt className="text-[#5a4a38]">{t(ui.card.period)}</dt>
           <dd>{t(p.period)}</dd>
