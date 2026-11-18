@@ -124,7 +124,7 @@ function Door() {
 }
 const door = <Door />;
 const SCREENS = 1.9;
-const deer = <Creature sheet={stag} ms={6000} />;
+const deer = <Creature sheet={stag} ms={2600} />;
 // Door and stag arrive as the curtains part and stay to the end (the door must stay reachable).
 const arrive: Keyframe[] = [{ at: 0.1, opacity: 0 }, { at: 0.2, opacity: 1, ease: 'out' }, { at: 0.86, opacity: 1 }, { at: 0.93, opacity: 0 }];
 const ambient: Keyframe[] = [{ at: 0.14, opacity: 0 }, { at: 0.22, opacity: 1 }, { at: 0.76, opacity: 1 }, { at: 0.84, opacity: 0 }];
@@ -172,6 +172,7 @@ const portrait = comp('portrait', [580, 800], 90);
 export const b5Understory: BeatDef = {
   slug: 'b5-understory',
   screens: SCREENS,
+  rests: [(G1 + 0.02 + S0) / 2, (S1 + 0.06 + OUT) / 2], // the word, then the scattered list
   manifest,
   // calm zone is the dark undergrowth on the right
   desktop: {

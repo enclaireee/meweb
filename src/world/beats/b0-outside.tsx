@@ -107,6 +107,7 @@ const starsFar = (c: typeof desktop, sky: string, rect: { x: number; y: number; 
 export const b0Outside: BeatDef = {
   slug: 'b0-outside',
   screens: SCREENS,
+  rests: [0], // the name, as it opens
   manifest,
   intro: { ms: INTRO_MS },
   desktop: {

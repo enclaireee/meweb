@@ -63,8 +63,8 @@ const box = (ax: number, ay: number, w: number) => {
 const SCREENS = 2.2;
 // The whale glides on a wrapper (the engine owns the overlay's transform).
 const fish = (
-  <div className="amb-glide size-full" style={{ '--amb-x': '26px', '--amb-y': '8px', '--amb-r': '0.7deg', '--amb-dur': '16s' } as CSSProperties}>
-    <Creature sheet={whale} ms={5000} />
+  <div className="amb-glide size-full" style={{ '--amb-x': '26px', '--amb-y': '8px', '--amb-r': '0.7deg', '--amb-dur': '8s' } as CSSProperties}>
+    <Creature sheet={whale} ms={1800} />
   </div>
 );
 
@@ -94,6 +94,7 @@ const portrait = comp('portrait', [540, 560], 150);
 export const b7SecondFold: BeatDef = {
   slug: 'b7-second-fold',
   screens: SCREENS,
+  rests: [0.635], // all four awards in, before they leave
   manifest,
   // calm zone is the cavern wall on the right; the heading sits on it, only the near gate column passes in front
   desktop: {

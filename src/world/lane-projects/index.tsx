@@ -40,7 +40,7 @@ export function projectS(id: string): number | undefined {
 
 /** Lane-local start screen of the shell and of each district (gates open enough to read), for the section gauge. */
 export function districts(): { id: 'shell' | 'web' | 'data' | 'hardware'; s: number }[] {
-  return [{ id: 'shell', s: 0 }, ...GROUPS.map((g) => ({ id: g, s: startOf(g) + LEAD + SLIDE }))];
+  return [{ id: 'shell', s: 0 }, ...GROUPS.map((g) => ({ id: g, s: startOf(g) + LEAD + CARD / 2 }))];
 }
 
 /* ---------- card ---------- */
@@ -240,6 +240,7 @@ const district = (g: Group): BeatDef => {
     screens,
     manifest,
     still: (LEAD + CARD / 2) / screens, // reduced motion: first card shown
+    rests: list.map((_, i) => (LEAD + i * CARD + CARD / 2) / screens), // each card fully in
     desktop: {
       ...comp('desktop'),
       overlays: cards(`${x0} top-[12svh] w-[min(35vw,36rem)]`, `${x0} bottom-[3svh]`),
@@ -300,6 +301,7 @@ export const projectBeats: BeatDef[] = [
     screens: SHELL,
     manifest: shellJson as Manifest,
     still: 0.4,
+    rests: [0],
     desktop: shellComp('desktop', [692, 530], 'left-[62vw] top-[22vh]'),
     portrait: shellComp('portrait', [540, 620], 'left-[8vw] bottom-[8svh]'),
   },

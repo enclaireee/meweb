@@ -40,6 +40,7 @@ const motes = (c: typeof desktop, id: string, rect: { x: number; y: number; w: n
 export const b3ScaleFlip: BeatDef = {
   slug: 'b3-scale-flip',
   screens: SCREENS,
+  rests: at.map((a) => a + (0.05 + W) / 2), // each role fully in
   manifest,
   // calm zone: the right wall on desktop; on portrait the dark floor at the bottom (art brief)
   desktop: {

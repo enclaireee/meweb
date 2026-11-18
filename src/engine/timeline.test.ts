@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  beatRanges, coverScale, dissolve, ease, evaluate, locate, mountWindow, pickComposition, restoreY, spriteFrame, spriteTransform,
+  beatRanges, coverScale, dissolve, ease, evaluate, locate, mountWindow, pickComposition, restoreY, restPoints, settle, spriteFrame, spriteTransform,
 } from './timeline';
 import type { SpriteSheet, Track } from './types';
 
@@ -124,5 +124,30 @@ describe('sprite sheet', () => {
   });
   it('translates the sheet to the frame', () => {
     expect(spriteTransform(sheet, 2)).toBe('translate3d(-64px,0px,0)');
+  });
+});
+
+describe('restPoints / settle', () => {
+  const r = beatRanges([{ screens: 2 }, { screens: 2 }]);
+  const pts = restPoints([{ rests: [0] }, { rests: [0.25, 0.75] }], r); // 0, 2.5, 3.5
+  it('maps local rests to lane screens, default mid-beat', () => {
+    expect(pts).toEqual([0, 2.5, 3.5]);
+    expect(restPoints([{}, { still: 0.4 }], r)).toEqual([1, 2.8]);
+  });
+  it('stays put at a rest point', () => {
+    expect(settle(pts, 2.5, 1)).toBeNull();
+    expect(settle(pts, 2.502, -1)).toBeNull();
+  });
+  it('goes on to the next rest point in the scroll direction', () => {
+    expect(settle(pts, 0.3, 1)).toBe(2.5);
+    expect(settle(pts, 2.4, 1)).toBe(2.5);
+    expect(settle(pts, 2.4, -1)).toBe(0);
+    expect(settle(pts, 3.0, -1)).toBe(2.5);
+  });
+  it('backs out of a tiny drift, picks the nearer one without a direction, clamps past the ends', () => {
+    expect(settle(pts, 0.02, 1)).toBe(0);
+    expect(settle(pts, 3.48, -1)).toBe(3.5);
+    expect(settle(pts, 2.9, 0)).toBe(2.5);
+    expect(settle(pts, 3.9, 1)).toBe(3.5);
   });
 });

@@ -123,8 +123,8 @@ const box = (ax: number, ay: number, w: number) => {
 const SCREENS = 1.9;
 // The jellyfish bobs on a wrapper (the engine owns the overlay's transform).
 const jelly = (
-  <div className="amb-bob size-full" style={{ '--amb-y': '10px', '--amb-dur': '5.5s' } as CSSProperties}>
-    <Creature sheet={jellyfish} ms={2400} />
+  <div className="amb-bob size-full" style={{ '--amb-y': '14px', '--amb-dur': '3.5s' } as CSSProperties}>
+    <Creature sheet={jellyfish} ms={1500} />
   </div>
 );
 
@@ -156,6 +156,7 @@ const headP = <Head2 p />;
 export const b6LanternVault: BeatDef = {
   slug: 'b6-lantern-vault',
   screens: SCREENS,
+  rests: [0.58], // every group lit, before the words leave
   manifest,
   // focus = the far exit arch. The heading hangs behind the near strings and chains.
   desktop: {

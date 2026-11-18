@@ -85,6 +85,7 @@ type OverlayLite = NonNullable<BeatDef['desktop']['overlays']>[number];
 export const b2FirstFold: BeatDef = {
   slug: 'b2-first-fold',
   screens: SCREENS,
+  rests: [DEG.a + (D + DEG.w) / 2, CRS.a + (D + CRS.w) / 2], // degree, then courses
   manifest,
   desktop: {
     ...desktop,

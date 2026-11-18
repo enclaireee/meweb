@@ -88,6 +88,7 @@ const stars = (c: typeof desktop, sky: string, rect: { x: number; y: number; w: 
 export const b1Approach: BeatDef = {
   slug: 'b1-approach',
   screens: SCREENS,
+  rests: [A + (0.05 + W) / 2], // mid-sentence: fully in
   manifest,
   desktop: {
     ...desktop,

@@ -115,6 +115,7 @@ const portrait = comp('portrait', [540, 590], 140);
 export const b9Window: BeatDef = {
   slug: 'b9-window',
   screens: SCREENS,
+  rests: [1], // the letter up, the end
   manifest,
   // focus = the window. Snow sits behind the frame (the split), the heading on the left wall behind the floor and sill.
   desktop: {

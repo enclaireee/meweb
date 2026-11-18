@@ -12,21 +12,20 @@ import { useT } from './lang';
 
 type Mark = { label: L; s: number; beat: number };
 
-/** Where a jump lands: early in the beat, once its gates have parted and its text has arrived. */
-const into = (start: number, screens: number, k: number) => start + screens * k;
 
 function marks(lane: Lane): { list: Mark[]; total: number } {
   const beats = lane === 'main' ? mainBeats : projectBeats;
   const r = beatRanges(beats);
   const total = r.at(-1)?.end ?? 1;
-  const at = (beat: number, k = 0.3) => ({ beat, s: beat === 0 ? 0 : into(r[beat]!.start, beats[beat]!.screens, k) });
+  // A jump lands on the beat's first rest point, where its text is fully in (the same place scrolling settles).
+  const at = (beat: number, k = 0) => ({ beat, s: r[beat]!.start + beats[beat]!.screens * (beats[beat]!.rests?.[k] ?? 0.3) });
   const g = ui.gauge;
   const list: Mark[] =
     lane === 'main'
       ? [
           { label: g.top, ...at(0) }, { label: g.about, ...at(1) }, { label: g.education, ...at(2) },
           { label: g.experience, ...at(3) }, { label: g.projects, ...at(5) }, { label: g.skills, ...at(6) },
-          { label: g.awards, ...at(7) }, { label: g.leadership, ...at(8) }, { label: g.contact, ...at(9, 0.45) }, // contact: after the letter has risen
+          { label: g.awards, ...at(7) }, { label: g.leadership, ...at(8) }, { label: g.contact, ...at(9) },
         ]
       : districts().map((d, i) => ({ label: d.id === 'shell' ? g.shell : ui.projects.groups[d.id], s: d.s, beat: i }));
   return { list, total };

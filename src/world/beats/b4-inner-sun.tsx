@@ -19,7 +19,7 @@ const SCREENS = 1.8;
 // and the last has left before the dive (t 0.67).
 const W = 0.2, at = slots(2, 0.17, W, 0.06);
 const text = <Spotlight slug="b4-inner-sun" roles={scenes.b4} at={at} w={W} bottom="always" paper />;
-const bird = <Creature sheet={heron} ms={5000} />;
+const bird = <Creature sheet={heron} ms={2200} />;
 
 // Ray sheets are square and centred on the sun, so the box centre is the pivot. Idle: outer ring turns one way in
 // 200 s, the inner ring (mirrored, so it turns the other way) in 140 s. Scroll adds its own counter-rotation.
@@ -44,6 +44,7 @@ const motes = (rect: { x: number; y: number; w: number; h: number }) => [
 export const b4InnerSun: BeatDef = {
   slug: 'b4-inner-sun',
   screens: SCREENS,
+  rests: at.map((a) => a + (0.05 + W) / 2), // each role fully in
   manifest,
   desktop: {
     ...comp('desktop', [1660, 800]),

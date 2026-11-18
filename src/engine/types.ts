@@ -78,6 +78,9 @@ export type BeatDef = {
   desktop: CompositionDef;
   portrait: CompositionDef;
   still?: number;
+  /** Local t where the beat is fully composed (text in, art at rest). Scrolling always comes to rest on one of
+   *  these; default [still ?? 0.5]. */
+  rests?: number[];
   /** Opening sequence length (beat 0 of the main lane only; clamped to 2500 ms). Needs `intro` tracks to show anything. */
   intro?: { ms: number };
   onProgress?: (t: number, el: HTMLElement, ctx: FrameCtx) => void;

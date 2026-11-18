@@ -8,7 +8,7 @@ import {
 import { InitialLaneCtx } from './hooks';
 import { introBlend, introMs, introPlays, introProgress, type IntroEnv } from './intro';
 import { emitFrame, getState, initLane, introIO, laneIO, SERVER_STATE, setState, subscribe } from './store';
-import { beatRanges, clampS, coverScale, dissolve, evaluate, locate, mountWindow, pickComposition, type Range } from './timeline';
+import { beatRanges, clampS, coverScale, dissolve, evaluate, locate, mountWindow, pickComposition, restPoints, settle, type Range } from './timeline';
 import type { BeatDef, Comp, IntroPhase, Lane, ManifestLayer, Pose, Quality, Track } from './types';
 
 const TURN_MS = 380;
@@ -34,6 +34,7 @@ type Mounted = {
 // Engine singleton (one Stage per page). Mutated only from effects, events and rAF, never in render.
 const E = {
   ranges: [] as Range[],
+  rests: [] as number[],
   lane: 'main' as Lane,
   unit: 1, w: 1, h: 1, tau: 0.07, res: 1, touch: false,
   s: 0, cur: -1, dirty: true,
@@ -379,9 +380,10 @@ export function Stage({ beats, projectBeats, initialLane = 'main', initialFocusI
   // Loop inputs follow the rendered lane; layout effect so it is current inside the flushSync of a lane swap.
   useLayoutEffect(() => {
     E.ranges = ranges;
+    E.rests = restPoints(list, ranges);
     E.lane = lane;
     E.dirty = true;
-  }, [ranges, lane]);
+  }, [ranges, list, lane]);
 
   useEffect(() => {
     E.tau = smoothing;
@@ -492,6 +494,32 @@ export function Stage({ beats, projectBeats, initialLane = 'main', initialFocusI
     introIO.skip = endIntro;
     flags();
 
+    // Settle: once scrolling stops (momentum included), glide on to the next rest point (beat `rests`) in the scroll
+    // direction, so the story never parks mid-animation. A native smooth scroll, so any new input simply takes over.
+    let lastY = scrollY;
+    let dir = 0;
+    let fingers = 0;
+    let idle = 0;
+    const arm = () => {
+      clearTimeout(idle);
+      idle = window.setTimeout(() => {
+        if (fingers || phase === 'play' || getState().reducedMotion) return;
+        const to = settle(E.rests, scrollY / E.unit, dir);
+        if (to !== null) window.scrollTo({ top: to * E.unit, behavior: 'smooth' });
+      }, 180);
+    };
+    const onScroll = () => {
+      if (scrollY !== lastY) dir = Math.sign(scrollY - lastY);
+      lastY = scrollY;
+      arm();
+    };
+    const onTouch = (e: TouchEvent) => {
+      fingers = e.touches.length;
+      if (!fingers) arm();
+    };
+    addEventListener('scroll', onScroll, { passive: true });
+    for (const type of ['touchstart', 'touchend', 'touchcancel'] as const) addEventListener(type, onTouch, { passive: true });
+
     const io = { ...laneIO };
     laneIO.getUnit = () => E.unit;
     laneIO.getLength = () => E.ranges.at(-1)?.end ?? 0;
@@ -583,6 +611,9 @@ export function Stage({ beats, projectBeats, initialLane = 'main', initialFocusI
       removeEventListener('pointermove', onPointer);
       removeEventListener('deviceorientation', onTilt);
       for (const type of SKIP) removeEventListener(type, onSkip, true);
+      clearTimeout(idle);
+      removeEventListener('scroll', onScroll);
+      for (const type of ['touchstart', 'touchend', 'touchcancel'] as const) removeEventListener(type, onTouch);
       introIO.skip = () => {};
       E.introU = null;
       unflags();

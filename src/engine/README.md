@@ -94,6 +94,7 @@ export type BeatDef = {
   desktop: CompositionDef;
   portrait: CompositionDef;
   still?: number;           // local t used for transforms under reduced motion, default 0.5
+  rests?: number[];         // local t where the beat is fully composed; scrolling settles on these (default [still ?? 0.5])
   intro?: { ms: number };   // opening sequence length, beat 0 of the main lane only, clamped to 2500
   /** Escape hatch for a hero effect, called every frame while the beat is visible.
    *  el = the beat group element (query `[data-layer="<id>"]`). transform/opacity only. Honour ctx.reducedMotion. */

@@ -60,6 +60,29 @@ export function dissolve(s: number, ranges: readonly Range[], i: number, fade = 
   return i === 0 ? 1 : clamp01((s - r.start + fade / 2) / fade);
 }
 
+/** Lane-local screens where each beat is fully composed (its `rests`, default its `still` or mid-beat), ascending. */
+export const restPoints = (beats: readonly { rests?: readonly number[]; still?: number }[], ranges: readonly Range[]) =>
+  beats.flatMap((b, i) => (b.rests ?? [b.still ?? 0.5]).map((t) => ranges[i]!.start + t * (ranges[i]!.end - ranges[i]!.start)))
+    .sort((p, q) => p - q);
+
+const AT_REST = 0.005; // screens (~4 px): already there
+const NUDGE = 0.04; // screens: a drift this small is not a scroll, back to where it was
+
+/** Where to glide when scrolling stops, or null if s is at a rest point. dir = last scroll direction: any real
+ *  scroll goes on to the next rest point that way, so one gesture = one scene, never parked between two. */
+export function settle(points: readonly number[], s: number, dir: number): number | null {
+  let a: number | undefined, b: number | undefined;
+  for (const p of points) {
+    if (Math.abs(p - s) < AT_REST) return null;
+    if (p < s) a = p;
+    else { b = p; break; }
+  }
+  if (a === undefined || b === undefined) return a ?? b ?? null;
+  if (dir > 0) return s - a > NUDGE ? b : a;
+  if (dir < 0) return b - s > NUDGE ? a : b;
+  return s - a < b - s ? a : b;
+}
+
 /** Lane-local s clamped to [0, lane length in screens]. */
 export const clampS = (s: number, length: number) => Math.min(Math.max(0, s), length);
 

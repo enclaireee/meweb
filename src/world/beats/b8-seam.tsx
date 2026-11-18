@@ -35,6 +35,7 @@ const headT: Keyframe[] = [{ at: 0.13, opacity: 0 }, { at: 0.14, opacity: 1 }, {
 export const b8Seam: BeatDef = {
   slug: 'b8-seam',
   screens: SCREENS,
+  rests: at.map((a) => a + (0.05 + W) / 2), // each role fully in
   manifest,
   // focus = the lit window of the miniature mountain; text on the dark left page, clear of the folds.
   // The heading sits on the left page; the near drape (gate-l) passes over its first letters.
